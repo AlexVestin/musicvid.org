@@ -1,0 +1,25 @@
+
+
+.container {
+    height: 100%;
+    width: 100%;
+    background-color: blanchedalmond;
+}
+
+.headerButtons {
+    display:flex;
+    flex-direction: row;
+    background-color: brown;
+    width: 100%;
+}
+
+.headerButtons div{
+    width: 20%;
+    cursor: pointer;
+    text-align: center;
+}
+
+.headerButtons div:hover{
+    background-color: #4345;
+    width: 20%;
+}

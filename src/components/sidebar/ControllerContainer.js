@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
-import * as dat from 'dat.gui'
 import Layers from './Layers'
 import MasterSettings from './MasterSettings'
+import classes from './ControllerContainer.module.css'
 
 export default class ControllerContainer extends PureComponent {
     
@@ -37,7 +37,8 @@ export default class ControllerContainer extends PureComponent {
     }
 
     debugMouseDown = () => {
-        this.gui.updateDisplay();
+        const { gui } = this.props;
+        gui.updateDisplay();
         if(this.layers.layers[0]) {
             if(!this.added) {
                 this.added = true;
@@ -48,18 +49,27 @@ export default class ControllerContainer extends PureComponent {
     }
 
     componentDidMount() {
-        this.gui = new dat.GUI({autoPlace: false});
-        this.layers = new Layers(this.gui);
-        this.masterSettings = new MasterSettings(this.gui);
-        this.mountRef.current.appendChild(this.gui.domElement);
-        this.gui.add(this, "exportVideo");
-
+        const { gui } = this.props;
+        this.layers = new Layers(gui);
+        this.masterSettings = new MasterSettings(gui);
+        this.mountRef.current.appendChild(gui.domElement);
+        gui.add(this, "exportVideo");
         window.onmousedown = this.debugMouseDown;
     }
   
     render() {
         return (
-            <div ref={this.mountRef}></div>
+            <div className={classes.container}>
+                <div className={classes.headerButtons}>
+                    <div>overview</div>
+                    <div>layers</div>
+                    <div>audio</div>
+                    <div>settings</div>
+                    <div>export</div>
+
+                </div>
+                <div  ref={this.mountRef} ></div>
+            </div>
         )
   }
 }
