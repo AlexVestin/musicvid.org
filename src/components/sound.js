@@ -56,6 +56,7 @@ export default class Audio {
         this.audioCtx.decodeAudioData(ev.target.result, (buffer) => {
             this.bufferSource = this.audioCtx.createBufferSource();
             this.bufferSource.buffer = buffer;
+            this.duration = buffer.duration;
             this.onfileready(buffer.duration);
         });
     }

@@ -1,0 +1,25 @@
+$height: 10px;
+$width: 75px;
+
+
+.slider { 
+    -webkit-appearance: none;
+    overflow: hidden;
+    height: $height;
+    width: $width;
+    cursor: pointer;
+    border-radius: 0; /* iOS */
+}
+
+.slider::-webkit-slider-runnable-track {
+    background: #ddd;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0px; /* 1 */
+    height: $height;
+    background: #fff;
+    box-shadow: -100vw 0 0 100vw dodgerblue;
+    border: 1px solid #999; /* 1 */
+}

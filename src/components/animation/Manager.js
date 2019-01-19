@@ -2,14 +2,13 @@ import * as THREE from 'three'
 
 export default class Manager {
 
-    constructor(canvasRef, resolution) {
+    constructor(gui, canvasRef, resolution) {
         this.canvasMountRef = canvasRef;
-
+        this.gui = gui;
         this.width = resolution.width;
         this.height = resolution.height;
         this.setUpRenderers();
         this.setUpScene();
-        
     }
 
     setUpScene = () => {
@@ -34,13 +33,22 @@ export default class Manager {
         this.externalCtx = this.canvasMountRef.getContext("2d");
         this.renderer.setClearColor('#000000');
         this.renderer.setSize(this.width, this.height);
+    }
 
-        console.log(this.width, this.height, this.canvasMountRef.width, this.canvasMountRef.height);
+    avg  = (arr) => {
+        let avg = 0;
+        for(var i = 0; i < arr.length; i ++) {
+            avg+=arr[i];
+        }
+        return avg / arr.length;
     }
 
     update = (time, audioData) => {
         this.cube.rotation.x += 0.01;
         this.cube.rotation.y += 0.01;
+        const s = this.avg(audioData.frequencyData);
+        this.cube.scale.set(s / 40,s / 40,s /40);
+
 
         this.renderer.render( this.scene, this.camera );
 

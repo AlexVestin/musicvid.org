@@ -1,0 +1,17 @@
+$size: 30px;
+
+.playButtonOuter {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+.img {
+  width: $size;
+  height: $size;
+  cursor: pointer;
+}
+
+.img:hover {
+  filter: invert(30%);
+}
+  

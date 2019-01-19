@@ -1,0 +1,30 @@
+
+@import '../colors';
+@import '../vars';
+
+
+$border-radius: 0.5em;
+
+.container {
+    background-color: $color-dark2;
+    width: 100%;
+    height: $canvas-container-height;
+
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.canvas {
+    border-radius: $border-radius;
+}
+.canvasMount {
+    border-radius: $border-radius;
+
+    position: relative;
+    width: 680px;
+    height: 420px;
+    background-color: black;
+    margin-left: auto;
+    margin-right: auto;
+}

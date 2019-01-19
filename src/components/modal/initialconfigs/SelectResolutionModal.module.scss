@@ -1,9 +1,11 @@
 
 
+@import '../../colors';
+
 .container {
     width:  100%;
     height: 100%;
-    background-color: #eee;
+    background-color: $color-light1;
     border-radius: 0.35em;
 
     display: flex;
@@ -18,7 +20,7 @@
 
 
 .resolutionBoxContainer {
-    background-color: #eee;
+    background-color: $color-light1;
 
     display: flex;
     flex-direction: column;
@@ -29,7 +31,7 @@
 .button {
     width: 120px;
     height: 80px;
-    background-color:#abc;
+    background-color:$color-light2;
     transition: all .1s ease-in-out;
     cursor: pointer;
     text-align: center;
@@ -41,7 +43,7 @@
 }
 
 .button:hover {
-    background-color:#bcd;
+    background-color:$color-light2;
     width: 120px;
     height: 80px;
     border-radius: 0;

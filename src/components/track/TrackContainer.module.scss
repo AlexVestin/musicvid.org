@@ -1,0 +1,77 @@
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import "../colors"; 
+@import "../vars";
+
+
+$group-margin: 2%;
+
+.container {
+    width: 100%;
+    height: $track-container-height;
+    background-color: $color-dark3;
+    display:flex; 
+    align-content: center;
+    align-items: center; 
+    border-top: 3px solid $color-dark1;
+}
+
+.trackContainer {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.controls {
+    display:flex;
+    margin-right: $group-margin;
+    flex-direction: row;
+    width: 20%;
+    justify-content: flex-end;
+}
+
+.timeDisplay {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: $color-light1;
+    margin-left: 8px;
+
+    display:flex;
+    align-items:center;
+}
+
+.seeker {
+    background-color: $color-light1;
+    width: $track-width;
+    cursor:pointer;
+    border: 2px solid $color-dark2;
+    height: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.seekerOverlay {
+    top: 0px; 
+    bottom: 0px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: $color-track-overlay;
+    cursor:pointer;
+}
+.buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.volumeContainer {
+    display:flex; 
+    align-items:center;
+    margin-left: $group-margin;
+}

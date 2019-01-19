@@ -1,4 +1,4 @@
-export default class Layer {
+ export default class Layer {
     constructor(folder, name) {
         this.folder = folder;
         this.name = String(name);

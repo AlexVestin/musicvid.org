@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import classes from './SelectResolutionModal.module.css';
+import classes from './SelectResolutionModal.module.scss';
 
 export default class ResolutionBox extends PureComponent {
 

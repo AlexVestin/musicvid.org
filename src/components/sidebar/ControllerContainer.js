@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import Layers from './Layers'
 import MasterSettings from './MasterSettings'
-import classes from './ControllerContainer.module.css'
+import classes from './ControllerContainer.module.scss'
 
 export default class ControllerContainer extends PureComponent {
     

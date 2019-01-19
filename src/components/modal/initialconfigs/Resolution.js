@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import classes from './SelectResolutionModal.module.css';
+import classes from './SelectResolutionModal.module.scss';
 import ResolutionBox from './ResolutionBox'
 
 const reg = [{name: "480p", res: "640x480"}, {name: "720p", res: "1280x720"},  {name: "1080p", res: "1920x1080"}]

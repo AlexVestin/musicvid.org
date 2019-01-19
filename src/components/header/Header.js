@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import classes from './Header.module.css';
+import classes from './Header.module.scss';
 
 export default function withHeader(WrappedComponent) {
   return class extends PureComponent {
@@ -9,9 +9,8 @@ export default function withHeader(WrappedComponent) {
         <div className={classes.container}>
 
           <div className={classes.logo}>
-            Logo
+            musicvid.org
           </div>
-
 
           <WrappedComponent {...this.props}></WrappedComponent>
         </div>
