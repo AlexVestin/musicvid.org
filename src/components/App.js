@@ -92,6 +92,7 @@ class App extends PureComponent {
                         stop={this.stop}
                         seek={this.seek}
                         playing={this.state.playing}
+                        audio={this.audio}
                     >
                     </TrackContainer>
                 </div>

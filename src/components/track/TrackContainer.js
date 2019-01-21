@@ -77,7 +77,7 @@ export default class TrackContainer extends PureComponent {
 
                     <div className={classes.volumeContainer}>
                         <img style={{width: 20, height: 20}} src={volumeimg} alt="volume"></img>
-                        <Slider style={{marginLeft: 10}}></Slider>
+                        <Slider disabled={this.props.disabled} audio={this.props.audio} style={{marginLeft: 10}}></Slider>
                     </div>
                     
                 </div>

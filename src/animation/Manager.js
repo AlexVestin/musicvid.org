@@ -14,7 +14,8 @@ export default class Manager {
     setUpScene = () => {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera( 75, this.width/this.height, 0.1, 1000 );
-        this.bars =  new Bars(this.scene);
+        this.bars =  new Bars(this.gui, this.scene);
+
         this.camera.position.z = 60;
     }
     setUpRenderers = () => {
