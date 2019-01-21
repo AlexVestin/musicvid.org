@@ -6,8 +6,8 @@ import * as dat from '../dat.gui/src/dat'
 import Canvas from './canvas/Canvas'
 import TrackContainer from './track/TrackContainer';
 import SelectResolutionModal from './modal/initialconfigs/SelectResolutionModal';
-import Sound from './sound'
-import AnimationManager from './animation/Manager'
+import Sound from '../audio/Sound'
+import AnimationManager from '../animation/Manager'
 
 class App extends PureComponent {
 
@@ -33,11 +33,10 @@ class App extends PureComponent {
         if(!this.state.playing) {
             this.setState({playing: true});
             this.audio.play(this.state.time);
+            this.startTime =  performance.now();
         }else {
             this.stop();
         }
-       
-        this.lastUpdate = performance.now();
     }
 
     stop = () => {
@@ -46,17 +45,14 @@ class App extends PureComponent {
     }
 
     update = () => {
-        
         this.canvasRef.current.begin();
         if(this.state.playing && this.state.time < this.audio.duration) {
-
-            const dt = (performance.now() - this.lastUpdate) / 1000;
-            this.setState({time: this.state.time + dt});
-            const audioData = this.audio.getAudioData();
-            this.animationManager.update(this.state.time + dt, audioData);
+            const time = (performance.now() - this.startTime) / 1000;
+            this.setState({time});
+            const audioData = this.audio.getAudioData(time);
+            this.animationManager.update(time, audioData);
         }
 
-        this.lastUpdate = performance.now();
         setTimeout(this.update, 16);
         this.canvasRef.current.end();
     }
@@ -66,8 +62,8 @@ class App extends PureComponent {
             this.audio.play(time);
         }
 
+        this.startTime =  performance.now() -(time*1000);
         this.setState({time: time});     
-        this.lastUpdate = performance.now();   
     }
 
     onSelect = (configurations) => {
@@ -84,9 +80,10 @@ class App extends PureComponent {
 
                 <div className={classes.leftContainer} >
                     <Sidebar gui={this.gui}></Sidebar>
+                    <Canvas ref={this.canvasRef}></Canvas>
                 </div>
                 <div className={classes.rightContainer}>
-                    <Canvas ref={this.canvasRef}></Canvas>
+                    
                     <TrackContainer
                         disabled={this.state.disabled}
                         time={this.state.time}

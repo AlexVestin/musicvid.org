@@ -1,21 +1,38 @@
 @import '../colors';
+@import '../vars';
 
 .container {
-    height: 100%;
-    width: 100%;
-    background-color: $color-dark1;
-    border-right: 2px solid $color-black;
+    height: $canvas-container-height;
+    width: 50%;
+    background-color: $color-dark2;
 
-    margin-top: 40%;
-    margin-left: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+
+
+.wrapper {
+    margin-top: auto;
+    margin-bottom: auto;
+
+    width: 70%;
+    height: 70%;
+    border: 1px solid rgba(155,155,155,0.3);
+    border-radius: 0.5em;
+    padding: 30px;
+    
 }
 
 .headerButtons {
     display:flex;
     flex-direction: row;
-    background-color: $color-dark2;
+    background-color: $color-dark1;
     width: 100%;
     color: $color-light1;
+
+
 }
 
 .headerButtons div{

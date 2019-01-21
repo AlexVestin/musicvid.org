@@ -3,8 +3,12 @@ import Layers from './Layers'
 import MasterSettings from './MasterSettings'
 import classes from './ControllerContainer.module.scss'
 
+
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
+
 export default class ControllerContainer extends PureComponent {
-    
+
     constructor() {
         super();
 
@@ -13,7 +17,7 @@ export default class ControllerContainer extends PureComponent {
     }
 
     addLayer = () => {
-        this.itemCount++; 
+        this.itemCount++;
     }
 
     exportVideo = () => {
@@ -26,7 +30,7 @@ export default class ControllerContainer extends PureComponent {
 
     recursivelyAddOnchange = (folder) => {
         folder.__controllers.forEach(controller => {
-   
+
             //controller.onChange( this.onChange )
         })
 
@@ -39,8 +43,8 @@ export default class ControllerContainer extends PureComponent {
     debugMouseDown = () => {
         const { gui } = this.props;
         gui.updateDisplay();
-        if(this.layers.layers[0]) {
-            if(!this.added) {
+        if (this.layers.layers[0]) {
+            if (!this.added) {
                 this.added = true;
                 //this.gui.add(this.layers.layers[0], "name")
                 //this.recursivelyAddOnchange(this.gui);
@@ -56,20 +60,25 @@ export default class ControllerContainer extends PureComponent {
         gui.add(this, "exportVideo");
         window.onmousedown = this.debugMouseDown;
     }
-  
+
     render() {
         return (
             <div className={classes.container}>
-                <div className={classes.headerButtons}>
-                    <div>overview</div>
-                    <div>layers</div>
-                    <div>audio</div>
-                    <div>settings</div>
-                    <div>export</div>
 
+                <div className={classes.wrapper}>
+
+                        <div className={classes.headerButtons}>
+                            <div>overview</div>
+                            <div>layers</div>
+                            <div>audio</div>
+                            <div>settings</div>
+                            <div>export</div>
+                        </div>
+                        <SimpleBar style={{ width: "100%", height: "100%" }}>
+                            <div ref={this.mountRef} ></div>
+                        </SimpleBar>
                 </div>
-                <div  ref={this.mountRef} ></div>
             </div>
         )
-  }
+    }
 }

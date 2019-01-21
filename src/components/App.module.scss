@@ -3,14 +3,14 @@
 .container {
     width: 100%;
     height: $body-height;
-    background-color: #444;
     display: flex;
+    flex-direction: column;
 }
 
 .leftContainer {
     display: flex;
-    height: 100%;
-    width: 22.5%;
+    width: 100%;
+    height: $canvas-container-height;
 }
 
 .rightContainer {
