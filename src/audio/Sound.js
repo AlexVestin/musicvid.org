@@ -14,7 +14,7 @@ export default class Audio {
         this.playing = false;
         this.playBufferSource = this.audioCtx.createBufferSource();
         this.loaded = false;
-        this.fftSize = 2048 * 2;
+        this.fftSize = 2048 * 8;
         this.volume = 0;
         //this.analyser.fftSize = this.fftSize;
         this.loadFft();

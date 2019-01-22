@@ -57,6 +57,7 @@ export default class ControllerContainer extends PureComponent {
         this.layers = new Layers(gui);
         this.masterSettings = new MasterSettings(gui);
         this.mountRef.current.appendChild(gui.domElement);
+        this.mountRef.current.scrollTo(0,0);
         gui.add(this, "exportVideo");
         window.onmousedown = this.debugMouseDown;
     }
@@ -74,7 +75,7 @@ export default class ControllerContainer extends PureComponent {
                             <div>settings</div>
                             <div>export</div>
                         </div>
-                        <SimpleBar style={{ width: "100%", height: "100%" }}>
+                        <SimpleBar data-simplebar-force-visible style={{ width: "100%", height: "100%" }}>
                             <div ref={this.mountRef} ></div>
                         </SimpleBar>
                 </div>

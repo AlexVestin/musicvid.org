@@ -4,7 +4,9 @@ import {
     tailTransform,
     smooth,
     exponentialTransform,
-    transformToVisualBins
+    transformToVisualBins,
+    smoothDropoff,
+    logTransform
 } from "./analyse_functions";
 
 export default function SpectrumAnalyser(gui, object) {
@@ -18,6 +20,8 @@ export default function SpectrumAnalyser(gui, object) {
     // ----
     const f1 = gui.addFolder("General settings");
     addAttribute("spectrumSize", 64, f1, { min: 0 });
+    addAttribute("shouldCapHeight", false, f1, { min: 0 });
+
     addAttribute("spectrumHeight", 280, f1, { min: 0 });
     addAttribute("spectrumStart", 0, f1, { min: 0 });
     addAttribute("spectrumEnd", 1200, f1, { min: 0 });
@@ -29,8 +33,12 @@ export default function SpectrumAnalyser(gui, object) {
     addAttribute("enableNormalizeTransform", true, f2);
     addAttribute("enableAverageTransform", true, f2);
     addAttribute("enableTailTransform", true, f2);
-    addAttribute("enableExponentialTransform", true, f2);
+    addAttribute("enableExponentialTransform", false, f2);
     addAttribute("enableSmoothingTransform", true, f2);
+    addAttribute("enableDropoffSmoothingTransform", true, f2);
+    
+
+
 
     // ---
     const f3 = gui.addFolder("Exponential settings");
@@ -49,16 +57,21 @@ export default function SpectrumAnalyser(gui, object) {
     addAttribute("headMarginSlope", 0.013334120966221101, f4, { min: 0 });
     addAttribute("tailMarginSlope", 1, f4, { min: 0 });
 
+    const f5 = gui.addFolder("Dropoff Smoothing");
+    addAttribute("dropoffAmount", 12, f5, { min: 0 });
+
+
     this.getTransformedSpectrum = (array) => {
-        let newArr = [];
-        if(this.enableCombineBins) newArr = transformToVisualBins(array, this);
-        console.log(newArr)
+        let newArr = array.slice();
+        if(this.enableCombineBins) newArr = transformToVisualBins(newArr, this);
+        if(this.enableLogTransform) newArr = logTransform(newArr, this);
         if(this.enableNormalizeTransform) newArr = normalizeAmplitude(newArr, this);
-        console.log(newArr.buffer)
         if(this.enableAverageTransform) newArr = averageTransform(newArr, this);
         if(this.enableTailTransform) newArr = tailTransform(newArr, this);
         if(this.enableSmoothingTransform) newArr = smooth(newArr, this);
         if(this.enableExponentialTransform) newArr = exponentialTransform(newArr, this);
+        if(this.enableDropoffSmoothingTransform) newArr = smoothDropoff(newArr, this);
+        this.prevArr = newArr;
         return newArr;
     }
 }
