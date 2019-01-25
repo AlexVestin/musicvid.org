@@ -212,12 +212,15 @@ export function smoothDropoff(array, object) {
     var newArr = [];
     let t;
     for(var i = 0; i < array.length; i++) {
+        newArr[i] = (array[i] + (prevArr[i] * dropoffAmount)) / (1+dropoffAmount)
+        if(newArr[i] <= 0) newArr[i] = 0.01
+        /*
         if(array[i] > prevArr[i] || prevArr - dropoffAmount < 0) {
             newArr[i] = array[i];
         }else {
             t = prevArr[i] - dropoffAmount
             newArr[i] = t > 0 ? t : 0.001;
-        }
+        }*/
     }
 
     return newArr;

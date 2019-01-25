@@ -58,7 +58,8 @@ export default function SpectrumAnalyser(gui, object) {
     addAttribute("tailMarginSlope", 1, f4, { min: 0 });
 
     const f5 = gui.addFolder("Dropoff Smoothing");
-    addAttribute("dropoffAmount", 12, f5, { min: 0 });
+    addAttribute("dropoffAmount", 0.2, f5, { min: 0 });
+
 
 
     this.getTransformedSpectrum = (array) => {
