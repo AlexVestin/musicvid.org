@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import classes from './App.module.scss';
 import Sidebar from './sidebar/ControllerContainer'
 import withHeader from './header/Header'
-import * as dat from '../dat.gui/src/dat'
+import * as dat from '../dat.gui.src'
 import Canvas from './canvas/Canvas'
 import TrackContainer from './track/TrackContainer';
 import SelectResolutionModal from './modal/initialconfigs/SelectResolutionModal';
