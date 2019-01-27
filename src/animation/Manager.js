@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import Bars from './Bars'
+import JSNationSpectrum from './JSNation';
 export default class Manager {
 
     constructor(gui, canvasRef, resolution) {
@@ -13,8 +14,20 @@ export default class Manager {
 
     setUpScene = () => {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera( 75, this.width/this.height, 0.1, 1000 );
-        this.bars =  new Bars(this.gui, this.scene);
+        //this.camera = new THREE.PerspectiveCamera( 75, this.width/this.height, 0.1, 1000 );
+        this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 1000 );
+
+
+        const info = {
+            gui: this.gui,
+            width: this.canvasMountRef.width,
+            height: this.canvasMountRef.height,
+            scene: this.scene,
+            camera: this.camera
+        }
+        
+        this.jsnation = new JSNationSpectrum(info);
+        //this.bars =  new Bars(info);
 
         this.camera.position.z = 60;
     }
@@ -32,7 +45,7 @@ export default class Manager {
     }
 
     update = (time, audioData) => {
-        this.bars.update(time, audioData);
+        this.jsnation.update(time, audioData);
         this.renderer.render( this.scene, this.camera );
         this.externalCtx.drawImage(this.internalCanvas, 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
     }

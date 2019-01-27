@@ -239,3 +239,13 @@ export function logTransform(array, object) {
 
     return newArr;
 }
+
+// https://stackoverflow.com/questions/14169317/interpreting-web-audio-api-fft-results
+export function toDBFS(arr, size, minDec=-100, maxDec=-10) {
+    let newArr = [];
+    for(var i = 0; i < arr.length; i++) {
+        let mag = 20 * Math.log( ( 2 * arr[i]) / size);
+        newArr[i] = mag - minDec / (maxDec - minDec);
+    }
+    return newArr;
+}
