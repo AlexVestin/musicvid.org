@@ -1,19 +1,16 @@
 
-import SpectrumAnalyser from '../audio/analyser'
 import * as THREE from "three";
-
-import { smooth, smoothDropoff, toDBFS } from '../audio/analyse_functions'
+import { smooth, smoothDropoff, toDBFS } from 'audio/analyse_functions'
 
 export default class JSNationSpectrum {
     constructor(info)  {
         this.folder = info.gui.addFolder("JSNationSpectrum");
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-
+        this.ctx.shadowBlur = 12;
         this.size = 512;
         this.canvas.width = this.size;
         this.canvas.height = this.size;
-
 
         this.colors = ["#FFFFFF", "#FFFF00", "#FF0000", "#FF66FF", "#333399", "#0000FF", "#33CCFF", "#00FF00"];
         this.spectrumCount = 8;
@@ -44,10 +41,8 @@ export default class JSNationSpectrum {
     }
 
     update = (time, audioData) => {
-        
         this.ctx.clearRect(0,0, this.size, this.size);
         if (this.spectrumCache.length >= this.maxBufferSize) {
-            
             this.spectrumCache.shift();
         }
 

@@ -1,6 +1,5 @@
 import * as THREE from 'three'
-import Bars from './Bars'
-import JSNationSpectrum from './JSNation';
+
 export default class Manager {
 
     constructor(gui, canvasRef, resolution) {
@@ -8,28 +7,21 @@ export default class Manager {
         this.gui = gui;
         this.width = resolution.width;
         this.height = resolution.height;
-        this.setUpRenderers();
-        this.setUpScene();
-    }
 
-    setUpScene = () => {
-        this.scene = new THREE.Scene();
-        //this.camera = new THREE.PerspectiveCamera( 75, this.width/this.height, 0.1, 1000 );
-        this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 1000 );
-
-
-        const info = {
+        this.scenes = [];
+        this.info = {
             gui: this.gui,
             width: this.canvasMountRef.width,
             height: this.canvasMountRef.height,
             scene: this.scene,
             camera: this.camera
         }
-        
-        this.jsnation = new JSNationSpectrum(info);
-        //this.bars =  new Bars(info);
+        this.setUpRenderers();
+        this.setUpScene();
+    }
 
-        this.camera.position.z = 60;
+    setUpScene = () => {
+        
     }
     setUpRenderers = () => {
         // Set up internal canvas to keep canvas size on screen consistent

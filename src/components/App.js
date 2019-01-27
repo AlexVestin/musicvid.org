@@ -5,9 +5,11 @@ import withHeader from './header/Header'
 import * as dat from '../dat.gui.src'
 import Canvas from './canvas/Canvas'
 import TrackContainer from './track/TrackContainer';
-import SelectResolutionModal from './modal/initialconfigs/SelectResolutionModal';
+import ModalContainer from './modal/initialconfigs/SelectResolutionModal';
 import Sound from '../audio/Sound'
-import AnimationManager from '../animation/Manager'
+
+
+import AnimationManager from '../animation/templates/EmptyTemplate'
 
 class App extends PureComponent {
 
@@ -15,18 +17,23 @@ class App extends PureComponent {
         super();
         this.gui = new dat.GUI({ autoPlace: false, width: "100%" });
         this.state = { audioDuration: 0, audioName: "", time: 0, disabled: true, playing: false };
+        
+        
         this.canvasRef = React.createRef();
+        this.modalRef = React.createRef();
     }
 
     componentDidMount = () => {
         this.mountRef = this.canvasRef.current.getMountRef();
+        this.gui.modalRef = this.modalRef.current;
+        this.gui.canvasMountRef = this.mountRef;
         this.update();
     }
 
 
     audioReady = (duration) => {
         this.setState({ audioDuration: duration, disabled: false });
-        this.animationManager = new AnimationManager(this.gui, this.mountRef, this.configurations.resolution);
+        this.animationManager = new AnimationManager(this.gui, this.configurations.resolution);
     }
 
     play = () => {
@@ -53,7 +60,7 @@ class App extends PureComponent {
             this.animationManager.update(time, audioData);
         }
 
-        setTimeout(this.update, 16);
+        requestAnimationFrame(this.update);
         this.canvasRef.current.end();
     }
 
@@ -76,7 +83,7 @@ class App extends PureComponent {
         const modal = true;
         return (
             <div className={classes.container}>
-                {modal && <SelectResolutionModal onSelect={this.onSelect}></SelectResolutionModal>}
+                {modal && <ModalContainer ref={this.modalRef} onSelect={this.onSelect}></ModalContainer>}
 
                 <div className={classes.leftContainer} >
                     <Sidebar gui={this.gui}></Sidebar>

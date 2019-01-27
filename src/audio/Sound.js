@@ -10,13 +10,11 @@ export default class Audio {
 
         this.onfileready = onfileloaded;
         this.audioCtx = new AudioContext();
-        //this.analyser = this.audioCtx.createAnalyser();
         this.playing = false;
         this.playBufferSource = this.audioCtx.createBufferSource();
         this.loaded = false;
         this.fftSize = 2048 * 8;
         this.volume = 0;
-        //this.analyser.fftSize = this.fftSize;
         this.loadFft();
     }
 
@@ -30,7 +28,8 @@ export default class Audio {
 
     // VOLUME FROM [0..1]
     setVolume = (volume) => {
-        this.gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+        if(this.gainNode)
+            this.gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
         this.volume = volume;
     }
 
@@ -46,7 +45,6 @@ export default class Audio {
         this.gainNode.gain.value = this.volume;
         this.playBufferSource.connect(this.gainNode);
         this.gainNode.connect(this.audioCtx.destination);
-        //this.analyser.connect(this.audioCtx.destination);
         this.playBufferSource.start(offset, time);
         this.playing = true;
     };
@@ -82,18 +80,6 @@ export default class Audio {
 
         return { frequencyData: bins, timeData: data };
     };
-
-    /*
-    getAudioData = () => {
-        const halfFftSize = this.fftSize / 2;
-        const frequencyData = new Uint8Array(halfFftSize);
-        const timeData = new Uint8Array(halfFftSize);
-        this.analyser.getByteTimeDomainData(timeData);
-        this.analyser.getByteFrequencyData(frequencyData);
-
-        return {timeData, frequencyData};
-    }*/
-
     stop = () => {
         if (this.playing) {
             this.playBufferSource.stop();

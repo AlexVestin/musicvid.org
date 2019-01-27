@@ -294,9 +294,6 @@ const GUI = function(pars) {
           // the bat.
           this.onResize();
 
-          if (_this.__closeButton) {
-            _this.__closeButton.innerHTML = v ? GUI.TEXT_OPEN : GUI.TEXT_CLOSED;
-          }
         }
       },
 
@@ -353,42 +350,31 @@ const GUI = function(pars) {
         }
       }
     }
-
-    this.__closeButton = document.createElement('div');
-    this.__closeButton.innerHTML = GUI.TEXT_CLOSED;
-    dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_BUTTON);
-    if (params.closeOnTop) {
-      dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_TOP);
-      this.domElement.insertBefore(this.__closeButton, this.domElement.childNodes[0]);
-    } else {
-      dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_BOTTOM);
-      this.domElement.appendChild(this.__closeButton);
-    }
-
-    dom.bind(this.__closeButton, 'click', function() {
-      _this.closed = !_this.closed;
-    });
     // Oh, you're a nested GUI!
   } else {
     if (params.closed === undefined) {
       params.closed = true;
     }
 
-    const titleRowName = document.createTextNode(params.name);
-    dom.addClass(titleRowName, 'controller-name');
+    if(params.useTitleRow !== false) {
+      const titleRowName = document.createTextNode(params.name);
+      dom.addClass(titleRowName, 'controller-name');
 
-    titleRow = addRow(_this, titleRowName);
+      titleRow = addRow(_this, titleRowName);
 
-    const onClickTitle = function(e) {
-      e.preventDefault();
-      _this.closed = !_this.closed;
-      return false;
-    };
+      const onClickTitle = function(e) {
+        e.preventDefault();
+        _this.closed = !_this.closed;
+        return false;
+      };
 
-    dom.addClass(this.__ul, GUI.CLASS_CLOSED);
+      dom.addClass(this.__ul, GUI.CLASS_CLOSED);
 
-    dom.addClass(titleRow, 'title');
-    dom.bind(titleRow, 'click', onClickTitle);
+      dom.addClass(titleRow, 'title');
+      dom.bind(titleRow, 'click', onClickTitle);
+    }
+    
+
 
     if (!params.closed) {
       this.closed = false;
@@ -606,7 +592,7 @@ common.extend(
      * name
      * @instance
      */
-    addFolder: function(name) {
+    addFolder: function(name, useTitleRow = true) {
       // We have to prevent collisions on names in order to have a key
       // by which to remember saved values
       if (this.__folders[name] !== undefined) {
@@ -614,7 +600,7 @@ common.extend(
           ' name "' + name + '"');
       }
 
-      const newGuiParams = { name: name, parent: this };
+      const newGuiParams = { name: name, parent: this, useTitleRow: useTitleRow };
 
       // We need to pass down the autoPlace trait so that we can
       // attach event listeners to open/close folder actions to
@@ -634,8 +620,10 @@ common.extend(
 
       const gui = new GUI(newGuiParams);
       this.__folders[name] = gui;
+  
 
       const li = addRow(this, gui.domElement);
+      this.__folders[name].li = li;
       dom.addClass(li, 'folder');
       return gui;
     },
@@ -713,9 +701,6 @@ common.extend(
         });
       }
 
-      if (root.__closeButton) {
-        root.__closeButton.style.width = root.width + 'px';
-      }
     },
 
     onResizeDebounced: common.debounce(function() { this.onResize(); }, 50),
@@ -1314,7 +1299,6 @@ function addResizeHandle(gui) {
   }
 
   function dragStop() {
-    dom.removeClass(gui.__closeButton, GUI.CLASS_DRAG);
     dom.unbind(window, 'mousemove', drag);
     dom.unbind(window, 'mouseup', dragStop);
   }
@@ -1324,7 +1308,6 @@ function addResizeHandle(gui) {
 
     pmouseX = e.clientX;
 
-    dom.addClass(gui.__closeButton, GUI.CLASS_DRAG);
     dom.bind(window, 'mousemove', drag);
     dom.bind(window, 'mouseup', dragStop);
 
@@ -1332,7 +1315,6 @@ function addResizeHandle(gui) {
   }
 
   dom.bind(gui.__resize_handle, 'mousedown', dragStart);
-  dom.bind(gui.__closeButton, 'mousedown', dragStart);
 
   gui.domElement.insertBefore(gui.__resize_handle, gui.domElement.firstElementChild);
 }
@@ -1344,9 +1326,7 @@ function setWidth(gui, w) {
   if (gui.__save_row && gui.autoPlace) {
     gui.__save_row.style.width = w + 'px';
   }
-  if (gui.__closeButton) {
-    gui.__closeButton.style.width = w + 'px';
-  }
+
 }
 
 function getCurrentPreset(gui, useInitialValues) {

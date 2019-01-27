@@ -3,6 +3,9 @@ import Modal from 'react-modal'
 import classes from './SelectResolutionModal.module.scss';
 import Resolution from './Resolution'
 import LoadAudio from './LoadAudio'
+import ItemsModal from './ItemsModal'
+
+
 const customStyles = {
     content: {
         top: '50%',
@@ -17,22 +20,26 @@ const customStyles = {
 
 export default class SelectResolutionModal extends PureComponent {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
+        this.onParentSelect = props.onSelect;
         this.state = { modalOpen: true, index: 0}
     }
 
     getDimensions = (object) => { return { width: Number(object.res.split("x")[0]), height: Number(object.res.split("x")[1]) } }
-    toggleModal = () => this.setState({ modalOpen: !this.state.modalOpen })
+    toggleModal = (idx) => {
+        let i = idx ? idx : this.state.index;
+        this.setState({ modalOpen: !this.state.modalOpen, index: i });
+    }
 
     onSelectResolution = (resolution) => {
         this.resolution = resolution;
-        this.setState({index:  1})
+        this.setState({index:  1});
     }
 
-    onSelectAudio = (audio) => {
-        this.props.onSelect({audio: audio, resolution: this.resolution})
+    onSelect = (info) => {
+        this.onParentSelect(info);
         this.toggleModal();
     }
     render() {
@@ -45,7 +52,9 @@ export default class SelectResolutionModal extends PureComponent {
             >
                 <div className={classes.container}>
                     {this.state.index === 0 && <Resolution onSelect={this.onSelectResolution}></Resolution> }
-                    {this.state.index === 1 && <LoadAudio onSelect={this.onSelectAudio}></LoadAudio> }
+                    {this.state.index === 1 && <LoadAudio onSelect={(audio) => this.onSelect({audio: audio, resolution: this.resolution})}></LoadAudio> }
+                    {this.state.index === 2 && <ItemsModal onSelect={this.onSelect}></ItemsModal> }
+
                 </div>
             </Modal>
         )
