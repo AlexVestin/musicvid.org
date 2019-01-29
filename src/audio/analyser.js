@@ -37,6 +37,7 @@ export default function SpectrumAnalyser(gui, object) {
     addAttribute("enableSmoothingTransform", true, f2);
     addAttribute("enableDropoffSmoothingTransform", true, f2);
     
+
     // ---
     const f3 = gui.addFolder("Exponential settings");
     addAttribute("spectrumMaxExponent", 6, f3, { min: 0 });
@@ -57,9 +58,10 @@ export default function SpectrumAnalyser(gui, object) {
     const f5 = gui.addFolder("Dropoff Smoothing");
     addAttribute("dropoffAmount", 0.2, f5, { min: 0 });
 
+
+
     this.getTransformedSpectrum = (array) => {
         let newArr = array.slice();
-        if(this.enableDropoffSmoothingTransform) newArr = smoothDropoff(newArr, this);
         if(this.enableCombineBins) newArr = transformToVisualBins(newArr, this);
         if(this.enableLogTransform) newArr = logTransform(newArr, this);
         if(this.enableNormalizeTransform) newArr = normalizeAmplitude(newArr, this);
@@ -67,9 +69,8 @@ export default function SpectrumAnalyser(gui, object) {
         if(this.enableTailTransform) newArr = tailTransform(newArr, this);
         if(this.enableSmoothingTransform) newArr = smooth(newArr, this);
         if(this.enableExponentialTransform) newArr = exponentialTransform(newArr, this);
-        
-        this.prevResArr = newArr;
-        this.prevArr = array;
+        if(this.enableDropoffSmoothingTransform) newArr = smoothDropoff(newArr, this);
+        this.prevArr = newArr;
         return newArr;
     }
 }

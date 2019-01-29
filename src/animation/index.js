@@ -29,8 +29,6 @@ export default class Manager {
         this.internalCanvas.width = this.width;
         this.internalCanvas.height = this.height;
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, canvas: this.internalCanvas});
-        
-
         this.externalCtx = this.canvasMountRef.getContext("2d");
         this.renderer.setClearColor('#000000');
         this.renderer.setSize(this.width, this.height);
@@ -41,5 +39,4 @@ export default class Manager {
         this.renderer.render( this.scene, this.camera );
         this.externalCtx.drawImage(this.internalCanvas, 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
     }
-
 }

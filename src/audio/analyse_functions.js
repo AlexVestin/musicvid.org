@@ -37,8 +37,7 @@ export function smooth(array, object) {
         var i;
         for (i = 0; i < sidePoints; i++) {
             newArr[i] = lastArray[i];
-            newArr[lastArray.length - i - 1] =
-                lastArray[lastArray.length - i - 1];
+            newArr[lastArray.length - i - 1] = lastArray[lastArray.length - i - 1];
         }
         for (i = sidePoints; i < lastArray.length - sidePoints; i++) {
             var sum = 0;
@@ -240,12 +239,50 @@ export function logTransform(array, object) {
     return newArr;
 }
 
-// https://stackoverflow.com/questions/14169317/interpreting-web-audio-api-fft-results
-export function toDBFS(arr, size, minDec=-100, maxDec=-10) {
-    let newArr = [];
-    for(var i = 0; i < arr.length; i++) {
-        let mag = 20 * Math.log( ( 2 * arr[i]) / size);
-        newArr[i] = mag - minDec / (maxDec - minDec);
+// https://github.com/WebKit/webkit/blob/89c28d471fae35f1788a0f857067896a10af8974/Source/WebCore/platform/audio/AudioUtilities.cpp
+function linearToDecibel(linear) {
+    if(!linear)
+        return -1000;
+    
+    return 20 * Math.log10(linear);
+}
+
+// https://github.com/WebKit/webkit/blob/master/Source/WebCore/Modules/webaudio/RealtimeAnalyser.cpp
+export function getByteSpectrum(magnitudeBuffer, minDec=-100, maxDec=-10) {
+    const UCHAR_MAX = 255;
+    const sourceLength = magnitudeBuffer.length;
+    const rangeScaleFactor = minDec === maxDec ? 1 : 1 / (maxDec - minDec);
+    let newArr = new Uint8Array(sourceLength);
+    for(var i = 0; i < sourceLength; i++) {
+        const linearValue = magnitudeBuffer[i];
+        const dbMag = !linearValue ? minDec : linearToDecibel(linearValue);
+        let scaledValue =  UCHAR_MAX * (dbMag - minDec) * rangeScaleFactor;
+        //console.log(scaledValue, linearValue, rangeScaleFactor, dbMag);
+    
+        if(scaledValue < 0)
+            scaledValue = 0;
+        if(scaledValue > UCHAR_MAX)
+            scaledValue = UCHAR_MAX;
+        
+        newArr[i] = scaledValue;
     }
+
+    return newArr;
+}
+
+// https://github.com/WebKit/webkit/blob/master/Source/WebCore/Modules/webaudio/RealtimeAnalyser.cpp
+// https://stackoverflow.com/questions/14169317/interpreting-web-audio-api-fft-results
+export function toWebAudioForm(arr, prevArr, smoothingTimeConstant, arrSize = null) {
+    let newArr = [];
+    const magnitudeScale = 1.0 / (arrSize ? arrSize : arr.length);
+    let k = smoothingTimeConstant;
+    k = Math.max(0.0, k);
+    k = Math.min(1.0, k);
+    for(var i = 0; i < arr.length; ++i) {
+        const scalarMagnitude = arr[i] * magnitudeScale;
+        const p = prevArr[i] ? prevArr[i] * k : 0; 
+        newArr[i] = p + (1 - k) * scalarMagnitude;
+    }
+
     return newArr;
 }

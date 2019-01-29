@@ -1,13 +1,14 @@
 
 import * as THREE from "three";
-import { smooth, smoothDropoff, toDBFS } from 'audio/analyse_functions'
+import { smooth, smoothDropoff, toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
+import Emblem from "./Emblem";
 
 export default class JSNationSpectrum {
     constructor(info)  {
         this.folder = info.gui.addFolder("JSNationSpectrum");
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.ctx.shadowBlur = 12;
+        
         this.size = 512;
         this.canvas.width = this.size;
         this.canvas.height = this.size;
@@ -22,22 +23,39 @@ export default class JSNationSpectrum {
         this.resMult = info.height / info.width;
 
         this.spectrumHeightScalar = 0.4;
-        this.dropoffAmount = 0.1;
+        this.smoothingTimeConstant = 0.1;
         this.smoothingPasses = 1;
         this.smoothingPoints = 3;
         this.exp = 4
         this.preAmplitude = 1.0;
+        this.emblemExaggeration = 2.3;
+
+        this.startBin = 8;
+        this.keepBins = 40;
+        this.prevArr = [];
+        this.minRadius = this.size / 4;
+
         this.folder.add(this, "preAmplitude");
-        this.folder.add(this, "dropoffAmount");
+        this.folder.add(this, "smoothingTimeConstant");
         this.folder.add(this, "spectrumHeightScalar");
         this.folder.add(this, "smoothingPasses");
         this.folder.add(this, "smoothingPoints");
         this.folder.add(this.ctx, "shadowBlur");
         this.folder.add(this, "exp");
 
+        this.ctx.shadowBlur = 25;
+        this.emblem = new Emblem("./img/emblem.svg");
+
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
         info.scene.add(this.mesh);
+    }
+
+    calcRadius = function(multiplier) {
+        let minSize = this.minRadius;
+        let maxSize = this.size / 2;
+        let scalar = multiplier * (maxSize - minSize) + minSize;
+        return scalar / 2;
     }
 
     update = (time, audioData) => {
@@ -46,18 +64,18 @@ export default class JSNationSpectrum {
             this.spectrumCache.shift();
         }
 
-        const subSpectrum = audioData.frequencyData.slice(8, 40);
+        const subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
+        const dbfs = toWebAudioForm(subSpectrum, this.prevArr, this.smoothingTimeConstant, audioData.frequencyData.length).map(e => e/this.preAmplitude);
+        const byteSpectrumArray = getByteSpectrum(dbfs, -40, -30);
+        const spectrum  = smooth(byteSpectrumArray, this);
+        const mult = Math.pow(this.multiplier(spectrum), 0.8) * this.emblemExaggeration;
 
-        const dbfs = toDBFS(subSpectrum.map(e => e * this.preAmplitude), audioData.frequencyData.length, -40, -30);
-        const dropped = smoothDropoff(dbfs, this);
-        this.prevArr = dropped;
-        const spectrum = smooth(dropped, this);
-        
+
+        let curRad = this.calcRadius(mult);
+        console.log(this.multiplier(spectrum), curRad, mult, this.minRadius)
+        curRad = curRad > this.minRadius ? curRad : this.minRadius;
         this.spectrumCache.push(spectrum);
-
-        //let curRad = Emblem.calcRadius(multiplier);
-        let curRad = this.size / 4;
-
+        
         for (let s = this.maxBufferSize - 1; s >= 0; s--) {
             let curSpectrum = this.smooth(this.spectrumCache[Math.max(this.spectrumCache.length - this.delays[s] - 1, 0)], this.smoothMargins[s]);
             let points = [];
@@ -70,24 +88,25 @@ export default class JSNationSpectrum {
                 let t = Math.PI * (i / (len - 1)) - Math.PI / 2;
                 let dropoff  = 1 - Math.pow(i / len, this.exp);
                 let r = curRad + Math.pow(curSpectrum[i] * this.spectrumHeightScalar * 1, this.exponents[s]) * dropoff;
-
-                
                 points.push({x: r * Math.cos(t), y: r * Math.sin(t)});
             }
 
             this.drawPoints(points);
         }
 
+        this.emblem.draw(this.ctx, this.canvas, curRad);
         this.mesh.material.map.needsUpdate = true;
+
     }
 
+    drawEmblem = () => {
+
+    }
 
     drawPoints = (points) => {
-        if (points.length == 0) {
+        if (points.length === 0) {
             return;
         }
-
-        //this.ctx.fillRect(100, 100, 200, 200);
 
         
         this.ctx.beginPath();
@@ -114,12 +133,23 @@ export default class JSNationSpectrum {
         
     }
 
+    multiplier = (spectrum) => {
+        let sum = 0;
+        let len = spectrum.length;
+        for (let i = 0; i < len; i++) {
+            sum += spectrum[i];
+        }
+        let intermediate = sum / this.keepBins / 256;
+        let transformer = 1.2;
+        return (1 / (transformer - 1)) * (-Math.pow(intermediate, transformer) + transformer * intermediate);
+    }
+
     smooth = (points, margin) => {
         if (margin == 0) {
             return points;
         }
 
-        let newArr = Array();
+        let newArr = [];
         for (let i = 0; i < points.length; i++) {
             let sum = 0;
             let denom = 0;

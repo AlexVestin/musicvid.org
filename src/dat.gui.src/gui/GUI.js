@@ -596,8 +596,15 @@ common.extend(
       // We have to prevent collisions on names in order to have a key
       // by which to remember saved values
       if (this.__folders[name] !== undefined) {
+        let s = "", i = name.length -1 ;
+          while (!isNaN(parseInt(name[i--], 10)) && i >= 0) 
+            s+= name[i+1];
+          name = s === "" ? name + "1" : Number(s);
+
+          console.log("hack to allow folders witht he same name");
+          /*
         throw new Error('You already have a folder in this GUI by the' +
-          ' name "' + name + '"');
+          ' name "' + name + '"');*/
       }
 
       const newGuiParams = { name: name, parent: this, useTitleRow: useTitleRow };
