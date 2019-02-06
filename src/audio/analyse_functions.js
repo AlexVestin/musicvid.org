@@ -251,7 +251,7 @@ function linearToDecibel(linear) {
 export function getByteSpectrum(magnitudeBuffer, minDec=-100, maxDec=-10) {
     const UCHAR_MAX = 255;
     const sourceLength = magnitudeBuffer.length;
-    const rangeScaleFactor = minDec === maxDec ? 1 : 1 / (maxDec - minDec);
+    const rangeScaleFactor = (minDec === maxDec) ? 1 : 1 / (maxDec - minDec);
     let newArr = new Uint8Array(sourceLength);
     for(var i = 0; i < sourceLength; i++) {
         const linearValue = magnitudeBuffer[i];
@@ -274,7 +274,7 @@ export function getByteSpectrum(magnitudeBuffer, minDec=-100, maxDec=-10) {
 // https://stackoverflow.com/questions/14169317/interpreting-web-audio-api-fft-results
 export function toWebAudioForm(arr, prevArr, smoothingTimeConstant, arrSize = null) {
     let newArr = [];
-    const magnitudeScale = 1.0 / (arrSize ? arrSize : arr.length);
+    const magnitudeScale = 1.0 / (arrSize ? arrSize*2 : arr.length*2);
     let k = smoothingTimeConstant;
     k = Math.max(0.0, k);
     k = Math.min(1.0, k);

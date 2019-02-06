@@ -68,7 +68,7 @@ export default class Audio {
             audio_p = this.Module._malloc(this.fftSize * 4);
             this.Module.HEAPF32.set(data, audio_p >> 2);
 
-            const buf_p = this.Module._fft_r(audio_p, this.fftSize, 1);
+            const buf_p = this.Module._fft_r(audio_p, this.fftSize, 2);
             bins = new Float32Array(
                 this.Module.HEAPU8.buffer,
                 buf_p,

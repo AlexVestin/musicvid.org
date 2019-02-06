@@ -22,13 +22,13 @@ export default class JSNationSpectrum {
         this.maxBufferSize = Math.max.apply(null, this.delays);
         this.resMult = info.height / info.width;
 
-        this.spectrumHeightScalar = 0.4;
+        this.spectrumHeightScalar = 0.2;
         this.smoothingTimeConstant = 0.1;
         this.smoothingPasses = 1;
         this.smoothingPoints = 3;
         this.exp = 4
         this.preAmplitude = 1.0;
-        this.emblemExaggeration = 2.3;
+        this.emblemExaggeration = 1.5;
 
         this.startBin = 8;
         this.keepBins = 40;
@@ -43,7 +43,7 @@ export default class JSNationSpectrum {
         this.folder.add(this.ctx, "shadowBlur");
         this.folder.add(this, "exp");
 
-        this.ctx.shadowBlur = 25;
+        this.ctx.shadowBlur = 12;
         this.emblem = new Emblem("./img/emblem.svg");
 
         this.tex = new THREE.CanvasTexture(this.canvas);
@@ -65,14 +65,16 @@ export default class JSNationSpectrum {
         }
 
         const subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
-        const dbfs = toWebAudioForm(subSpectrum, this.prevArr, this.smoothingTimeConstant, audioData.frequencyData.length).map(e => e/this.preAmplitude);
+        
+        const dbfs = toWebAudioForm(subSpectrum, this.prevArr, this.smoothingTimeConstant, audioData.frequencyData.length);
+        
+        this.prevArr = dbfs;
         const byteSpectrumArray = getByteSpectrum(dbfs, -40, -30);
         const spectrum  = smooth(byteSpectrumArray, this);
         const mult = Math.pow(this.multiplier(spectrum), 0.8) * this.emblemExaggeration;
 
 
         let curRad = this.calcRadius(mult);
-        console.log(this.multiplier(spectrum), curRad, mult, this.minRadius)
         curRad = curRad > this.minRadius ? curRad : this.minRadius;
         this.spectrumCache.push(spectrum);
         
@@ -96,10 +98,6 @@ export default class JSNationSpectrum {
 
         this.emblem.draw(this.ctx, this.canvas, curRad);
         this.mesh.material.map.needsUpdate = true;
-
-    }
-
-    drawEmblem = () => {
 
     }
 
