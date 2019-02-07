@@ -286,3 +286,18 @@ export function toWebAudioForm(arr, prevArr, smoothingTimeConstant, arrSize = nu
 
     return newArr;
 }
+
+export function average(array, object) {
+    const { startBin, endBin, amplitude }= object;
+    let avg = 0.0;
+
+    const len = Math.min(array.length, endBin);
+    if(startBin > len)
+        return 0;
+
+    for(var i = startBin; i < len; i++) {
+        avg += array[i];
+    }
+
+    return avg / (len - startBin);
+}

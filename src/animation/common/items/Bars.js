@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import SpectrumAnalyser from 'audio/analyser'
+import SpectrumAnalyser from 'audio/SpectrumAnalyser'
 export default class Bars {
     constructor(info) {
         this.folder = info.gui.addFolder("Spectrum bars");

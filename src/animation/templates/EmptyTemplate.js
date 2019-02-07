@@ -24,6 +24,7 @@ export default class Manager {
         this.internalCanvas.width = this.width;
         this.internalCanvas.height = this.height;
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, canvas: this.internalCanvas});
+        this.renderer.autoClear = false;
         this.externalCtx = this.canvasMountRef.getContext("2d");
         this.renderer.setClearColor('#000000');
         this.renderer.setSize(this.width, this.height);
@@ -33,10 +34,18 @@ export default class Manager {
         this.gui.__folders["Layers"].modalRef = this.gui.modalRef;
         this.gui.__folders["Layers"].canvasMountRef = this.gui.canvasMountRef;
 
-        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"]));
+        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.width / this.height));
+        this.scenes.push(new Scene3DPerspective(this.gui.__folders["Layers"], this.width / this.height));
+        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.width / this.height));
+        
+        this.scenes[0].addItemFromText("Background");
+        //this.scenes[1].addItemFromText("Particles");
+        this.scenes[2].addItemFromText("JSNation");
+        
     }
 
     update = (time, audioData) => {
+        this.renderer.clear();
         this.scenes.forEach(scene => {
             scene.update(time, audioData);
             this.renderer.render(scene.scene, scene.camera);

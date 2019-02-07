@@ -1,6 +1,6 @@
 
 import * as THREE from "three";
-import { smooth, smoothDropoff, toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
+import { smooth, toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
 import Emblem from "./Emblem";
 
 export default class JSNationSpectrum {
@@ -34,6 +34,21 @@ export default class JSNationSpectrum {
         this.keepBins = 40;
         this.prevArr = [];
         this.minRadius = this.size / 4;
+
+        //SHAKE 
+        this.waveSpeedX = 1;
+        this.waveSpeedY = 1;
+        this.waveFrameX = 0;
+        this.waveFrameY = 0;
+        this.waveAmplitudeX = 1;
+        this.waveAmplitudeY = 1;
+        this.trigX = Math.round(Math.random());
+        this.trigY = Math.round(Math.random());
+        this.wave_DURATION = Math.PI / 8;
+        this.maxShakeIntensity = Math.PI / 3;
+        this.maxShakeDisplacement = 4;
+        this.minShakeScalar = 0.9;
+        this.maxShakeScalar = 1.6;
 
         this.folder.add(this, "preAmplitude");
         this.folder.add(this, "smoothingTimeConstant");
@@ -73,7 +88,7 @@ export default class JSNationSpectrum {
         const spectrum  = smooth(byteSpectrumArray, this);
         const mult = Math.pow(this.multiplier(spectrum), 0.8) * this.emblemExaggeration;
 
-
+        this.shake(mult / 32);
         let curRad = this.calcRadius(mult);
         curRad = curRad > this.minRadius ? curRad : this.minRadius;
         this.spectrumCache.push(spectrum);
@@ -99,6 +114,34 @@ export default class JSNationSpectrum {
         this.emblem.draw(this.ctx, this.canvas, curRad);
         this.mesh.material.map.needsUpdate = true;
 
+    }
+    shake = (multiplier) => {
+        this.ctx.save();
+
+        let step = this.maxShakeIntensity * multiplier;
+        this.waveFrameX += step * this.waveSpeedX;
+
+        if (this.waveFrameX > this.wave_DURATION) {
+            this.waveFrameX = 0;
+            this.waveAmplitudeX = this.random(this.minShakeScalar, this.maxShakeScalar);
+            this.waveSpeedX = this.random(this.minShakeScalar, this.maxShakeScalar) * (Math.random() < 0.5 ? -1 : 1);
+            this.trigX = Math.round(Math.random());
+        }
+        this.waveFrameY += step * this.waveSpeedY;
+        if (this.waveFrameY > this.wave_DURATION) {
+            this.waveFrameY = 0;
+            this.waveAmplitudeY = this.random(this.minShakeScalar, this.maxShakeScalar);
+            this.waveSpeedY = this.random(this.minShakeScalar, this.maxShakeScalar) * (Math.random() < 0.5 ? -1 : 1);
+            this.trigY = Math.round(Math.random());
+        }
+
+        let trigFuncX = this.trigX == 0 ? Math.cos : Math.sin;
+        let trigFuncY = this.trigY == 0 ? Math.cos : Math.sin;
+
+        let dx = trigFuncX(this.waveFrameX) * this.maxShakeDisplacement * this.waveAmplitudeX * multiplier;
+        let dy = trigFuncY(this.waveFrameY) * this.maxShakeDisplacement * this.waveAmplitudeY * multiplier;
+
+        this.ctx.translate(dx, dy);
     }
 
     drawPoints = (points) => {
@@ -161,5 +204,9 @@ export default class JSNationSpectrum {
             newArr[i] = sum / denom;
         }
         return newArr;
+    }
+
+    random = (min, max) => {
+        return Math.random() * (max - min) + min;
     }
 }

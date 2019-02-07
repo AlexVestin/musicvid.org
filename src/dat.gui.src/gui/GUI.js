@@ -506,7 +506,8 @@ common.extend(
         object,
         property,
         {
-          factoryArgs: Array.prototype.slice.call(arguments, 2)
+          factoryArgs: Array.prototype.slice.call(arguments, 2),
+          object:  Array.prototype.slice.call(arguments, 2)
         }
       );
     },
@@ -1108,12 +1109,24 @@ function recallSavedValue(gui, controller) {
   }
 }
 
+
+
 function add(gui, object, property, params) {
   if (object[property] === undefined) {
     throw new Error(`Object "${object}" has no property "${property}"`);
   }
 
-  let controller;
+  let controller, innerHTMLName;
+  
+  // very good code to use name instead of 
+  if(params.factoryArgs[0] && params.factoryArgs[0].name) {
+      innerHTMLName = params.factoryArgs[0].name;
+
+      if(params.factoryArgs.length === 1)
+        params.factoryArgs[0] = undefined;
+      else
+        delete params.factoryArgs[0].name;
+  }
 
   if (params.color) {
     controller = new ColorController(object, property);
@@ -1132,7 +1145,8 @@ function add(gui, object, property, params) {
 
   const name = document.createElement('span');
   dom.addClass(name, 'property-name');
-  name.innerHTML = controller.property;
+
+  name.innerHTML = innerHTMLName ? innerHTMLName : controller.property;
 
   const container = document.createElement('div');
   container.appendChild(name);

@@ -19,7 +19,6 @@ export default class Scene3DOrtho {
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
-        this.addItemFromText("JSNation");
     }
 
     addItemFromText = (name) => {
