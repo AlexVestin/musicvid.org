@@ -5,11 +5,10 @@ import Emblem from "./Emblem";
 
 export default class JSNationSpectrum {
     constructor(info)  {
-        this.folder = info.gui.addFolder("JSNationSpectrum");
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         
-        this.size = 512;
+        this.size = 1024;
         this.canvas.width = this.size;
         this.canvas.height = this.size;
 
@@ -49,21 +48,50 @@ export default class JSNationSpectrum {
         this.maxShakeDisplacement = 4;
         this.minShakeScalar = 0.9;
         this.maxShakeScalar = 1.6;
-
-        this.folder.add(this, "preAmplitude");
-        this.folder.add(this, "smoothingTimeConstant");
-        this.folder.add(this, "spectrumHeightScalar");
-        this.folder.add(this, "smoothingPasses");
-        this.folder.add(this, "smoothingPoints");
-        this.folder.add(this.ctx, "shadowBlur");
-        this.folder.add(this, "exp");
-
-        this.ctx.shadowBlur = 12;
-        this.emblem = new Emblem("./img/emblem.svg");
-
+        this.scale = 1.0
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
+        this.emblem = new Emblem("./img/emblem.svg");     
+        this.folder = this.setUpGUI(info.gui, "JSNation");
+        
+        this.ctx.shadowBlur = 12;
+        
+
+       
         info.scene.add(this.mesh);
+    }
+
+    changeEmblemImage = () => {
+        this.folder.__root.modalRef.onParentSelect = this.emblem.loadImage;
+        this.folder.__root.modalRef.toggleModal(3);
+    }
+
+    setUpGUI = (gui, name) => {
+        const folder = gui.addFolder(name);        
+        const emFolder = folder.addFolder("Emblem");
+        emFolder.add(this, "changeEmblemImage")
+        emFolder.add(this.emblem, "shouldClipImageToCircle");
+        emFolder.add(this.emblem, "emblemSizeScale", 0.0, 2.0);
+        emFolder.add(this.emblem, "shouldFillCircle");
+        emFolder.addColor(this.emblem, "circleFillColor");
+        
+        const spFolder = folder.addFolder("Spectrum");
+        spFolder.add(this, "startBin", 0, 8192*2, 1)
+        spFolder.add(this, "keepBins", 0, 8192*2, 1)
+
+        spFolder.add(this, "smoothingPasses", [1,2,3,4,5,6,7,8,9]);
+        spFolder.add(this, "smoothingPoints", [1,2,3,4,5,7,8,9]);
+        spFolder.add(this, "spectrumHeightScalar",0, 0.5);
+        spFolder.add(this, "smoothingTimeConstant", 0, 0.95);
+        folder.add(this.mesh.position, "x", -2, 2, 0.01);
+        folder.add(this.mesh.position, "y", -2, 2, 0.01);
+        folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));
+
+
+        
+        folder.add(this.ctx, "shadowBlur", 0, 100);
+        folder.add(this, "exp", 0, 10);
+        return folder;
     }
 
     calcRadius = function(multiplier) {

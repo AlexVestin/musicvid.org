@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react'
-import Layers from './Layers'
-import MasterSettings from './MasterSettings'
+
 import classes from './ControllerContainer.module.scss'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
@@ -25,44 +24,33 @@ class GUIMount extends PureComponent {
 
 export default class ControllerContainer extends PureComponent {
 
-    constructor() {
-        super();
-
+    constructor(props) {
+        super(props);
         this.state = {index: 0};
-
-        this.mountOverviewRef   = React.createRef();
-        this.mountAudioRef      = React.createRef();
-        this.mountExportRef     = React.createRef();
-        this.mountLayersRef     = React.createRef();
-        this.mountSettingsRef   = React.createRef();
-
-        this.itemsCount = 0;
-    }
-
-    addLayer = () => {
-        this.itemCount++;
-    }
-
-    exportVideo = () => {
-        console.log("export");
-    }
-
-    onChange = (value) => {
-        console.log(value);
     }
 
     componentDidMount() {
-        const { gui } = this.props;
-        this.layersFolder       = gui.addFolder("Layers", false);
-        this.overviewFolder     = gui.addFolder("Overview", false);
-        this.audioFolder        = gui.addFolder("Audio", false);
-        this.settingsFolder     = gui.addFolder("Settings", false);
-        this.exportFolder       = gui.addFolder("Export", false);       
+        this.initExportGUI();
+    }
+
+    initExportGUI = () => {
+        const folder = this.props.gui.__folders["Export"];
+        this.bitrate = 12000 * 1000;
+        this.fps = 60;
+        this.preset =  6;
+        folder.add(this, "bitrate");
+        folder.add(this, "fps");
+        folder.add(this, "preset", [1,2,3,4,5,6])
+        folder.add(this, "startEncoding");
+    }
+
+    startEncoding = () => {
+        this.props.startEncoding({fps: this.fps, bitrate: this.bitrate, preset: this.preset})
     }
 
     render() {
         const { index } = this.state;
-        const { gui } = this.props;
+        const { gui, loaded } = this.props;
 
         return (
             <div className={classes.container}>
@@ -76,11 +64,11 @@ export default class ControllerContainer extends PureComponent {
                     </div>
                     <div style={{width: "100%", height: 5, backgroundColor: "gray"}}></div>
                     <SimpleBar data-simplebar-force-visible style={{ width: "100%", height: "100%" }}>
-                        {index === 0 && gui.__folders["Overview"] && <div gui={gui.__folders["Overview"].domElement}></div>}
-                        {index === 1 && gui && <GUIMount gui={gui.__folders["Layers"].domElement}></GUIMount>}
-                        {index === 2 && gui && <GUIMount gui={gui.__folders["Audio"].domElement}></GUIMount>}
-                        {index === 3 && gui && <GUIMount gui={gui.__folders["Settings"].domElement}></GUIMount>}
-                        {index === 4 && gui && <GUIMount gui={gui.__folders["Export"].domElement}></GUIMount>}
+                        {index === 0 && loaded && <GUIMount gui={gui.__folders["Overview"].domElement}></GUIMount>}
+                        {index === 1 && loaded && <GUIMount gui={gui.__folders["Layers"].domElement}></GUIMount>}
+                        {index === 2 && loaded && <GUIMount gui={gui.__folders["Audio"].domElement}></GUIMount>}
+                        {index === 3 && loaded && <GUIMount gui={gui.__folders["Settings"].domElement}></GUIMount>}
+                        {index === 4 && loaded && <GUIMount gui={gui.__folders["Export"].domElement}></GUIMount>}
                     </SimpleBar>
                 </div>
             </div>

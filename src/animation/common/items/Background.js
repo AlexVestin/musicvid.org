@@ -39,16 +39,39 @@ const fragmentShader = [
 export default class Background {
 
     constructor(info) {
-        this.folder = info.gui.addFolder("Background");
-        
+        this.gui = info.gui;
         this.scene = info.scene;
-        this.setBackground();
-
         this.brightenToAudio = true;
         this.brightenMultipler = 1;
         this.vignetteAmount = 0.3;
+
+        this.texture = new THREE.Texture();
+        this.material = new THREE.ShaderMaterial( {
+            uniforms: { 
+                texture1: {type: "t", value: this.texture }, 
+                vignette_amt: {value: 0.3}, 
+                should_vignette: {value: true}, 
+                should_mirror: {value: true} 
+            },
+            vertexShader,
+            fragmentShader,
+        });
         
+        this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.material);
+        this.scene.add(this.mesh);
+
+        const url = "./img/solar.jpeg";
+        this.fromURL(url);
+        this.folder = this.setUpGUI(this.gui, "Background");
     }
+
+    
+
+    changeImage = () => {
+        this.folder.__root.modalRef.onParentSelect = this.loadNewBackground;
+        console.log(this.folder.__root.modalRef.toggleModal(3));
+    }
+    
 
     update = (time, audioData) => {
         if(this.brightenToAudio && this.impactAnalyser) {
@@ -57,39 +80,55 @@ export default class Background {
         }
     }
 
-    setBackground = () => {
-        const url2 = "https://images.pexels.com/photos/240040/pexels-photo-240040.jpeg";
-        const url = "./img/solar.jpeg";
+    setUpGUI = (gui, name) => {
+        const folder = gui.addFolder(name);
+        folder.add(this, "changeImage");
+        folder.add(this.material.uniforms.should_vignette, "value", {name: "Enable Vignette"});
+        folder.add(this, "brightenToAudio");
+        folder.add(this, "brightenMultipler");           
+        folder.add(this, "vignetteAmount").onChange(() => this.material.uniforms.value = this.vignetteAmount);
+        folder.add(this.material.uniforms.should_mirror, "value", {name: "Mirror image"});
+        this.impactAnalyser = new ImpactAnalyser(folder);
+        this.impactAnalyser.endBin = 60;
+        this.impactAnalyser.deltaDecay = 20;
+        folder.updateDisplay();
+        return folder;
+    }
+
+    setBackground = (texture) => {
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.generateMipMaps = false;
+        this.material.uniforms.texture1.value = texture;
+        this.material.needsUpdate = true;
+    }
+
+    loadNewBackground = (selected) => {
+        if(typeof selected === "string") {
+            this.fromURL(selected);
+        }else {
+            this.fromFile(selected);
+        }
+    }
+
+    fromFile = (file) => {
+        const reader  = new FileReader();
+        const image = document.createElement("img");
+        const texture = new THREE.Texture();
+        texture.image = image;
+        reader.onload = (e) => {
+            image.src = e.target.result;
+            image.onload = () =>  {
+                texture.needsUpdate = true;
+                this.setBackground(texture);
+            }
+        }
+        reader.readAsDataURL(file);
+    }
+
+    fromURL = (url) => {        
         const textureLoader = new THREE.TextureLoader();
         textureLoader.crossOrigin = "";
-        textureLoader.load(url, (texture) => {
-            texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;
-            texture.generateMipMaps = false;
-
-            this.material = new THREE.ShaderMaterial( {
-                uniforms: { 
-                    texture1: {type: "t", value: texture }, 
-                    vignette_amt: {value: 0.3}, 
-                    should_vignette: {value: true}, 
-                    should_mirror: {value: true} 
-                },
-                vertexShader,
-                fragmentShader,
-            });
-            
-            this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.material);
-            this.scene.add(this.mesh);
-            
-            this.folder.add(this.material.uniforms.should_vignette, "value", {name: "Enable Vignette"});
-            this.folder.add(this, "brightenToAudio");
-            this.folder.add(this, "brightenMultipler");           
-            this.folder.add(this, "vignetteAmount").onChange(() => this.material.uniforms.value = this.vignetteAmount);
-            this.folder.add(this.material.uniforms.should_mirror, "value", {name: "Mirror image"});
-            this.impactAnalyser = new ImpactAnalyser(this.folder);
-            this.impactAnalyser.endBin = 60;
-            this.impactAnalyser.deltaDecay = 20;
-            this.folder.updateDisplay();
-        })
+        textureLoader.load(url, this.setBackground)
     }
 }

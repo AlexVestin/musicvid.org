@@ -38,9 +38,15 @@ export default class Manager {
         this.scenes.push(new Scene3DPerspective(this.gui.__folders["Layers"], this.width / this.height));
         this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.width / this.height));
         
-        this.scenes[0].addItemFromText("Background");
-        //this.scenes[1].addItemFromText("Particles");
-        this.scenes[2].addItemFromText("JSNation");
+        const it1 = this.scenes[0].addItemFromText("StarField");
+        //const it2 = this.scenes[1].addItemFromText("Particles");
+        const it3 = this.scenes[2].addItemFromText("JSNation");
+
+        it1.setUpGUI(this.gui.__folders["Overview"], "StarField");
+        //it2.setUpGUI(this.gui.__folders["Overview"], "Particles");
+        it3.setUpGUI(this.gui.__folders["Overview"], "JSNation");
+
+        this.gui.__folders["Overview"].onResize();
         
     }
 

@@ -38,7 +38,9 @@ export default class Scene3DOrtho {
             camera: this.camera
         };
         
-        this.items.push(new items[name](info));
+        const item = new items[name](info)
+        this.items.push(item);
+        return item;
     }
 
     addItem = () => {

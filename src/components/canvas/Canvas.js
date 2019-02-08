@@ -18,6 +18,12 @@ export default class Canvas extends PureComponent {
     }
     begin = () => this.stats.begin();
     end = () => this.stats.end();
+    hideStats = (hide) =>  {
+        if(hide)
+            this.stats.dom.style.display = "none";
+        else 
+            this.stats.dom.style.display = "inherit";
+    }
 
     componentDidMount() {
         this.canvasRef2.current.appendChild(this.stats.dom);

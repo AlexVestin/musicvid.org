@@ -3,11 +3,12 @@ import * as THREE from 'three';
 import items from '../items'
 
 export default class Scene3DOrtho {
-    constructor(gui) {        
+    constructor(gui, resolution) {        
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 1000 );
         this.camera.position.z = 1;
         this.modalRef = gui.modalRef;
+        this.resolution = resolution;
         this.items = [];
         this.setUpGui(gui);
     }
@@ -27,10 +28,12 @@ export default class Scene3DOrtho {
             width: this.gui.canvasMountRef.width,
             height: this.gui.canvasMountRef.height,
             scene: this.scene,
-            camera: this.camera
+            camera: this.camera,
         };
         
-        this.items.push(new items[name](info));
+        const item = new items[name](info)
+        this.items.push(item);
+        return item;
     }
 
     addItem = () => {

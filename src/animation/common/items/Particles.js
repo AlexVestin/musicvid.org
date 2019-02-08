@@ -49,7 +49,6 @@ class ParticleData {
 export default class Particles {
     constructor(info) {
 
-        this.folder = info.gui.addFolder("Particles");
         this.maxParticleCount = 1200; // particle count at 1080p
         this.particleMaxSpawnRate = 8; // max particles to spawn each frame. this takes effect during particle initlzn.
         this.particleOpacityMin = 0.9;
@@ -80,8 +79,9 @@ export default class Particles {
         this.scene = info.scene;
         this.particleData = [];
         this.baseSizes = [];
-
-        this.folder.add(this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
+        this.color = 0xFFFFFF;
+        this.folder = this.setUpGUI(info.gui, "Particles");
+        
        
 
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
@@ -91,6 +91,19 @@ export default class Particles {
         this.folder.updateDisplay();
 
         this.setUp();
+    }
+
+    setUpGUI = (gui, name) => {
+        const folder = gui.addFolder(name);
+        folder.add(this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
+        folder.addColor(this, "color").onChange(this.changeColor);
+        return folder;
+    }
+
+    changeColor = () => {
+        console.log(this.color)
+        console.log()
+        this.pMaterial.uniforms.color.value = new THREE.Color(this.color)
     }
 
 
@@ -184,7 +197,8 @@ export default class Particles {
         this.baseSizes = [];
         this.baseSizes = [];
 
-        this.maxParticleCount = this.maxParticleCount + this.maxParticleCount % 2;
+        this.maxParticleCount = Math.floor(this.maxParticleCount) + Math.floor(this.maxParticleCount) % 2;
+        console.log(this.maxParticleCount)
 
         this.particleSystem = new THREE.Points(this.particlesGeom, this.pMaterial);
         this.particleSystem.sortParticles = true;

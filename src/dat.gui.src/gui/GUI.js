@@ -585,6 +585,28 @@ common.extend(
       removeListeners(this);
     },
 
+    recAddFolderCopy: function(name, folderToCopy)  {
+
+    },
+
+    addFolderCopy: function(name, folderToCopy, useTitleRow = true) {
+      const newGuiParams = { name: name, parent: this, useTitleRow: useTitleRow };
+      const li = document.createElement('li');
+      const dme = folderToCopy.domElement.cloneNode(true);      
+      li.appendChild(dme);
+      console.log(dme)
+      console.log(folderToCopy.domElement);
+      this.__ul.appendChild(li);
+      console.log(name);
+      this.__folders[name] = Object.assign(folderToCopy);
+      this.__folders[name].li = li;
+      this.onResize();
+      dom.addClass(li, 'folder');
+
+      console.log(this.__folders[name])
+
+    },
+
     /**
      * Creates a new subfolder GUI instance.
      * @param name
@@ -596,6 +618,7 @@ common.extend(
     addFolder: function(name, useTitleRow = true) {
       // We have to prevent collisions on names in order to have a key
       // by which to remember saved values
+     
       if (this.__folders[name] !== undefined) {
         let s = "", i = name.length -1 ;
           while (!isNaN(parseInt(name[i--], 10)) && i >= 0) 
@@ -628,6 +651,12 @@ common.extend(
 
       const gui = new GUI(newGuiParams);
       this.__folders[name] = gui;
+
+      if(!this.__root) {
+        gui.__root = this;
+      }else {
+        gui.__root = this.__root;
+      }
   
 
       const li = addRow(this, gui.domElement);
@@ -1117,9 +1146,8 @@ function add(gui, object, property, params) {
   }
 
   let controller, innerHTMLName;
-  
   // very good code to use name instead of 
-  if(params.factoryArgs[0] && params.factoryArgs[0].name) {
+  if(params.factoryArgs && params.factoryArgs[0] && params.factoryArgs[0].name) {
       innerHTMLName = params.factoryArgs[0].name;
 
       if(params.factoryArgs.length === 1)

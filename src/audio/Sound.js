@@ -15,6 +15,8 @@ export default class Audio {
         this.loaded = false;
         this.fftSize = 2048 * 8;
         this.volume = 0;
+        this.exportWindowSize = 2048;
+        this.exportFrameIdx = 0;
         this.loadFft();
     }
 
@@ -25,6 +27,21 @@ export default class Audio {
             this.Module._init_r(this.fftSize);
         };
     };
+
+    setFFTSize = ( fftSize ) => {
+        this.fftSize = Number(fftSize);
+        this.Module._init_r(this.fftSize);
+    }
+
+    getEncodingFrame = () => {
+        const sidx = this.exportFrameIdx * this.exportWindowSize;
+        const eidx = (this.exportFrameIdx + 1) * this.exportWindowSize;
+
+        const left = this.bufferSource.buffer.getChannelData(0).slice(sidx, eidx);
+        const right = this.bufferSource.buffer.getChannelData(1).slice(sidx, eidx);
+        this.exportFrameIdx++;
+        return {type: "audio", left, right, sampleRate: this.sampleRate }
+    }
 
     // VOLUME FROM [0..1]
     setVolume = (volume) => {
@@ -64,6 +81,8 @@ export default class Audio {
         if (idx < 0) idx = 0;
         let audio_p, bins;
         const data = this.combinedAudioData.subarray(idx, idx + this.fftSize);
+
+        console.log(this.fftSize, data.length)
         try {
             audio_p = this.Module._malloc(this.fftSize * 4);
             this.Module.HEAPF32.set(data, audio_p >> 2);
@@ -92,6 +111,7 @@ export default class Audio {
             this.bufferSource = this.audioCtx.createBufferSource();
             this.bufferSource.buffer = buffer;
             this.duration = buffer.duration;
+            this.sampleRate = buffer.sampleRate;
 
             this.getAudioByteData(buffer);
             this.onfileready(buffer.duration);

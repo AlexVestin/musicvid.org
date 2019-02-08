@@ -39,7 +39,7 @@ export default function ImpactAnalyser(gui, object) {
 
         amount = amount * this.amplitude / 64;
         if(amount > this.maxAmount) 
-            amount =  this.maxAmount;
+            amount = this.maxAmount;
         
         if(amount < this.minAmount)
             amount = this.minAmount;

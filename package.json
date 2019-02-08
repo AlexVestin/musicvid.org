@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "comment-regex": "^1.0.1",
     "dat.gui": "^0.7.3",
+    "file-saver": "^2.0.0",
     "node-sass": "^4.11.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
