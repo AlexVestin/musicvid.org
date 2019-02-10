@@ -35,17 +35,30 @@ export default class ControllerContainer extends PureComponent {
 
     initExportGUI = () => {
         const folder = this.props.gui.__folders["Export"];
-        this.bitrate = 12000 * 1000;
+        this.MBitBitrate = 1.2;
         this.fps = 60;
-        this.preset =  6;
-        folder.add(this, "bitrate");
-        folder.add(this, "fps");
-        folder.add(this, "preset", [1,2,3,4,5,6])
+        this.preset =  "ultrafast";
+        this.presetLookup = [
+            "ultrafast",
+            "veryfast",
+            "fast",
+            "medium",
+            "slow",
+            "veryslow"
+        ];
+        this.fileName = "myvid.mp4";
+        folder.add(this, "fileName");
+        
+        folder.add(this, "fps", [24, 25, 30, 48, 60]);
+        folder.add(this, "preset", this.presetLookup)
         folder.add(this, "startEncoding");
+        folder.add(this, "MBitBitrate", 0, 20, 0.1);
     }
 
     startEncoding = () => {
-        this.props.startEncoding({fps: this.fps, bitrate: this.bitrate, preset: this.preset})
+        const bitrate = this.MBitBitrate * Math.pow(10, 6);
+        const preset = this.presetLookup.findIndex(e => e === this.preset);
+        this.props.startEncoding({fps: this.fps, bitrate: bitrate, preset: preset, fileName: this.fileName})
     }
 
     render() {

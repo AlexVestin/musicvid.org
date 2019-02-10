@@ -10,7 +10,7 @@ import Sound from '../audio/Sound'
 import Exporter from '../export/Exporter'
 
 
-import AnimationManager from '../animation/templates/EmptyTemplate'
+import AnimationManager from '../animation/templates/JSNation'
 
 class App extends PureComponent {
 
@@ -32,6 +32,7 @@ class App extends PureComponent {
         this.modalRef = React.createRef();
 
         this.firstLoad = true;
+        this.fastLoad = true;
     }
 
     loadNewAudioFile = () =>  {
@@ -43,6 +44,12 @@ class App extends PureComponent {
         this.mountRef = this.canvasRef.current.getMountRef();
         this.gui.modalRef = this.modalRef.current;
         this.gui.canvasMountRef = this.mountRef;
+
+        if(this.fastLoad) {
+            this.resolution = {width: 1280, height: 720};
+            this.canvasRef.current.setSize(this.resolution);
+            this.loadNewAudio("https://s3.eu-west-3.amazonaws.com/fysiklabb/Syn+Cole+-+Miami+82+(Lucas+Silow+Remix).mp3");
+        }
     }
 
 
@@ -50,6 +57,7 @@ class App extends PureComponent {
         this.setState({ audioDuration: duration, disabled: false, loaded: true });
 
         if(this.firstLoad) {
+            this.animationManager = new AnimationManager(this.gui, this.resolution, this.audio);
             this.update();
             this.firstLoad = false;
             this.audioFolder.add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384]).onChange(() => this.audio.setFFTSize(this.audio.fftSize))
@@ -107,8 +115,9 @@ class App extends PureComponent {
                 bitrate: selected.bitrate,
                 preset: selected.preset
             },
+            fileName: selected.fileName,
             animationManager: this.animationManager,
-            duration: this.state.duration,
+            duration: this.state.audioDuration,
             sound: this.audio
         }
       
@@ -127,7 +136,7 @@ class App extends PureComponent {
     loadNewAudio = (audio) => {
         this.stop();
         this.setState({ disabled: true});
-        this.audio = new Sound(audio, this.audioReady);
+        this.audio = new Sound(audio, this.audioReady, this.audioFolder);
     }
 
     onSelect = (selected) => {
@@ -135,14 +144,13 @@ class App extends PureComponent {
             this.resolution = selected;
             this.canvasRef.current.setSize(this.resolution);
             this.modalRef.current.toggleModal(1, true); 
-            this.animationManager = new AnimationManager(this.gui, this.resolution);
             return;
         }
         this.loadNewAudio(selected);
     }
 
     render() {
-        const modal = true;
+        const modal = !this.fastLoad;
         return (
             <div className={classes.container}>
                 {modal && <ModalContainer ref={this.modalRef} onSelect={this.onSelect}></ModalContainer>}

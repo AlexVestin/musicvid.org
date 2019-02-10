@@ -1,7 +1,7 @@
 import KissFFT from "./KissFFT";
 
 export default class Audio {
-    constructor(infile, onfileloaded) {
+    constructor(infile, onfileloaded, gui) {
         if (typeof infile === "string") {
             this.loadFileFromUrl(infile);
         } else {
@@ -17,6 +17,7 @@ export default class Audio {
         this.volume = 0;
         this.exportWindowSize = 2048;
         this.exportFrameIdx = 0;
+        this.gui = gui;
         this.loadFft();
     }
 
@@ -31,6 +32,7 @@ export default class Audio {
     setFFTSize = ( fftSize ) => {
         this.fftSize = Number(fftSize);
         this.Module._init_r(this.fftSize);
+        this.gui.updateDisplay();
     }
 
     getEncodingFrame = () => {
@@ -82,7 +84,6 @@ export default class Audio {
         let audio_p, bins;
         const data = this.combinedAudioData.subarray(idx, idx + this.fftSize);
 
-        console.log(this.fftSize, data.length)
         try {
             audio_p = this.Module._malloc(this.fftSize * 4);
             this.Module.HEAPF32.set(data, audio_p >> 2);

@@ -1,6 +1,6 @@
 $nest-margin:8px;
-$row-height: 27px;
-
+$row-height: 28px;
+$folder-font-size: 12px;
 $button-height: 20px;
 
 .dg {
@@ -143,6 +143,7 @@ $button-height: 20px;
   li.title {
     cursor: pointer;
     margin-left: -$nest-margin;
+    font-size: $folder-font-size;
   }
 
   /** Hides closed items */
@@ -284,7 +285,7 @@ $button-height: 20px;
 
 #dg-local-explain {
   display: none;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 17px;
   border-radius: 3px;
   background-color: #333;

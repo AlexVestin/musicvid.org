@@ -7,11 +7,14 @@ export default class Scene3DOrtho {
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 1000 );
         this.camera.position.z = 1;
-        this.modalRef = gui.modalRef;
         this.resolution = resolution;
         this.items = [];
+
         this.setUpGui(gui);
+        
     }
+
+    
 
     setUpGui = (gui) => {
         this.gui = gui;
@@ -25,8 +28,8 @@ export default class Scene3DOrtho {
     addItemFromText = (name) => {
         const info = {
             gui: this.itemsFolder,
-            width: this.gui.canvasMountRef.width,
-            height: this.gui.canvasMountRef.height,
+            width: this.gui.__root.canvasMountRef.width,
+            height: this.gui.__root.canvasMountRef.height,
             scene: this.scene,
             camera: this.camera,
         };
@@ -37,8 +40,8 @@ export default class Scene3DOrtho {
     }
 
     addItem = () => {
-        this.modalRef.onParentSelect = this.addItemFromText;
-        this.gui.modalRef.toggleModal(2);
+        this.gui.__root.onParentSelect = this.addItemFromText;
+        this.gui.__root.modalRef.toggleModal(2);
     }
 
     update = (time, audioData) => {

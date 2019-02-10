@@ -74,12 +74,13 @@ export default class Particles {
         // The min/max to normalize the particle phase amplitude multiplier to.
         this.particlePhaseAmplitudeMultMin = 0.1;
         this.particlePhaseAmplitudeMultMax = 1;
-        this.resMult = 1;
+        this.sizeMult = 1.0;
         this.VERTEX_SIZE = 3;
         this.scene = info.scene;
         this.particleData = [];
         this.baseSizes = [];
         this.color = 0xFFFFFF;
+        this.baseSpeed = 1.0;
         this.folder = this.setUpGUI(info.gui, "Particles");
         
        
@@ -89,7 +90,6 @@ export default class Particles {
         this.impactAnalyser.endBin = 80;
         this.impactAnalyser.deltaDecay = 0.3;
         this.folder.updateDisplay();
-
         this.setUp();
     }
 
@@ -97,12 +97,14 @@ export default class Particles {
         const folder = gui.addFolder(name);
         folder.add(this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
         folder.addColor(this, "color").onChange(this.changeColor);
+        folder.add(this, "particleBaseSpeed", 0, 10, 0.01);
+        folder.add(this, "sizeMult", 0, 5.0, 0.01).onChange(() => this.updateSizes());
+
         return folder;
     }
 
     changeColor = () => {
-        console.log(this.color)
-        console.log()
+
         this.pMaterial.uniforms.color.value = new THREE.Color(this.color)
     }
 
@@ -157,8 +159,8 @@ export default class Particles {
             return; // no data set, so particle is "despawned"
         }
 
-        let speed = ignoreSpeed ? 1 : data.getSpeed();
-        const adjustedSpeed = Math.max(speed * multiplier, this.particleBaseSpeed);
+        let speed = ignoreSpeed ? 1 * this.baseSpeed : data.getSpeed() * this.baseSpeed;
+        const adjustedSpeed = Math.max(speed * multiplier * this.baseSpeed, this.particleBaseSpeed);
 
         let ampMult = (this.particlePhaseAmplitudeMultMax - this.particlePhaseAmplitudeMultMin) * multiplier
                 + this.particlePhaseAmplitudeMultMin;
@@ -270,7 +272,7 @@ export default class Particles {
 
     updateSizes = () => {
         for (let i = 0; i < this.maxParticleCount / 2; i++) {
-            this.applyMirroredValue(this.particlesGeom.attributes.size.array, i, this.baseSizes[i] * this.resMult);
+            this.applyMirroredValue(this.particlesGeom.attributes.size.array, i, this.baseSizes[i] * this.sizeMult);
         }
         this.particlesGeom.attributes.size.needsUpdate = true;
     }

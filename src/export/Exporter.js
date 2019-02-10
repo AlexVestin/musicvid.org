@@ -7,12 +7,13 @@ export default class Exporter {
 
         this.fps                = config.video.fps;
         this.videoBitrate       = config.video.bitrate;
-        this.duration           = config.duration;
+        this.duration           = config.sound.duration;
         this.encodedVideoFrames = 0;
         this.width              = config.video.width;
         this.height             = config.video.height;
         this.sound              = config.sound;
         this.onready            = onready;
+        this.fileName           = config.fileName || "myVid.mp4";
         this.ondone             = ondone;
         this.animationManager   = config.animationManager;
         this.time               = 0;
@@ -61,7 +62,8 @@ export default class Exporter {
 
         this.videoEncoder.sendFrame();
 
-        if(this.encodedVideoFrames > 1000) {
+        console.log(this.encodedVideoFrames, this.duration, this.fps, Math.floor(this.duration * this.fps))
+        if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {
             this.videoEncoder.close(this.saveBlob);
         }
     }
@@ -82,7 +84,7 @@ export default class Exporter {
     }
 
     saveBlob = (vid) => {
-        FileSaver.saveAs(new Blob([vid], { type: 'video/mp4' }), "vid.mp4");
+        FileSaver.saveAs(new Blob([vid], { type: 'video/mp4' }), this.fileName);
         this.ondone();
     }    
 }
