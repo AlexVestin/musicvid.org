@@ -76,7 +76,7 @@ export default class ControllerContainer extends PureComponent {
                         <div onClick={()=>this.setState({index: 4})} style={{backgroundColor: index === 4 ? "green" : ""}}>export</div>
                     </div>
                     <div style={{width: "100%", height: 5, backgroundColor: "gray"}}></div>
-                    <SimpleBar data-simplebar-force-visible style={{ width: "100%", height: "100%" }}>
+                    <SimpleBar data-simplebar-force-visible style={{ width: "100%", height: "95%", borderBottom: "2px solid gray", borderLeft: "2px solid gray", borderRight: "2px solid gray" }}>
                         {index === 0 && loaded && <GUIMount gui={gui.__folders["Overview"].domElement}></GUIMount>}
                         {index === 1 && loaded && <GUIMount gui={gui.__folders["Layers"].domElement}></GUIMount>}
                         {index === 2 && loaded && <GUIMount gui={gui.__folders["Audio"].domElement}></GUIMount>}

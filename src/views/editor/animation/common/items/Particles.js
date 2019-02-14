@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import ImpactAnalyser from 'audio/ImpactAnalyser'
+import ImpactAnalyser from '../../../audio/ImpactAnalyser'
 import BaseItem from './BaseItem'
  
 

@@ -7,7 +7,6 @@ const fonts = ["Arial", "Helvetica", "Times New Roman", "Times", "Courier New", 
 
 
 
-
 export default class Polartone extends BaseItem {
     constructor(info) {
         super();
@@ -20,7 +19,7 @@ export default class Polartone extends BaseItem {
 
         this.ctx = this.canvas.getContext("2d");
 
-        this.fontSize = 60;
+        this.fontSize = 30;
         this.font = "Arial";
         this.positionX  = 0;
         this.positionY  = 0;

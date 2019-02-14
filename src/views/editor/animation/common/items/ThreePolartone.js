@@ -2,7 +2,7 @@
 import lerp from "lerp";
 import * as THREE from "three";
 import createCamera from "perspective-camera";
-import { toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
+import { toWebAudioForm, getByteSpectrum } from '../../../audio/analyse_functions'
 import BaseItem from './BaseItem'
 
 

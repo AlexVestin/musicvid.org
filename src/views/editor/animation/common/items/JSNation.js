@@ -1,6 +1,6 @@
 
 import * as THREE from "three";
-import { smooth, toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
+import { smooth, toWebAudioForm, getByteSpectrum } from '../../../audio/analyse_functions'
 import Emblem from "./Emblem";
 import BaseItem from './BaseItem'
 
@@ -92,8 +92,6 @@ export default class JSNationSpectrum extends BaseItem {
         folder.add(this.mesh.position, "y", -2, 2, 0.01);
         folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));
 
-
-        
         folder.add(this.ctx, "shadowBlur", 0, 100);
         folder.add(this, "exp", 0, 10);
         return folder;

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import SpectrumAnalyser from 'audio/SpectrumAnalyser'
+import SpectrumAnalyser from '../../../audio/SpectrumAnalyser'
 import BaseItem from './BaseItem'
 
 export default class Bars extends BaseItem {

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { smooth, toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
+import { smooth, toWebAudioForm, getByteSpectrum } from '../../../audio/analyse_functions'
 import BaseItem from './BaseItem'
 
 

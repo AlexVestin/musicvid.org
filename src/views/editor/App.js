@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react'
 import classes from './App.module.scss';
-import Sidebar from './sidebar/ControllerContainer'
-import withHeader from './header/Header'
-import * as dat from '../dat.gui.src'
-import Canvas from './canvas/Canvas'
-import TrackContainer from './track/TrackContainer';
-import ModalContainer from './modal/initialconfigs/SelectResolutionModal';
-import Sound from '../audio/Sound'
-import Exporter from '../export/Exporter'
-import AnimationManager from '../animation/templates/Polartone'
+import Sidebar from './components/sidebar/ControllerContainer'
+import withHeader from './components/header/Header'
+import * as dat from './dat.gui.src'
+import Canvas from './components/canvas/Canvas'
+import TrackContainer from './components/track/TrackContainer';
+import ModalContainer from './components/modal/initialconfigs/SelectResolutionModal';
+import Sound from './audio/Sound'
+import Exporter from './export/Exporter'
+import AnimationManager from './animation/templates/Polartone'
 
 class App extends PureComponent {
 
