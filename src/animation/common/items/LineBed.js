@@ -1,9 +1,12 @@
 import * as THREE from "three";
 import { smooth, toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
+import BaseItem from './BaseItem'
 
 
-export default class PointBed {
+export default class PointBed extends BaseItem {
+    
     constructor(info) {
+        super();
         this.prevArr = [];
         this.amplitude = 2.5;
 

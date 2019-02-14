@@ -38,7 +38,9 @@
 .headerButtons div{
     width: 20%;
     cursor: pointer;
+    overflow: hidden;
     text-align: center;
+    padding: 2px;
 }
 
 .headerButtons div:hover{

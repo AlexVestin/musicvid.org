@@ -1,7 +1,10 @@
 import * as THREE from "three";
+import BaseItem from './BaseItem'
 
-export default class Box {
+
+export default class Box extends BaseItem {
     constructor(info) {
+        super();
         this.folder = info.gui.addFolder("Plane");
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.MeshBasicMaterial({color: "red"}));
         this.color = 0xFF0000;

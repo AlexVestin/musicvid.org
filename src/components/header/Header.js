@@ -9,7 +9,6 @@ export default function withHeader(WrappedComponent) {
         <div className={classes.container}>
 
           <div className={classes.logo}>
-            musicvid.org
           </div>
 
           <WrappedComponent {...this.props}></WrappedComponent>

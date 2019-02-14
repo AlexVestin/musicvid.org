@@ -14,7 +14,11 @@ export default class Scene3DOrtho {
         
     }
 
-    
+    stop = () => {
+        this.items.forEach(item => {
+            item.stop();
+        })
+    }
 
     setUpGui = (gui) => {
         this.gui = gui;

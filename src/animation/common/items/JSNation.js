@@ -2,13 +2,15 @@
 import * as THREE from "three";
 import { smooth, toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
 import Emblem from "./Emblem";
+import BaseItem from './BaseItem'
 
-export default class JSNationSpectrum {
+export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {
+        super();
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         
-        this.size = 1024;
+        this.size = 512;
         this.canvas.width = this.size;
         this.canvas.height = this.size;
 
@@ -50,6 +52,9 @@ export default class JSNationSpectrum {
         this.maxShakeScalar = 1.6;
         this.scale = 1.0
         this.tex = new THREE.CanvasTexture(this.canvas);
+        this.tex.generateMipmaps = false;
+        this.tex.magFilter = THREE.LinearFilter;
+        this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
         this.emblem = new Emblem("./img/emblem.svg");     
         this.folder = this.setUpGUI(info.gui, "JSNation");

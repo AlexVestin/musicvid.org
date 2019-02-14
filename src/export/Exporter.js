@@ -5,7 +5,7 @@ import VideoEncoder from './VideoEncodeWorker'
 export default class Exporter {
     constructor(config, onready, ondone) {
 
-        this.fps                = config.video.fps;
+        this.fps                = Number(config.video.fps);
         this.videoBitrate       = config.video.bitrate;
         this.duration           = config.sound.duration;
         this.encodedVideoFrames = 0;

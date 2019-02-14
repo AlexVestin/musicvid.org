@@ -10,8 +10,11 @@ import Polartone from './Polartone'
 import ThreePolartone from './ThreePolartone'
 import TimeRep from './TimeRep'
 import TimeRepCanvas from './TimeRepCanvas'
-import PointBed from './PointBed'
 import LineBed from './LineBed'
+import Image from './Image'
+import SpriteTextMask from './SpriteTextMask'
+import SpriteText from './SpriteText'
+
 
 
 
@@ -28,6 +31,8 @@ export default {
     ThreePolartone,
     TimeRep,
     TimeRepCanvas,
-    PointBed,
-    LineBed
+    LineBed,
+    Image,
+    SpriteTextMask,
+    SpriteText
 }

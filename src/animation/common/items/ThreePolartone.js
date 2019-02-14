@@ -2,11 +2,13 @@
 import lerp from "lerp";
 import * as THREE from "three";
 import createCamera from "perspective-camera";
-import { smooth, toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
+import { toWebAudioForm, getByteSpectrum } from 'audio/analyse_functions'
+import BaseItem from './BaseItem'
 
 
-export default class Polartone {
+export default class Polartone extends BaseItem {
     constructor(info) {
+        super();
         this.positions = [];
         this.cursor = [0, 0, 0];
         this.dpr = window.devicePixelRatio;

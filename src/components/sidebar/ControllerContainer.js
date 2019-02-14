@@ -35,9 +35,9 @@ export default class ControllerContainer extends PureComponent {
 
     initExportGUI = () => {
         const folder = this.props.gui.__folders["Export"];
-        this.MBitBitrate = 1.2;
+        this.MBitBitrate = 7.2;
         this.fps = 60;
-        this.preset =  "ultrafast";
+        this.preset =  "fast";
         this.presetLookup = [
             "ultrafast",
             "veryfast",

@@ -81,14 +81,14 @@ export default class Audio {
         const halfWindowSize = this.fftSize / 2;
         let idx = Math.floor(time * this.bufferSource.buffer.sampleRate);
         if (idx < 0) idx = 0;
-        let audio_p, bins;
+        let audio_p, bins, buf_p;
         const data = this.combinedAudioData.subarray(idx, idx + this.fftSize);
-
+        
         try {
             audio_p = this.Module._malloc(this.fftSize * 4);
             this.Module.HEAPF32.set(data, audio_p >> 2);
 
-            const buf_p = this.Module._fft_r(audio_p, this.fftSize, 2);
+            buf_p = this.Module._fft_r(audio_p, this.fftSize, 2);
             bins = new Float32Array(
                 this.Module.HEAPU8.buffer,
                 buf_p,
@@ -96,7 +96,10 @@ export default class Audio {
             );
         } finally {
             this.Module._free(audio_p);
+            this.Module._free(buf_p);
+
         }
+        
 
         return { frequencyData: bins, timeData: data };
     };

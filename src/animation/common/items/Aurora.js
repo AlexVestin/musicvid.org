@@ -172,6 +172,8 @@ export default class Aurora {
         this.folder.updateDisplay();
     }
 
+    stop  = () => {}
+
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
         folder.add(this, "brightenToAudio");

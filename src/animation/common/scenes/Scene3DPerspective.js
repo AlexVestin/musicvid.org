@@ -19,13 +19,6 @@ export default class Scene3DPerspective {
         this.items = [];
         this.setUpGui(gui);
         this.setUpControls();
-        this.camera.position.x = 1415;
-        this.camera.position.y = 1644;
-        this.camera.position.z = -2556;
-        this.camera.updateMatrixWorld();
-
-
-       
     }
     
     setUpControls = () => {
@@ -38,6 +31,12 @@ export default class Scene3DPerspective {
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
+    }
+
+    stop = () => {
+        this.items.forEach(item => {
+            item.stop();
+        })
     }
 
     addItemFromText = (name) => {
@@ -61,6 +60,5 @@ export default class Scene3DPerspective {
 
     update = (time, audioData) => {
         this.items.forEach(item => item.update(time, audioData));
-        console.log(this.camera.position)
     }
 }

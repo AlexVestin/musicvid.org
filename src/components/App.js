@@ -8,9 +8,7 @@ import TrackContainer from './track/TrackContainer';
 import ModalContainer from './modal/initialconfigs/SelectResolutionModal';
 import Sound from '../audio/Sound'
 import Exporter from '../export/Exporter'
-
-
-import AnimationManager from '../animation/templates/JSNation'
+import AnimationManager from '../animation/templates/Polartone'
 
 class App extends PureComponent {
 
@@ -22,7 +20,6 @@ class App extends PureComponent {
         this.audioFolder        = this.gui.addFolder("Audio", false);
         this.audioFolder.add(this, "loadNewAudioFile");
         
-
         this.hideStats = false;
         this.settingsFolder     = this.gui.addFolder("Settings", false);
         this.settingsFolder.add(this, "hideStats").onChange(() => this.canvasRef.current.hideStats(this.hideStats))
@@ -48,7 +45,10 @@ class App extends PureComponent {
         if(this.fastLoad) {
             this.resolution = {width: 1280, height: 720};
             this.canvasRef.current.setSize(this.resolution);
+ 
             this.loadNewAudio("https://s3.eu-west-3.amazonaws.com/fysiklabb/Syn+Cole+-+Miami+82+(Lucas+Silow+Remix).mp3");
+        }else {
+            this.modalRef.current.toggleModal(0);
         }
     }
 
@@ -78,6 +78,9 @@ class App extends PureComponent {
     stop = () => {
         if(this.audio)
             this.audio.stop();
+
+        if(this.animationManager)
+            this.animationManager.stop();
         this.setState({playing: false, time: 0});
     }
 
@@ -150,10 +153,9 @@ class App extends PureComponent {
     }
 
     render() {
-        const modal = !this.fastLoad;
         return (
             <div className={classes.container}>
-                {modal && <ModalContainer ref={this.modalRef} onSelect={this.onSelect}></ModalContainer>}
+                {<ModalContainer ref={this.modalRef} onSelect={this.onSelect} ></ModalContainer>}
 
                 <div className={classes.leftContainer} >
                     <Sidebar 

@@ -1,38 +1,19 @@
 import createCamera from "perspective-camera";
 import lerp from "lerp";
 import * as THREE from "three";
+import BaseItem from './BaseItem'
 
-const vertexShader = [
-    "varying vec2 vUv;",
-    "void main() {",
-        "vUv = uv;",
-        "gl_Position =   projectionMatrix * modelViewMatrix * vec4(position,1.0);",
-    "}",
-].join("\n");
-
-const fragmentShader = [
-    "uniform sampler2D texture1;",
-    "varying vec2 vUv;",
-
-    "void main() {",
-        "vec2 pos  = vUv;",
-        "float c =  texture2D(texture1, pos);",
-        "if(length(c) < 0.01)",
-            "gl_FragColor = c;",
-        "else",
-            "gl_FragColor = vec4(c.rgb, 0.);",
-    "}"
-].join("\n");
-
-export default class Polartone {
+export default class Polartone extends BaseItem {
     constructor(info) {
+        super();
         // Cant clear the canvas so create internal canvas for this item
+        this.aspect = info.height / info.width;
         this.internalCanvas = document.createElement("canvas");
         this.internalCanvas.width = 1024;
-        this.internalCanvas.height = 1024;
+        this.internalCanvas.height = 1024 * this.aspect;
         this.internalCtx = this.internalCanvas.getContext("2d");
 
-        const shape = [1024 , 1024];
+        const shape = [this.internalCanvas.width , this.internalCanvas.height];
         this.camera = createCamera({
             fov: Math.PI / 4,
             near: 0.01,
@@ -47,20 +28,21 @@ export default class Polartone {
         this.cameraX = 0;
         this.cameraY = -3.5;
         this.cameraZ = 0;
-        this.amplitude = 128.0;
+        this.amplitude = 48.0;
         this.extent = 0.65;
         this.scale = 1.0;
         this.capacity = 900;
         this.distance = 0.35;
         this.clearAlpha = 0.1;
-        this.baseStrokeAlpha = 0.25;
+        this.clearColor = "#000000";
+        this.baseStrokeAlpha = 0.15;
         this.internalCtx.globalAlpha = this.baseStrokeAlpha 
 
         this.positionX  = 0;
         this.positionY  = 0;
         this.textureScale = 1.0;
 
-        this.geo = new THREE.PlaneGeometry(2 * (info.height / info.width), 2);
+        this.geo = new THREE.PlaneGeometry(2, 2);
         
         this.tex = new THREE.CanvasTexture(this.internalCanvas);
         this.mat = new THREE.MeshBasicMaterial({ map: this.tex, transparent: true });
@@ -77,6 +59,12 @@ export default class Polartone {
 
     }
 
+    stop  = () => {
+        const { width, height} = this.internalCanvas;
+        this.internalCtx.clearRect(0,0,width,height);
+        this.positions  = [];
+    }
+
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
         folder.add(this, "songDuration");
@@ -89,11 +77,12 @@ export default class Polartone {
         folder.add(this, "distance");
         folder.addColor(this.internalCtx, "strokeStyle")
         folder.add(this, "baseStrokeAlpha").onChange(() => this.internalCtx.globalAlpha = this.baseStrokeAlpha);
-        folder.add(this, "clearAlpha", 0, 1, 0.001);
+        folder.add(this, "clearAlpha", 0, 1, 0.01);
+        folder.addColor(this, "clearColor");
+
         folder.add(this, "positionX", -2, 2, 0.01).onChange(() => this.mesh.position.x = this.positionX);
         folder.add(this, "positionY", -2, 2, 0.01).onChange(() => this.mesh.position.y = this.positionY);
         folder.add(this, "textureScale", -2, 2, 0.01).onChange(() => this.mesh.scale.set(this.textureScale, this.textureScale, this.textureScale) );
-
 
         return folder;
     };
@@ -113,8 +102,11 @@ export default class Polartone {
 
         // for a motion trail effect
         // const [width, height] = shape
-        this.internalCtx.fillStyle = 'rgb(0,0,0,'+this.clearAlpha+')'
+        this.internalCtx.globalAlpha = this.clearAlpha;
+        this.internalCtx.fillStyle = this.clearColor;
         this.internalCtx.fillRect(0,0, 1024, 1024)
+
+        this.internalCtx.globalAlpha = this.baseStrokeAlpha;
 
         let radius = 1 - dur;
         const startAngle = time;

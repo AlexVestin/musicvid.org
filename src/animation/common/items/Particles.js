@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import ImpactAnalyser from 'audio/ImpactAnalyser'
+import BaseItem from './BaseItem'
  
 
 const vertShader =
@@ -46,9 +47,9 @@ class ParticleData {
     }
 }
 
-export default class Particles {
+export default class Particles extends BaseItem {
     constructor(info) {
-
+        super();
         this.maxParticleCount = 1200; // particle count at 1080p
         this.particleMaxSpawnRate = 8; // max particles to spawn each frame. this takes effect during particle initlzn.
         this.particleOpacityMin = 0.9;

@@ -25,7 +25,7 @@ export default class SelectResolutionModal extends PureComponent {
         super(props);
 
         this.onParentSelect = props.onSelect;
-        this.state = { modalOpen: true, index: 0}
+        this.state = { modalOpen: false, index: 0}
     }
 
     getDimensions = (object) => { return { width: Number(object.res.split("x")[0]), height: Number(object.res.split("x")[1]) } }
@@ -33,8 +33,6 @@ export default class SelectResolutionModal extends PureComponent {
         let i = idx ? idx : this.state.index;
         let o = open ? open : !this.state.modalOpen;
         this.setState({ modalOpen: o, index: i });
-
-        console.log(idx, this.state.modalOpen, o)
     }
 
     onSelect = (info) => {
@@ -42,6 +40,7 @@ export default class SelectResolutionModal extends PureComponent {
         this.onParentSelect(info);
     }
     render() {
+
         return (
             <Modal
                 isOpen={this.state.modalOpen}

@@ -1,8 +1,10 @@
 
 import * as THREE from "three";
+import BaseItem from './BaseItem'
 
-export default class Polartone {
+export default class Polartone extends BaseItem {
     constructor(info) {
+        super();
         this.canvas = document.createElement("canvas");
         this.height  = 1024;
         this.width  = 1024;

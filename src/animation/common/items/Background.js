@@ -1,6 +1,8 @@
 
 import * as THREE from 'three'
 import ImpactAnalyser from '../../../audio/ImpactAnalyser'
+import loadImage from '../../../util/ImageLoader';
+import BaseItem from './BaseItem'
 
 const vertexShader = [
     "varying vec2 vUv;",
@@ -14,7 +16,6 @@ const fragmentShader = [
     "uniform sampler2D texture1;",
     "uniform bool should_vignette;",
     "uniform bool should_mirror;",
-
     "uniform float vignette_amt;",
     "varying vec2 vUv;",
 
@@ -36,9 +37,10 @@ const fragmentShader = [
 ].join("\n");
 
 
-export default class Background {
+export default class Background extends BaseItem {
 
     constructor(info) {
+        super();
         this.gui = info.gui;
         this.scene = info.scene;
         this.brightenToAudio = true;
@@ -46,6 +48,9 @@ export default class Background {
         this.vignetteAmount = 0.3;
 
         this.texture = new THREE.Texture();
+        this.texture.generateMipmaps = false;
+        this.texture.magFilter = THREE.LinearFilter;
+        this.texture.minFilter = THREE.LinearFilter;
         this.material = new THREE.ShaderMaterial( {
             uniforms: { 
                 texture1: {type: "t", value: this.texture }, 
@@ -61,7 +66,7 @@ export default class Background {
         this.scene.add(this.mesh);
 
         const url = "./img/solar.jpeg";
-        this.fromURL(url);
+        this.loadNewBackground(url);
         this.folder = this.setUpGUI(this.gui, "Background");
     }
 
@@ -69,7 +74,7 @@ export default class Background {
 
     changeImage = () => {
         this.folder.__root.modalRef.onParentSelect = this.loadNewBackground;
-        console.log(this.folder.__root.modalRef.toggleModal(3));
+        this.folder.__root.modalRef.toggleModal(3);
     }
     
 
@@ -87,6 +92,7 @@ export default class Background {
         folder.add(this, "brightenToAudio");
         folder.add(this, "brightenMultipler");           
         folder.add(this, "vignetteAmount").onChange(() => this.material.uniforms.value = this.vignetteAmount);
+        folder.add(this.mesh, "visible");
         folder.add(this.material.uniforms.should_mirror, "value", {name: "Mirror image"});
         this.impactAnalyser = new ImpactAnalyser(folder);
         this.impactAnalyser.endBin = 60;
@@ -94,6 +100,8 @@ export default class Background {
         folder.updateDisplay();
         return folder;
     }
+
+
 
     setBackground = (texture) => {
         texture.minFilter = THREE.LinearFilter;
@@ -104,31 +112,6 @@ export default class Background {
     }
 
     loadNewBackground = (selected) => {
-        if(typeof selected === "string") {
-            this.fromURL(selected);
-        }else {
-            this.fromFile(selected);
-        }
-    }
-
-    fromFile = (file) => {
-        const reader  = new FileReader();
-        const image = document.createElement("img");
-        const texture = new THREE.Texture();
-        texture.image = image;
-        reader.onload = (e) => {
-            image.src = e.target.result;
-            image.onload = () =>  {
-                texture.needsUpdate = true;
-                this.setBackground(texture);
-            }
-        }
-        reader.readAsDataURL(file);
-    }
-
-    fromURL = (url) => {        
-        const textureLoader = new THREE.TextureLoader();
-        textureLoader.crossOrigin = "";
-        textureLoader.load(url, this.setBackground)
+        loadImage(selected, this.setBackground);
     }
 }

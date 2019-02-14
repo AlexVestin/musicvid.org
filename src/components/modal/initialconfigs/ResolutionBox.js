@@ -11,7 +11,6 @@ export default class ResolutionBox extends PureComponent {
         const dim = this.getDimensions(object);
         const aspect = dim.width / dim.height;
 
-
         return { width: this.height * aspect, height: this.height, color: object.name === this.props.selected ? "gold" : null }
     }
     render() {

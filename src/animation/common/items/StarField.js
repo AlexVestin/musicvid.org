@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import ShaderToyMaterial from '../../../util/ShaderToyMaterial'
 import ImpactAnalyser from '../../../audio/ImpactAnalyser'
+import BaseItem from './BaseItem'
 
 
 
@@ -66,8 +67,9 @@ const fragmentShader = [
 
 
 
-export default class StarField {
+export default class StarField extends BaseItem {
     constructor(info) {
+        super();
         this.folder = info.gui.addFolder("StarField");
 
         this.geo = new THREE.PlaneGeometry(2,2);
