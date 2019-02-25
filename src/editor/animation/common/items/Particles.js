@@ -142,7 +142,7 @@ export default class Particles extends BaseItem {
 
     update = function(time, audioData) {
         if(this.particleSystem) {
-            const multiplier = this.impactAnalyser.analyseImpact(audioData.frequencyData);
+            const multiplier = this.impactAnalyser.analyse(audioData.frequencyData);
             for (let i = 0; i < this.maxParticleCount / 2; i++) {
 
                 this.updatePosition(i, multiplier);

@@ -5,7 +5,6 @@ import Plane from './Plane'
 import Background from './Background'
 import Particles from './Particles'
 import StarField from './StarField'
-import Aurora from './Aurora'
 import Polartone from './Polartone'
 import ThreePolartone from './ThreePolartone'
 import TimeRep from './TimeRep'
@@ -16,7 +15,12 @@ import SpriteTextMask from './SpriteTextMask'
 import SpriteText from './SpriteText'
 import ParticlesSideways  from './ParticlesSideways' 
 import MonsterBars from './MonsterBars'
-
+import SideLobes from './SideLobes'
+import Noise from './Noise'
+import SimplicityGalaxy from './SimplicityGalaxy'
+import TextLines from './TextLines' 
+import HexaGone from './HexaGone'
+import OverTheMoon from './OverTheMoon'
 
 
 
@@ -28,7 +32,6 @@ export default {
     Background,
     Particles,
     StarField,
-    Aurora,
     Polartone,
     ThreePolartone,
     TimeRep,
@@ -38,5 +41,11 @@ export default {
     SpriteTextMask,
     SpriteText,
     ParticlesSideways,
-    MonsterBars
+    MonsterBars,
+    SideLobes,
+    Noise,
+    SimplicityGalaxy,
+    TextLines,
+    HexaGone,
+    OverTheMoon
 }

@@ -112,34 +112,52 @@ function ProductCategories(props) {
       templateName: "Stars"
     },
     {
-      url:
-        'https://images.unsplash.com/photo-1523309996740-d5315f9cc28b?auto=format&fit=crop&w=400&q=80',
-      title: 'Gastronomy',
+      url: 'img/templates/AudioWave.png',
+      title: 'Audio Wave',
       width: '38%',
+      templateName: "AudioWave"
     },
     {
-      url:
-        'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=400&q=80',
-      title: 'Shopping',
+      url: 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=400&q=80',
+      title: 'Lobes',
       width: '24%',
+      templateName: "Lobes"
     },
     {
-      url:
-        'https://images.unsplash.com/photo-1506941433945-99a2aa4bd50a?auto=format&fit=crop&w=400&q=80',
-      title: 'Walking',
+      url:'img/templates/Noise.png',
+      title: 'Noise',
       width: '40%',
+      templateName: "Noise"
     },
     {
-      url:
-        'https://images.unsplash.com/photo-1533727937480-da3a97967e95?auto=format&fit=crop&w=400&q=80',
-      title: 'Fitness',
+      url: 'img/templates/SimplicityGalaxy.png',
+      title: 'Simplicity Galaxy',
       width: '20%',
+      templateName: "SimplicityGalaxy"
     },
     {
-      url:
-        'https://images.unsplash.com/photo-1518136247453-74e7b5265980?auto=format&fit=crop&w=400&q=80',
-      title: 'Reading',
+      url: 'img/templates/HexaGone.png',
+      title: 'HexaGone',
       width: '40%',
+      templateName:"HexaGone"
+    },
+    {
+      url:'img/templates/Noise.png',
+      title: 'Noise',
+      width: '25%',
+      templateName: "Noise"
+    },
+    {
+      url: 'img/templates/SimplicityGalaxy.png',
+      title: 'Simplicity Galaxy',
+      width: '49%',
+      templateName: "SimplicityGalaxy"
+    },
+    {
+      url: 'img/templates/HexaGone.png',
+      title: 'HexaGone',
+      width: '26%',
+      templateName:"HexaGone"
     },
   ];
 

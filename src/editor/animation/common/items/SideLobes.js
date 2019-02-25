@@ -39,7 +39,6 @@ export default class JSNationSpectrum extends BaseItem {
         this.tex.magFilter = THREE.LinearFilter;
         this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
-        this.emblem = new Emblem("./img/emblem.svg");     
         this.barHeightMultiplier = 1.3;
         this.folder = this.setUpGUI(info.gui, "Bars");
         
@@ -54,8 +53,14 @@ export default class JSNationSpectrum extends BaseItem {
         this.spectrumWidth = this.spectrumSize * (this.barWidth  + this.spectrumSpacing);
         this.spectrumHeight = 256;
 
+        
+        
         this.analyser = new SpectrumAnalyser(this.folder);
-
+        this.analyser.minDecibel = -100;
+        this.analyser.maxDecibel = -33;
+        //this.analyser.enableToWebAudioForm = false;
+        
+        this.analyser.smoothingTimeConstant = 0.2;
 
 
         info.scene.add(this.mesh);
@@ -95,12 +100,17 @@ export default class JSNationSpectrum extends BaseItem {
 
     
         const array = this.analyser.analyse(audioData.frequencyData);
-        console.log(array);
         
         this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
         this.ctx.shadowBlur = this.shadowBlur;
         this.ctx.shadowOffsetX = this.shadowOffsetX;
         this.ctx.shadowOffsetY = this.shadowOffsetY;
+
+        const halfWidth = this.size / 2;
+        const halfHeight = this.size / 2;
+
+
+
     
         if (this.spectrumAnimation === "phase_1") {
             var ratio = time;
@@ -130,23 +140,25 @@ export default class JSNationSpectrum extends BaseItem {
             var ratio = (time - 2) / 2.0;
     
             // drawing pass
+            this.ctx.beginPath();
+            this.ctx.moveTo(0,halfHeight);
             for (var i = 0; i < spectrumSize; i++) {
-                var value = array[i] * this.barHeightMultiplier * 0.3;
-    
-                // Used to smooth transiton between bar & full spectrum (lasts 1 sec)
-                if (ratio < 1) {
-                    value = value / (1 + 9 - 9 * ratio); 
-                }
-    
-                if (value < 2 * resRatio) {
-                    value = 2 * resRatio;
-                }
-    
-                this.ctx.fillRect(i * (barWidth + spectrumSpacing), spectrumHeight - value, barWidth, value, value);
+
+
+                this.ctx.lineTo(this.size * i/ spectrumSize, halfHeight - array[i]);
+                /*
+                var value = array[i];
+                let c = (i / spectrumSize + (i+1) / spectrumSize) / 2;
+                let d = (array[i] + array[i + 1]) / 2;
+
+                const cpx = this.size *  i / spectrumSize;
+                const cpy = value;
+                this.ctx.quadraticCurveTo(cpx, array[i+1], this.size * c, value);*/
             }
+
+            
         }
-        
+        this.ctx.fill();
         this.tex.needsUpdate = true;
-        this.ctx.clearRect(0, spectrumHeight, spectrumWidth, blockTopPadding); 
     }
 }

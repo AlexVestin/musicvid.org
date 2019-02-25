@@ -26,7 +26,7 @@ export default class Image extends BaseItem{
     
     update = (time, audioData) => {
         if(this.brightenToAudio && this.impactAnalyser) {
-            const impact = this.impactAnalyser.analyseImpact(audioData.frequencyData) ;
+            const impact = this.impactAnalyser.analyse(audioData.frequencyData) ;
             this.material.uniforms.vignette_amt.value = this.vignetteAmount + impact * this.brightenMultipler * -0.0005;
         }
     }

@@ -42,7 +42,7 @@ export default function SpectrumAnalyser(gui, object) {
     
 
     const f6 = gui.addFolder("Web Audio Conversion");
-    addAttribute("smoothingTimeConstant", 6, f6, { min: 0, max: 1.0 });
+    addAttribute("smoothingTimeConstant", 0.8, f6, { min: 0, max: 1.0 });
     addAttribute("minDecibel", -100, f6, { min: -100, max: 0 });
     addAttribute("maxDecibel", -10, f6, { min: -100, max: 0 });
 
@@ -70,7 +70,7 @@ export default function SpectrumAnalyser(gui, object) {
     this.prevOrigArray = [];
 
 
-    this.getTransformedSpectrum = (array) => {
+    this.analyse = (array) => {
         let newArr = array.slice();
         if(this.enableToWebAudioForm) {
             newArr = toWebAudioForm(newArr, this.prevOrigArray, this.smoothingTimeConstant);

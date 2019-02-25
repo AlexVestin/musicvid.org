@@ -166,8 +166,8 @@ export default class JSNationSpectrum extends BaseItem {
             this.trigY = Math.round(Math.random());
         }
 
-        let trigFuncX = this.trigX == 0 ? Math.cos : Math.sin;
-        let trigFuncY = this.trigY == 0 ? Math.cos : Math.sin;
+        let trigFuncX = this.trigX === 0 ? Math.cos : Math.sin;
+        let trigFuncY = this.trigY === 0 ? Math.cos : Math.sin;
 
         let dx = trigFuncX(this.waveFrameX) * this.maxShakeDisplacement * this.waveAmplitudeX * multiplier;
         let dy = trigFuncY(this.waveFrameY) * this.maxShakeDisplacement * this.waveAmplitudeY * multiplier;

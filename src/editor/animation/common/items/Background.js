@@ -65,7 +65,7 @@ export default class Background extends BaseItem {
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.material);
         this.scene.add(this.mesh);
 
-        const url = "./img/solar.jpeg";
+        const url = "./img/space.jpeg";
         this.loadNewBackground(url);
         this.folder = this.setUpGUI(this.gui, "Background");
     }
@@ -80,7 +80,7 @@ export default class Background extends BaseItem {
 
     update = (time, audioData) => {
         if(this.brightenToAudio && this.impactAnalyser) {
-            const impact = this.impactAnalyser.analyseImpact(audioData.frequencyData) ;
+            const impact = this.impactAnalyser.analyse(audioData.frequencyData) ;
             this.material.uniforms.vignette_amt.value = this.vignetteAmount + impact * this.brightenMultipler * -0.0005;
         }
     }

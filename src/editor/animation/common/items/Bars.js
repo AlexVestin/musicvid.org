@@ -38,7 +38,7 @@ export default class Bars extends BaseItem {
     };
 
     update = (time, audioData, alpha) => {
-        const bins = this.analyser.getTransformedSpectrum(audioData.frequencyData);
+        const bins = this.analyser.analyse(audioData.frequencyData);
         const divider = 100 / this.amplitude;
 
         this.group.children.forEach((e, i) => {

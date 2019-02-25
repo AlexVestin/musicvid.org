@@ -26,7 +26,7 @@ export default function ImpactAnalyser(gui, object) {
     addAttribute("deltaDecay", 0.01, f1, {min: 0});
    
     this.lastAmount = 0;
-    this.analyseImpact = (array) => {
+    this.analyse = (array) => {
         let newArr = array.slice();
         let amount = this.baseAmount;
         if(this.enableImpactAnalysis) amount = average(newArr, this);
