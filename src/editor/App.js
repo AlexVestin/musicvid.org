@@ -30,6 +30,7 @@ class App extends PureComponent {
         this.firstLoad = true;
         this.fastLoad = true;
         this.pauseTime = 0;
+        console.log("test")
     }
 
     loadNewAudioFile = () =>  {
