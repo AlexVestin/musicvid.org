@@ -24,7 +24,6 @@ export default class Scene3DOrtho {
         this.gui = gui;
         this.folder = gui.addFolder("Scene3D Ortho");
         this.itemsFolder = this.folder.addFolder("Items");
-        this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
     }

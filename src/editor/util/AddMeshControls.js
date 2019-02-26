@@ -1,11 +1,4 @@
 
-const NOISES = [
-    "BlueNoise64FFT.png",
-    "BayerMatrix.png",
-    "WhiteNoiseFFT.png",
-    "space.jpeg"
-]
-
 export default function addNoise(parent, mesh, gui) {
     const folder = gui.addFolder("Mesh Settings");
     const obj = {

@@ -6,7 +6,6 @@ import Background from './Background'
 import Particles from './Particles'
 import StarField from './StarField'
 import Polartone from './Polartone'
-import ThreePolartone from './ThreePolartone'
 import TimeRep from './TimeRep'
 import TimeRepCanvas from './TimeRepCanvas'
 import LineBed from './LineBed'
@@ -21,6 +20,8 @@ import SimplicityGalaxy from './SimplicityGalaxy'
 import TextLines from './TextLines' 
 import HexaGone from './HexaGone'
 import OverTheMoon from './OverTheMoon'
+import UniverseWithin from './UniverseWithin'
+
 
 
 
@@ -33,7 +34,6 @@ export default {
     Particles,
     StarField,
     Polartone,
-    ThreePolartone,
     TimeRep,
     TimeRepCanvas,
     LineBed,
@@ -47,5 +47,6 @@ export default {
     SimplicityGalaxy,
     TextLines,
     HexaGone,
-    OverTheMoon
+    OverTheMoon,
+    UniverseWithin
 }

@@ -6,8 +6,7 @@ import Button from '../components/Button';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 
-const backgroundImage =
-  'https://images.pexels.com/photos/736355/pexels-photo-736355.jpeg';
+const backgroundImage = './img/Background.png';
 
 const styles = theme => ({
   background: {
@@ -41,22 +40,25 @@ function ProductHero(props) {
         Upgrade your viusals
       </Typography>
       <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-        Enjoy secret offers up to -70% off the best luxury hotels every Sunday.
+          Make professional visuals directly in your browser.
+          <br/> 
+            No payments, watermarks or sign-ups!
       </Typography>
       <Button
+        disabled
         color="secondary"
         variant="contained"
         size="large"
         className={classes.button}
         style={{textAlign: "center", color: "rgb(40,40,42)"}}
         component={linkProps => (
-          <Link {...linkProps} href="/editor" variant="button" />
+          <Link {...linkProps} href="/projects" variant="button" />
         )}
       >
         View Projects
       </Button>
       <Typography variant="body2" color="inherit" className={classes.more}>
-        Discover the experience
+        Scroll down to view featured templates
       </Typography>
     </ProductHeroLayout>
   );

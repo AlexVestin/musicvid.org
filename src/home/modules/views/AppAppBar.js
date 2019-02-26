@@ -1,18 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 
 const styles = theme => ({
+  container: {
+    height: "7vh"
+  },
   title: {
     fontSize: 24,
   },
   placeholder: toolbarStyles(theme).root,
   toolbar: {
     justifyContent: 'space-between',
+
   },
   left: {
     flex: 1,
@@ -39,7 +42,7 @@ function AppAppBar(props) {
   const { classes } = props;
 
   return (
-    <div>
+    <div className={classes.container}>
       <AppBar position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
@@ -48,29 +51,11 @@ function AppAppBar(props) {
             underline="none"
             color="inherit"
             className={classes.title}
-            href="/premium-themes/onepirate"
+            href="/"
           >
             {'musicvid.org'}
           </Link>
-          <div className={classes.right}>
-            <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={classes.rightLink}
-              href="/premium-themes/onepirate/sign-in"
-            >
-              {'Sign In'}
-            </Link>
-            <Link
-              variant="h6"
-              underline="none"
-              className={clsx(classes.rightLink, classes.linkSecondary)}
-              href="/premium-themes/onepirate/sign-up"
-            >
-              {'Sign Up'}
-            </Link>
-          </div>
+          <div className={classes.right}></div>
         </Toolbar>
       </AppBar>
       <div className={classes.placeholder} />

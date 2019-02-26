@@ -6,7 +6,6 @@ import {
     exponentialTransform,
     transformToVisualBins,
     smoothDropoff,
-    logTransform,
     toWebAudioForm, 
     getByteSpectrum
 } from "./analyse_functions";
@@ -31,7 +30,6 @@ export default function SpectrumAnalyser(gui, object) {
 
     const f2 = gui.addFolder("Transformations");
     addAttribute("enableToWebAudioForm", true, f2);
-    addAttribute("enableLogTransform", true, f2);
     addAttribute("enableCombineBins", true, f2);
     addAttribute("enableNormalizeTransform", true, f2);
     addAttribute("enableAverageTransform", true, f2);
@@ -79,7 +77,6 @@ export default function SpectrumAnalyser(gui, object) {
         }
 
         if(this.enableCombineBins) newArr = transformToVisualBins(newArr, this);
-        //if(this.enableLogTransform) newArr = logTransform(newArr, this);
         if(this.enableNormalizeTransform) newArr = normalizeAmplitude(newArr, this);
         if(this.enableAverageTransform) newArr = averageTransform(newArr, this);
         if(this.enableTailTransform) newArr = tailTransform(newArr, this);

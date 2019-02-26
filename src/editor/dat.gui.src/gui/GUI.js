@@ -590,20 +590,15 @@ common.extend(
     },
 
     addFolderCopy: function(name, folderToCopy, useTitleRow = true) {
-      const newGuiParams = { name: name, parent: this, useTitleRow: useTitleRow };
       const li = document.createElement('li');
       const dme = folderToCopy.domElement.cloneNode(true);      
       li.appendChild(dme);
-      console.log(dme)
-      console.log(folderToCopy.domElement);
       this.__ul.appendChild(li);
-      console.log(name);
       this.__folders[name] = Object.assign(folderToCopy);
       this.__folders[name].li = li;
       this.onResize();
       dom.addClass(li, 'folder');
 
-      console.log(this.__folders[name])
 
     },
 

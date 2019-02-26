@@ -51,8 +51,8 @@ export default class ControllerContainer extends PureComponent {
         
         folder.add(this, "fps", [24, 25, 30, 48, 60]);
         folder.add(this, "preset", this.presetLookup)
-        folder.add(this, "startEncoding");
         folder.add(this, "MBitBitrate", 0, 20, 0.1);
+        folder.add(this, "startEncoding");
     }
 
     startEncoding = () => {
@@ -65,15 +65,16 @@ export default class ControllerContainer extends PureComponent {
         const { index } = this.state;
         const { gui, loaded } = this.props;
 
+        const selectedColor = "#444";
         return (
             <div className={classes.container}>
                 <div className={classes.wrapper}>
                     <div className={classes.headerButtons}>
-                        <div onClick={()=>this.setState({index: 0})} style={{backgroundColor: index === 0 ? "green" : ""}}>overview</div>
-                        <div onClick={()=>this.setState({index: 1})} style={{backgroundColor: index === 1 ? "green" : ""}}>layers</div>
-                        <div onClick={()=>this.setState({index: 2})} style={{backgroundColor: index === 2 ? "green" : ""}}>audio</div>
-                        <div onClick={()=>this.setState({index: 3})} style={{backgroundColor: index === 3 ? "green" : ""}}>settings</div>
-                        <div onClick={()=>this.setState({index: 4})} style={{backgroundColor: index === 4 ? "green" : ""}}>export</div>
+                        <div onClick={()=>this.setState({index: 0})} style={{backgroundColor: index === 0 ? selectedColor : ""}}>overview</div>
+                        <div onClick={()=>this.setState({index: 1})} style={{backgroundColor: index === 1 ? selectedColor : ""}}>layers</div>
+                        <div onClick={()=>this.setState({index: 2})} style={{backgroundColor: index === 2 ? selectedColor : ""}}>audio</div>
+                        <div onClick={()=>this.setState({index: 3})} style={{backgroundColor: index === 3 ? selectedColor : ""}}>settings</div>
+                        <div onClick={()=>this.setState({index: 4})} style={{backgroundColor: index === 4 ? selectedColor : ""}}>export</div>
                     </div>
                     <div style={{width: "100%", height: 5, backgroundColor: "gray"}}></div>
                     <SimpleBar data-simplebar-force-visible style={{ width: "100%", height: "95%", borderBottom: "2px solid gray", borderLeft: "2px solid gray", borderRight: "2px solid gray" }}>

@@ -4,9 +4,10 @@ import Home from './home/Home'
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+import withRoot from './home/modules/withRoot';
 
 
-export default class Index extends PureComponent {
+class Index extends PureComponent {
   render() {
     return (
       <Router >
@@ -19,3 +20,6 @@ export default class Index extends PureComponent {
     )
   }
 }
+
+
+export default withRoot(Index);

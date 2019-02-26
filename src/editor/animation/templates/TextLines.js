@@ -2,7 +2,6 @@
 
 import WebGLManager from '../WebGLManager'
 import Scene3DPerspective from '../common/scenes/Scene3DPerspective';
-import { Group } from 'three'
 
 export default class Manager extends WebGLManager {
 

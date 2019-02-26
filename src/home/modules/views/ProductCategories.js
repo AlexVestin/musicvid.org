@@ -15,6 +15,33 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
+  license: {
+    position: "absolute",
+    left: "5%",
+    bottom: "10%",
+    textAlign: "left",
+    
+  },
+  attrib: {
+    position: "absolute",
+    right: "5%",
+    bottom: "10%",
+    textAlign: "right",
+    
+  },
+  link: {
+    textDecoration: "none", 
+    color: "inherit", 
+    fontFamily:"'Roboto', sans-serif",
+    backgroundColor: "rgba(255,255,255,0.1)",
+    padding: 4,
+    borderRadius: "0.25em",
+    '&:hover': {
+      backgroundColor: "rgba(0,0,0,0.3)",
+    },
+  },
+  
+ 
   imageWrapper: {
     position: 'relative',
     display: 'block',
@@ -91,80 +118,92 @@ function ProductCategories(props) {
       url: 'img/templates/JSNation.png',
       title: 'Circle Spectrum',
       width: '40%',
-      templateName: "JSNation"
+      templateName: "JSNation",
+      attrib: "@caseif",
+      attribUrl: "https://github.com/caseif/vis.js",
+      license: "Attribution Required"
     },
     {
       url: 'img/templates/Polartone.png',
       title: 'Polartone',
       width: '20%',
-      templateName: "Polartone"
+      templateName: "Polartone",
+      attrib: "@mattdesl",
+      attribUrl: "https://github.com/mattdesl/Polartone",
+      license: "FREE"
     },
     {
       url: 'img/templates/Monstercat.png',
       title: 'Monstercat Bar Visualizer',
       width: '40%',
-      templateName: "Monstercat"
+      templateName: "Monstercat",
+      attrib: "@caseif & @itsIncept",
+      attribUrl: "https://github.com/caseif/vis.js",
+      license: "Attribution Required"
     },
     {
       url: 'img/templates/StarField.png',
       title: 'Star Field',
       width: '38%',
-      templateName: "Stars"
+      templateName: "Stars",
+      attrib: "@kali",
+      attribUrl: "https://www.shadertoy.com/user/kali",
+      license: "FREE"
     },
     {
       url: 'img/templates/AudioWave.png',
       title: 'Audio Wave',
       width: '38%',
-      templateName: "AudioWave"
+      templateName: "AudioWave",
+      attrib: "@GamleGaz",
+      attribUrl: "https://www.github.com/AlexVestin",
+      license: "FREE"
     },
     {
-      url: 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=400&q=80',
-      title: 'Lobes',
+      url: 'img/templates/UniverseWithin.png',
+      title: 'Universe Within',
       width: '24%',
-      templateName: "Lobes"
+      templateName: "UniverseWithin",
+      attrib: "@BigWIngs",
+      attribUrl: "https://www.youtube.com/channel/UCcAlTqd9zID6aNX3TzwxJXg",
+      twitter: "https://twitter.com/The_ArtOfCode",
+      license: "Attribution Required"
     },
     {
       url:'img/templates/Noise.png',
-      title: 'Noise',
+      title: 'Electric Noise',
       width: '40%',
-      templateName: "Noise"
+      templateName: "Noise",
+      attrib: "Samuel C. (@stormoid)",
+      attribUrl: "https://www.shadertoy.com/user/nimitz",
+      twitter: "https://twitter.com/stormoid",
+      license: "Attribution Required"
     },
     {
       url: 'img/templates/SimplicityGalaxy.png',
       title: 'Simplicity Galaxy',
       width: '20%',
-      templateName: "SimplicityGalaxy"
+      templateName: "SimplicityGalaxy",
+      attrib: "@CBS",
+      attribUrl: "https://www.shadertoy.com/user/CBS",
+      license: "FREE"
     },
     {
       url: 'img/templates/HexaGone.png',
       title: 'HexaGone',
       width: '40%',
-      templateName:"HexaGone"
-    },
-    {
-      url:'img/templates/Noise.png',
-      title: 'Noise',
-      width: '25%',
-      templateName: "Noise"
-    },
-    {
-      url: 'img/templates/SimplicityGalaxy.png',
-      title: 'Simplicity Galaxy',
-      width: '49%',
-      templateName: "SimplicityGalaxy"
-    },
-    {
-      url: 'img/templates/HexaGone.png',
-      title: 'HexaGone',
-      width: '26%',
-      templateName:"HexaGone"
+      templateName:"HexaGone",
+      attribUrl: "https://www.youtube.com/channel/UCcAlTqd9zID6aNX3TzwxJXg",
+      twitter: "https://twitter.com/The_ArtOfCode",
+      attrib: "@BigWIngs",
+      license: "Attribution Required"
     },
   ];
 
   return (
     <LayoutBody className={classes.root} component="section" width="large">
       <Typography variant="h4" marked="center" align="center" component="h2">
-        For all tastes and all desires
+        Featured projects
       </Typography>
       <div className={classes.images}>
         {images.map(image => (
@@ -193,6 +232,20 @@ function ProductCategories(props) {
                 {image.title}
                 <div className={classes.imageMarked} />
               </Typography>
+
+              <div className={classes.attrib}>
+                <Typography component="h6" variant="h6" color="inherit" >
+                  {image.attrib}
+                </Typography>
+                <Typography component="h6" variant="h6" color="inherit">
+                  
+                  <a href={image.attribUrl} className={classes.link}>Website</a>
+                  <div style={{fontSize: 12, marginTop: 4}}>{image.license}</div>
+                </Typography>
+              </div>
+
+ 
+
             </div>
           </ButtonBase>
         ))}

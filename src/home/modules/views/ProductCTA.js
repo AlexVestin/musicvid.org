@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '../components/Typography';
-import TextField from '../components/TextField';
 import Snackbar from '../components/Snackbar';
 import LayoutBody from '../components/LayoutBody';
 import Button from '../components/Button';
@@ -21,7 +20,7 @@ const styles = theme => ({
   card: {
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: theme.palette.warning.main,
+    backgroundColor: "#99AAB5",
     padding: theme.spacing(8, 3),
   },
   cardContent: {
@@ -86,19 +85,20 @@ class ProductCTA extends React.Component {
             <div className={classes.card}>
               <form onSubmit={this.handleSubmit} className={classes.cardContent}>
                 <Typography variant="h2" component="h2" gutterBottom>
-                  Receive offers
+                 Community
                 </Typography>
                 <Typography variant="h5">
-                  Taste the holidays of the everyday close to home.
+                  Join the community! Request features and visuals, ask for help, or show off your videos
                 </Typography>
-                <TextField noBorder className={classes.textField} placeholder="Your email" />
                 <Button
                   type="submit"
-                  color="primary"
+                  color="#7289DA"
                   variant="contained"
+                  style={{backgroundColor: "#7289DA"}}
                   className={classes.button}
+                  href="https://discord.gg/Xer3X6"
                 >
-                  Keep me updated
+                  Discord Link
                 </Button>
               </form>
             </div>
@@ -107,7 +107,7 @@ class ProductCTA extends React.Component {
             <Hidden smDown>
               <div className={classes.imageDots} />
               <img
-                src="https://images.unsplash.com/photo-1527853787696-f7be74f2e39a?auto=format&fit=crop&w=750&q=80"
+                src="./onepirate/curves.jpg"
                 alt="call to action"
                 className={classes.image}
               />

@@ -209,7 +209,6 @@ export function smoothDropoff(array, object) {
     if(!prevArr) return array;
 
     var newArr = [];
-    let t;
     for(var i = 0; i < array.length; i++) {
         newArr[i] = (array[i] + (prevArr[i] * dropoffAmount)) / (1+dropoffAmount)
         if(newArr[i] <= 0) newArr[i] = 0.01
@@ -288,7 +287,7 @@ export function toWebAudioForm(arr, prevArr, smoothingTimeConstant, arrSize = nu
 }
 
 export function average(array, object) {
-    const { startBin, endBin, amplitude }= object;
+    const { startBin, endBin }= object;
     let avg = 0.0;
 
     const len = Math.min(array.length, endBin);

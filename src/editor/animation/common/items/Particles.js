@@ -4,27 +4,27 @@ import BaseItem from './BaseItem'
  
 
 const vertShader =
-    "attribute float size; \
-    attribute float alpha; \
-    uniform vec3 color; \
-    varying float vAlpha; \
-    varying vec3 vColor; \
-    void main() { \
-        vColor = color; \
-        vAlpha = alpha; \
-        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0); \
-        gl_PointSize = 100.0 * size / length(mvPosition.xyz); \
-        gl_Position = projectionMatrix * mvPosition; \
-    }";
+    `attribute float size;
+    attribute float alpha;
+    uniform vec3 color; 
+    varying float vAlpha; 
+    varying vec3 vColor; 
+    void main() { 
+        vColor = color; 
+        vAlpha = alpha; 
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0); 
+        gl_PointSize = 100.0 * size / length(mvPosition.xyz); 
+        gl_Position = projectionMatrix * mvPosition; 
+    }`;
 
 const fragShader =
-    "uniform sampler2D texture; \
-    varying float vAlpha; \
-    varying vec3 vColor; \
-    void main() { \
-        gl_FragColor = vec4(vColor, vAlpha); \
-        gl_FragColor = gl_FragColor * texture2D(texture, gl_PointCoord); \
-    }";
+    `uniform sampler2D texture; 
+    varying float vAlpha; 
+    varying vec3 vColor; 
+    void main() { 
+        gl_FragColor = vec4(vColor, vAlpha); 
+        gl_FragColor = gl_FragColor * texture2D(texture, gl_PointCoord); 
+    }`;
 
 
 class ParticleData {
@@ -280,7 +280,6 @@ export default class Particles extends BaseItem {
 
      applyPosition = (i, x, y, z) => {
         let baseIndex = this.VERTEX_SIZE * i;
-        let shiftedBaseIndex = baseIndex + this.maxParticleCount / 2;
         this.applyMirroredValue(this.particlesGeom.attributes.position.array, baseIndex + 0, x, this.VERTEX_SIZE);
         this.applyMirroredValue(this.particlesGeom.attributes.position.array, baseIndex + 1, y, this.VERTEX_SIZE);
         this.applyMirroredValue(this.particlesGeom.attributes.position.array, baseIndex + 2, z, this.VERTEX_SIZE);

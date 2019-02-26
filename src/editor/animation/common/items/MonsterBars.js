@@ -1,8 +1,16 @@
 
 import * as THREE from "three";
 import SpectrumAnalyser from '../../../audio/SpectrumAnalyser'
-import Emblem from "./Emblem";
 import BaseItem from './BaseItem'
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
 
 export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {
@@ -14,39 +22,25 @@ export default class JSNationSpectrum extends BaseItem {
         this.canvas.width = this.size;
         this.canvas.height = this.size;
 
-        this.colors = ["#FFFFFF", "#FFFF00", "#FF0000", "#FF66FF", "#333399", "#0000FF", "#33CCFF", "#00FF00"];
-        this.spectrumCount = 8;
-        this.exponents = [1, 1.12, 1.14, 1.30, 1.33, 1.36, 1.50, 1.52];
-        this.smoothMargins = [0, 2, 2, 3, 3, 3, 5, 5];
-        this.spectrumCache = [];
-        this.delays = [0, 1, 2, 3, 4, 5, 6, 7];
-        this.maxBufferSize = Math.max.apply(null, this.delays);
         this.resMult = info.height / info.width;
 
-        this.exp = 4
-        this.preAmplitude = 1.0;
-        this.emblemExaggeration = 1.5;
 
-        this.startBin = 8;
-        this.keepBins = 40;
-        this.prevArr = [];
-        this.minRadius = this.size / 4;
-
-        //SHAKE 
         this.scale = 1.0
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.tex.generateMipmaps = false;
         this.tex.magFilter = THREE.LinearFilter;
         this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
-        this.emblem = new Emblem("./img/emblem.svg");     
-        this.barHeightMultiplier = 1.3;
-        this.folder = this.setUpGUI(info.gui, "Bars");
-        
-        this.ctx.shadowBlur = 12;
+        this.barHeightMultiplier = 6.0;
 
+        this.shadowBlur = 12;
+        this.shadowOffsetX = 0; 
+        this.shadowOffsetY = 0; 
+
+        this.color = "#ff0000";
+        this.shadowAlpha = 0.5;
         this.spectrumAnimation = "phase_1";
-        this.spectrumSize  = 64;
+        this.spectrumSize  = 63;
         this.resRatio = info.width / info.height;
         this.barWidth = 6;
         this.spectrumSpacing = 2;
@@ -54,8 +48,9 @@ export default class JSNationSpectrum extends BaseItem {
         this.spectrumWidth = this.spectrumSize * (this.barWidth  + this.spectrumSpacing);
         this.spectrumHeight = 256;
 
+        
+        this.folder = this.setUpGUI(info.gui, "Bars");
         this.analyser = new SpectrumAnalyser(this.folder);
-
 
 
         info.scene.add(this.mesh);
@@ -75,10 +70,13 @@ export default class JSNationSpectrum extends BaseItem {
         folder.add(this.mesh.position, "y", -2, 2, 0.01);
         folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));
 
-        folder.add(this.ctx, "shadowBlur", 0, 100);
-        folder.add(this, "barHeightMultiplier", 0, 6.0, 0.01);
-        folder.add(this.ctx, "shadowOffsetX", 0, 100);
-        folder.add(this.ctx, "shadowOffsetY", 0, 100);
+        folder.addColor(this, "color");
+        folder.add(this, "shadowBlur", 0, 100);
+        folder.add(this, "shadowAlpha", 0, 1, 0.001);
+
+        folder.add(this, "barHeightMultiplier", 0, 12.0, 0.01);
+        folder.add(this, "shadowOffsetX", 0, 100);
+        folder.add(this, "shadowOffsetY", 0, 100);
         return folder;
     }
 
@@ -92,20 +90,17 @@ export default class JSNationSpectrum extends BaseItem {
     update = (time, audioData) => {
         const { spectrumHeight, spectrumWidth, resRatio, spectrumSize, spectrumSpacing, barWidth, blockTopPadding } = this;
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
-
-    
         const array = this.analyser.analyse(audioData.frequencyData);
-        console.log(array);
-        
-        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        const rgb = hexToRgb(this.color);
+        this.ctx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${this.shadowAlpha})`;
         this.ctx.shadowBlur = this.shadowBlur;
         this.ctx.shadowOffsetX = this.shadowOffsetX;
         this.ctx.shadowOffsetY = this.shadowOffsetY;
-    
-        if (this.spectrumAnimation === "phase_1") {
-            var ratio = time;
+        this.ctx.fillStyle = this.color;
 
-            this.ctx.fillStyle = "red";
+        let ratio;
+        if (this.spectrumAnimation === "phase_1") {
+            ratio = time;
 
             this.ctx.fillRect(0, spectrumHeight - 2 * resRatio, (spectrumWidth/2) * ratio, 2 * resRatio);
             this.ctx.fillRect(spectrumWidth - (spectrumWidth/2) * ratio, spectrumHeight - 2 * resRatio, (spectrumWidth/2) * ratio, 2 * resRatio);
@@ -115,7 +110,7 @@ export default class JSNationSpectrum extends BaseItem {
             }
 
         } else if (this.spectrumAnimation === "phase_2") {
-            var ratio = (time - 1.0) / 2.0;
+            ratio = (time - 1.0) / 2.0;
     
             this.ctx.globalAlpha = Math.abs(Math.cos(ratio*10));
     
@@ -127,7 +122,7 @@ export default class JSNationSpectrum extends BaseItem {
                 this.spectrumAnimation = "phase_3";
             }
         } else if (this.spectrumAnimation === "phase_3") {
-            var ratio = (time - 2) / 2.0;
+            ratio = (time - 2) / 2.0;
     
             // drawing pass
             for (var i = 0; i < spectrumSize; i++) {

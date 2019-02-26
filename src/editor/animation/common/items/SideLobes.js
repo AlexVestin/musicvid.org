@@ -1,7 +1,6 @@
 
 import * as THREE from "three";
 import SpectrumAnalyser from '../../../audio/SpectrumAnalyser'
-import Emblem from "./Emblem";
 import BaseItem from './BaseItem'
 
 export default class JSNationSpectrum extends BaseItem {
@@ -95,7 +94,7 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     update = (time, audioData) => {
-        const { spectrumHeight, spectrumWidth, resRatio, spectrumSize, spectrumSpacing, barWidth, blockTopPadding } = this;
+        const { spectrumHeight, spectrumWidth, resRatio, spectrumSize } = this;
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
 
     
@@ -106,14 +105,10 @@ export default class JSNationSpectrum extends BaseItem {
         this.ctx.shadowOffsetX = this.shadowOffsetX;
         this.ctx.shadowOffsetY = this.shadowOffsetY;
 
-        const halfWidth = this.size / 2;
         const halfHeight = this.size / 2;
-
-
-
-    
+        var ratio;
         if (this.spectrumAnimation === "phase_1") {
-            var ratio = time;
+            ratio = time;
 
             this.ctx.fillStyle = "red";
 
@@ -125,7 +120,7 @@ export default class JSNationSpectrum extends BaseItem {
             }
 
         } else if (this.spectrumAnimation === "phase_2") {
-            var ratio = (time - 1.0) / 2.0;
+            ratio = (time - 1.0) / 2.0;
     
             this.ctx.globalAlpha = Math.abs(Math.cos(ratio*10));
     
@@ -137,7 +132,7 @@ export default class JSNationSpectrum extends BaseItem {
                 this.spectrumAnimation = "phase_3";
             }
         } else if (this.spectrumAnimation === "phase_3") {
-            var ratio = (time - 2) / 2.0;
+            ratio = (time - 2) / 2.0;
     
             // drawing pass
             this.ctx.beginPath();

@@ -9,20 +9,3 @@
     
 }
 
-.logo {
-    display:flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-    padding-top: 14px;
-
-    height: $header-height;
-    color: $color-light1;
-    font-size: 30px;
-    text-align: center;
-    border-bottom: 3px solid $color-dark3;
-
-    user-select: none;
-    cursor:pointer;
-
-}

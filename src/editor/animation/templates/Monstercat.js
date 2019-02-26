@@ -15,6 +15,11 @@ export default class Monstercat extends WebGLManager {
         this.scenes.push(particlesScene);
 
         const bars = spectrumBarsScene.addItemFromText("MonsterBars");
+        const artistText = spectrumBarsScene.addItemFromText("SpriteText");
+        artistText.setText("Artist - Song", 0, -0.125);
+        artistText.setUpGUI(this.gui.__folders["Overview"], "Artist text");
+
+
         this.scenes.push(spectrumBarsScene);
         bars.setUpGUI(this.gui.__folders["Overview"], "Bars")
 

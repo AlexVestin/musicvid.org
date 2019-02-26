@@ -1,9 +1,7 @@
 
 
 import * as THREE from 'three'
-import Scene3DOrthoGraphic from '../common/scenes/Scene3DOrthoGraphic'
-import Scene3DPerspective from '../common/scenes/Scene3DPerspective'
-import Scene2D from '../common/scenes/Scene2D'
+
 
 export default class Manager {
 

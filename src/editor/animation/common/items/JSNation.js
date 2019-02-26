@@ -217,7 +217,7 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     smooth = (points, margin) => {
-        if (margin == 0) {
+        if (margin === 0) {
             return points;
         }
 

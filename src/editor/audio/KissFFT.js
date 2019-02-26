@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var KissFFT = function(KissFFT) {
   KissFFT = KissFFT || {};
   let scriptArgs, readbuffer, read, quit, printErr, print, FS;

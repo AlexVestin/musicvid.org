@@ -5,6 +5,7 @@
     height: $body-height;
     display: flex;
     flex-direction: column;
+    overflow: hidden !important;
 }
 
 .leftContainer {

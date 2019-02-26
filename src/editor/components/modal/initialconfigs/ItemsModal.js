@@ -5,9 +5,6 @@ export default class ItemsModal extends PureComponent {
 
     state = {selected: ""}
 
-    constructor(props) {
-        super(props);
-    }
     setSelected = (name) => {this.setState({selected:name})}
   render() {
     return (

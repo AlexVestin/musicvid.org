@@ -113,20 +113,23 @@ export default class Particles extends BaseItem {
         var velocityResScale = Math.pow(resRatio, 5);
         var fleckVelocity = maxParticleVelocity * fleckVelocityScalar;
 
-        for (var p = 0; p < particleCount; p++) {
+
+        let xRange, yRange, pX, pY, pZ, p;
+        let particle;
+        for (p = 0; p < particleCount; p++) {
             var z = biasedRandom(zPosRange, zPosBias) + zModifier;
-            var xRange =
+            xRange =
                 Math.abs(this.camera.position.z - z) *
                 Math.tan(toRads(VIEW_ANGLE)) *
                 2; // maximum range on the x-axis at this z-value
-            var yRange =
+            yRange =
                 Math.abs(this.camera.position.z - z) *
                 Math.tan(toRads(VIEW_ANGLE / this.aspect)) *
                 2; // maximum range on the y-axis at this z-value
-            var pX = Math.random() * xRange - xRange / 2,
-                pY = centerBiasedRandom(yRange, xPosBias),
-                pZ = z,
-                particle = new THREE.Vector3(pX, pY, pZ);
+            pX = Math.random() * xRange - xRange / 2
+            pY = centerBiasedRandom(yRange, xPosBias)
+            pZ = z
+            particle = new THREE.Vector3(pX, pY, pZ);
 
             // create a velocity vector
             particle.velocity = new THREE.Vector3(
@@ -146,21 +149,21 @@ export default class Particles extends BaseItem {
         fleckYVelScalar *= fleckVelocity;
 
         var fleckZ = 150;
-
-        for (var p = 0; p < fleckCount; p++) {
-            var z = fleckZ;
-            var xRange =
+        let fleck;
+        for (p = 0; p < fleckCount; p++) {
+            z = fleckZ;
+            xRange =
                 Math.abs(this.camera.position.z - z) *
                 Math.tan(toRads(VIEW_ANGLE)) *
                 2; // maximum range on the x-axis at this z-value
-            var yRange =
+            yRange =
                 Math.abs(this.camera.position.z - z) *
                 Math.tan(toRads(VIEW_ANGLE / this.aspect)) *
                 2; // maximum range on the y-axis at this z-value
-            var pX = Math.random() * xRange - xRange / 2,
-                pY = Math.floor(Math.random() * yRange) - yRange / 2,
-                pZ = z,
-                fleck = new THREE.Vector3(pX, pY, pZ);
+            pX = Math.random() * xRange - xRange / 2
+            pY = Math.floor(Math.random() * yRange) - yRange / 2
+            pZ = z
+            fleck = new THREE.Vector3(pX, pY, pZ);
             fleck.fleck = true;
 
             // create a velocity vector
@@ -177,22 +180,22 @@ export default class Particles extends BaseItem {
         var bokehYVelRange = (bokehMinVelocity + bokehMaxVelocity) * 0.5 * 2;
 
         var bokehZ = 200;
-
-        for (var p = 0; p < bokehCount; p++) {
-            var z = bokehZ;
+        let b;
+        for (p = 0; p < bokehCount; p++) {
+            z = bokehZ;
             //var z = Math.random() * zPosRange - (zPosRange / 2);
-            var xRange =
+            xRange =
                 Math.abs(this.camera.position.z - z) *
                 Math.tan(toRads(VIEW_ANGLE)) *
                 2; // maximum range on the x-axis at this z-value
-            var yRange =
+            yRange =
                 Math.abs(this.camera.position.z - z) *
                 Math.tan(toRads(VIEW_ANGLE / this.aspect)) *
                 2; // maximum range on the y-axis at this z-value
-            var pX = Math.random() * xRange - xRange / 2,
-                pY = Math.random() * yRange - yRange / 2,
-                pZ = z,
-                b = new THREE.Vector3(pX, pY, pZ);
+            pX = Math.random() * xRange - xRange / 2
+            pY = Math.random() * yRange - yRange / 2
+            pZ = z
+            b = new THREE.Vector3(pX, pY, pZ);
             b.bokeh = true;
 
             // create a velocity vector
@@ -324,7 +327,7 @@ export default class Particles extends BaseItem {
             ? fleckYVelScalar
             : yVelRange;
         var velVector = new THREE.Vector3(
-            (side != 0 ? 0.5 : 1) * particle.bokeh
+            (side !== 0 ? 0.5 : 1) * particle.bokeh
                 ? Math.random() * (bokehMaxVelocity - bokehMinVelocity) +
                   bokehMinVelocity
                 : particle.fleck
@@ -341,17 +344,17 @@ export default class Particles extends BaseItem {
                 velocityResScale
             )
         );
-        if (side == 0) {
+        if (side === 0) {
             particle.velocity = velVector;
-        } else if (side == 2) {
+        } else if (side === 2) {
             particle.velocity = velVector.multiply(new THREE.Vector3(-1, 1, 1));
-        } else if (side == 1) {
+        } else if (side === 1) {
             particle.velocity = new THREE.Vector3(
                 velVector.y,
                 velVector.x,
                 velVector.z
             );
-        } else if (side == 3) {
+        } else if (side === 3) {
             particle.velocity = new THREE.Vector3(
                 velVector.y,
                 -velVector.x,
@@ -385,8 +388,10 @@ export default class Particles extends BaseItem {
             bokehSystem
         } = this;
         particleSystem.material.size = particleSize;
-        for (var i = 0; i < particles.vertices.length; i++) {
-            var particle = particles.vertices[i];
+
+        let particle, i;
+        for (i = 0; i < particles.vertices.length; i++) {
+            particle = particles.vertices[i];
             particle.x += particle.velocity.x * velMult;
             particle.y += particle.velocity.y * velMult;
             particle.z += particle.velocity.z * velMult;
@@ -397,8 +402,8 @@ export default class Particles extends BaseItem {
         particleSystem.geometry.__dirtyVertices = true;
         particleSystem.geometry.verticesNeedUpdate = true;
 
-        for (var i = 0; i < flecks.vertices.length; i++) {
-            var particle = flecks.vertices[i];
+        for (i = 0; i < flecks.vertices.length; i++) {
+            particle = flecks.vertices[i];
             particle.x += particle.velocity.x * velMult;
             particle.y += particle.velocity.y * velMult;
             particle.z += particle.velocity.z * velMult;
@@ -409,8 +414,8 @@ export default class Particles extends BaseItem {
         fleckSystem.geometry.__dirtyVertices = true;
         fleckSystem.geometry.verticesNeedUpdate = true;
 
-        for (var i = 0; i < bokeh.vertices.length; i++) {
-            var particle = bokeh.vertices[i];
+        for (i = 0; i < bokeh.vertices.length; i++) {
+            particle = bokeh.vertices[i];
             particle.x += particle.velocity.x * velMult;
             particle.y += particle.velocity.y * velMult;
             particle.z += particle.velocity.z * velMult;
@@ -429,30 +434,32 @@ export default class Particles extends BaseItem {
             : fleck
             ? fleckZ
             : biasedRandom(zPosRange, zPosBias) + zModifier; // random z-value
-        if (side == 0 || fleck) {
+
+        let x, yRange, y, xRange;
+        if (side === 0 || fleck) {
             // left
-            var x = -this.getXRangeAtZ(z) / 2; // x-value intersecting the frustum at this z-value
-            var yRange = this.getYRangeAtZ(z); // maximum range on the y-axis at this z-value
-            var y = bokeh
+            x = -this.getXRangeAtZ(z) / 2; // x-value intersecting the frustum at this z-value
+            yRange = this.getYRangeAtZ(z); // maximum range on the y-axis at this z-value
+            y = bokeh
                 ? Math.random() * yRange - yRange / 2
                 : centerBiasedRandom(yRange, xPosBias); // random y-value within calculated range
-        } else if (side == 2) {
+        } else if (side === 2) {
             // right
-            var x = this.getXRangeAtZ(z) / 2;
-            var yRange = this.getYRangeAtZ(z);
-            var y = bokeh
+            x = this.getXRangeAtZ(z) / 2;
+            yRange = this.getYRangeAtZ(z);
+            y = bokeh
                 ? Math.random() * yRange - yRange / 2
                 : centerBiasedRandom(yRange, xPosBias); // random y-value within calculated range
-        } else if (side == 1) {
+        } else if (side === 1) {
             // top
-            var y = -this.getYRangeAtZ(z) / 2;
-            var xRange = this.getXRangeAtZ(z);
-            var x = Math.random() * xRange - xRange / 2;
+            y = -this.getYRangeAtZ(z) / 2;
+            xRange = this.getXRangeAtZ(z);
+            x = Math.random() * xRange - xRange / 2;
         } else {
             // bottom
-            var y = this.getYRangeAtZ(z) / 2;
-            var xRange = this.getXRangeAtZ(z);
-            var x = Math.random() * xRange - xRange / 2;
+            y = this.getYRangeAtZ(z) / 2;
+            xRange = this.getXRangeAtZ(z);
+            x = Math.random() * xRange - xRange / 2;
         }
         return new THREE.Vector3(x, y, z);
     }
@@ -490,22 +497,6 @@ function brighten(hexString, factor) {
     var newBlue = Math.floor(
         parseInt("0x" + blueHex) * (1 / factor) + 255 * ((factor - 1) / factor)
     );
-    var newColor =
-        "#" +
-        newRed.toString(16).toUpperCase() +
-        newGreen.toString(16).toUpperCase() +
-        newBlue.toString(16).toUpperCase();
-    return newColor;
-}
-
-function darken(hexString, factor) {
-    hexString = hexString.replace("#", "");
-    var redHex = hexString.substring(0, 2);
-    var greenHex = hexString.substring(2, 4);
-    var blueHex = hexString.substring(4, 6);
-    var newRed = Math.floor(parseInt("0x" + redHex) * (1 / factor));
-    var newGreen = Math.floor(parseInt("0x" + greenHex) * (1 / factor));
-    var newBlue = Math.floor(parseInt("0x" + blueHex) * (1 / factor));
     var newColor =
         "#" +
         newRed.toString(16).toUpperCase() +

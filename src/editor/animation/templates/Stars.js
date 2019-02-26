@@ -1,7 +1,6 @@
 
 
 import Scene3DOrthoGraphic from '../common/scenes/Scene3DOrthoGraphic'
-import Scene3DPerspective from '../common/scenes/Scene3DPerspective'
 import WebGLManager from '../WebGLManager'
 
 export default class Stars extends WebGLManager {

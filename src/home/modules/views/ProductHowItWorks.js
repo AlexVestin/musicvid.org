@@ -72,12 +72,12 @@ function ProductHowItWorks(props) {
               <div className={classes.item}>
                 <div className={classes.number}>1.</div>
                 <img
-                  src="onepirate/productHowItWorks1.svg"
+                  src="onepirate/project-management.png"
                   alt="suitcase"
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  Appointment every Wednesday 9am.
+                  Choose a template to start from, or create a new project and select the items you want.
                 </Typography>
               </div>
             </Grid>
@@ -85,12 +85,12 @@ function ProductHowItWorks(props) {
               <div className={classes.item}>
                 <div className={classes.number}>2.</div>
                 <img
-                  src="onepirate/productHowItWorks2.svg"
+                  src="onepirate/music-and-multimedia.png"
                   alt="graph"
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  First come, first served. Our offers are in limited quantities, so be quick.
+                  Play around with the different settings until you have something you like.
                 </Typography>
               </div>
             </Grid>
@@ -98,28 +98,28 @@ function ProductHowItWorks(props) {
               <div className={classes.item}>
                 <div className={classes.number}>3.</div>
                 <img
-                  src="onepirate/productHowItWorks3.svg"
+                  src="onepirate/video.png"
                   alt="clock"
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  {'New offers every week. New experiences, new surprises. '}
-                  {'Your Sundays will no longer be alike.'}
+                  Hit export!
                 </Typography>
               </div>
             </Grid>
           </Grid>
         </div>
         <Button
+          disabled
           color="secondary"
           size="large"
           variant="contained"
           className={classes.button}
           component={linkProps => (
-            <Link {...linkProps} href="/premium-themes/onepirate/sign-up" variant="button" />
+            <Link {...linkProps} href="/tutorials" variant="button" />
           )}
         >
-          Get started
+          More information
         </Button>
       </LayoutBody>
     </section>

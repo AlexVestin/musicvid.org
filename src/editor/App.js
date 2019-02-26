@@ -8,7 +8,6 @@ import TrackContainer from './components/track/TrackContainer';
 import ModalContainer from './components/modal/initialconfigs/SelectResolutionModal';
 import Sound from './audio/Sound'
 import Exporter from './export/Exporter'
-//import AnimationManager from './animation/templates/Polartone'
 
 class App extends PureComponent {
 
@@ -30,6 +29,7 @@ class App extends PureComponent {
 
         this.firstLoad = true;
         this.fastLoad = true;
+        this.pauseTime = 0;
     }
 
     loadNewAudioFile = () =>  {
@@ -59,17 +59,12 @@ class App extends PureComponent {
         if(this.firstLoad) {
             var url = new URL(window.location.href);
             var template = url.searchParams.get("template");
-            console.log("./animation/templates/" + template)
             import("./animation/templates/" + template + ".js").then(AnimationManager => {
-                console.log(AnimationManager)
                 this.animationManager = new AnimationManager.default(this.gui, this.resolution, this.audio);
                 this.update();
                 this.firstLoad = false;
                 this.audioFolder.add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384]).onChange(() => this.audio.setFFTSize(this.audio.fftSize))
             });
-            
-
-           
         }
        
     }
@@ -77,10 +72,13 @@ class App extends PureComponent {
     play = () => {
         if(!this.state.playing) {
             this.setState({playing: true});
-            this.audio.play(this.state.time);
-            this.startTime =  performance.now();
+            const t = this.state.time + this.pauseTime;
+            this.audio.play(t);
+            this.startTime =  performance.now() - (this.pauseTime * 1000);
         }else {
-            this.stop();
+            this.setState({playing: false});
+            this.pauseTime =  (performance.now() - this.startTime) / 1000;
+            this.audio.stop();
         }
     }
 
@@ -91,6 +89,7 @@ class App extends PureComponent {
         if(this.animationManager)
             this.animationManager.stop();
         this.setState({playing: false, time: 0});
+        this.pauseTime = 0;
     }
 
     update = () => {

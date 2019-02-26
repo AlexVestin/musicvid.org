@@ -1,6 +1,7 @@
 
 import * as THREE from "three";
 import BaseItem from './BaseItem'
+import addMeshControls from '../../../util/AddMeshControls'
 
 
 const fonts = ["Arial", "Helvetica", "Times New Roman", "Times", "Courier New", "Courier", "Verdana", "Georgia", "Palatino", "Garamond", "Bookman", "Comic Sans MS"]
@@ -43,15 +44,12 @@ export default class Polartone extends BaseItem {
 
         this.fontSize = 150;
         this.font = "Arial";
-        this.positionX  = 0;
-        this.positionY  = 0;
-        this.textureScale = 0.5;
         this.ctx.fillStyle = "#FFFFFF";
         this.aspect = info.width/info.height;
         this.text = "Example Text";
         this.ctx.textAlign = "center";
 
-        this.folder = this.setUpGUI(info.gui, "Polartone");
+        
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.mat = new THREE.ShaderMaterial({
             vertexShader,
@@ -65,7 +63,7 @@ export default class Polartone extends BaseItem {
         //this.mat = new THREE.MeshBasicMaterial({map:tex, transparent: true});
         this.geo = new THREE.PlaneGeometry(2,2 * this.aspect);
         this.mesh = new THREE.Mesh(this.geo, this.mat);
-        this.mesh.scale.set(this.textureScale, this.textureScale, this.textureScale)
+        this.folder = this.setUpGUI(info.gui, "Polartone");
 
         this.updateText();
         info.scene.add(this.mesh);
@@ -79,9 +77,8 @@ export default class Polartone extends BaseItem {
         this.ctx.font = `${this.fontSize}px ${this.font}`;
         this.ctx.textAlign = "center";
         this.tex.needsUpdate = true;
-        this.ctx.fillText(this.text, width/2, height / 2)
-        this.ctx.fillText("OUT NOW", width/2, height / 2 + 150)
-        console.log(this.textureResolutionHeight, this.textureResolutionWidth)
+        this.ctx.fillText(this.text, width/2, height / 2);
+        this.ctx.fillText("OUT NOW", width/2, height / 2 + 150);
     }
 
     setSize = () => {
@@ -95,11 +92,7 @@ export default class Polartone extends BaseItem {
         folder.add(this, "text").onChange(this.updateText);
         folder.add(this, "font", fonts).onChange(this.updateText);
         folder.add(this, "fontSize", 0, 300).onChange(this.updateText);
-
-        folder.add(this, "positionX", -2, 2, 0.01).onChange(() => this.mesh.position.x = this.positionX);
-        folder.add(this, "positionY", -2, 2, 0.01).onChange(() => this.mesh.position.y = this.positionY);
-        folder.add(this, "textureScale", -2, 2, 0.01).onChange(() => this.mesh.scale.set(this.textureScale, this.textureScale, this.textureScale) );
-
+        addMeshControls(this, this.mesh, folder);
         return folder;
     };
 

@@ -130,18 +130,12 @@ export default class Aurora {
         this.mat.uniforms.iTime.value = time;
         const freqs = this.spectrumAnalyser.analyse(audioData.frequencyData);
         if (this.brightenToAudio && this.impactAnalyser) {
-            const impact = this.impactAnalyser.analyse(
-                audioData.frequencyData
-            );
-
             this.mat.uniforms.freqs.value = new THREE.Vector4(
                 Math.max(freqs[3] * this.mult / 120, this.limit),
                 Math.max(freqs[8] * this.mult / 320, this.limit),
                 Math.max(freqs[15] * this.mult / 220, this.limit),
                 Math.max(freqs[27] * this.mult / 128, this.limit)
             );
-
-            console.log(this.mat.uniforms.freqs.value)
             //this.mat.uniforms.spe.value = this.brightness + impact * this.brightenMultipler * -0.0005;
         }
     };

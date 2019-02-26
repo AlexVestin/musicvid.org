@@ -89,7 +89,7 @@ export default class ShaderToyMaterial extends THREE.RawShaderMaterial {
 
 
         if (this.uniforms.iDate) {
-            let dt = new Date;
+            let dt = new Date();
             let sec = dt.getSeconds() + (60 * dt.getMinutes()) + (60 * 60 * dt.getHours());
             this.uniforms.iDate.value = new THREE.Vector4(
                 dt.getFullYear(), dt.getMonth(), dt.getDay(), sec

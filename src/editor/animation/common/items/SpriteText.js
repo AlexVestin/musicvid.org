@@ -1,6 +1,7 @@
 
 import * as THREE from "three";
 import BaseItem from './BaseItem'
+import addMeshControls from '../../../util/AddMeshControls'
 
 
 const fonts = ["Arial", "Helvetica", "Times New Roman", "Times", "Courier New", "Courier", "Verdana", "Georgia", "Palatino", "Garamond", "Bookman", "Comic Sans MS"]
@@ -29,7 +30,7 @@ export default class Polartone extends BaseItem {
         this.text = "Example Text";
         this.ctx.textAlign = "center";
 
-        this.folder = this.setUpGUI(info.gui, "Polartone");
+        
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.mat = new THREE.MeshBasicMaterial({transparent: true, map: this.tex})
 
@@ -37,11 +38,21 @@ export default class Polartone extends BaseItem {
         this.geo = new THREE.PlaneGeometry(2, this.aspect);
         this.mesh = new THREE.Mesh(this.geo, this.mat);
         this.mesh.scale.set(this.textureScale, this.textureScale, this.textureScale)
+        this.folder = this.setUpGUI(info.gui, "Polartone");
 
         this.updateText();
         info.scene.add(this.mesh);
 
         this.ctx.fillStyle = "#FFFFFF";
+    }
+
+    setText = (text, x, y) => {
+        this.text = text;
+        this.positionX = x;
+        this.mesh.position.x = this.positionX;
+        this.positionY = y;
+        this.mesh.position.y = this.positionY;
+        this.updateText();
     }
 
     updateText = () => {
@@ -65,10 +76,7 @@ export default class Polartone extends BaseItem {
         folder.add(this, "font", fonts).onChange(this.updateText);
         folder.add(this, "fontSize", 0, 300).onChange(this.updateText);
         folder.addColor(this.ctx, "fillStyle");
-
-        folder.add(this, "positionX", -2, 2, 0.01).onChange(() => this.mesh.position.x = this.positionX);
-        folder.add(this, "positionY", -2, 2, 0.01).onChange(() => this.mesh.position.y = this.positionY);
-        folder.add(this, "textureScale", -2, 2, 0.01).onChange(() => this.mesh.scale.set(this.textureScale, this.textureScale, this.textureScale) );
+        addMeshControls(this, this.mesh, folder);
 
         return folder;
     };
