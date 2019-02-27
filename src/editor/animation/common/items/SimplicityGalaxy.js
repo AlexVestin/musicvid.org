@@ -112,6 +112,23 @@ export default class Aurora {
         this.impactAnalyser.deltaDecay = 20;
 
         this.folder.updateDisplay();
+
+        this.__attribution = {
+            showAttribution: true,
+            name:"Simplicity Galaxy",
+            authors: [
+                {
+                    name: "CBS", 
+                    social1: {type: "website", url: "https://www.shadertoy.com/user/CBS"},
+                },
+            ],
+            projectUrl: "https://www.shadertoy.com/view/MslGWN",
+            description: "Parallax scrolling fractal galaxy.",
+            license: this.LICENSE.MIT,
+            changeDisclaimer: true,
+            //TODO change image
+            imageUrl: "img/templates/SimplicityGalaxy.png"
+        }
     }
 
     stop = () => {};

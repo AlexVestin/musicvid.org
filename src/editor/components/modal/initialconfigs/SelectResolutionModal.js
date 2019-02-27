@@ -1,23 +1,10 @@
 import React, { PureComponent } from 'react'
-import Modal from 'react-modal'
 import classes from './SelectResolutionModal.module.scss';
 import Resolution from './Resolution'
-import LoadAudio from './LoadAudio'
-import ItemsModal from './ItemsModal'
-import LoadImage from './LoadImage'
+import LoadImage from './LoadImage' 
+import AudioModal from './AudioModal'
+import LicenseModal from './LicenseModal'
 
-
-const customStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 10, 
-    }
-};
 
 export default class SelectResolutionModal extends PureComponent {
 
@@ -28,6 +15,23 @@ export default class SelectResolutionModal extends PureComponent {
         this.state = { modalOpen: false, index: 0}
     }
 
+    reject = () => {
+        this.licenseReject();
+        this.setState({modalOpen: false});
+    }
+
+    accept = () => {
+        this.licenseAgree();
+        this.setState({modalOpen: false});
+    }
+
+    openLicenseModal = (items, resolve, reject) => {
+        this.__items = items;
+        this.licenseAgree = resolve;
+        this.licenseReject = reject;
+        this.setState({index: 4, modalOpen: true});
+    }
+
     getDimensions = (object) => { return { width: Number(object.res.split("x")[0]), height: Number(object.res.split("x")[1]) } }
     toggleModal = (idx, open) => {
         let i = idx ? idx : this.state.index;
@@ -36,27 +40,22 @@ export default class SelectResolutionModal extends PureComponent {
     }
 
     onSelect = (info) => {
+        
         this.toggleModal();
-        this.onParentSelect(info);
+        if(info)
+            this.onParentSelect(info);
     }
     render() {
+        const { modalOpen } = this.state;
+        return (    
 
-        return (
-            <Modal
-                isOpen={this.state.modalOpen}
-                onAfterOpen={this.afterOpenModal}
-                contentLabel="Example Modal"
-                style={customStyles}
-            >
                 <div className={classes.container}>
-                    {this.state.index === 0 && <Resolution onSelect={(res) => this.onSelect(res)}></Resolution> }
-                    {this.state.index === 1 && <LoadAudio onSelect={(audio) => this.onSelect(audio)}></LoadAudio> }
-                    {this.state.index === 2 && <ItemsModal onSelect={this.onSelect}></ItemsModal> }
-                    {this.state.index === 3 && <LoadImage onSelect={this.onSelect}></LoadImage> }
-
+                    {this.state.index === 1 && <AudioModal open={modalOpen} onSelect={(res) => this.onSelect(res)}></AudioModal> }
+                    {this.state.index === 0 && <Resolution open={modalOpen} onSelect={(res) => this.onSelect(res)}></Resolution> }
+                    {this.state.index === 3 && <LoadImage  open={modalOpen} onSelect={this.onSelect}></LoadImage> }
+                    {this.state.index === 4 && <LicenseModal items={this.__items} open={modalOpen} accept={this.accept} reject={this.reject}></LicenseModal> }
 
                 </div>
-            </Modal>
         )
     }
 }

@@ -60,10 +60,29 @@ export default class JSNationSpectrum extends BaseItem {
         this.folder = this.setUpGUI(info.gui, "JSNation");
         
         this.ctx.shadowBlur = 12;
-        
-
-       
         info.scene.add(this.mesh);
+
+        this.__attribution = {
+            showAttribution: true,
+            name:"Trap Nation Viusalizer",
+            authors: [
+                {
+                    name: "caseif", 
+                    social1: {type: "website", url: "https://caseif.net/"},
+                    social2: {type: "github", url: "https://github.com/caseif"},
+                },
+                {
+                    name: "Incept", 
+                    social1: {type: "youtube", url: "https://www.youtube.com/channel/UCS12_l2kLigIPaXjRRmbdNA"},
+                    social2: {type: "github", url: "https://github.com/itsIncept"},
+                }
+            ],
+            projectUrl: "https://github.com/caseif/js.nation",
+            description: "Trap Nation visualizer emulation in JavaScript.",
+            license: this.LICENSE.REQUIRE_ATTRIBUTION,
+            changeDisclaimer: true,
+            imageUrl: "img/templates/JSNation.png"
+        }
     }
 
     changeEmblemImage = () => {

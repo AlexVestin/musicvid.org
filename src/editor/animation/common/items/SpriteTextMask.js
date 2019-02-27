@@ -67,7 +67,6 @@ export default class Polartone extends BaseItem {
 
         this.updateText();
         info.scene.add(this.mesh);
-
         this.ctx.fillStyle = "#FFFFFF";
     }
 

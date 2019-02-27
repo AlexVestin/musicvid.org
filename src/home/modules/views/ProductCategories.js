@@ -35,6 +35,8 @@ const styles = theme => ({
     fontFamily:"'Roboto', sans-serif",
     backgroundColor: "rgba(255,255,255,0.1)",
     padding: 4,
+    cursor: "pointer",
+    border: "none",
     borderRadius: "0.25em",
     '&:hover': {
       backgroundColor: "rgba(0,0,0,0.3)",
@@ -239,7 +241,7 @@ function ProductCategories(props) {
                 </Typography>
                 <Typography component="h6" variant="h6" color="inherit">
                   
-                  <a href={image.attribUrl} className={classes.link}>Website</a>
+                  <button onClick={(e)=>{window.location=image.attribUrl;e.preventDefault()}} className={classes.link}>Website</button>
                   <div style={{fontSize: 12, marginTop: 4}}>{image.license}</div>
                 </Typography>
               </div>

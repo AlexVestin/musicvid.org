@@ -78,7 +78,7 @@ function AppFooter(props) {
               spacing={2}
             >
               <Grid item className={classes.icons}>
-                <a href="https://facebook.com/" className={classes.icon}>
+                <a href="https://facebook.com/" className={classes.icon} disabled>
                   <img src="onepirate/appFooterFacebook.png" alt="Facebook" />
                 </a>
                 <a href="https://twitter.com/" className={classes.icon}>

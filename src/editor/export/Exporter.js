@@ -3,8 +3,8 @@ import * as FileSaver from "file-saver";
 import VideoEncoder from './VideoEncodeWorker'
 
 export default class Exporter {
-    constructor(config, onready, ondone) {
-
+    constructor(config, onready, ondone, onProgress) {
+        this.onProgress         = onProgress;
         this.fps                = Number(config.video.fps);
         this.videoBitrate       = config.video.bitrate;
         this.duration           = config.sound.duration;
@@ -51,7 +51,6 @@ export default class Exporter {
         const videoTs = (this.encodedVideoFrames / this.fps );
         const audioTs = (this.sound.exportFrameIdx * this.sound.exportWindowSize) / this.sound.sampleRate; 
         if( videoTs >= audioTs ) {
-            
             this.encodeAudioFrame();
         }else{
             const audioData = this.sound.getAudioData(this.time);
@@ -62,7 +61,9 @@ export default class Exporter {
 
         this.videoEncoder.sendFrame();
 
-        console.log(this.encodedVideoFrames, this.duration, this.fps, Math.floor(this.duration * this.fps))
+        if(this.encodedVideoFrames % 15 === 0) 
+            this.onProgress(this.encodedVideoFrames, Math.floor(this.duration * this.fps))
+
         if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {
             this.videoEncoder.close(this.saveBlob);
         }

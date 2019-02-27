@@ -20,6 +20,16 @@ export default class WebGLManager {
         this.setUpScene();
     }
 
+    getAllItems = () => {
+        const items = [];
+        this.scenes.forEach(scene => {
+            scene.items.forEach(item => {
+                items.push(item.__attribution);
+            })
+        })
+        return items;
+    }
+
     setClear = () => {
         this.renderer.setClearColor(this.clearColor);
         this.renderer.setClearAlpha(this.clearAlpha);

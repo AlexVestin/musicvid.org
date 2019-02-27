@@ -37,7 +37,7 @@ function ProductHero(props) {
       {/* Increase the network loading priority of the background image. */}
       <img style={{ display: 'none' }} src={backgroundImage} alt="" />
       <Typography color="inherit" align="center" variant="h2" marked="center">
-        Upgrade your viusals
+        Visualize your music
       </Typography>
       <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
           Make professional visuals directly in your browser.

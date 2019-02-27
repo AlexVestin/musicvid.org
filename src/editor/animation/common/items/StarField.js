@@ -94,6 +94,23 @@ export default class StarField extends BaseItem {
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;
         this.folder.updateDisplay();
+
+        this.__attribution = {
+            showAttribution: true,
+            name:"Star Nest",
+            authors: [
+                {
+                    name: "Kali", 
+                    social1: {type: "website", url: "https://www.shadertoy.com/user/Kali"},
+                },
+            ],
+            projectUrl: "https://www.shadertoy.com/view/XlfGRj",
+            description: "3D kaliset fractal - volumetric rendering and some tricks.",
+            license: this.LICENSE.MIT,
+            changeDisclaimer: true,
+            //TODO change image
+            imageUrl: "img/templates/StarField.png"
+        }
     }
 
     setUpGUI = (gui, name) => {

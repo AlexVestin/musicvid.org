@@ -8,7 +8,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import AddPhotoAlternate from '@material-ui/icons/AddPhotoAlternate';
+import AudioTrack from '@material-ui/icons/Audiotrack';
 import Cloud from '@material-ui/icons/Cloud';
 
 import blue from '@material-ui/core/colors/blue';
@@ -73,18 +73,18 @@ class SimpleDialog extends React.Component {
                 <ListItem button onClick={this.loadAudioFromFile}>
                     <ListItemAvatar>
                         <Avatar>
-                        <AddPhotoAlternate />
+                        <AudioTrack />
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText primary="Load file from computer" />
                     </ListItem>
-                    <ListItem button disabled onClick={this.loadAudioFromURL}>
-                    <ListItemAvatar >
+                    <ListItem button onClick={this.loadAudioFromURL}>
+                    <ListItemAvatar>
                         <Avatar>
                         <Cloud />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary="Use image url (disabled)" />
+                    <ListItemText primary="Use sample audio file" />
                     </ListItem>
                 </List>
                 </div>

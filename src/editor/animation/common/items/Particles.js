@@ -92,6 +92,30 @@ export default class Particles extends BaseItem {
         this.impactAnalyser.deltaDecay = 0.3;
         this.folder.updateDisplay();
         this.setUp();
+
+        this.__attribution = {
+            showAttribution: true,
+            name:"Particles",
+            authors: [
+                {
+                    name: "caseif", 
+                    social1: {type: "website", url: "https://caseif.net/"},
+                    social2: {type: "github", url: "https://github.com/caseif"},
+                },
+                {
+                    name: "Incept", 
+                    social1: {type: "youtube", url: "https://www.youtube.com/channel/UCS12_l2kLigIPaXjRRmbdNA"},
+                    social2: {type: "github", url: "https://github.com/itsIncept"},
+
+                }
+            ],
+            projectUrl: "https://github.com/caseif/js.nation",
+            description: "",
+            license: this.LICENSE.REQUIRE_ATTRIBUTION,
+            changeDisclaimer: true,
+            //TODO change image
+            imageUrl: "img/templates/JSNation.png"
+        }
     }
 
     setUpGUI = (gui, name) => {

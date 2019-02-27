@@ -48,12 +48,26 @@ export default class JSNationSpectrum extends BaseItem {
         this.spectrumWidth = this.spectrumSize * (this.barWidth  + this.spectrumSpacing);
         this.spectrumHeight = 256;
 
-        
         this.folder = this.setUpGUI(info.gui, "Bars");
         this.analyser = new SpectrumAnalyser(this.folder);
-
-
         info.scene.add(this.mesh);
+
+        this.__attribution = {
+            showAttribution: true,
+            name:"vis.js",
+            authors: [
+                {
+                    name: "caseif", 
+                    social1: {type: "website", url: "https://caseif.net/"},
+                    social2: {type: "github", url: "https://github.com/caseif"},
+                },
+            ],
+            projectUrl: "https://github.com/caseif/vis.js",
+            description: "Monstercat visualizer in Javascript and three.js.",
+            license: this.LICENSE.REQUIRE_ATTRIBUTION,
+            changeDisclaimer: true,
+            imageUrl: "img/templates/Monstercat.png"
+        }
     }
     stop = () => {
         this.spectrumAnimation = "phase_1";

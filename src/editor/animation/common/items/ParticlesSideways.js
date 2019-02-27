@@ -260,6 +260,24 @@ export default class Particles extends BaseItem {
         
         this.folder = this.setUpGUI(info.gui, "Particles");
         this.analyser = new ImpactAnalyser(this.folder);
+
+        this.__attribution = {
+            showAttribution: true,
+            name:"Particles",
+            authors: [
+                {
+                    name: "caseif", 
+                    social1: {type: "website", url: "https://caseif.net/"},
+                    social2: {type: "github", url: "https://github.com/caseif"},
+                },
+            ],
+            projectUrl: "https://github.com/caseif/vis.js",
+            description: "",
+            license: this.LICENSE.REQUIRE_ATTRIBUTION,
+            changeDisclaimer: true,
+            //TODO change image
+            imageUrl: "img/templates/Monstercat.png"
+        }
     }
 
     setUpGUI = (gui, name) => {

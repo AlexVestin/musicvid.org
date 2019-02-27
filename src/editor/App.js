@@ -8,6 +8,9 @@ import TrackContainer from './components/track/TrackContainer';
 import ModalContainer from './components/modal/initialconfigs/SelectResolutionModal';
 import Sound from './audio/Sound'
 import Exporter from './export/Exporter'
+import license from './util/License'
+import ExportScreen from './components/Export'
+
 
 class App extends PureComponent {
 
@@ -23,14 +26,13 @@ class App extends PureComponent {
         this.settingsFolder     = this.gui.addFolder("Settings", false);
         this.settingsFolder.add(this, "hideStats").onChange(() => this.canvasRef.current.hideStats(this.hideStats))
         this.exportFolder       = this.gui.addFolder("Export", false);       
-        this.state = { audioDuration: 0, audioName: "", time: 0, disabled: true, playing: false, loaded: false };
+        this.state = { audioDuration: 0, audioName: "", time: 0, disabled: true, playing: false, loaded: false, encoding: false, progress: 0 };
         this.canvasRef = React.createRef();
         this.modalRef = React.createRef();
 
         this.firstLoad = true;
-        this.fastLoad = true;
+        this.fastLoad = false;
         this.pauseTime = 0;
-        console.log("test")
     }
 
     loadNewAudioFile = () =>  {
@@ -117,6 +119,12 @@ class App extends PureComponent {
         this.encoding = true;
         this.stop();
         this.exporter.encode();
+        this.setState({encoding: true});
+    }
+
+    onProgress = (current, max) => {
+        console.log(current, max, current/max)
+        this.setState({progress: current/max})
     }
     startEncoding = (selected) => {
         const config = {
@@ -133,7 +141,9 @@ class App extends PureComponent {
             sound: this.audio
         }
       
-        this.exporter = new Exporter(config, this.encoderReady, this.encoderDone);
+        this.exporter = new Exporter(config, this.encoderReady, this.encoderDone, this.onProgress);
+        this.encoding = true;
+       
     }
 
     seek = (time) => {
@@ -161,16 +171,40 @@ class App extends PureComponent {
         this.loadNewAudio(selected);
     }
 
+    checkLicense = () => {
+        return new Promise((resolve, reject) => {
+            const items = this.animationManager.getAllItems();
+            this.__items = items;
+            let attribFound = false;
+            items.forEach(item => {
+                console.log(item, license.REQUIRE_ATTRIBUTION)
+                if(item.license === license.REQUIRE_ATTRIBUTION) {
+                    this.modalRef.current.openLicenseModal(items, resolve, reject);
+                    attribFound = true;
+                }
+            })
+
+            if(!attribFound)
+                resolve();  
+
+        })
+     
+    }
     render() {
         return (
             <div className={classes.container}>
                 {<ModalContainer ref={this.modalRef} onSelect={this.onSelect} ></ModalContainer>}
 
+                {this.state.encoding ?
+                    <ExportScreen progress={this.state.progress} items={this.__items}></ExportScreen>
+                :
+                <React.Fragment>
                 <div className={classes.leftContainer} >
                     <Sidebar 
                         gui={this.gui} 
                         loaded={this}
                         startEncoding={this.startEncoding}
+                        checkLicense={this.checkLicense}
                     >
                     </Sidebar>
                     <Canvas ref={this.canvasRef}></Canvas>
@@ -188,6 +222,8 @@ class App extends PureComponent {
                     >
                     </TrackContainer>
                 </div>
+                </React.Fragment>
+                }
             </div>
         )
     }

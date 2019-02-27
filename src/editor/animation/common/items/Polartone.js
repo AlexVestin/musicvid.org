@@ -57,6 +57,23 @@ export default class Polartone extends BaseItem {
         this.camera.update();
         this.folder = this.setUpGUI(info.gui, "Polartone");
 
+        this.__attribution = {
+            showAttribution: true,
+            name:"Polartone",
+            authors: [
+                {
+                    name: "mattdesl", 
+                    social1: {type: "twitter", url: "https://twitter.com/mattdesl"},
+                },
+            ],
+            projectUrl: "https://github.com/mattdesl/Polartone",
+            description: "Audio visualizer, rendering waveforms in polar coordinates.",
+            license: this.LICENSE.MIT,
+            changeDisclaimer: true,
+            //TODO change image
+            imageUrl: "img/templates/Polartone.png"
+        }
+
     }
 
     stop  = () => {

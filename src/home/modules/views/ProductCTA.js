@@ -92,7 +92,6 @@ class ProductCTA extends React.Component {
                 </Typography>
                 <Button
                   type="submit"
-                  color="#7289DA"
                   variant="contained"
                   style={{backgroundColor: "#7289DA"}}
                   className={classes.button}
