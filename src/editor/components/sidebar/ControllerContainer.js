@@ -56,11 +56,15 @@ export default class ControllerContainer extends PureComponent {
     }
 
     startEncoding = () => {
-        this.props.checkLicense().then(() => {
-            const bitrate = this.MBitBitrate * Math.pow(10, 6);
-            const preset = this.presetLookup.findIndex(e => e === this.preset);
-            this.props.startEncoding({fps: this.fps, bitrate: bitrate, preset: preset, fileName: this.fileName})
-        });
+        const { checkLicense, disabled, startEncoding } = this.props;
+        if(!disabled) {
+            checkLicense().then(() => {
+                const bitrate = this.MBitBitrate * Math.pow(10, 6);
+                const preset = this.presetLookup.findIndex(e => e === this.preset);
+                startEncoding({fps: this.fps, bitrate: bitrate, preset: preset, fileName: this.fileName})
+            });
+           
+        }
        
     }
 
@@ -70,7 +74,7 @@ export default class ControllerContainer extends PureComponent {
 
         const selectedColor = "#444";
         return (
-            <div className={classes.container}>
+            <div className={classes.container} >
                 <div className={classes.wrapper}>
                     <div className={classes.headerButtons}>
                         <div onClick={()=>this.setState({index: 0})} style={{backgroundColor: index === 0 ? selectedColor : ""}}>overview</div>

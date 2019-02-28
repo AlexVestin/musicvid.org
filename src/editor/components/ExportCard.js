@@ -48,19 +48,30 @@ function MediaControlCard(props) {
                         <Typography component="h5" variant="h5">
                             {item.name}
                         </Typography>
-                        <Typography variant="subtitle1" color="textSecondary" >
-                        {""}
+                        <Typography variant="subtitle1" color="textSecondary">
+                            {""}
                         </Typography>
 
-                        {item.projectUrl &&
-                        <Typography
-                            variant="subtitle1"
-                            color="textSecondary"
-                            style={{textAlign: "left", textDecoration: "none", color: "inherit"}}
-                        >
-                            <a style={{color: "#333"}} href={item.projectUrl}>Project url</a>
+                        {item.projectUrl && (
+                            <Typography
+                                variant="subtitle1"
+                                color="textSecondary"
+                                style={{
+                                    textAlign: "left",
+                                    textDecoration: "none",
+                                    color: "inherit"
+                                }}
+                            >
+                                <a
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ color: "#333" }}
+                                    href={item.projectUrl}
+                                >
+                                    Project url
+                                </a>
                             </Typography>
-                        }
+                        )}
                     </CardContent>
                 </div>
 
@@ -68,39 +79,78 @@ function MediaControlCard(props) {
                     return (
                         <div className={classes.author} key={author.name}>
                             <CardContent className={classes.content}>
-                                <Typography component="h5" variant="h5" style={{backgroundColor: "rgba(0,0,0,0.12)"}}>
+                                <Typography
+                                    component="h5"
+                                    variant="h5"
+                                    style={{
+                                        backgroundColor: "rgba(0,0,0,0.12)"
+                                    }}
+                                >
                                     {author.name}
                                 </Typography>
-                                
-                                {author.social1 &&<Typography
-                                    variant="subtitle1"
-                                    color="textSecondary"
-                                    style={{textAlign: "center", textDecoration: "none", color: "inherit"}}
-                                >
-                                   <a style={{color: "#333"}} href={author.social1.url}>{author.social1.type}</a>
-                                   
-                                </Typography>
-                                }
 
-                                {author.social2 &&
-                                <Typography
-                                    variant="subtitle1"
-                                    color="textSecondary"
-                                    style={{textAlign: "center", textDecoration: "none", color: "inherit"}}
-                                >
-                                  <a style={{color: "#333"}} href={author.social2.url}>{author.social2.type}</a>
-                                 </Typography>
-                                }
+                                {author.social1 && (
+                                    <Typography
+                                        variant="subtitle1"
+                                        color="textSecondary"
+                                        style={{
+                                            textAlign: "center",
+                                            textDecoration: "none",
+                                            color: "inherit"
+                                        }}
+                                    >
+                                        <a
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ color: "#333" }}
+                                            href={author.social1.url}
+                                        >
+                                            {author.social1.type}
+                                        </a>
+                                    </Typography>
+                                )}
 
-                                {author.social3 &&
-                                <Typography
-                                    variant="subtitle1"
-                                    color="textSecondary"
-                                    style={{textAlign: "center", textDecoration: "none", color: "inherit"}}
-                                >
-                                  <a style={{color: "#333"}} href={author.social3.url}>{author.social3.type}</a>
-                                 </Typography>
-                                }
+                                {author.social2 && (
+                                    <Typography
+                                        variant="subtitle1"
+                                        color="textSecondary"
+                                        style={{
+                                            textAlign: "center",
+                                            textDecoration: "none",
+                                            color: "inherit"
+                                        }}
+                                    >
+                                        <a
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ color: "#333" }}
+                                            href={author.social2.url}
+                                        >
+                                            {author.social2.type}
+                                        </a>
+                                    </Typography>
+                                )}
+
+                                {author.social3 && (
+                                    <Typography
+                                        variant="subtitle1"
+                                        color="textSecondary"
+                                        style={{
+                                            textAlign: "center",
+                                            textDecoration: "none",
+                                            color: "inherit"
+                                        }}
+                                    >
+                                        <a
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ color: "#333" }}
+                                            href={author.social3.url}
+                                        >
+                                            {author.social3.type}
+                                        </a>
+                                    </Typography>
+                                )}
                             </CardContent>
                         </div>
                     );

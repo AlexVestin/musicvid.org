@@ -1,14 +1,8 @@
 import KissFFT from "./KissFFT";
 
 export default class Audio {
-    constructor(infile, onfileloaded, gui) {
-        if (typeof infile === "string") {
-            this.loadFileFromUrl(infile);
-        } else {
-            this.loadFileFromFile(infile);
-        }
-
-        this.onfileready = onfileloaded;
+    constructor(infile, gui, onprogress) {
+        this.infile = infile;
         this.audioCtx = new AudioContext();
         this.playing = false;
         this.playBufferSource = this.audioCtx.createBufferSource();
@@ -18,7 +12,19 @@ export default class Audio {
         this.exportWindowSize = 2048;
         this.exportFrameIdx = 0;
         this.gui = gui;
+        this.onProgress = onprogress;
         this.loadFft();
+    }
+
+    load = () => {
+        return new Promise( (resolve, reject) => {
+            this.onfileready = resolve;
+            if (typeof this.infile === "string") {
+                this.loadFileFromUrl(this.infile);
+            } else {
+                this.loadFileFromFile(this.infile);
+            }
+        })
     }
 
     loadFft = () => {
@@ -29,29 +35,35 @@ export default class Audio {
         };
     };
 
-    setFFTSize = ( fftSize ) => {
+    setFFTSize = fftSize => {
         this.fftSize = Number(fftSize);
         this.Module._init_r(this.fftSize);
         this.gui.updateDisplay();
-    }
+    };
 
     getEncodingFrame = () => {
         const sidx = this.exportFrameIdx * this.exportWindowSize;
         const eidx = (this.exportFrameIdx + 1) * this.exportWindowSize;
 
-        const left = this.bufferSource.buffer.getChannelData(0).slice(sidx, eidx);
-        const right = this.bufferSource.buffer.getChannelData(1).slice(sidx, eidx);
+        const left = this.bufferSource.buffer
+            .getChannelData(0)
+            .slice(sidx, eidx);
+        const right = this.bufferSource.buffer
+            .getChannelData(1)
+            .slice(sidx, eidx);
         this.exportFrameIdx++;
-        return {type: "audio", left, right, sampleRate: this.sampleRate }
-    }
+        return { type: "audio", left, right, sampleRate: this.sampleRate };
+    };
 
     // VOLUME FROM [0..1]
-    setVolume = (volume) => {
-        if(this.gainNode)
-            this.gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+    setVolume = volume => {
+        if (this.gainNode)
+            this.gainNode.gain.setValueAtTime(
+                volume,
+                this.audioCtx.currentTime
+            );
         this.volume = volume;
-    }
-
+    };
 
     play = (time = 0, offset = 0) => {
         if (this.playing) {
@@ -83,7 +95,7 @@ export default class Audio {
         if (idx < 0) idx = 0;
         let audio_p, bins, buf_p;
         const data = this.combinedAudioData.subarray(idx, idx + this.fftSize);
-        
+
         try {
             audio_p = this.Module._malloc(this.fftSize * 4);
             this.Module.HEAPF32.set(data, audio_p >> 2);
@@ -97,9 +109,7 @@ export default class Audio {
         } finally {
             this.Module._free(audio_p);
             this.Module._free(buf_p);
-
         }
-        
 
         return { frequencyData: bins, timeData: data };
     };
@@ -116,13 +126,33 @@ export default class Audio {
             this.bufferSource.buffer = buffer;
             this.duration = buffer.duration;
             this.sampleRate = buffer.sampleRate;
-
+            this.onProgress(0.99);
             this.getAudioByteData(buffer);
             this.onfileready(buffer.duration);
         });
     };
 
     loadFileFromUrl(url) {
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", url);
+        oReq.responseType = "arraybuffer";
+        oReq.onload = () => {
+            var blob = oReq.response; // Note: not oReq.responseText
+            if (blob) {
+                this.onload({target: {result: blob}})
+            }
+        };
+
+        oReq.addEventListener("progress", (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = event.loaded / event.total;
+                this.onProgress(Math.max(percentComplete-0.02, 0));
+              }
+        });
+
+        oReq.send();
+
+        /*
         fetch(url)
             .then(response => {
                 return response.blob();
@@ -135,6 +165,7 @@ export default class Audio {
             .catch(err => {
                 console.log(err);
             });
+            */
     }
 
     loadFileFromFile(file) {
@@ -142,5 +173,11 @@ export default class Audio {
         fileReader.readAsArrayBuffer(file);
         fileReader.onload = this.onload;
         fileReader.onerror = err => console.log(err);
+        fileReader.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = event.loaded / event.total;
+                this.onProgress(Math.max(percentComplete-0.02, 0));
+              }
+        };
     }
 }

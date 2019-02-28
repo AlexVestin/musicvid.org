@@ -52,10 +52,10 @@ export default class TrackContainer extends PureComponent {
         const ele = this.seekRef.current;
         let seekerWidth = 0;
         if (ele)
-            seekerWidth = (this.props.time / this.props.audioDuration) * ele.clientWidth;
+            seekerWidth = (this.props.time / this.props.audioDuration) * ele.clientWidth || 0;
 
         return (
-            <div className={classes.container} ref={this.mountRef}>
+            <div className={classes.container} ref={this.mountRef} > 
                 <div className={classes.trackContainer}>
                     <div className={classes.controls}>
 

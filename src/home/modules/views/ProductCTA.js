@@ -95,7 +95,7 @@ class ProductCTA extends React.Component {
                   variant="contained"
                   style={{backgroundColor: "#7289DA"}}
                   className={classes.button}
-                  href="https://discord.gg/Xer3X6"
+                  href="https://discord.gg/Qf7y579"
                 >
                   Discord Link
                 </Button>

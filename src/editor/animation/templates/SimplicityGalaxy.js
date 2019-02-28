@@ -6,7 +6,6 @@ import WebGLManager from '../WebGLManager'
 export default class Manager extends WebGLManager {
 
     setUpScene() {
-        this.setFFTSize(2048);
         const scene = new Scene3DOrthoGraphic(this.gui.__folders["Layers"],this.aspect);
         
 

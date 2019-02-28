@@ -5,17 +5,16 @@ import * as THREE from 'three'
 
 export default class WebGLManager {
 
-    constructor(gui, resolution, sound) {
-        
+    constructor(gui, resolution, ) {
+        this.fftSize = 16384;
         this.canvasMountRef = gui.canvasMountRef;
         this.modalRef = gui.modalRef;
         this.gui = gui;
         this.width = resolution.width;
         this.height = resolution.height;
         this.aspect = this.width / this.height;
-        this.audioDuration = sound.audioDuration;  
-        this.audio = sound;
         this.scenes = [];
+        this.audio = null;
         this.setUpRenderers();
         this.setUpScene();
     }
@@ -33,6 +32,11 @@ export default class WebGLManager {
     setClear = () => {
         this.renderer.setClearColor(this.clearColor);
         this.renderer.setClearAlpha(this.clearAlpha);
+    }
+
+    setAudio = (audio) => {
+        this.audio = audio;
+        this.setFFTSize(this.fftSize);
     }
 
     setFFTSize = (size) => {
@@ -60,11 +64,11 @@ export default class WebGLManager {
     }
 
     stop = () => {
+        this.externalCtx.clearRect( 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
         this.scenes.forEach(scene => {
             scene.stop();
         })
         this.renderer.clear();
-        console.log("stop")
     }
 
     setUpScene() {

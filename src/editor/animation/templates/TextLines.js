@@ -6,7 +6,6 @@ import Scene3DPerspective from '../common/scenes/Scene3DPerspective';
 export default class Manager extends WebGLManager {
 
     setUpScene() {
-        this.setFFTSize(2048);
         this.scenes.push(new Scene3DPerspective(this.gui.__folders["Layers"],this.aspect));
         
         const it0 = this.scenes[0].addItemFromText("TextLines");

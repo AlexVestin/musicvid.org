@@ -1,6 +1,7 @@
 @import './components/vars';
 
 .container {
+    position: relative;
     width: 100%;
     height: $body-height;
     display: flex;
@@ -17,3 +18,4 @@
 .rightContainer {
     width: 100%;
 }
+

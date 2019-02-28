@@ -10,6 +10,7 @@ import Sound from './audio/Sound'
 import Exporter from './export/Exporter'
 import license from './util/License'
 import ExportScreen from './components/Export'
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 
 class App extends PureComponent {
@@ -22,16 +23,27 @@ class App extends PureComponent {
         this.audioFolder        = this.gui.addFolder("Audio", false);
         this.audioFolder.add(this, "loadNewAudioFile");
         
-        this.hideStats = false;
+        this.hideStats = true;
         this.settingsFolder     = this.gui.addFolder("Settings", false);
         this.settingsFolder.add(this, "hideStats").onChange(() => this.canvasRef.current.hideStats(this.hideStats))
         this.exportFolder       = this.gui.addFolder("Export", false);       
-        this.state = { audioDuration: 0, audioName: "", time: 0, disabled: true, playing: false, loaded: false, encoding: false, progress: 0 };
+        this.state = { 
+            videoLoaded: false,
+            audioLoaded: false,
+            audioDuration: 0, 
+            audioName: "", 
+            time: 0, 
+            disabled: true, 
+            playing: false, 
+            loaded: false, 
+            encoding: false, 
+            progress: 0 
+        };
         this.canvasRef = React.createRef();
         this.modalRef = React.createRef();
 
         this.firstLoad = true;
-        this.fastLoad = false;
+        this.fastLoad = true;
         this.pauseTime = 0;
     }
 
@@ -45,11 +57,19 @@ class App extends PureComponent {
         this.gui.modalRef = this.modalRef.current;
         this.gui.canvasMountRef = this.mountRef;
 
+        const url = new URL(window.location.href);
+        const template = url.searchParams.get("template");
+        const prom = import("./animation/templates/" + template + ".js").then(AnimationManager => {
+            this.animationManager = new AnimationManager.default(this.gui, this.resolution);
+            this.update();
+            this.setState({videoLoaded: true});
+        });
+
         if(this.fastLoad) {
             this.resolution = {width: 1280, height: 720};
             this.canvasRef.current.setSize(this.resolution);
- 
-            this.loadNewAudio("https://s3.eu-west-3.amazonaws.com/fysiklabb/Syn+Cole+-+Miami+82+(Lucas+Silow+Remix).mp3");
+            const rep = this.loadNewAudio("https://s3.eu-west-3.amazonaws.com/fysiklabb/Syn+Cole+-+Miami+82+(Lucas+Silow+Remix).mp3");
+            rep.then( this.audioReady );
         }else {
             this.modalRef.current.toggleModal(0);
         }
@@ -57,19 +77,13 @@ class App extends PureComponent {
 
 
     audioReady = (duration) => {
-        this.setState({ audioDuration: duration, disabled: false, loaded: true });
-
         if(this.firstLoad) {
-            var url = new URL(window.location.href);
-            var template = url.searchParams.get("template");
-            import("./animation/templates/" + template + ".js").then(AnimationManager => {
-                this.animationManager = new AnimationManager.default(this.gui, this.resolution, this.audio);
-                this.update();
-                this.firstLoad = false;
-                this.audioFolder.add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384]).onChange(() => this.audio.setFFTSize(this.audio.fftSize))
-            });
+            this.audioFolder.add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384]).onChange(() => this.audio.setFFTSize(this.audio.fftSize))
+            this.firstLoad = false;
         }
-       
+
+        this.animationManager.setAudio(this.audio);
+        this.setState({ audioDuration: duration, audioLoaded: true });
     }
 
     play = () => {
@@ -123,8 +137,12 @@ class App extends PureComponent {
     }
 
     onProgress = (current, max) => {
-        console.log(current, max, current/max)
         this.setState({progress: current/max})
+    }
+
+    onAudioProgress = (e) => {
+        this.setState({progress: e});
+
     }
     startEncoding = (selected) => {
         const config = {
@@ -157,8 +175,9 @@ class App extends PureComponent {
 
     loadNewAudio = (audio) => {
         this.stop();
-        this.setState({ disabled: true});
-        this.audio = new Sound(audio, this.audioReady, this.audioFolder);
+        this.setState({ audioLoaded: false});
+        this.audio = new Sound(audio, this.audioFolder, this.onAudioProgress);
+        return this.audio.load();
     }
 
     onSelect = (selected) => {
@@ -168,7 +187,7 @@ class App extends PureComponent {
             this.modalRef.current.toggleModal(1, true); 
             return;
         }
-        this.loadNewAudio(selected);
+        this.loadNewAudio(selected).then(this.audioReady);
     }
 
     checkLicense = () => {
@@ -177,7 +196,6 @@ class App extends PureComponent {
             this.__items = items;
             let attribFound = false;
             items.forEach(item => {
-                console.log(item, license.REQUIRE_ATTRIBUTION)
                 if(item.license === license.REQUIRE_ATTRIBUTION) {
                     this.modalRef.current.openLicenseModal(items, resolve, reject);
                     attribFound = true;
@@ -186,32 +204,39 @@ class App extends PureComponent {
 
             if(!attribFound)
                 resolve();  
-
         })
-     
     }
     render() {
+        const disabled = !this.state.audioLoaded || !this.state.videoLoaded; 
+        const { progress } = this.state;
+
+        const lineClass = classes.line; 
         return (
             <div className={classes.container}>
                 {<ModalContainer ref={this.modalRef} onSelect={this.onSelect} ></ModalContainer>}
 
+               
+
                 {this.state.encoding ?
-                    <ExportScreen progress={this.state.progress} items={this.__items}></ExportScreen>
+                    <ExportScreen progress={progress} items={this.__items}></ExportScreen>
                 :
                 <React.Fragment>
+                    {disabled && <LinearProgress style={{position: "absolute", top:0, width:"100%", opacity: 1-progress/2}} color="secondary" variant="determinate" value={progress * 100} />}
+
                 <div className={classes.leftContainer} >
                     <Sidebar 
                         gui={this.gui} 
-                        loaded={this}
                         startEncoding={this.startEncoding}
                         checkLicense={this.checkLicense}
+                        disabled={disabled}
+                        loaded={this.state.videoLoaded}
                     >
                     </Sidebar>
                     <Canvas ref={this.canvasRef}></Canvas>
                 </div>
                 <div className={classes.rightContainer}>
                     <TrackContainer
-                        disabled={this.state.disabled}
+                        disabled={disabled}
                         time={this.state.time}
                         audioDuration={this.state.audioDuration}
                         play={this.play}

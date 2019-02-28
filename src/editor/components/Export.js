@@ -8,6 +8,9 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 
 import blue from "@material-ui/core/colors/blue";
 import ExportCard from "./ExportCard";
+import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
+
 
 const styles = {
     root: {
@@ -66,8 +69,11 @@ class SimpleDialog extends React.Component {
                             variant="h6"
                         >
                             Check out the contributors in the meantime! (but
-                            don't navigate away or close the page)
+                            don't navigate away from or close the tab)
                         </Typography>
+                    </ListItem>
+                    <ListItem style={{ justifyContent: "center" }}>
+                    <Divider variant="fullWidth"/>
                     </ListItem>
 
                     <ListItem style={{ justifyContent: "center" }}>
@@ -76,7 +82,7 @@ class SimpleDialog extends React.Component {
                             component="h4"
                             variant="h4"
                         >
-                            Contributors
+                            Creators
                         </Typography>
                     </ListItem>
 
@@ -89,6 +95,64 @@ class SimpleDialog extends React.Component {
                             )}
                         </React.Fragment>
                     ))}
+
+                    <ListItem style={{ justifyContent: "center" }}>
+                        <Typography
+                            style={{ color: "#efefef" }}
+                            component="h6"
+                            variant="h6"
+                        >
+                            musicvid.org Socials
+                        </Typography>
+                    </ListItem>
+
+
+                    <ListItem style={{ justifyContent: "center" }}>
+
+
+                    <Typography variant="h5" color="secondary">
+                        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                style={{backgroundColor: "#7289DA", width: 200}}
+                                className={classes.button}
+                                href="https://discord.gg/Qf7y579"
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                >
+                            Discord
+                            </Button>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                style={{backgroundColor: "#ff0000", width: 200, color: "#efefef", marginTop: 12}}
+                                className={classes.button}
+                                href="https://www.youtube.com/channel/UCMujRUizB4Rwdt_c0hpYryA"
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                >
+                            youtube
+                            </Button>
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                style={{backgroundColor: "#ff4500", width: 200, color: "#efefef", marginTop: 12}}
+                                className={classes.button}
+                                href=""
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                disabled
+                                >
+                            Reddit
+                            </Button>
+
+
+                            </div>
+                        </Typography>
+                    </ListItem>
+                        
 
                     
                 </List>

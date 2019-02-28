@@ -49,6 +49,7 @@ const styles = theme => ({
     display: 'block',
     padding: 0,
     borderRadius: 0,
+    minHeight: 165,
     height: '40vh',
     [theme.breakpoints.down('sm')]: {
       width: '100% !important',
