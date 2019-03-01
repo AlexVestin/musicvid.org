@@ -31,12 +31,14 @@ export default class Scene3DOrtho {
     addItemFromText = (name) => {
         const info = {
             gui: this.itemsFolder,
-            width: this.gui.__root.canvasMountRef.width,
-            height: this.gui.__root.canvasMountRef.height,
+            width: this.resolution.width,
+            height: this.resolution.height,
             scene: this.scene,
             camera: this.camera,
         };
-        
+
+
+        console.log(name)
         const item = new items[name](info)
         this.items.push(item);
         return item;

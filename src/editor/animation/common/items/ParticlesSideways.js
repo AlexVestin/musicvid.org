@@ -259,7 +259,7 @@ export default class Particles extends BaseItem {
         info.scene.add(this.mesh);
         
         this.folder = this.setUpGUI(info.gui, "Particles");
-        this.analyser = new ImpactAnalyser(this.folder);
+        
 
         this.__attribution = {
             showAttribution: true,
@@ -282,7 +282,10 @@ export default class Particles extends BaseItem {
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
-        folder.add(this, "amplitude");
+        folder.add(this, "amplitude", -10, 10, 0.1);
+
+        this.analyser = new ImpactAnalyser(folder);
+        this.analyser.deltaDecay = 2; 
         return folder;
     }
 
@@ -382,7 +385,7 @@ export default class Particles extends BaseItem {
     }
 
     update = (time, audioData) => {
-        const amp = this.analyser.analyse(audioData.frequencyData) * this.amplitude;        
+        const amp = this.analyser.analyse(audioData.frequencyData) * this.amplitude;     
         this.velMult = amp / 512;
         this.velMult = isNaN(this.velMult) ? 0 : this.velMult;
         particleSize = this.velMult;

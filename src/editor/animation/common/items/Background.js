@@ -73,8 +73,7 @@ export default class Background extends BaseItem {
     
 
     changeImage = () => {
-        this.folder.__root.modalRef.onParentSelect = this.loadNewBackground;
-        this.folder.__root.modalRef.toggleModal(3);
+        this.folder.__root.modalRef.toggleModal(3).then(this.loadNewBackground);
     }
     
 

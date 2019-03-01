@@ -53,7 +53,11 @@ class SimpleDialog extends React.Component {
 
   handleClose = () => {
     this.props.onSelect();
-  }; 
+  };
+  
+  noFile = () => {
+
+  }
 
   handleListItemClick = value => {
     this.props.onSelect(value);
@@ -64,10 +68,10 @@ class SimpleDialog extends React.Component {
 
     return (
         <React.Fragment>
-            <input accept="audio/*" type="file" ref={this.fileRef} style={{ display: 'none' }} />
+            <input accept="image/*" type="file" ref={this.fileRef} style={{ display: 'none' }} />
             <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
                 
-                <DialogTitle id="simple-dialog-title">Load audio</DialogTitle>
+                <DialogTitle id="simple-dialog-title">Load image</DialogTitle>
                 <div>
                 <List>
                 <ListItem button onClick={this.loadAudioFromFile}>
@@ -78,13 +82,14 @@ class SimpleDialog extends React.Component {
                     </ListItemAvatar>
                     <ListItemText primary="Load file from computer" />
                     </ListItem>
+
                     <ListItem button disabled onClick={this.loadAudioFromURL}>
-                    <ListItemAvatar >
-                        <Avatar>
-                        <Cloud />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="Use image url (disabled)" />
+                      <ListItemAvatar >
+                          <Avatar>
+                          <Cloud />
+                          </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary="Use image url (disabled)" />
                     </ListItem>
                 </List>
                 </div>

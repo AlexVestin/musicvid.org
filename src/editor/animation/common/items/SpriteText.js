@@ -1,10 +1,10 @@
 
 import * as THREE from "three";
 import BaseItem from './BaseItem'
-import addMeshControls from '../../../util/AddMeshControls'
+import { addOrthoMeshControls }  from '../../../util/AddMeshControls'
 
 
-const fonts = ["Arial", "Helvetica", "Times New Roman", "Times", "Courier New", "Courier", "Verdana", "Georgia", "Palatino", "Garamond", "Bookman", "Comic Sans MS"]
+const fonts = ["Montserrat", "Anton", "Carrois Gothic SC", "Arial", "Helvetica", "Times New Roman", "Times", "Courier New", "Courier", "Verdana", "Georgia", "Palatino", "Garamond", "Bookman", "Comic Sans MS"]
 
 
 
@@ -12,8 +12,8 @@ export default class Polartone extends BaseItem {
     constructor(info) {
         super();
         this.canvas = document.createElement("canvas");
-        this.textureResolutionWidth = 512;
-        this.textureResolutionHeight = 256;
+        this.textureResolutionWidth = 1024;
+        this.textureResolutionHeight = 512;
 
         this.canvas.height  = this.textureResolutionHeight;
         this.canvas.width  = this.textureResolutionWidth;
@@ -21,7 +21,7 @@ export default class Polartone extends BaseItem {
         this.ctx = this.canvas.getContext("2d");
 
         this.fontSize = 30;
-        this.font = "Arial";
+        this.font = "Montserrat";
         this.positionX  = 0;
         this.positionY  = 0;
         this.textureScale = 0.5;
@@ -29,6 +29,7 @@ export default class Polartone extends BaseItem {
         this.aspect = info.width/info.height;
         this.text = "Example Text";
         this.ctx.textAlign = "center";
+        this.textAlign ="center";
 
         
         this.tex = new THREE.CanvasTexture(this.canvas);
@@ -46,7 +47,12 @@ export default class Polartone extends BaseItem {
         this.ctx.fillStyle = "#FFFFFF";
     }
 
-    setText = (text, x, y) => {
+    setText = (text, x, y, options) => {
+
+        if(options.fontSize) this.fontSize = options.fontSize;
+        if(options.textAlign) this.textAlign = options.textAlign;
+
+
         this.text = text;
         this.positionX = x;
         this.mesh.position.x = this.positionX;
@@ -58,8 +64,8 @@ export default class Polartone extends BaseItem {
     updateText = () => {
         const {width,height} = this.canvas;
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
-        this.ctx.font = `${this.fontSize}px ${this.font}`;
-        this.ctx.textAlign = "center";
+        this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
+        this.ctx.textAlign = this.textAlign;
         this.tex.needsUpdate = true;
         this.ctx.fillText(this.text, width/2, height / 2)
     }
@@ -76,7 +82,7 @@ export default class Polartone extends BaseItem {
         folder.add(this, "font", fonts).onChange(this.updateText);
         folder.add(this, "fontSize", 0, 300).onChange(this.updateText);
         folder.addColor(this.ctx, "fillStyle");
-        addMeshControls(this, this.mesh, folder);
+        addOrthoMeshControls(this, this.mesh, folder);
 
         return folder;
     };

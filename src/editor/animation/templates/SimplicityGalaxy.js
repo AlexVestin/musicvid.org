@@ -6,7 +6,7 @@ import WebGLManager from '../WebGLManager'
 export default class Manager extends WebGLManager {
 
     setUpScene() {
-        const scene = new Scene3DOrthoGraphic(this.gui.__folders["Layers"],this.aspect);
+        const scene = new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.resolution);
         
 
         const it0 = scene.addItemFromText("SimplicityGalaxy");

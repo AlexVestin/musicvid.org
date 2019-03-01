@@ -2,6 +2,7 @@
 import * as THREE from 'three'
 import loadImage from '../../../util/ImageLoader'
 import BaseItem from './BaseItem'
+import { addOrthoMeshControls } from '../../../util/AddMeshControls'
 
 export default class Image extends BaseItem{
 
@@ -15,13 +16,17 @@ export default class Image extends BaseItem{
         this.scene.add(this.mesh);
 
         const url = "./img/solar.jpeg";
-        this.fromURL(url);
+        this.loadNewBackground(url);
         this.folder = this.setUpGUI(this.gui, "Background");
     }
 
-    changeImage = () => {
-        this.folder.__root.modalRef.onParentSelect = this.loadNewBackground;
-        this.folder.__root.modalRef.toggleModal(3);
+    async changeImage() {
+        const ref = this.folder.__root.modalRef; 
+        if(ref.currentPromise && !ref.currentPromise.done) {
+            await ref.currentPromise;
+        }
+
+        ref.toggleModal(3).then(this.loadNewBackground)
     }
     
     update = (time, audioData) => {
@@ -34,6 +39,7 @@ export default class Image extends BaseItem{
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
         folder.add(this, "changeImage");
+        addOrthoMeshControls(this, this.mesh, folder);
         folder.updateDisplay();
         return folder;
     }

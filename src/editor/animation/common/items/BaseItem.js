@@ -8,7 +8,7 @@ export default class BaseItem {
         authors: [
         ],
         description: "",
-        license: this.LICENSE.MIT,
+        license: "",
         changeDisclaimer: true,
         imageUrl: ""
     }

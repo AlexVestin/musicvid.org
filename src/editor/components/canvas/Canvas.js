@@ -29,6 +29,7 @@ export default class Canvas extends PureComponent {
         this.canvasRef2.current.appendChild(this.stats.dom);
         this.stats.dom.style.position = "absolute";
         this.stats.dom.style.zIndex = "0";
+        this.stats.dom.style.display = "none";
 
     }
 

@@ -31,6 +31,8 @@ export default class JSNationSpectrum extends BaseItem {
         this.preAmplitude = 1.0;
         this.emblemExaggeration = 1.5;
 
+        console.log(info)
+
         this.startBin = 8;
         this.keepBins = 40;
         this.prevArr = [];
@@ -86,8 +88,7 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     changeEmblemImage = () => {
-        this.folder.__root.modalRef.onParentSelect = this.emblem.loadImage;
-        this.folder.__root.modalRef.toggleModal(3);
+        this.folder.__root.modalRef.toggleModal(3).then(this.loadNewBackground);
     }
 
     setUpGUI = (gui, name) => {

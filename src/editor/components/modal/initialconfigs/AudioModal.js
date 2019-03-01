@@ -65,7 +65,7 @@ class SimpleDialog extends React.Component {
     return (
         <React.Fragment>
             <input accept="audio/*" type="file" ref={this.fileRef} style={{ display: 'none' }} />
-            <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+            <Dialog aria-labelledby="simple-dialog-title" {...other}>
                 
                 <DialogTitle id="simple-dialog-title">Load audio</DialogTitle>
                 <div>

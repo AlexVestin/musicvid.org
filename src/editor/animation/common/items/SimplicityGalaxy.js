@@ -3,6 +3,7 @@ import * as THREE from "three";
 import ShaderToyMaterial from "../../../util/ShaderToyMaterial";
 import ImpactAnalyser from "../../../audio/ImpactAnalyser";
 import SpectrumAnalyser from "../../../audio/SpectrumAnalyser";
+import BaseItem from "./BaseItem";
 
 const fragmentShader = [
     "//CBS",
@@ -77,8 +78,9 @@ const fragmentShader = [
     "}"
 ].join("\n");
 
-export default class Aurora {
+export default class Aurora extends BaseItem {
     constructor(info) {
+        super();
         this.geo = new THREE.PlaneGeometry(2, 2);
         this.mat = new ShaderToyMaterial(fragmentShader, {
             uniforms: {

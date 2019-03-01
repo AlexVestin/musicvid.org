@@ -43,36 +43,40 @@ class App extends PureComponent {
         this.modalRef = React.createRef();
 
         this.firstLoad = true;
-        this.fastLoad = true;
+        this.fastLoad = false;
         this.pauseTime = 0;
     }
 
     loadNewAudioFile = () =>  {
-        this.modalRef.current.onParentSelect = this.onSelect;
-        this.modalRef.current.toggleModal(1, true); 
+        this.modalRef.current.toggleModal(1, true).then(this.onSelect); 
     }
 
     componentDidMount = () => {
+
+
         this.mountRef = this.canvasRef.current.getMountRef();
         this.gui.modalRef = this.modalRef.current;
         this.gui.canvasMountRef = this.mountRef;
 
         const url = new URL(window.location.href);
         const template = url.searchParams.get("template");
-        const prom = import("./animation/templates/" + template + ".js").then(AnimationManager => {
-            this.animationManager = new AnimationManager.default(this.gui, this.resolution);
+        import("./animation/templates/" + template + ".js").then(AnimationManager => {
+            this.animationManager = new AnimationManager.default(this.gui);
             this.update();
             this.setState({videoLoaded: true});
+        }).then(() => {
+            if(this.fastLoad) {
+                this.resolution = {width: 1280, height: 720};
+                this.animationManager.init(this.resolution);
+                this.canvasRef.current.setSize(this.resolution);
+                const rep = this.loadNewAudio("https://s3.eu-west-3.amazonaws.com/fysiklabb/Syn+Cole+-+Miami+82+(Lucas+Silow+Remix).mp3");
+                rep.then( this.audioReady );
+            }else {
+                this.modalRef.current.toggleModal(0).then(this.onSelect);
+            }
         });
 
-        if(this.fastLoad) {
-            this.resolution = {width: 1280, height: 720};
-            this.canvasRef.current.setSize(this.resolution);
-            const rep = this.loadNewAudio("https://s3.eu-west-3.amazonaws.com/fysiklabb/Syn+Cole+-+Miami+82+(Lucas+Silow+Remix).mp3");
-            rep.then( this.audioReady );
-        }else {
-            this.modalRef.current.toggleModal(0);
-        }
+        
     }
 
 
@@ -110,7 +114,7 @@ class App extends PureComponent {
     }
 
     update = () => {
-        if(!this.encoding) {
+        if(!this.encoding ) {
             this.canvasRef.current.begin();
             if(this.state.playing && this.state.time < this.audio.duration) {
                 const time = (performance.now() - this.startTime) / 1000;
@@ -183,8 +187,9 @@ class App extends PureComponent {
     onSelect = (selected) => {
         if(!this.resolution) {
             this.resolution = selected;
+            this.modalRef.current.toggleModal(1, true).then(this.onSelect); 
+            this.animationManager.init(this.resolution);
             this.canvasRef.current.setSize(this.resolution);
-            this.modalRef.current.toggleModal(1, true); 
             return;
         }
         this.loadNewAudio(selected).then(this.audioReady);
@@ -209,8 +214,6 @@ class App extends PureComponent {
     render() {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded; 
         const { progress } = this.state;
-
-        const lineClass = classes.line; 
         return (
             <div className={classes.container}>
                 {<ModalContainer ref={this.modalRef} onSelect={this.onSelect} ></ModalContainer>}
@@ -221,7 +224,7 @@ class App extends PureComponent {
                     <ExportScreen progress={progress} items={this.__items}></ExportScreen>
                 :
                 <React.Fragment>
-                    {disabled && <LinearProgress style={{position: "absolute", top:0, width:"100%", opacity: 1-progress/2}} color="secondary" variant="determinate" value={progress * 100} />}
+                    {disabled && <LinearProgress style={{position: "absolute", top:5, width:"100%", opacity: 1-progress/2}} color="secondary" variant="determinate" value={progress * 100} />}
 
                 <div className={classes.leftContainer} >
                     <Sidebar 

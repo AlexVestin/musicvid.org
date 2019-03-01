@@ -5,19 +5,42 @@ import * as THREE from 'three'
 
 export default class WebGLManager {
 
-    constructor(gui, resolution, ) {
+    constructor(gui) {
         this.fftSize = 16384;
         this.canvasMountRef = gui.canvasMountRef;
         this.modalRef = gui.modalRef;
         this.gui = gui;
+        
+        this.scenes = [];
+        this.audio = null;
+        this.inFullScreen = false;
+       
+        document.body.addEventListener("keydown", (e) => {
+            if(e.keyCode === 70) {
+                if(!this.inFullScreen) {
+                    this.fullscreen(this.canvasMountRef);
+                }else {
+                    this.exitFullscreen(this.canvasMountRef);
+                }
+                this.inFullScreen = !this.inFullScreen;
+                
+            }
+        })
+    }
+
+    init = ( resolution ) => {
+        console.log("res", resolution);
+        this.resolution = resolution;
         this.width = resolution.width;
         this.height = resolution.height;
         this.aspect = this.width / this.height;
-        this.scenes = [];
-        this.audio = null;
+
+        console.log(this.resolution);
         this.setUpRenderers();
         this.setUpScene();
     }
+
+    
 
     getAllItems = () => {
         const items = [];
@@ -44,6 +67,8 @@ export default class WebGLManager {
         this.gui.__folders["Audio"].updateDisplay();
     }
 
+
+
     setUpRenderers = () => {
         // Set up internal canvas to keep canvas size on screen consistent
         this.internalCanvas = document.createElement("canvas");
@@ -61,6 +86,27 @@ export default class WebGLManager {
         this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
         this.gui.__folders["Settings"].add(this, "clearAlpha", 0, 1, 0.001).onChange(this.setClear);
 
+    }
+
+    exitFullscreen(canvas) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+        else if (document.msExitFullscreen) document.msExitFullscreen();
+    };
+    fullscreen(canvas){
+        console.log("full?")
+        if(canvas.RequestFullScreen){
+            canvas.RequestFullScreen();
+        }else if(canvas.webkitRequestFullScreen){
+            canvas.webkitRequestFullScreen();
+        }else if(canvas.mozRequestFullScreen){
+            canvas.mozRequestFullScreen();
+        }else if(canvas.msRequestFullscreen){
+            canvas.msRequestFullscreen();
+        }else{
+            alert("This browser doesn't supporter fullscreen");
+        }
     }
 
     stop = () => {

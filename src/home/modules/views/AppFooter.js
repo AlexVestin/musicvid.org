@@ -109,10 +109,11 @@ function AppFooter(props) {
           </Grid>
 
           <Grid item xs={8} sm={4} md={2}>
-            
+          Node background made by <a href="https://twitter.com/The_ArtOfCode">BIgWings</a>
             </Grid>
           <Grid item>
             <Typography variant="caption">
+
               {'Icons made by '}
               <Link href="http://www.freepik.com" title="Freepik">
                 Freepik
@@ -130,6 +131,8 @@ function AppFooter(props) {
               >
                 CC 3.0 BY
               </Link>
+               
+
             </Typography>
           </Grid>
         </Grid>

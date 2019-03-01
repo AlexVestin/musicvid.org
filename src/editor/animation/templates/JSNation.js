@@ -7,9 +7,9 @@ import WebGLManager from '../WebGLManager'
 export default class Manager extends WebGLManager {
 
     setUpScene() {
-        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.width / this.height));
-        this.scenes.push(new Scene3DPerspective(this.gui.__folders["Layers"], this.width / this.height));
-        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.width / this.height));
+        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"],this.resolution));
+        this.scenes.push(new Scene3DPerspective(this.gui.__folders["Layers"], this.resolution));
+        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.resolution));
         
 
         const it1 = this.scenes[0].addItemFromText("Background");

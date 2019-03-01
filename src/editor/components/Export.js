@@ -135,20 +135,6 @@ class SimpleDialog extends React.Component {
                             youtube
                             </Button>
 
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                style={{backgroundColor: "#ff4500", width: 200, color: "#efefef", marginTop: 12}}
-                                className={classes.button}
-                                href=""
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                disabled
-                                >
-                            Reddit
-                            </Button>
-
-
                             </div>
                         </Typography>
                     </ListItem>

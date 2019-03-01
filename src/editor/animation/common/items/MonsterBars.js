@@ -61,6 +61,11 @@ export default class JSNationSpectrum extends BaseItem {
                     social1: {type: "website", url: "https://caseif.net/"},
                     social2: {type: "github", url: "https://github.com/caseif"},
                 },
+                {
+                    name: "Incept", 
+                    social1: {type: "youtube", url: "https://www.youtube.com/channel/UCS12_l2kLigIPaXjRRmbdNA"},
+                    social2: {type: "github", url: "https://github.com/itsIncept"},
+                }
             ],
             projectUrl: "https://github.com/caseif/vis.js",
             description: "Monstercat visualizer in Javascript and three.js.",
@@ -74,8 +79,7 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     changeEmblemImage = () => {
-        this.folder.__root.modalRef.onParentSelect = this.emblem.loadImage;
-        this.folder.__root.modalRef.toggleModal(3);
+        this.folder.__root.modalRef.toggleModal(3).then(this.emblem.loadImage);
     }
 
     setUpGUI = (gui, name) => {

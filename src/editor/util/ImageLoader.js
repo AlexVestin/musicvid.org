@@ -6,7 +6,7 @@ export default function loadImage(selected, callback) {
         const textureLoader = new TextureLoader();
         textureLoader.crossOrigin = "";
         textureLoader.load(selected, callback);
-    }else {
+    }else if (selected) {
         const reader  = new FileReader();
         const image = document.createElement("img");
         const texture = new Texture();

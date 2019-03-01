@@ -122,8 +122,8 @@ function ProductCategories(props) {
       title: 'Circle Spectrum',
       width: '40%',
       templateName: "JSNation",
-      attrib: "@caseif",
-      attribUrl: "https://github.com/caseif/vis.js",
+      attrib: "@caseif & @Incept",
+      attribUrl: "https://github.com/caseif/js.nation",
       license: "Attribution Required"
     },
     {
@@ -140,7 +140,7 @@ function ProductCategories(props) {
       title: 'Monstercat Bar Visualizer',
       width: '40%',
       templateName: "Monstercat",
-      attrib: "@caseif & @itsIncept",
+      attrib: "@caseif & @Incept",
       attribUrl: "https://github.com/caseif/vis.js",
       license: "Attribution Required"
     },

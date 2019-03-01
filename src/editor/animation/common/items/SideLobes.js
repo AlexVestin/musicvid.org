@@ -68,10 +68,6 @@ export default class JSNationSpectrum extends BaseItem {
         this.spectrumAnimation = "phase_1";
     }
 
-    changeEmblemImage = () => {
-        this.folder.__root.modalRef.onParentSelect = this.emblem.loadImage;
-        this.folder.__root.modalRef.toggleModal(3);
-    }
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);        

@@ -32,16 +32,27 @@ export default class SelectResolutionModal extends PureComponent {
         this.setState({index: 4, modalOpen: true});
     }
 
-    getDimensions = (object) => { return { width: Number(object.res.split("x")[0]), height: Number(object.res.split("x")[1]) } }
-    toggleModal = (idx, open) => {
-        let i = idx ? idx : this.state.index;
-        let o = open ? open : !this.state.modalOpen;
-        this.setState({ modalOpen: o, index: i });
+    getDimensions = (object) => { 
+        return { width: Number(object.res.split("x")[0]), height: Number(object.res.split("x")[1]) } 
+    }
+    
+    async toggleModal(idx, open) {
+        if(this.currentPromise && !this.currentPromise.done)
+            await this.currentPromise;
+
+        this.currentPromise = new Promise((resolve, reject) => {
+            let i = idx ? idx : this.state.index;
+            let o = open ? open : !this.state.modalOpen;
+            this.setState({ modalOpen: o, index: i });
+            this.onParentSelect = resolve;
+        })
+
+        return this.currentPromise;
     }
 
     onSelect = (info) => {
         
-        this.toggleModal();
+        this.setState({modalOpen: false})
         if(info)
             this.onParentSelect(info);
     }
