@@ -25,7 +25,9 @@ export default class JSNationSpectrum extends BaseItem {
         this.resMult = info.height / info.width;
 
 
-        this.scale = 1.0
+        this.scaleX = 1.5;
+        this.scaleY = 1.0;
+
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.tex.generateMipmaps = false;
         this.tex.magFilter = THREE.LinearFilter;
@@ -86,7 +88,9 @@ export default class JSNationSpectrum extends BaseItem {
         const folder = gui.addFolder(name);        
         folder.add(this.mesh.position, "x", -2, 2, 0.01);
         folder.add(this.mesh.position, "y", -2, 2, 0.01);
-        folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));
+        folder.add(this, "scaleX", -2, 2).onChange(() => this.mesh.scale.set(this.scaleX, this.scaleY, 1));
+        folder.add(this, "scaleY", -2, 2).onChange(() => this.mesh.scale.set(this.scaleX, this.scaleY, 1));
+
 
         folder.addColor(this, "color");
         folder.add(this, "shadowBlur", 0, 100);
@@ -96,13 +100,6 @@ export default class JSNationSpectrum extends BaseItem {
         folder.add(this, "shadowOffsetX", 0, 100);
         folder.add(this, "shadowOffsetY", 0, 100);
         return folder;
-    }
-
-    calcRadius = function(multiplier) {
-        let minSize = this.minRadius;
-        let maxSize = this.size / 2;
-        let scalar = multiplier * (maxSize - minSize) + minSize;
-        return scalar / 2;
     }
 
     update = (time, audioData) => {

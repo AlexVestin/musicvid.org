@@ -24,13 +24,18 @@ export default class Polartone extends BaseItem {
         this.font = "Montserrat";
         this.positionX  = 0;
         this.positionY  = 0;
-        this.textureScale = 0.5;
+        this.textureScale = 1.0;
         this.ctx.fillStyle = "#FFFFFF";
         this.aspect = info.width/info.height;
         this.text = "Example Text";
         this.ctx.textAlign = "center";
         this.textAlign ="center";
-
+        
+        // SHADOWS
+        this.shouldDrawShadow = true;
+        this.shadowBlur = 12;
+        this.lineWidth = 5;
+        this.shadowColor = "#000000";
         
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.mat = new THREE.MeshBasicMaterial({transparent: true, map: this.tex})
@@ -48,9 +53,12 @@ export default class Polartone extends BaseItem {
     }
 
     setText = (text, x, y, options) => {
-
         if(options.fontSize) this.fontSize = options.fontSize;
         if(options.textAlign) this.textAlign = options.textAlign;
+        if(options.shadowBlur) this.shadowBlur = options.shadowBlur; 
+        if(options.lineWidth) this.lineWidth = options.lineWidth; 
+
+        
 
 
         this.text = text;
@@ -81,6 +89,11 @@ export default class Polartone extends BaseItem {
         folder.add(this, "text").onChange(this.updateText);
         folder.add(this, "font", fonts).onChange(this.updateText);
         folder.add(this, "fontSize", 0, 300).onChange(this.updateText);
+
+        folder.add(this, "shouldDrawShadow");
+        folder.addColor(this, "shadowColor");
+        folder.add(this, "lineWidth", 0, 30);
+
         folder.addColor(this.ctx, "fillStyle");
         addOrthoMeshControls(this, this.mesh, folder);
 

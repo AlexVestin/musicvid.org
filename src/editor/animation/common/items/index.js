@@ -21,6 +21,11 @@ import TextLines from './TextLines'
 import HexaGone from './HexaGone'
 import OverTheMoon from './OverTheMoon'
 import UniverseWithin from './UniverseWithin'
+import Monstercat2D from './canvas/MonsterBars2D'
+import Text2D from './canvas/Text'
+import Image2D from './canvas/Image'
+
+
 
 
 
@@ -48,5 +53,8 @@ export default {
     TextLines,
     HexaGone,
     OverTheMoon,
-    UniverseWithin
+    UniverseWithin,
+    Monstercat2D,
+    Text2D,
+    Image2D
 }

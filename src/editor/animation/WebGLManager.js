@@ -34,6 +34,9 @@ export default class WebGLManager {
         this.width = resolution.width;
         this.height = resolution.height;
         this.aspect = this.width / this.height;
+        this.overviewFolder = this.gui.__folders["Overview"];
+        this.layersFolder = this.gui.__folders["Layers"];
+
 
         console.log(this.resolution);
         this.setUpRenderers();
@@ -95,7 +98,6 @@ export default class WebGLManager {
         else if (document.msExitFullscreen) document.msExitFullscreen();
     };
     fullscreen(canvas){
-        console.log("full?")
         if(canvas.RequestFullScreen){
             canvas.RequestFullScreen();
         }else if(canvas.webkitRequestFullScreen){

@@ -4,14 +4,24 @@ import items from '../items'
 
 export default class Scene3DOrtho {
     constructor(gui, resolution) {        
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 1000 );
-        this.camera.position.z = 1;
+        this.canvas = document.createElement("canvas");
+        this.canvas.width = resolution.width;
+        this.canvas.height = resolution.height;
+        this.ctx = this.canvas.getContext("2d");
         this.resolution = resolution;
         this.items = [];
-
         this.setUpGui(gui);
-        
+
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10 );
+        this.camera.position.z = 1;
+        this.tex = new THREE.Texture(this.canvas);
+        this.tex.minFilter = THREE.LinearFilter;
+        this.tex.magFilter = THREE.LinearFilter;
+        this.tex.generateMipmaps = false;
+
+        this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
+        this.scene.add(this.mesh);
     }
 
     stop = () => {
@@ -33,12 +43,11 @@ export default class Scene3DOrtho {
             gui: this.itemsFolder,
             width: this.resolution.width,
             height: this.resolution.height,
-            scene: this.scene,
-            camera: this.camera,
+            canvas: this.canvas,
+            ctx: this.ctx
         };
 
 
-        console.log(name)
         const item = new items[name](info)
         this.items.push(item);
         return item;
@@ -50,6 +59,11 @@ export default class Scene3DOrtho {
     }
 
     update = (time, audioData) => {
-        this.items.forEach(item => item.update(time, audioData));
+        this.items.forEach(item =>  {
+            this.ctx.save();
+            item.update(time, audioData)
+            this.ctx.restore();
+        });
+        this.tex.needsUpdate = true;
     }
 }

@@ -1,13 +1,13 @@
 
 
-import Scene3DOrthoGraphic from '../common/scenes/Scene3DOrthoGraphic'
+import OrthographicScene from '../common/scenes/OrthographicScene'
 import WebGLManager from '../WebGLManager'
 
 export default class Manager extends WebGLManager {
 
     setUpScene() {
         this.fftSize = 2048;
-        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.resolution));
+        this.scenes.push(new OrthographicScene(this.layersFolder, this.resolution));
         
         const it0 = this.scenes[0].addItemFromText("Background");
         const it1 = this.scenes[0].addItemFromText("TimeRep");
@@ -28,12 +28,12 @@ export default class Manager extends WebGLManager {
         it3.folder.updateDisplay();
 
 
-        it0.setUpGUI(this.gui.__folders["Overview"], "Background");
-        it1.setUpGUI(this.gui.__folders["Overview"], "TimeRep");
-        it2.setUpGUI(this.gui.__folders["Overview"], "SpriteText");
-        it3.setUpGUI(this.gui.__folders["Overview"], "SpriteText2");
+        it0.setUpGUI(this.overviewFolder, "Background");
+        it1.setUpGUI(this.overviewFolder, "TimeRep");
+        it2.setUpGUI(this.overviewFolder, "SpriteText");
+        it3.setUpGUI(this.overviewFolder, "SpriteText2");
     
-        this.gui.__folders["Overview"].onResize();
+        this.overviewFolder.onResize();
         
     }
 

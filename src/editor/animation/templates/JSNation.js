@@ -1,15 +1,15 @@
 
 
-import Scene3DOrthoGraphic from '../common/scenes/Scene3DOrthoGraphic'
-import Scene3DPerspective from '../common/scenes/Scene3DPerspective'
+import OrthographicScene from '../common/scenes/OrthographicScene'
+import PerspectiveScene from '../common/scenes/PerspectiveScene'
 import WebGLManager from '../WebGLManager'
 
 export default class Manager extends WebGLManager {
 
     setUpScene() {
-        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"],this.resolution));
-        this.scenes.push(new Scene3DPerspective(this.gui.__folders["Layers"], this.resolution));
-        this.scenes.push(new Scene3DOrthoGraphic(this.gui.__folders["Layers"], this.resolution));
+        this.scenes.push(new OrthographicScene(this.layersFolder, this.resolution));
+        this.scenes.push(new PerspectiveScene(this.layersFolder, this.resolution));
+        this.scenes.push(new OrthographicScene(this.layersFolder, this.resolution));
         
 
         const it1 = this.scenes[0].addItemFromText("Background");

@@ -1,22 +1,22 @@
 
 
 import WebGLManager from '../WebGLManager'
-import Scene3DPerspective from '../common/scenes/Scene3DPerspective';
+import PerspectiveScene from '../common/scenes/PerspectiveScene';
 
 export default class Manager extends WebGLManager {
 
     setUpScene() {
-        this.scenes.push(new Scene3DPerspective(this.gui.__folders["Layers"], this.resolution));
+        this.scenes.push(new PerspectiveScene(this.layersFolder, this.resolution));
         
         const it0 = this.scenes[0].addItemFromText("TextLines");
         it0.mesh.position.y = 30;
         const it1 = this.scenes[0].addItemFromText("TextLines");
         it1.text = "Song"; 
         it1.mesh.position.y = -20;
-        it0.setUpGUI(this.gui.__folders["Overview"], "TextLines");
-        it1.setUpGUI(this.gui.__folders["Overview"], "TextLines");
+        it0.setUpGUI(this.overviewFolder, "TextLines");
+        it1.setUpGUI(this.overviewFolder, "TextLines");
         
-        this.gui.__folders["Overview"].onResize();
+        this.overviewFolder.onResize();
         
     }
 

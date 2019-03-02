@@ -139,7 +139,7 @@ function ProductCategories(props) {
       url: 'img/templates/Monstercat.png',
       title: 'Monstercat Bar Visualizer',
       width: '40%',
-      templateName: "Monstercat",
+      templateName: "Monstercat2D",
       attrib: "@caseif & @Incept",
       attribUrl: "https://github.com/caseif/vis.js",
       license: "Attribution Required"
