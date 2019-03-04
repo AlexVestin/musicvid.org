@@ -1,5 +1,6 @@
 
 import BaseItem from '../BaseItem'
+import { loadImage } from '../../../../util/ImageLoader';
 
 export default class Polartone extends BaseItem {
     constructor(info) {
@@ -14,8 +15,6 @@ export default class Polartone extends BaseItem {
         this.positionY = 0.5;
         this.width = 0.1;
         this.height = 0.1;
-
-
         
         // SHADOWS
         this.shouldDrawShadow = true;
@@ -26,28 +25,13 @@ export default class Polartone extends BaseItem {
         this.image = new Image();
     }
 
-    async loadNewImage() {
-        const ref = this.folder.__root.modalRef; 
-        if(ref.currentPromise && !ref.currentPromise.done) {
-            await ref.currentPromise;
-        }
-
-        ref.toggleModal(3).then(this.imageLoaded)
+    loadNewImage() {
+        loadImage(this.gui.__root.modalRef, (img) => this.image = img);
     }
-
-    imageLoaded = (image) => {
-        const fr = new FileReader();
-        
-        fr.onload =  () => {
-            this.image.src = fr.result;
-        }
-        fr.readAsDataURL(image);
-    }
-
-
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
+        folder.add(this, "loadNewImage");
         folder.add(this, "positionX");
         folder.add(this, "positionY");
         folder.add(this, "width");

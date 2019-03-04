@@ -11,20 +11,6 @@ export default class Emblem {
         this.shouldClipImageToCircle = false;
     }
 
-
-    loadImage = (selected) => {
-        const image = document.createElement("img");
-        image.onload = () =>  this.image = image;
-        if(typeof selected === "string") {
-            image.src = selected;
-        }else {
-            const reader  = new FileReader();
-            reader.onload = (e) => image.src = e.target.result;
-            reader.readAsDataURL(selected);
-        }
-    }
-    
-
     draw = (ctx, canvas, currentRadius) => {
         if(this.loaded) {
             let dimension = currentRadius * 2 * this.emblemSizeScale;

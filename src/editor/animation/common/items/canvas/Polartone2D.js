@@ -1,17 +1,14 @@
 import createCamera from "perspective-camera";
 import lerp from "lerp";
-import * as THREE from "three";
-import BaseItem from './BaseItem'
+import BaseItem from '../BaseItem'
 
 export default class Polartone extends BaseItem {
     constructor(info) {
         super();
         // Cant clear the canvas so create internal canvas for this item
         this.aspect = info.height / info.width;
-        this.internalCanvas = document.createElement("canvas");
-        this.internalCanvas.width = 1024;
-        this.internalCanvas.height = 1024 ;
-        this.internalCtx = this.internalCanvas.getContext("2d");
+        this.internalCanvas = info.canvas;
+        this.internalCtx = info.ctx;
 
         const shape = [this.internalCanvas.width , this.internalCanvas.height];
         this.camera = createCamera({
@@ -24,15 +21,16 @@ export default class Polartone extends BaseItem {
         this.positions = [];
         this.cursor = [0, 0, 0];
         this.dpr = window.devicePixelRatio;
-        this.songDuration = 180;
+        this.songDuration = 250;
         this.cameraX = 0;
         this.cameraY = -3.5;
         this.cameraZ = 0;
         this.amplitude = 48.0;
-        this.extent = 0.65;
-        this.capacity = 900;
-        this.distance = 0.35;
+        this.extent = 0.25;
+        this.capacity = 1000;
+        this.distance = 0.1;
         this.clearAlpha = 0.1;
+        this.scale = 1.0;
         this.clearColor = "#000000";
         this.baseStrokeAlpha = 0.15;
         this.internalCtx.globalAlpha = this.baseStrokeAlpha 
@@ -41,15 +39,7 @@ export default class Polartone extends BaseItem {
         this.positionY  = 0;
         this.textureScale = 1.0;
 
-        this.geo = new THREE.PlaneGeometry(2, 2 / this.aspect);
-        
-        this.tex = new THREE.CanvasTexture(this.internalCanvas);
-        this.mat = new THREE.MeshBasicMaterial({ map: this.tex });
-        this.mat.alphaTest = 0.1;
-        this.mesh = new THREE.Mesh(this.geo, this.mat);
-        info.scene.add(this.mesh);
-        this.internalCtx.strokeStyle = 'rgb(255,255,255)'
-        this.mesh.scale.set(0.75,0.75, 1)
+        this.internalCtx.strokeStyle = 'rgb(0,0,0)'
 
         this.camera.identity();
         this.camera.translate([this.cameraX, this.cameraY, this.cameraZ]);
@@ -74,15 +64,21 @@ export default class Polartone extends BaseItem {
             imageUrl: "img/templates/Polartone.png"
         }
 
-        this.internalCtx.fillStyle = "rgb(255,255,255)";
+        const ccls = 245;
+        this.internalCtx.globalAlpha = 1.0;
+        this.internalCtx.fillStyle = `rgb(${ccls},${ccls},${ccls})`;
         this.internalCtx.fillRect(0,0,this.internalCanvas.width,this.internalCanvas.height);
+        this.internalCtx.globalAlpha = this.baseStrokeAlpha;
     }
 
     stop  = () => {
         const { width, height} = this.internalCanvas;
         this.internalCtx.clearRect(0,0,width,height);
-        this.internalCtx.fillRect(0,0,width,height);
-
+        const ccls = 245;
+        this.internalCtx.globalAlpha = 1.0;
+        this.internalCtx.fillStyle = `rgb(${ccls},${ccls},${ccls})`;
+        this.internalCtx.fillRect(0,0,this.internalCanvas.width,this.internalCanvas.height);
+        this.internalCtx.globalAlpha = this.baseStrokeAlpha;
         this.positions  = [];
     }
 
@@ -109,15 +105,9 @@ export default class Polartone extends BaseItem {
     };
 
     update = (time, data) => {
-        const { width, height} = this.internalCanvas;
         const audioData = data.timeData;
         const dur = time / this.songDuration;
         const bufferLength = audioData.length;
-
-        // set up our this.camera
-        // with WebGL (persistent lines) could be
-        // interesting to fly through it in 3d
-       
 
         this.internalCtx.save();
         this.internalCtx.scale(this.dpr, this.dpr);
@@ -126,7 +116,7 @@ export default class Polartone extends BaseItem {
         this.internalCtx.lineJoin = 'round'
         let radius = 1 - dur;
         const startAngle = time;
-
+        
         this.internalCtx.beginPath();
 
         for (let i = this.positions.length - 1; i >= 0; i--) {
@@ -146,7 +136,7 @@ export default class Polartone extends BaseItem {
             this.cursor[0] = Math.cos(angle) * radius;
             this.cursor[2] = Math.sin(angle) * radius;
 
-            const amplitude = (audioData[i] / 128.0) * this.amplitude;
+            const amplitude = audioData[i] * 2;
             const waveY = (amplitude * this.extent) / 2;
 
             const adjusted = [
@@ -161,11 +151,9 @@ export default class Polartone extends BaseItem {
             }
 
             this.positions.push([
-                this.cameraX + x * this.scale,
-                this.cameraY + y * this.scale
+                this.cameraX + x ,
+                this.cameraY + y 
             ]);
         }
-
-        this.mat.map.needsUpdate = true;
     };
 }

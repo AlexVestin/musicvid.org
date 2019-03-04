@@ -54,7 +54,8 @@ export default class Particles extends BaseItem {
     constructor(info) {
         super();
 
-        this.amplitude = 1.0;
+        this.amplitude = 4.5;
+        this.baseSpeed = 1.0;
         this.camera = info.camera;
         var particleCount = baseParticleCount;
 
@@ -282,7 +283,8 @@ export default class Particles extends BaseItem {
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
-        folder.add(this, "amplitude", -10, 10, 0.1);
+        folder.add(this, "amplitude", 0, 10, 0.1);
+        folder.add(this, "baseSpeed", 0, 10);
 
         this.analyser = new ImpactAnalyser(folder);
         this.analyser.deltaDecay = 2; 
@@ -389,10 +391,7 @@ export default class Particles extends BaseItem {
         this.velMult = amp / 512;
         this.velMult = isNaN(this.velMult) ? 0 : this.velMult;
         particleSize = this.velMult;
-        this.velMult =
-            Math.pow(this.velMult, particleExponent) *
-                (1 - absMinParticleVelocity) +
-            absMinParticleVelocity;
+        this.velMult = Math.pow(this.velMult, particleExponent) * (1 - this.baseSpeed / 1000) + (this.baseSpeed / 1000);
 
         particleSize = (maxParticleSize - minParticleSize) * Math.pow(particleSize, particleSizeExponent) + minParticleSize;
         this.updateParticles();

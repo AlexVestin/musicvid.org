@@ -23,7 +23,7 @@ export default function ImpactAnalyser(gui, object) {
 
     addAttribute("useDeltaSmoothing", true, f1, { min: 0 });
     addAttribute("minDeltaNeededToTrigger", 0.01, f1, { min: 0 });
-    addAttribute("deltaDecay", 0.01, f1, {min: 0});
+    addAttribute("deltaDecay", 4, f1, {min: 0});
    
     this.lastAmount = 0;
     this.analyse = (array) => {

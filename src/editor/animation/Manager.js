@@ -1,8 +1,4 @@
 
-
-import * as THREE from 'three'
-
-
 export default class WebGLManager {
 
     constructor(gui) {
@@ -35,8 +31,7 @@ export default class WebGLManager {
         this.aspect = this.width / this.height;
         this.overviewFolder = this.gui.__folders["Overview"];
         this.layersFolder = this.gui.__folders["Layers"];
-        
-        // Set up internal canvas to keep canvas size on screen consistent
+
         this.externalCtx = this.canvasMountRef.getContext("2d");
         this.internalCanvas = document.createElement("canvas");
         this.internalCanvas.width = this.width;
@@ -57,11 +52,6 @@ export default class WebGLManager {
         return items;
     }
 
-    setClear = () => {
-        this.renderer.setClearColor(this.clearColor);
-        this.renderer.setClearAlpha(this.clearAlpha);
-    }
-
     setAudio = (audio) => {
         this.audio = audio;
         this.setFFTSize(this.fftSize);
@@ -70,25 +60,6 @@ export default class WebGLManager {
     setFFTSize = (size) => {
         this.audio.setFFTSize(size);
         this.gui.__folders["Audio"].updateDisplay();
-    }
-
-    setTime = (time) => {
-
-    }
-
-
-
-
-    setUpRenderers = () => {
-        this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, canvas: this.internalCanvas});
-        this.renderer.autoClear = false;
-        this.renderer.setClearColor('#000000');
-        this.renderer.setSize(this.width, this.height);
-        this.clearColor = "#000000";
-        this.clearAlpha = 1.0;
-        this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
-        this.gui.__folders["Settings"].add(this, "clearAlpha", 0, 1, 0.001).onChange(this.setClear);
-
     }
 
     exitFullscreen(canvas) {
@@ -112,25 +83,23 @@ export default class WebGLManager {
     }
 
     stop = () => {
-        this.externalCtx.clearRect( 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
-        this.scenes.forEach(scene => {
-            scene.stop();
-        })
-        this.renderer.clear();
+
+    }
+
+    setTime = (time) => {
+
     }
 
     setUpScene() {
         console.log("Implement this");
     }
 
-    update = (time, audioData) => {
-        this.renderer.clear();
-        this.scenes.forEach(scene => {
-            scene.update(time, audioData);
-            this.renderer.render(scene.scene, scene.camera);
-        });        
+    setUpRenderers = () => {
 
-        this.externalCtx.drawImage(this.internalCanvas, 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
+    }
+
+    update = (time, audioData) => {
+      
     }
 
 }

@@ -1,24 +1,61 @@
+import { TextureLoader, Texture } from "three";
 
-import { TextureLoader, Texture } from 'three';
+export function loadImageFromChoice(selected, callback) {
+    if (typeof selected === "string") {
+        const img = new Image();
+        img.src = selected;
+        img.onload = () => callback(img);
+        img.onerror = console.log;
+    } else if (selected) {
+        const reader = new FileReader();
+        const image = document.createElement("img");
+        reader.onload = e => {
+            image.src = e.target.result;
+            image.onload = () => {
+                callback(image);
+            };
+        };
+        reader.readAsDataURL(selected);
+    }
+}
 
-export default function loadImage(selected, callback) {
-    if(typeof selected === "string") {
+export function loadImageTextureFromChoice(selected, callback) {
+    if (typeof selected === "string") {
         const textureLoader = new TextureLoader();
         textureLoader.crossOrigin = "";
         textureLoader.load(selected, callback);
-    }else if (selected) {
-        const reader  = new FileReader();
+    } else if (selected) {
+        const reader = new FileReader();
         const image = document.createElement("img");
         const texture = new Texture();
         texture.image = image;
-        reader.onload = (e) => {
+        reader.onload = e => {
             image.src = e.target.result;
-            image.onload = () =>  {
+            image.onload = () => {
                 texture.needsUpdate = true;
                 callback(texture);
-            }
-        }
+            };
+        };
         reader.readAsDataURL(selected);
-    
     }
+}
+
+
+export async function loadImage(ref, callback) {
+    if (ref.currentPromise && !ref.currentPromise.done) {
+        await ref.currentPromise;
+    }
+    ref.toggleModal(3).then(selected => {
+        loadImageFromChoice(selected, callback);
+    });
+}
+
+export async function loadImageTexture(ref, callback) {
+    if (ref.currentPromise && !ref.currentPromise.done) {
+        await ref.currentPromise;
+    }
+
+    ref.toggleModal(3).then(selected => {
+       loadImageTextureFromChoice(selected, callback);
+    });
 }

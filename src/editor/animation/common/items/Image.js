@@ -1,6 +1,6 @@
 
 import * as THREE from 'three'
-import loadImage from '../../../util/ImageLoader'
+import {loadImageTexture} from '../../../util/ImageLoader'
 import BaseItem from './BaseItem'
 import { addOrthoMeshControls } from '../../../util/AddMeshControls'
 
@@ -22,11 +22,7 @@ export default class Image extends BaseItem{
 
     async changeImage() {
         const ref = this.folder.__root.modalRef; 
-        if(ref.currentPromise && !ref.currentPromise.done) {
-            await ref.currentPromise;
-        }
-
-        ref.toggleModal(3).then(this.loadNewBackground)
+        loadImageTexture(ref, this.setBackground);
     }
     
     update = (time, audioData) => {
@@ -51,11 +47,4 @@ export default class Image extends BaseItem{
         this.material.map = texture;
         this.material.needsUpdate = true;
     }
-
-    loadNewBackground = (selected) => {
-        loadImage(selected, this.setBackground);
-        
-    }
-
-   
 }

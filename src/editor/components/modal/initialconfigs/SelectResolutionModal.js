@@ -37,8 +37,6 @@ export default class SelectResolutionModal extends PureComponent {
     }
     
     async toggleModal(idx, open) {
-        if(this.currentPromise && !this.currentPromise.done)
-            await this.currentPromise;
 
         this.currentPromise = new Promise((resolve, reject) => {
             let i = idx ? idx : this.state.index;
@@ -53,8 +51,7 @@ export default class SelectResolutionModal extends PureComponent {
     onSelect = (info) => {
         
         this.setState({modalOpen: false})
-        if(info)
-            this.onParentSelect(info);
+        this.onParentSelect(info);
     }
     render() {
         const { modalOpen } = this.state;

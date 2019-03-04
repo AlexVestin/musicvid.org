@@ -7,7 +7,7 @@ export default class Scene3DOrtho {
         this.canvas = document.createElement("canvas");
         this.canvas.width = resolution.width;
         this.canvas.height = resolution.height;
-        this.ctx = this.canvas.getContext("2d");
+        this.ctx = this.canvas.getContext("2d",  {alpha: false});
         this.resolution = resolution;
         this.items = [];
         this.setUpGui(gui);

@@ -1,6 +1,7 @@
 
 import * as THREE from "three";
 import { smooth, toWebAudioForm, getByteSpectrum } from '../../../audio/analyse_functions'
+import { loadImage } from '../../../util/ImageLoader'
 import Emblem from "./Emblem";
 import BaseItem from './BaseItem'
 
@@ -30,8 +31,6 @@ export default class JSNationSpectrum extends BaseItem {
         this.exp = 4
         this.preAmplitude = 1.0;
         this.emblemExaggeration = 1.5;
-
-        console.log(info)
 
         this.startBin = 8;
         this.keepBins = 40;
@@ -88,7 +87,8 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     changeEmblemImage = () => {
-        this.folder.__root.modalRef.toggleModal(3).then(this.loadNewBackground);
+        loadImage(this.folder.__root.modalRef, (img) => this.emblem.image = img);
+
     }
 
     setUpGUI = (gui, name) => {

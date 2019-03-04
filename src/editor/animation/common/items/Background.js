@@ -1,7 +1,7 @@
 
 import * as THREE from 'three'
 import ImpactAnalyser from '../../../audio/ImpactAnalyser'
-import loadImage from '../../../util/ImageLoader';
+import { loadImageTexture, loadImageTextureFromChoice } from '../../../util/ImageLoader';
 import BaseItem from './BaseItem'
 
 const vertexShader = [
@@ -66,14 +66,13 @@ export default class Background extends BaseItem {
         this.scene.add(this.mesh);
 
         const url = "./img/space.jpeg";
-        this.loadNewBackground(url);
+        loadImageTextureFromChoice(url, this.setBackground);
         this.folder = this.setUpGUI(this.gui, "Background");
     }
 
-    
-
-    changeImage = () => {
-        this.folder.__root.modalRef.toggleModal(3).then(this.loadNewBackground);
+    changeImage() {
+        const ref = this.folder.__root.modalRef; 
+        loadImageTexture(ref, this.setBackground);
     }
     
 
@@ -100,17 +99,11 @@ export default class Background extends BaseItem {
         return folder;
     }
 
-
-
     setBackground = (texture) => {
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.generateMipMaps = false;
         this.material.uniforms.texture1.value = texture;
         this.material.needsUpdate = true;
-    }
-
-    loadNewBackground = (selected) => {
-        loadImage(selected, this.setBackground);
     }
 }

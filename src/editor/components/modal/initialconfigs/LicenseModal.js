@@ -56,8 +56,8 @@ class AlertDialog extends React.Component {
                         style={{ lineHeight: 0.95 }}
                         component={"span"}
                     >
-                        This composition contains licensed work and to use these
-                        items commercially attribution is legally required.
+                        This composition contains licensed work, and in order to share it with others you are required to attribute
+                        the authors, by displaying their information.
                         <br />
                         <br />
                         <div style={{ backgroundColor: "#efefef" }}>
@@ -91,8 +91,18 @@ class AlertDialog extends React.Component {
                             })}
                         </div>
                         <br />
-                        By selecting "I AGREE" you agree to add this attribution
-                        visibly to your content.
+                        By selecting "I AGREE" you agree to honor the license of{" "}
+                        <a
+                            href="https://creativecommons.org/licenses/by/4.0/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            CC-BY
+                        </a>{" "}
+                        and to add to the above attribution 
+                        <a  href="/faq#attribution"
+                            target="_blank"
+                            rel="noopener noreferrer"> visibly to your content. </a>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

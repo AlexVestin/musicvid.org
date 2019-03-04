@@ -24,6 +24,8 @@ import UniverseWithin from './UniverseWithin'
 import Monstercat2D from './canvas/MonsterBars2D'
 import Text2D from './canvas/Text'
 import Image2D from './canvas/Image'
+import Polartone2D from './canvas/Polartone2D'
+
 
 
 
@@ -56,5 +58,6 @@ export default {
     UniverseWithin,
     Monstercat2D,
     Text2D,
-    Image2D
+    Image2D,
+    Polartone2D
 }

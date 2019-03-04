@@ -75,9 +75,6 @@ export default class JSNationSpectrum extends BaseItem {
         this.spectrumAnimation = "phase_1";
     };
 
-    changeEmblemImage = () => {
-        this.folder.__root.modalRef.toggleModal(3).then(this.emblem.loadImage);
-    };
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
@@ -88,12 +85,9 @@ export default class JSNationSpectrum extends BaseItem {
         folder.add(this, "positionX");
         folder.add(this, "positionY");
         folder.add(this, "spectrumSpacing", 0, 10, 1);
-
-
         folder.add(this, "shadowBlur", 0, 100);
         folder.add(this, "shadowAlpha", 0, 1, 0.001);
-
-        folder.add(this, "barHeightMultiplier", 0, 12.0, 0.01);
+        folder.add(this, "barHeightMultiplier", 0, 25.0, 0.01);
         folder.add(this, "shadowOffsetX", 0, 100);
         folder.add(this, "shadowOffsetY", 0, 100);
         return folder;

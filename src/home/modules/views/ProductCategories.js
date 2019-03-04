@@ -113,6 +113,10 @@ const styles = theme => ({
   },
 });
 
+
+
+
+
 function ProductCategories(props) {
   const { classes } = props;
 
@@ -129,16 +133,16 @@ function ProductCategories(props) {
     {
       url: 'img/templates/Polartone.png',
       title: 'Polartone',
-      width: '20%',
+      width: '24%',
       templateName: "Polartone",
       attrib: "@mattdesl",
       attribUrl: "https://github.com/mattdesl/Polartone",
-      license: "FREE"
+      license: "MIT"
     },
     {
       url: 'img/templates/Monstercat.png',
       title: 'Monstercat Bar Visualizer',
-      width: '40%',
+      width: '36%',
       templateName: "Monstercat2D",
       attrib: "@caseif & @Incept",
       attribUrl: "https://github.com/caseif/vis.js",
@@ -147,25 +151,26 @@ function ProductCategories(props) {
     {
       url: 'img/templates/StarField.png',
       title: 'Star Field',
-      width: '38%',
+      width: '32%',
       templateName: "Stars",
       attrib: "@kali",
       attribUrl: "https://www.shadertoy.com/user/kali",
-      license: "FREE"
+      license: "MIT"
     },
     {
-      url: 'img/templates/AudioWave.png',
-      title: 'Audio Wave',
+      url: 'img/templates/Sinuous.png',
+      title: 'Sinuous',
       width: '38%',
-      templateName: "AudioWave",
-      attrib: "@GamleGaz",
-      attribUrl: "https://www.github.com/AlexVestin",
-      license: "FREE"
+      templateName:"Sinuous",
+      attrib: "Samuel C. (@stormoid)",
+      attribUrl: "https://www.shadertoy.com/user/nimitz",
+      twitter: "https://twitter.com/stormoid",
+      license: "Attribution Required"
     },
     {
       url: 'img/templates/UniverseWithin.png',
       title: 'Universe Within',
-      width: '24%',
+      width: '30%',
       templateName: "UniverseWithin",
       attrib: "@BigWIngs",
       attribUrl: "https://www.youtube.com/channel/UCcAlTqd9zID6aNX3TzwxJXg",
@@ -183,13 +188,13 @@ function ProductCategories(props) {
       license: "Attribution Required"
     },
     {
-      url: 'img/templates/SimplicityGalaxy.png',
-      title: 'Simplicity Galaxy',
+      url: 'img/templates/AudioWave.png',
+      title: 'Audio Wave',
       width: '20%',
-      templateName: "SimplicityGalaxy",
-      attrib: "@CBS",
-      attribUrl: "https://www.shadertoy.com/user/CBS",
-      license: "FREE"
+      templateName: "AudioWave",
+      attrib: "@GamleGaz",
+      attribUrl: "https://www.github.com/AlexVestin",
+      license: "MIT"
     },
     {
       url: 'img/templates/HexaGone.png',
@@ -200,9 +205,16 @@ function ProductCategories(props) {
       twitter: "https://twitter.com/The_ArtOfCode",
       attrib: "@BigWIngs",
       license: "Attribution Required"
-    },
-  ];
+    }
 
+  ];
+  /*url: 'img/templates/SimplicityGalaxy.png',
+      title: 'Simplicity Galaxy',
+      width: '20%',
+      templateName: "SimplicityGalaxy",
+      attrib: "@CBS",
+      attribUrl: "https://www.shadertoy.com/user/CBS",
+      license: "FREE" */
   return (
     <LayoutBody className={classes.root} component="section" width="large">
       <Typography variant="h4" marked="center" align="center" component="h2">
