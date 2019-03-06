@@ -57,7 +57,7 @@ class AlertDialog extends React.Component {
                         component={"span"}
                     >
                         This composition contains licensed work, and in order to share it with others you are required to attribute
-                        the authors, by displaying their information.
+                        the authors, by displaying their information on or alongside your content.
                         <br />
                         <br />
                         <div style={{ backgroundColor: "#efefef" }}>

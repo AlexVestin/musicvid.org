@@ -4,11 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import WhileExporting from './WhileExporting'
+import DoneExporting from './DoneExporting'
+
 
 import blue from "@material-ui/core/colors/blue";
 import ExportCard from "./ExportCard";
-import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 
@@ -29,6 +30,15 @@ const styles = {
 };
 
 class SimpleDialog extends React.Component {
+
+    componentDidMount() {
+        window.onbeforeunload = function(event) {
+            // do stuff here
+            event.returnValue = "Your export will be canceled, are you sure you want navigate away?";  
+            return "Your export will be canceled, are you sure you want navigate away?";
+        };
+    }
+
     handleClose = () => {
         //this.props.onClose(this.props.selectedValue);
     };
@@ -41,41 +51,20 @@ class SimpleDialog extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, progress, encoding  } = this.props;
         const items = this.props.items;
+
+        console.log(progress, encoding);
 
         return (
             <div className={classes.container}>
                 <List>
-
-                <ListItem style={{ justifyContent: "center", display: "flex", flexDirection: "column" }}>
-                        <Typography
-                            style={{ color: "#efefef" }}
-                            component="h2"
-                            variant="h2"
-                        >
-                            Exporting
-                        </Typography>
-                        <div className={classes.root}>
-                            <LinearProgress
-                                color="secondary"
-                                variant="determinate"
-                                value={this.props.progress * 100}
-                            />
-                        </div>
-                        <Typography
-                            style={{ color: "#efefef" }}
-                            component="h6"
-                            variant="h6"
-                        >
-                            Check out the contributors in the meantime! (but
-                            don't navigate away from or close the tab)
-                        </Typography>
-                    </ListItem>
-                    <ListItem style={{ justifyContent: "center" }}>
-                    <Divider variant="fullWidth"/>
-                    </ListItem>
-
+                    {encoding  ? 
+                    <DoneExporting classes={classes}></DoneExporting>
+                        :
+                    <WhileExporting classes={classes} progress={progress}></WhileExporting>
+                    }
+                
                     <ListItem style={{ justifyContent: "center" }}>
                         <Typography
                             style={{ color: "#efefef" }}

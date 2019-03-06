@@ -19,6 +19,7 @@ export default class Exporter {
         this.time               = 0;
         this.frames             = [];
         this.videoEncoder       = new VideoEncoder(this.initEncoder);
+        this.presetIdx          = config.video.presetIdx;
     }
 
 
@@ -28,7 +29,7 @@ export default class Exporter {
             h: this.height,
             bitrate: this.videoBitrate,
             fps: this.fps,
-            presetIdx: 6,
+            presetIdx: this.presetIdx,
         }
 
         const audioConfig = {
@@ -70,10 +71,7 @@ export default class Exporter {
     }
 
     encodeVideoFrame = () => {
-        const { width, height } = this;
-        const glContext = this.animationManager.renderer.getContext();
-        this.pixels = new Uint8Array(width * height * 4);
-        glContext.readPixels(0,0,width,height, glContext.RGBA, glContext.UNSIGNED_BYTE, this.pixels);
+        this.pixels = this.animationManager.readPixels();
         this.videoEncoder.queueFrame( {type: "video", pixels: this.pixels} );
         this.pixels = null;
         this.encodedVideoFrames++;

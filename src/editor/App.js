@@ -35,7 +35,8 @@ class App extends PureComponent {
             playing: false, 
             loaded: false, 
             encoding: false, 
-            progress: 0 
+            progress: 0,
+            doneEncoding: false 
         };
         this.canvasRef = React.createRef();
         this.modalRef = React.createRef();
@@ -50,7 +51,14 @@ class App extends PureComponent {
     }
 
     componentDidMount = () => {
-
+        if(!this.fastLoad) {
+            window.onbeforeunload = function(event) {
+                // do stuff here
+                event.returnValue = "If you leave this page you will lose your unsaved changes.";  
+                return "If you leave this page you will lose your unsaved changes.";
+            };
+        }
+        
 
         this.mountRef = this.canvasRef.current.getMountRef();
         this.gui.modalRef = this.modalRef.current;
@@ -127,8 +135,11 @@ class App extends PureComponent {
     }
 
     encoderDone = () => {
-        this.encoding = false;
-        requestAnimationFrame(this.update);
+        //this.encoding = false;
+        //requestAnimationFrame(this.update);
+        this.setState({doneEncoding: true});
+        this.setState({doneEncoding: true});
+        console.log("?")
     }
 
     encoderReady = () => {
@@ -153,7 +164,7 @@ class App extends PureComponent {
                 height: this.resolution.height,
                 fps: selected.fps,
                 bitrate: selected.bitrate,
-                preset: selected.preset
+                presetIdx: selected.preset
             },
             fileName: selected.fileName,
             animationManager: this.animationManager,
@@ -219,7 +230,7 @@ class App extends PureComponent {
                
 
                 {this.state.encoding ?
-                    <ExportScreen progress={progress} items={this.__items}></ExportScreen>
+                    <ExportScreen encoding={this.state.doneEncoding} progress={progress} items={this.__items}></ExportScreen>
                 :
                 <React.Fragment>
                     {disabled && <LinearProgress style={{position: "absolute", top:5, width:"100%", opacity: 1-progress/2}} color="secondary" variant="determinate" value={progress * 100} />}

@@ -1,6 +1,7 @@
 
 
 import * as THREE from 'three'
+import OrbitControls from './common/controls/OrbitControls';
 
 
 export default class WebGLManager {
@@ -88,7 +89,6 @@ export default class WebGLManager {
         this.clearAlpha = 1.0;
         this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
         this.gui.__folders["Settings"].add(this, "clearAlpha", 0, 1, 0.001).onChange(this.setClear);
-
     }
 
     exitFullscreen(canvas) {
@@ -109,6 +109,15 @@ export default class WebGLManager {
         }else{
             alert("This browser doesn't supporter fullscreen");
         }
+    }
+
+    readPixels = () => {
+        const {width, height} = this;
+        console.log(width, height)
+        const glContext = this.renderer.getContext()
+        const pixels = new Uint8Array(width * height * 4);
+        glContext.readPixels(0,0,width,height, glContext.RGBA, glContext.UNSIGNED_BYTE, pixels);
+        return pixels;
     }
 
     stop = () => {

@@ -63,6 +63,7 @@ export default class ControllerContainer extends PureComponent {
             checkLicense().then(() => {
                 const bitrate = this.MBitBitrate * Math.pow(10, 6);
                 const preset = this.presetLookup.findIndex(e => e === this.preset);
+                console.log(preset)
                 startEncoding({fps: this.fps, bitrate: bitrate, preset: preset, fileName: this.fileName})
             });
            

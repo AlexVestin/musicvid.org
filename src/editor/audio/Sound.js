@@ -32,13 +32,17 @@ export default class Audio {
         KissFFT(this.Module);
         this.Module["onRuntimeInitialized"] = () => {
             this.Module._init_r(this.fftSize);
+            this.moduleLoaded = true;
         };
     };
 
     setFFTSize = fftSize => {
         this.fftSize = Number(fftSize);
-        this.Module._init_r(this.fftSize);
-        this.gui.updateDisplay();
+        if(this.moduleLoaded) {
+            this.Module._init_r(this.fftSize);
+            this.gui.updateDisplay();
+        }
+        
     };
 
     getEncodingFrame = () => {

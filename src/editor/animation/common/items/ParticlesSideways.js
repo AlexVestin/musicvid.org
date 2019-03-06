@@ -42,9 +42,7 @@ var particleExponent = 4.5; // the power to raise velMult to after initial compu
 var fleckZ = 150;
 var bokehYVelRange = (bokehMinVelocity + bokehMaxVelocity) * 0.5 * 2;
 var bokehZ = 200;
-var color = "#FF0000";
-const resRatio = 2;
-var velocityResScale = Math.pow(resRatio, 5);
+var color = "#FFFFFF";
 
 var VIEW_ANGLE = 45;
 
@@ -54,10 +52,11 @@ export default class Particles extends BaseItem {
     constructor(info) {
         super();
 
-        this.amplitude = 4.5;
-        this.baseSpeed = 1.0;
+        this.amplitude = 16.5;
+        this.baseSpeed = 300.0;
         this.camera = info.camera;
         var particleCount = baseParticleCount;
+        this.resRatio = info.width / 1920;
 
         this.aspect = info.width / info.height;
 
@@ -111,7 +110,7 @@ export default class Particles extends BaseItem {
 
         this.bokehMaterial.alphaTest = alphaTest;
 
-        var velocityResScale = Math.pow(resRatio, 5);
+        this.velocityResScale = Math.pow(this.resRatio, 5);
         var fleckVelocity = maxParticleVelocity * fleckVelocityScalar;
 
 
@@ -134,11 +133,11 @@ export default class Particles extends BaseItem {
 
             // create a velocity vector
             particle.velocity = new THREE.Vector3(
-                velocityResScale *
+                this.velocityResScale *
                     (Math.random() *
                         (maxParticleVelocity - minParticleVelocity) +
                         minParticleVelocity),
-                velocityResScale * centerBiasedRandom(yVelRange, velBias),
+                        this.velocityResScale * centerBiasedRandom(yVelRange, velBias),
                 0
             );
 
@@ -169,8 +168,8 @@ export default class Particles extends BaseItem {
 
             // create a velocity vector
             fleck.velocity = new THREE.Vector3(
-                velocityResScale * fleckVelocity,
-                velocityResScale * centerBiasedRandom(fleckYVelScalar, velBias),
+                this.velocityResScale * fleckVelocity,
+                this.velocityResScale * centerBiasedRandom(fleckYVelScalar, velBias),
                 0
             );
 
@@ -201,10 +200,10 @@ export default class Particles extends BaseItem {
 
             // create a velocity vector
             b.velocity = new THREE.Vector3(
-                velocityResScale *
+                this.velocityResScale *
                     (Math.random() * (bokehMaxVelocity - bokehMinVelocity) +
                         bokehMinVelocity),
-                velocityResScale *
+                        this.velocityResScale *
                     (Math.random() * bokehYVelRange - bokehYVelRange / 2),
                 0
             );
@@ -308,7 +307,7 @@ export default class Particles extends BaseItem {
             : pMaterial.size;
         translated.x = particle.x;
         translated.y = particle.y;
-        translated.z = particle.z - camera.position.z;
+        translated.z = particle.z - 20;
         if (translated.x < 0) {
             translated.x += frustumPadding;
         } else {
@@ -362,9 +361,9 @@ export default class Particles extends BaseItem {
         );
         velVector = velVector.multiply(
             new THREE.Vector3(
-                velocityResScale,
-                velocityResScale,
-                velocityResScale
+                this.velocityResScale,
+                this.velocityResScale,
+                this.velocityResScale
             )
         );
         if (side === 0) {
@@ -438,7 +437,7 @@ export default class Particles extends BaseItem {
             particle = bokeh.vertices[i];
             particle.x += particle.velocity.x * velMult;
             particle.y += particle.velocity.y * velMult;
-            particle.z += particle.velocity.z * velMult;
+            //particle.z += particle.velocity.z * velMult;
             if (particle.x > 0 && !this.isInView(particle)) {
                 this.resetParticle(particle);
             }

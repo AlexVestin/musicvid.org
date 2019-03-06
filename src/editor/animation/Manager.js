@@ -24,6 +24,15 @@ export default class WebGLManager {
         })
     }
 
+
+    readPixels = () => {
+        const {width, height} = this;
+        const glContext = this.gl;
+        const pixels = new Uint8Array(width * height * 4);
+        glContext.readPixels(0,0,width,height, glContext.RGBA, glContext.UNSIGNED_BYTE, pixels);
+        return pixels;
+    }
+
     init = ( resolution ) => {
         this.resolution = resolution;
         this.width = resolution.width;

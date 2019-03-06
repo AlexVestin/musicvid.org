@@ -4,13 +4,15 @@ import CanvasScene from '../common/scenes/CanvasScene'
 import PerspectiveScene from '../common/scenes/PerspectiveScene'
 import WebGLManager from '../WebGLManager'
 
+import * as THREE from 'three'
+import OrbitControls from '../common/controls/OrbitControls';
+
 export default class Monstercat extends WebGLManager {
 
     setUpScene() {
-        console.log(this.resolution, "dopifgnio")
         const particlesScene = new PerspectiveScene(this.layersFolder, this.resolution); 
         const spectrumBarsScene = new CanvasScene(this.layersFolder, this.resolution); 
-
+        particlesScene.camera.position.y = 0;
         particlesScene.camera.position.z = 300;
         particlesScene.camera.updateMatrixWorld();
         this.scenes.push(particlesScene);
@@ -70,6 +72,29 @@ export default class Monstercat extends WebGLManager {
         const it1 = particlesScene.addItemFromText("ParticlesSideways");
         it1.setUpGUI(this.overviewFolder, "Particles");
         this.overviewFolder.onResize();
+
+
+        this.camera2 = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 10000 );
+        this.camera2.position.z = 300;
+        this.camera2.updateProjectionMatrix();
+        this.controls = new OrbitControls(this.camera2, this.gui.canvasMountRef);
+        this.helper = new THREE.CameraHelper( particlesScene.camera.clone() );
+        this.scene = new THREE.Scene();
+        this.scene.add( this.helper );
+
+    }
+
+    update = (time, audioData) => {
+        this.renderer.clear();
+        this.scenes.forEach(scene => {
+            scene.update(time, audioData);
+            this.renderer.render(scene.scene, scene.camera);
+        });   
+        this.helper.update();     
+        this.helper.camera.updateMatrixWorld(true);
+        this.renderer.render(this.scene, this.camera2);
+
+        this.externalCtx.drawImage(this.internalCanvas, 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
     }
 
     autoPlaceText = () => {
