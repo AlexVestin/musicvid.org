@@ -85,7 +85,7 @@ class ProductCTA extends React.Component {
             <div className={classes.card}>
               <form onSubmit={this.handleSubmit} className={classes.cardContent}>
                 <Typography variant="h2" component="h2" gutterBottom>
-                 Community
+                 Help out!
                 </Typography>
                 <Typography variant="h5">
                   Join the community! Request features and visuals, ask for help, or show off your videos

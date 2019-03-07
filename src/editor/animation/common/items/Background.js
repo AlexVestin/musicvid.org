@@ -2,6 +2,8 @@
 import * as THREE from 'three'
 import ImpactAnalyser from '../../../audio/ImpactAnalyser'
 import { loadImageTexture, loadImageTextureFromChoice } from '../../../util/ImageLoader';
+import { addOrthoMeshControls } from '../../../util/AddMeshControls';
+
 import BaseItem from './BaseItem'
 
 const vertexShader = [
@@ -86,15 +88,15 @@ export default class Background extends BaseItem {
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
         folder.add(this, "changeImage");
-        folder.add(this.material.uniforms.should_vignette, "value", {name: "Enable Vignette"});
+        folder.add(this.material.uniforms.should_vignette, "value", {name: "Enable Postprocessing"});
         folder.add(this, "brightenToAudio");
         folder.add(this, "brightenMultipler");           
         folder.add(this, "vignetteAmount").onChange(() => this.material.uniforms.value = this.vignetteAmount);
-        folder.add(this.mesh, "visible");
         folder.add(this.material.uniforms.should_mirror, "value", {name: "Mirror image"});
         this.impactAnalyser = new ImpactAnalyser(folder);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;
+        addOrthoMeshControls(this, this.mesh, folder);
         folder.updateDisplay();
         return folder;
     }

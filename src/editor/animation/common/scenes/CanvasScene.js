@@ -2,25 +2,26 @@
 import * as THREE from 'three';
 import items from '../items'
 
-export default class Scene3DOrtho {
+export default class CanvasScene {
     constructor(gui, resolution) {        
-        this.canvas = document.createElement("canvas");
+        this.canvas = document.createElement("canvas",);
         this.canvas.width = resolution.width;
         this.canvas.height = resolution.height;
-        this.ctx = this.canvas.getContext("2d",  {alpha: false});
+        this.ctx = this.canvas.getContext("2d");
         this.resolution = resolution;
         this.items = [];
         this.setUpGui(gui);
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10 );
-        this.camera.position.z = 1;
+        this.camera.position.z = 1.0;
         this.tex = new THREE.Texture(this.canvas);
         this.tex.minFilter = THREE.LinearFilter;
         this.tex.magFilter = THREE.LinearFilter;
         this.tex.generateMipmaps = false;
 
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
+        
         this.scene.add(this.mesh);
     }
 
@@ -59,6 +60,7 @@ export default class Scene3DOrtho {
     }
 
     update = (time, audioData) => {
+        this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
         this.items.forEach(item =>  {
             this.ctx.save();
             item.update(time, audioData)

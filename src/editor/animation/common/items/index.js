@@ -28,11 +28,6 @@ import Polartone2D from './canvas/Polartone2D'
 
 
 
-
-
-
-
-
 export default {
     Bars,
     JSNation, 

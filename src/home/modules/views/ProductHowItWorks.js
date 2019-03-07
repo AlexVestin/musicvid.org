@@ -77,7 +77,7 @@ function ProductHowItWorks(props) {
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  Choose a template to start from, or create a new project and select the items you want.
+                  Choose a template to start from.
                 </Typography>
               </div>
             </Grid>
@@ -90,7 +90,7 @@ function ProductHowItWorks(props) {
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  Play around with the different settings until you have something you like.
+                  Play around with the settings until you have something you like.
                 </Typography>
               </div>
             </Grid>

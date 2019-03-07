@@ -1,10 +1,10 @@
 
 import * as THREE from "three";
 import BaseItem from './BaseItem'
-import addMeshControls from '../../../util/AddMeshControls'
+import { addOrthoMeshControls } from '../../../util/AddMeshControls'
+import fonts from '../../../util/Fonts'
+import { loadImageTexture } from '../../../util/ImageLoader';
 
-
-const fonts = ["Arial", "Helvetica", "Times New Roman", "Times", "Courier New", "Courier", "Verdana", "Georgia", "Palatino", "Garamond", "Bookman", "Comic Sans MS"]
 
 
 const vertexShader = [
@@ -17,6 +17,7 @@ const vertexShader = [
 
 const fragmentShader = [
     "uniform sampler2D texture1;",
+    "uniform sampler2D texture2;",
     "varying vec2 vUv;",
 
     "void main() {",
@@ -25,7 +26,7 @@ const fragmentShader = [
         "if(length(c.rgb) < 0.5)",
             "alpha = 1.0 - length(c.rgb) * 2.;",
             
-        "gl_FragColor = vec4(0.0,0.,0., alpha);",
+        "gl_FragColor = vec4(texture2D(texture2, vUv).rgb, alpha);",
     "}"
 ].join("\n");
 
@@ -43,12 +44,26 @@ export default class Polartone extends BaseItem {
         this.ctx = this.canvas.getContext("2d");
 
         this.fontSize = 150;
-        this.font = "Arial";
+        this.font = "Montserrat";
         this.ctx.fillStyle = "#FFFFFF";
         this.aspect = info.width/info.height;
-        this.text = "Example Text";
+
+
+        
+        this.topText = "Example Text";
+        this.topTextX = 1.0;
+        this.topTextY = 1.0;
+        this.topFontSize = 150;
+
+        
+        this.bottomText = "Example Text";
+        this.botTextX = 1.0;
+        this.botTextY = 1.3;
+        this.botFontSize  = 120;
+
         this.ctx.textAlign = "center";
 
+        this.backgroundTex = new THREE.Texture();
         
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.mat = new THREE.ShaderMaterial({
@@ -56,7 +71,8 @@ export default class Polartone extends BaseItem {
             fragmentShader,
             transparent: true,
             uniforms: {
-                texture1: { value: this.tex }
+                texture1: { value: this.tex },
+                texture2: { value: null, type: "t"},
             }
         })
 
@@ -65,19 +81,37 @@ export default class Polartone extends BaseItem {
         this.mesh = new THREE.Mesh(this.geo, this.mat);
         this.folder = this.setUpGUI(info.gui, "Polartone");
 
+        const scale = 0.46;
+        this.mesh.scale.set(scale, scale, scale);
+
         this.updateText();
         info.scene.add(this.mesh);
         this.ctx.fillStyle = "#FFFFFF";
     }
 
+    setBackground = (texture) => {
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.generateMipMaps = false;
+        this.mat.uniforms.texture2.value = texture;
+        this.mat.needsUpdate = true;
+        
+    }
+    changeBackroundImage = () => {
+        loadImageTexture(this.folder.__root.modalRef, this.setBackground)
+    }
+
     updateText = () => {
         const {width,height} = this.canvas;
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
-        this.ctx.font = `${this.fontSize}px ${this.font}`;
+        
         this.ctx.textAlign = "center";
         this.tex.needsUpdate = true;
-        this.ctx.fillText(this.text, width/2, height / 2);
-        this.ctx.fillText("OUT NOW", width/2, height / 2 + 150);
+
+        this.ctx.font = `${this.topFontSize}px ${this.font}`;
+        this.ctx.fillText(this.topText, this.topTextX*(width/2), this.topTextY * height / 2);
+        this.ctx.font = `${this.botFontSize}px ${this.font}`;
+        this.ctx.fillText(this.bottomText,  this.botTextX*(width/2), this.botTextY * height / 2);
     }
 
     setSize = () => {
@@ -88,10 +122,21 @@ export default class Polartone extends BaseItem {
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
-        folder.add(this, "text").onChange(this.updateText);
+        folder.add(this, "changeBackroundImage");
+        folder.add(this, "topText").onChange(this.updateText);
+        folder.add(this, "topFontSize").onChange(this.updateText);
+        folder.add(this, "topTextX", -2, 2).onChange(this.updateText);
+        folder.add(this, "topTextY", -2, 2).onChange(this.updateText);
+        
+        folder.add(this, "bottomText").onChange(this.updateText);
+        folder.add(this, "botFontSize").onChange(this.updateText);
+        folder.add(this, "botTextX", -2, 2).onChange(this.updateText);
+        folder.add(this, "botTextY", -2, 2).onChange(this.updateText);
+
+
         folder.add(this, "font", fonts).onChange(this.updateText);
         folder.add(this, "fontSize", 0, 300).onChange(this.updateText);
-        addMeshControls(this, this.mesh, folder);
+        addOrthoMeshControls(this, this.mesh, folder);
         return folder;
     };
 

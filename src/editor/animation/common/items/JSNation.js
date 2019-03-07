@@ -11,7 +11,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         
-        this.size = 512;
+        this.size = 1024;
         this.canvas.width = this.size;
         this.canvas.height = this.size;
 
@@ -24,13 +24,16 @@ export default class JSNationSpectrum extends BaseItem {
         this.maxBufferSize = Math.max.apply(null, this.delays);
         this.resMult = info.height / info.width;
 
-        this.spectrumHeightScalar = 0.2;
+        this.spectrumHeightScalar = 0.4;
         this.smoothingTimeConstant = 0.1;
         this.smoothingPasses = 1;
         this.smoothingPoints = 3;
         this.exp = 4
         this.preAmplitude = 1.0;
         this.emblemExaggeration = 1.5;
+
+        this.drawType = "fill";
+        this.lineWidth = 2.0;
 
         this.startBin = 8;
         this.keepBins = 40;
@@ -94,13 +97,22 @@ export default class JSNationSpectrum extends BaseItem {
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);        
         const emFolder = folder.addFolder("Emblem");
+        emFolder.add(this.emblem, "visible")
+
         emFolder.add(this, "changeEmblemImage")
         emFolder.add(this.emblem, "shouldClipImageToCircle");
         emFolder.add(this.emblem, "emblemSizeScale", 0.0, 2.0);
         emFolder.add(this.emblem, "shouldFillCircle");
         emFolder.addColor(this.emblem, "circleFillColor");
+        emFolder.add(this.emblem, "circleSizeScale", 0, 2.0);
+        
+        emFolder.add(this, "emblemExaggeration", 0.0, 2.50);
+
+
         
         const spFolder = folder.addFolder("Spectrum");
+        spFolder.add(this, "drawType", ["fill", "stroke"]);
+        spFolder.add(this, "lineWidth", 0, 10.0, 1)
         spFolder.add(this, "startBin", 0, 8192*2, 1)
         spFolder.add(this, "keepBins", 0, 8192*2, 1)
 
@@ -149,6 +161,7 @@ export default class JSNationSpectrum extends BaseItem {
             let points = [];
 
             this.ctx.fillStyle = this.colors[s];
+            this.ctx.strokeStyle = this.colors[s];
             this.ctx.shadowColor = this.colors[s];
 
             let len = curSpectrum.length;
@@ -221,7 +234,14 @@ export default class JSNationSpectrum extends BaseItem {
                     points[len - 2].y + halfHeight, xMult * points[len - 1].x + halfWidth,
                     points[len - 1].y + halfHeight);
         }
-        this.ctx.fill();
+
+        if(this.drawType === "fill") {
+            this.ctx.fill();
+        }else {
+            this.ctx.lineWidth = this.lineWidth;
+            this.ctx.stroke();
+        }
+        
         
     }
 

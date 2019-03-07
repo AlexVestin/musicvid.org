@@ -1,6 +1,7 @@
 
 import * as THREE from "three";
 import BaseItem from './BaseItem'
+import { addOrthoMeshControls } from '../../../util/AddMeshControls';
 
 export default class Polartone extends BaseItem{
     constructor(info) {
@@ -28,8 +29,9 @@ export default class Polartone extends BaseItem{
         this.linePositions = new Float32Array( 1024 * 3 ); // 3 vertices per point
         this.geometry.addAttribute( 'position', new THREE.BufferAttribute( this.linePositions, 3 ) );
 
-        var material = new THREE.LineBasicMaterial( { color: this.color } );
+        const material = new THREE.LineBasicMaterial( { color: this.color } );
         this.line = new THREE.Line( this.geometry,  material );
+        material.wireframe = false;
         info.scene.add( this.line );
         this.line.position.y = this.positionY;
         this.folder = this.setUpGUI(info.gui, "Polartone");
@@ -42,11 +44,8 @@ export default class Polartone extends BaseItem{
         folder.add(this, "width", 0, 5.0, 0.01);
         folder.addColor(this, "color").onChange(() => this.line.material.color = new THREE.Color(this.color));
         folder.add(this.line.material, "linewidth", 0, 10, 0.01);
-        folder.add(this, "positionX", -2, 2, 0.01).onChange(() => this.line.position.x = this.positionX);
-        folder.add(this, "positionY", -2, 2, 0.01).onChange(() => this.line.position.y = this.positionY);
-        folder.add(this, "textureScale", -2, 2, 0.01).onChange(() => this.line.scale.set(this.textureScale, this.textureScale, this.textureScale) );
 
-
+        addOrthoMeshControls(this, this.line, folder);
         return folder;
     };
 

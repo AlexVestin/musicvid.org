@@ -4,14 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
-import WhileExporting from './WhileExporting'
-import DoneExporting from './DoneExporting'
-
+import WhileExporting from "./WhileExporting";
+import DoneExporting from "./DoneExporting";
 
 import blue from "@material-ui/core/colors/blue";
 import ExportCard from "./ExportCard";
-import Button from '@material-ui/core/Button';
-
+import Button from "@material-ui/core/Button";
 
 const styles = {
     root: {
@@ -30,11 +28,11 @@ const styles = {
 };
 
 class SimpleDialog extends React.Component {
-
     componentDidMount() {
         window.onbeforeunload = function(event) {
             // do stuff here
-            event.returnValue = "Your export will be canceled, are you sure you want navigate away?";  
+            event.returnValue =
+                "Your export will be canceled, are you sure you want navigate away?";
             return "Your export will be canceled, are you sure you want navigate away?";
         };
     }
@@ -51,20 +49,20 @@ class SimpleDialog extends React.Component {
     };
 
     render() {
-        const { classes, progress, encoding  } = this.props;
+        const { classes, progress, encoding } = this.props;
         const items = this.props.items;
 
-        console.log(progress, encoding);
+        console.log(progress, items);
 
         return (
             <div className={classes.container}>
                 <List>
-                    {encoding  ? 
-                    <DoneExporting classes={classes}></DoneExporting>
-                        :
-                    <WhileExporting classes={classes} progress={progress}></WhileExporting>
-                    }
-                
+                    {encoding ? (
+                        <DoneExporting classes={classes} />
+                    ) : (
+                        <WhileExporting classes={classes} progress={progress} />
+                    )}
+
                     <ListItem style={{ justifyContent: "center" }}>
                         <Typography
                             style={{ color: "#efefef" }}
@@ -75,15 +73,19 @@ class SimpleDialog extends React.Component {
                         </Typography>
                     </ListItem>
 
-                    {items.map(item => (
-                        <React.Fragment key={item.name}>
-                            {item.showAttribution && (
-                                <ListItem style={{ justifyContent: "center" }}>
+                    {items.map(item => {
+                        if (item.showAttribution) {
+                            return (
+                                <ListItem
+                                    key={item.name}
+                                    style={{ justifyContent: "center" }}
+                                >
                                     <ExportCard item={item} />
                                 </ListItem>
-                            )}
-                        </React.Fragment>
-                    ))}
+                            );
+                        }
+                        return null;
+                    })}
 
                     <ListItem style={{ justifyContent: "center" }}>
                         <Typography
@@ -95,41 +97,48 @@ class SimpleDialog extends React.Component {
                         </Typography>
                     </ListItem>
 
-
                     <ListItem style={{ justifyContent: "center" }}>
-
-
-                    <Typography variant="h5" color="secondary">
-                        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                style={{backgroundColor: "#7289DA", width: 200}}
-                                className={classes.button}
-                                href="https://discord.gg/Qf7y579"
-                                target="_blank" 
-                                rel="noopener noreferrer"
+                        <Typography variant="h5" color="secondary">
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    style={{
+                                        backgroundColor: "#7289DA",
+                                        width: 200
+                                    }}
+                                    className={classes.button}
+                                    href="https://discord.gg/Qf7y579"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
-                            Discord
-                            </Button>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                style={{backgroundColor: "#ff0000", width: 200, color: "#efefef", marginTop: 12}}
-                                className={classes.button}
-                                href="https://www.youtube.com/channel/UCMujRUizB4Rwdt_c0hpYryA"
-                                target="_blank" 
-                                rel="noopener noreferrer"
+                                    Discord
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    style={{
+                                        backgroundColor: "#ff0000",
+                                        width: 200,
+                                        color: "#efefef",
+                                        marginTop: 12
+                                    }}
+                                    className={classes.button}
+                                    href="https://www.youtube.com/channel/UCMujRUizB4Rwdt_c0hpYryA"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
-                            youtube
-                            </Button>
-
+                                    youtube
+                                </Button>
                             </div>
                         </Typography>
                     </ListItem>
-                        
-
-                    
                 </List>
             </div>
         );
