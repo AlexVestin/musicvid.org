@@ -5,11 +5,11 @@ export default class Emblem {
         this.image = new Image();
         this.image.onload = () => this.loaded = true;
         this.image.src = filePath;
-        this.emblemSizeScale = 1.0;
+        this.emblemSizeScale = 0.9;
         this.circleSizeScale = 1.0;
         this.circleFillColor = "#FFF"
         this.shouldFillCircle = true;
-        this.shouldClipImageToCircle = false;
+        this.shouldClipImageToCircle = true;
         this.visible = true;
     }
 

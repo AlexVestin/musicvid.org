@@ -51,8 +51,6 @@ export function addOrthoMeshControls(parent, mesh, gui) {
         scale: 1.0
     }
 
-    const lim = 2.0;
-
     const maxPos = 2;
     const maxScale = 2.5;
     folder.add(mesh, "visible");

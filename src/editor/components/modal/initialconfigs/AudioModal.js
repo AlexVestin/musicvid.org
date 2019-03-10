@@ -13,6 +13,7 @@ import Cloud from '@material-ui/icons/Cloud';
 
 import blue from '@material-ui/core/colors/blue';
 
+
 const styles = {
   avatar: {
     backgroundColor: blue[100],
@@ -42,22 +43,14 @@ class SimpleDialog extends React.Component {
         this.fileRef.current.click()
     }
 
-    loadAudioFromURL = (e) => {
-        e.stopPropagation();
-        this.props.onSelect(this.inputRef.current.value)
-    }
-
     loadSampleAudio = () => {
-        this.props.onSelect("sampleUrl")
+        this.props.onSelect("https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3")
     }
 
   handleClose = () => {
     this.props.onSelect();
   }; 
 
-  handleListItemClick = value => {
-    this.props.onSelect(value);
-  };
 
   render() {
     const { classes, onClose, selectedValue, ...other } = this.props;
@@ -72,7 +65,7 @@ class SimpleDialog extends React.Component {
                 <List>
                 <ListItem button onClick={this.loadAudioFromFile}>
                     <ListItemAvatar>
-                        <Avatar>
+                        <Avatar className={classes.avatar}>
                         <AudioTrack />
                         </Avatar>
                     </ListItemAvatar>
@@ -80,11 +73,12 @@ class SimpleDialog extends React.Component {
                     </ListItem>
                     <ListItem button onClick={this.loadAudioFromURL}>
                     <ListItemAvatar>
-                        <Avatar>
+                        <Avatar className={classes.avatar}>
                         <Cloud />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary="Use sample audio file" />
+                      <ListItemText onClick={this.loadSampleAudio} primary="Use sample audio file"  secondary="Reverie by Nomyn"/>
+                    
                     </ListItem>
                 </List>
                 </div>

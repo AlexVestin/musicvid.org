@@ -620,7 +620,7 @@ common.extend(
             s+= name[i+1];
           name = s === "" ? name + "1" : Number(s);
 
-          console.log("hack to allow folders witht he same name");
+          console.log("hack to allow folders with he same name");
           /*
         throw new Error('You already have a folder in this GUI by the' +
           ' name "' + name + '"');*/

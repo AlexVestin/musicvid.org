@@ -256,7 +256,6 @@ export function getByteSpectrum(magnitudeBuffer, minDec=-100, maxDec=-10) {
         const linearValue = magnitudeBuffer[i];
         const dbMag = !linearValue ? minDec : linearToDecibel(linearValue);
         let scaledValue =  UCHAR_MAX * (dbMag - minDec) * rangeScaleFactor;
-        //console.log(scaledValue, linearValue, rangeScaleFactor, dbMag);
     
         if(scaledValue < 0)
             scaledValue = 0;

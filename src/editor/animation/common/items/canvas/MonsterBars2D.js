@@ -39,6 +39,8 @@ export default class JSNationSpectrum extends BaseItem {
         this.folder = this.setUpGUI(info.gui, "Bars");
         this.analyser = new SpectrumAnalyser(this.folder);
 
+        this.animTime = 0.5;
+
         this.__attribution = {
             showAttribution: true,
             name: "vis.js",
@@ -101,7 +103,6 @@ export default class JSNationSpectrum extends BaseItem {
             spectrumSize,
             spectrumSpacing,
             barWidth,
-            blockTopPadding,
             positionX,
             positionY,
         } = this;
@@ -124,7 +125,7 @@ export default class JSNationSpectrum extends BaseItem {
         const y = (positionY-1) * this.canvas.height;
 
         if (this.spectrumAnimation === "phase_1") {
-            ratio = time;
+            ratio = time * 2;
 
             this.ctx.fillRect(
                 x,
@@ -139,11 +140,11 @@ export default class JSNationSpectrum extends BaseItem {
                 2 * resRatio
             );
 
-            if (ratio > 1) {
+            if (ratio > this.animTime) {
                 this.spectrumAnimation = "phase_2";
             }
         } else if (this.spectrumAnimation === "phase_2") {
-            ratio = (time - 1.0) / 2.0;
+            ratio = (time - this.animTime) / (this.animTime * 2);
 
             this.ctx.globalAlpha = Math.abs(Math.cos(ratio * 10));
 
@@ -160,7 +161,7 @@ export default class JSNationSpectrum extends BaseItem {
                 this.spectrumAnimation = "phase_3";
             }
         } else if (this.spectrumAnimation === "phase_3") {
-            ratio = (time - 2) / 2.0;
+            ratio = (time - (this.amimTime * 2)) / (this.animTime * 2);
 
             // drawing pass
             for (var i = 0; i < spectrumSize; i++) {

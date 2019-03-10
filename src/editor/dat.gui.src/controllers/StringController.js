@@ -28,7 +28,10 @@ class StringController extends Controller {
 
     const _this = this;
 
-    function onChange() {
+    function onChange(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
       _this.setValue(_this.__input.value);
     }
 

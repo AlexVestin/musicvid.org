@@ -107,9 +107,6 @@ export default class Polartone extends BaseItem {
         const audioData = data.timeData;
         const bufferLength = audioData.length
 
-        // set up our camera
-        // with WebGL (persistent lines) could be
-        // interesting to fly through it in 3d
         this.camera.identity()
         this.camera.translate([ 0, 3.5, 0 ])
         this.camera.lookAt([ 0, 0, 0 ])
@@ -118,16 +115,10 @@ export default class Polartone extends BaseItem {
         this.context.save()
         this.context.scale(this.dpr, this.dpr)
 
-        // for a motion trail effect
-        // const [width, height] = shape
-        // context.fillStyle = 'rgba(255,255,255,0.001)'
-        // context.fillRect(0, 0, width, height)
-
         let radius = 1 - dur
         const startAngle = time
         const alpha = this.baseStrokeAlpha;
         const rgb = hexToRgb(this.strokeStyle);
-        console.log(rgb, this.strokeStyle)
         this.context.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
         this.context.lineWidth = 1
         this.context.lineJoin = 'round'
@@ -140,22 +131,22 @@ export default class Polartone extends BaseItem {
         this.context.restore()
 
         for (let i = 0; i < bufferLength; i++) {
-        const alpha = i / (bufferLength - 1)
-        const angle = lerp(startAngle + this.distance, startAngle, alpha)
-        this.cursor[0] = Math.cos(angle) * radius
-        this.cursor[2] = Math.sin(angle) * radius
+            const alpha = i / (bufferLength - 1)
+            const angle = lerp(startAngle + this.distance, startAngle, alpha)
+            this.cursor[0] = Math.cos(angle) * radius
+            this.cursor[2] = Math.sin(angle) * radius
 
-        const amplitude = Math.floor( ((audioData[i] + 1) / 2) * 256) / 128.0;
-        const waveY = (amplitude * this.extent / 2)
+            const amplitude = Math.floor( ((audioData[i] + 1) / 2) * 256) / 128.0;
+            const waveY = (amplitude * this.extent / 2)
 
-        const adjusted = [this.cursor[0], this.cursor[1] + waveY, this.cursor[2]]
-        const [x, y] = this.camera.project(adjusted)
-        if (this.positions.length > this.capacity) {
-            this.positions.shift()
+            const adjusted = [this.cursor[0], this.cursor[1] + waveY, this.cursor[2]]
+            const [x, y] = this.camera.project(adjusted)
+            if (this.positions.length > this.capacity) {
+                this.positions.shift()
+            }
+                this.positions.push([x, y])
         }
-            this.positions.push([x, y])
-        }
-    
+        
         this.externalCtx.drawImage(this.internalCanvas, 0, 0, this.internalCanvas.width, this.internalCanvas.height);
     };
 }

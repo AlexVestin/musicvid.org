@@ -58,6 +58,12 @@ class App extends PureComponent {
                 return "If you leave this page you will lose your unsaved changes.";
             };
         }
+
+        document.body.addEventListener("keyup", (e) => {
+            if(e.keyCode === 32) {
+               this.play();            
+            }
+        })
         
 
         this.mountRef = this.canvasRef.current.getMountRef();
@@ -139,7 +145,6 @@ class App extends PureComponent {
         //requestAnimationFrame(this.update);
         this.setState({doneEncoding: true});
         this.setState({doneEncoding: true});
-        console.log("?")
     }
 
     encoderReady = () => {

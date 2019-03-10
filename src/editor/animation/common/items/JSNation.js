@@ -60,7 +60,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.tex.magFilter = THREE.LinearFilter;
         this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
-        this.emblem = new Emblem("./img/emblem.svg");     
+        this.emblem = new Emblem("./img/mvlogo.png");     
         this.folder = this.setUpGUI(info.gui, "JSNation");
         
         this.ctx.shadowBlur = 12;

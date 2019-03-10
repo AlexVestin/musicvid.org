@@ -48,11 +48,18 @@ class NumberControllerBox extends NumberController {
      */
     let prevY;
 
-    function onChange() {
+    function onChange(e) {
       const attempted = parseFloat(_this.__input.value);
+      
+
       if (!common.isNaN(attempted)) {
         _this.setValue(attempted);
       }
+    }
+
+    function onKeyUp(e) {
+      e.stopPropagation();
+      e.preventDefault();
     }
 
     function onFinish() {
@@ -90,6 +97,8 @@ class NumberControllerBox extends NumberController {
     // Makes it so manually specified values are not truncated.
 
     dom.bind(this.__input, 'change', onChange);
+    dom.bind(this.__input, 'keyup', onKeyUp);
+
     dom.bind(this.__input, 'blur', onBlur);
     dom.bind(this.__input, 'mousedown', onMouseDown);
     dom.bind(this.__input, 'keydown', function(e) {

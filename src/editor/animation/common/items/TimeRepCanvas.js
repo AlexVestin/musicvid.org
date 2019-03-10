@@ -64,7 +64,6 @@ export default class Polartone extends BaseItem {
     update = (time, data) => {
         const {width,height} = this.canvas;
         this.ctx.clearRect(0,0,width,height);
-        console.log(width, height);
         const audioData = data.timeData;
         let x = 0;
         this.ctx.beginPath();

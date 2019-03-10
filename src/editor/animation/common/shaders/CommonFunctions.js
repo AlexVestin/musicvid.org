@@ -1,4 +1,6 @@
 import SHADERS from './Standard'
+import TEXSHADERS from './TextureShaders'
+
 class RenderTarget {
     constructor(gl, width, height) {
         const targetTextureWidth = width;
@@ -30,6 +32,9 @@ class RenderTarget {
     }
 }
 
+
+
+
 export function createFBO(gl, tex, level) {
     // Create and bind the framebuffer
     const fb = gl.createFramebuffer();
@@ -44,7 +49,6 @@ export function compileShader(gl, vsSource, fsSource) {
 
     
     if(typeof fragmentShader !== "object") {
-    console.log(fragmentShader)
       return fragmentShader;
     }
 
@@ -109,6 +113,10 @@ function addShaderToyUniforms(fs, inChannels) {
     return channels.join("\n") + "\n";
 }
 
+export function makeTextureProgram(gl) {
+    return compileShader(gl, TEXSHADERS.vs, TEXSHADERS.fs);
+}
+
 export function makeProgram(gl, frag, w, h, inChannels, toScreen) {
     
     const channels = addShaderToyUniforms(SHADERS.fs, inChannels);    
@@ -137,10 +145,7 @@ export function makeProgram(gl, frag, w, h, inChannels, toScreen) {
     
 
     gl.uniform3fv(iChannelResolution, new Float32Array( resos ))
-    gl.uniform2f(iResolution, w, h);
-
-    console.log(shader)
-    
+    gl.uniform2f(iResolution, w, h);    
     
     return {
         program: prog, 

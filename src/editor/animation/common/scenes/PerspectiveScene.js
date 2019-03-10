@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
 import items from '../items'
-import OrbitControls from '../controls/OrbitControls';
+//import OrbitControls from '../controls/OrbitControls';
 
 export default class Scene3DPerspective {
     constructor(gui, resolution) {   
@@ -23,7 +23,7 @@ export default class Scene3DPerspective {
     }
     
     setUpControls = () => {
-        this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef)
+        //this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef)
     }
     setUpGui = (gui) => {
         this.gui = gui;

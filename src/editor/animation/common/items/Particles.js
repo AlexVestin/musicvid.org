@@ -60,7 +60,7 @@ export default class Particles extends BaseItem {
         this.particleDespawnBuffer = 0; // distance from the camera z-plane before despawning particles
         this.particleRadiusMin = 10; // the minimum radius of the particle cone at the z-plane intersecting the camera
         this.particleRadiusMax = 120; // the maximum radius of the particle cone at the z-plane intersecting the camera
-        this.particleBaseSpeed = 0.15;
+        this.particleMinSpeed = 0.15;
         this.particleSpeedMultMin = 1.1;
         this.particleSpeedMultMax = 1.45;
         // The min/max phase speed a particle may be assigned. This is a property of each particle and does not change.
@@ -82,6 +82,7 @@ export default class Particles extends BaseItem {
         this.baseSizes = [];
         this.color = 0xFFFFFF;
         this.baseSpeed = 1.0;
+        this.movementAmplitude = 1.0;
         this.folder = this.setUpGUI(info.gui, "Particles");
         
        
@@ -122,7 +123,10 @@ export default class Particles extends BaseItem {
         const folder = gui.addFolder(name);
         folder.add(this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
         folder.addColor(this, "color").onChange(this.changeColor);
-        folder.add(this, "particleBaseSpeed", 0, 10, 0.01);
+        folder.add(this, "particleMinSpeed", 0, 10);
+        folder.add(this, "baseSpeed", 0, 10);
+        
+        folder.add(this, "movementAmplitude");
         folder.add(this, "sizeMult", 0, 5.0, 0.01).onChange(() => this.updateSizes());
 
         return folder;
@@ -166,7 +170,7 @@ export default class Particles extends BaseItem {
 
     update = function(time, audioData) {
         if(this.particleSystem) {
-            const multiplier = this.impactAnalyser.analyse(audioData.frequencyData);
+            const multiplier = this.impactAnalyser.analyse(audioData.frequencyData) * this.movementAmplitude;
             for (let i = 0; i < this.maxParticleCount / 2; i++) {
 
                 this.updatePosition(i, multiplier);
@@ -185,7 +189,7 @@ export default class Particles extends BaseItem {
         }
 
         let speed = ignoreSpeed ? 1 * this.baseSpeed : data.getSpeed() * this.baseSpeed;
-        const adjustedSpeed = Math.max(speed * multiplier * this.baseSpeed, this.particleBaseSpeed);
+        const adjustedSpeed = Math.max(speed * multiplier * this.baseSpeed, this.particleMinSpeed);
 
         let ampMult = (this.particlePhaseAmplitudeMultMax - this.particlePhaseAmplitudeMultMin) * multiplier
                 + this.particlePhaseAmplitudeMultMin;
@@ -225,7 +229,6 @@ export default class Particles extends BaseItem {
         this.baseSizes = [];
 
         this.maxParticleCount = Math.floor(this.maxParticleCount) + Math.floor(this.maxParticleCount) % 2;
-        console.log(this.maxParticleCount)
 
         this.particleSystem = new THREE.Points(this.particlesGeom, this.pMaterial);
         this.particleSystem.sortParticles = true;

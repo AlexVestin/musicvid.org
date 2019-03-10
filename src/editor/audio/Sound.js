@@ -8,7 +8,7 @@ export default class Audio {
         this.playBufferSource = this.audioCtx.createBufferSource();
         this.loaded = false;
         this.fftSize = 2048 * 8;
-        this.volume = 0;
+        this.volume = 1;
         this.exportWindowSize = 2048;
         this.exportFrameIdx = 0;
         this.gui = gui;

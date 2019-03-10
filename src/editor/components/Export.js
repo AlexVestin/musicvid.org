@@ -52,8 +52,6 @@ class SimpleDialog extends React.Component {
         const { classes, progress, encoding } = this.props;
         const items = this.props.items;
 
-        console.log(progress, items);
-
         return (
             <div className={classes.container}>
                 <List>

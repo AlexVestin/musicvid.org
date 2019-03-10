@@ -7,7 +7,6 @@ import WebGLManager from '../WebGLManager'
 export default class Monstercat extends WebGLManager {
 
     setUpScene() {
-        console.log(this.resolution, "dopifgnio")
         const particlesScene = new PerspectiveScene(this.layersFolder, this.resolution); 
         const spectrumBarsScene = new OrthographicScene(this.layersFolder, this.resolution); 
 

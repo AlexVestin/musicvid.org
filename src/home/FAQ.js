@@ -1,10 +1,8 @@
 // --- Post bootstrap -----
 import React from "react";
-import Markdown from "./modules/components/Markdown";
 import Typography from "./modules/components/Typography";
 import LayoutBody from "./modules/components/LayoutBody";
 import AppAppBar from "./modules/views/AppAppBar";
-import terms from "./modules/views/terms.md";
 import AppFooter from "./modules/views/AppFooter";
 import FAQItem from './FAQitem'
 function Terms() {

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import classes from './Slider.module.scss';
 
 export default class Slider extends PureComponent {
-  state = { value: 0 }
+  state = { value: 100 }
   onChange = (e) => {
     if(this.props.disabled) {
       e.stopPropagation();

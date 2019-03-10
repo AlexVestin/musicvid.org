@@ -1,8 +1,7 @@
 
 
 import * as THREE from 'three'
-import OrbitControls from './common/controls/OrbitControls';
-
+import AttribItem from './common/items/Attribution'
 
 export default class WebGLManager {
 
@@ -15,18 +14,29 @@ export default class WebGLManager {
         this.scenes = [];
         this.audio = null;
         this.inFullScreen = false;
+
+        
        
-        document.body.addEventListener("keydown", (e) => {
+        document.body.addEventListener("keyup", (e) => {
             if(e.keyCode === 70) {
                 if(!this.inFullScreen) {
                     this.fullscreen(this.canvasMountRef);
-                }else {
-                    this.exitFullscreen(this.canvasMountRef);
                 }
+                
                 this.inFullScreen = !this.inFullScreen;
                 
             }
         })
+    }
+
+    setUpAttrib() {
+         // Set up scene for attribution text
+         this.attribScene = new THREE.Scene();
+         this.attribCamera =  new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 10 );
+         this.attribCamera.position.z = 1;
+         this.attribItem = new AttribItem(this.width, this.height);
+         this.attribScene.add(this.attribItem.mesh);
+         this.drawAttribution = false;
     }
 
     init = ( resolution ) => {
@@ -34,6 +44,7 @@ export default class WebGLManager {
         this.width = resolution.width;
         this.height = resolution.height;
         this.aspect = this.width / this.height;
+        this.setUpAttrib();
         this.overviewFolder = this.gui.__folders["Overview"];
         this.layersFolder = this.gui.__folders["Layers"];
         
@@ -44,6 +55,8 @@ export default class WebGLManager {
         this.internalCanvas.height = this.height;
         this.setUpRenderers();
         this.setUpScene();
+
+       
     }
 
     
@@ -77,8 +90,19 @@ export default class WebGLManager {
 
     }
 
-
-
+    updateAttribution = () => {
+        const items = this.getAllItems();
+        const names = ["Visuals by:"];
+        items.forEach(item => {
+            item.authors.forEach(author => {
+                if(names.indexOf(author.name) < 0 ) {
+                    names.push(author.name);
+                }
+            })
+        })
+        
+        this.attribItem.setText(names, 0.75, -0.6);
+    }
 
     setUpRenderers = () => {
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, canvas: this.internalCanvas});
@@ -89,6 +113,7 @@ export default class WebGLManager {
         this.clearAlpha = 1.0;
         this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
         this.gui.__folders["Settings"].add(this, "clearAlpha", 0, 1, 0.001).onChange(this.setClear);
+        this.gui.__folders["Settings"].add(this, "drawAttribution").onChange(this.updateAttribution);
     }
 
     exitFullscreen(canvas) {
@@ -113,7 +138,6 @@ export default class WebGLManager {
 
     readPixels = () => {
         const {width, height} = this;
-        console.log(width, height)
         const glContext = this.renderer.getContext()
         const pixels = new Uint8Array(width * height * 4);
         glContext.readPixels(0,0,width,height, glContext.RGBA, glContext.UNSIGNED_BYTE, pixels);
@@ -134,12 +158,20 @@ export default class WebGLManager {
 
     update = (time, audioData) => {
         this.renderer.clear();
+
+        
         this.scenes.forEach(scene => {
             scene.update(time, audioData);
             this.renderer.render(scene.scene, scene.camera);
-        });        
+        }); 
+        
 
-        this.externalCtx.drawImage(this.internalCanvas, 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
+        if(this.drawAttribution) {
+            this.renderer.render(this.attribScene, this.attribCamera);
+        }
+
+
+        this.externalCtx.drawImage(this.internalCanvas, 0, 0, Math.floor(this.canvasMountRef.width), Math.floor(this.canvasMountRef.height));
     }
 
 }
