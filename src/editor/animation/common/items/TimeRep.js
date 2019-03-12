@@ -31,6 +31,8 @@ export default class Polartone extends BaseItem{
 
         const material = new THREE.LineBasicMaterial( { color: this.color } );
         this.line = new THREE.Line( this.geometry,  material );
+
+        //Needs to be here for orthomeshcontrols
         material.wireframe = false;
         info.scene.add( this.line );
         this.line.position.y = this.positionY;
@@ -43,7 +45,7 @@ export default class Polartone extends BaseItem{
         folder.add(this, "extent", 0, 2.0, 0.01);
         folder.add(this, "width", 0, 5.0, 0.01);
         folder.addColor(this, "color").onChange(() => this.line.material.color = new THREE.Color(this.color));
-        folder.add(this.line.material, "linewidth", 0, 10, 0.01);
+        folder.add(this.line.material, "linewidth", 0, 10, 1).onChange(()=>this.line.material.needsUpdate = true);
 
         addOrthoMeshControls(this, this.line, folder);
         return folder;
@@ -53,6 +55,8 @@ export default class Polartone extends BaseItem{
         const audioData = data.timeData;
         const bufferLength = audioData.length;
         var linePos = this.line.geometry.attributes.position.array;
+
+        console.log(this.line.material)
         if(bufferLength * 3 !== linePos.length) {
             this.geometry = new THREE.BufferGeometry();
             this.linePositions = new Float32Array( bufferLength * 3 ); // 3 vertices per point

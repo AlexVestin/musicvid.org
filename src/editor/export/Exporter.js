@@ -48,26 +48,34 @@ export default class Exporter {
         this.onready();
     }
 
+    cancel = () => {
+        this.canceled = true;
+        this.videoEncoder.close();
+    }
+
     encode = () => {
-        const videoTs = (this.encodedVideoFrames / this.fps );
-        const audioTs = (this.sound.exportFrameIdx * this.sound.exportWindowSize) / this.sound.sampleRate; 
-        if( videoTs >= audioTs ) {
-            this.encodeAudioFrame();
-        }else{
-            const audioData = this.sound.getAudioData(this.time);
-            this.animationManager.update(this.time, audioData);
-            this.time += 1 / this.fps;
-            this.encodeVideoFrame();
+        if(!this.canceled ) {
+            const videoTs = (this.encodedVideoFrames / this.fps );
+            const audioTs = (this.sound.exportFrameIdx * this.sound.exportWindowSize) / this.sound.sampleRate; 
+            if( videoTs >= audioTs ) {
+                this.encodeAudioFrame();
+            }else{
+                const audioData = this.sound.getAudioData(this.time);
+                this.animationManager.update(this.time, audioData);
+                this.time += 1 / this.fps;
+                this.encodeVideoFrame();
+            }
+    
+            this.videoEncoder.sendFrame();
+    
+            if(this.encodedVideoFrames % 15 === 0) 
+                this.onProgress(this.encodedVideoFrames, Math.floor(this.duration * this.fps))
+    
+            if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {
+                this.videoEncoder.close(this.saveBlob);
+            }
         }
-
-        this.videoEncoder.sendFrame();
-
-        if(this.encodedVideoFrames % 15 === 0) 
-            this.onProgress(this.encodedVideoFrames, Math.floor(this.duration * this.fps))
-
-        if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {
-            this.videoEncoder.close(this.saveBlob);
-        }
+       
     }
 
     encodeVideoFrame = () => {

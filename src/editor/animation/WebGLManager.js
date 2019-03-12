@@ -55,8 +55,11 @@ export default class WebGLManager {
         this.internalCanvas.height = this.height;
         this.setUpRenderers();
         this.setUpScene();
+    }
 
-       
+    refresh = (ref) => {
+        this.canvasMountRef = ref;
+        this.externalCtx = ref.getContext("2d");
     }
 
     
@@ -157,9 +160,7 @@ export default class WebGLManager {
     }
 
     update = (time, audioData) => {
-        this.renderer.clear();
-
-        
+        this.renderer.clear();        
         this.scenes.forEach(scene => {
             scene.update(time, audioData);
             this.renderer.render(scene.scene, scene.camera);
@@ -169,7 +170,6 @@ export default class WebGLManager {
         if(this.drawAttribution) {
             this.renderer.render(this.attribScene, this.attribCamera);
         }
-
 
         this.externalCtx.drawImage(this.internalCanvas, 0, 0, Math.floor(this.canvasMountRef.width), Math.floor(this.canvasMountRef.height));
     }

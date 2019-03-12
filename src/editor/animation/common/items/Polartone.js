@@ -117,7 +117,6 @@ export default class Polartone extends BaseItem {
         // with WebGL (persistent lines) could be
         // interesting to fly through it in 3d
        
-
         this.internalCtx.save();
         this.internalCtx.scale(this.dpr, this.dpr);
         this.internalCtx.globalAlpha = this.baseStrokeAlpha;

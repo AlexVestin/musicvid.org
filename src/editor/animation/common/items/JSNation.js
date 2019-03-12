@@ -118,7 +118,7 @@ export default class JSNationSpectrum extends BaseItem {
 
         spFolder.add(this, "smoothingPasses", [1,2,3,4,5,6,7,8,9]);
         spFolder.add(this, "smoothingPoints", [1,2,3,4,5,7,8,9]);
-        spFolder.add(this, "spectrumHeightScalar",0, 0.5);
+        spFolder.add(this, "spectrumHeightScalar",0, 1.0);
         spFolder.add(this, "smoothingTimeConstant", 0, 0.95);
         folder.add(this.mesh.position, "x", -2, 2, 0.01);
         folder.add(this.mesh.position, "y", -2, 2, 0.01);

@@ -30,13 +30,14 @@ export default class ControllerContainer extends PureComponent {
     }
 
     componentDidMount() {
-        this.initExportGUI();
+        const {firstLoad} =this.props;
+        if(firstLoad)
+            this.initExportGUI();
     }
 
     initExportGUI = () => {
         const folder = this.props.gui.__folders["Export"];
-        
-
+    
         this.MBitBitrate = 7.2;
         this.fps = 60;
         this.preset =  "fast";
@@ -63,7 +64,6 @@ export default class ControllerContainer extends PureComponent {
             checkLicense().then(() => {
                 const bitrate = this.MBitBitrate * Math.pow(10, 6);
                 const preset = this.presetLookup.findIndex(e => e === this.preset);
-                console.log(preset)
                 startEncoding({fps: this.fps, bitrate: bitrate, preset: preset, fileName: this.fileName})
             });
            

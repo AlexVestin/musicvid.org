@@ -52,8 +52,8 @@ export default class VideoEncoder {
     }
 
     close = (onsuccess) => {
-        this.closed = true
-        this.onsuccess = onsuccess
+        this.closed = true;
+        this.onsuccess = onsuccess;
         setTimeout(e => this.worker.postMessage({action: "close"}), 500)                        
     }
     
@@ -73,7 +73,8 @@ export default class VideoEncoder {
                 }
                 break;
             case "return":
-                this.onsuccess(data.data)
+                if(this.onsuccess)
+                    this.onsuccess(data.data)
                 break;
             case "error":
                 break;

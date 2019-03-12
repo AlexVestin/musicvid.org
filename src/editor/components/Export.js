@@ -6,7 +6,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import WhileExporting from "./WhileExporting";
 import DoneExporting from "./DoneExporting";
-
+import CancelExportModal from './modal/CancelExportModal';
 import blue from "@material-ui/core/colors/blue";
 import ExportCard from "./ExportCard";
 import Button from "@material-ui/core/Button";
@@ -28,6 +28,7 @@ const styles = {
 };
 
 class SimpleDialog extends React.Component {
+    state = {modalOpen: false};
     componentDidMount() {
         window.onbeforeunload = function(event) {
             // do stuff here
@@ -48,13 +49,31 @@ class SimpleDialog extends React.Component {
         };
     };
 
+    toggleModal = () => this.setState({modalOpen: !this.state.modalOpen}); 
+
+    cancel = () => {
+        this.props.cancel();
+        this.toggleModal();
+    }
+
     render() {
         const { classes, progress, encoding } = this.props;
         const items = this.props.items;
 
         return (
             <div className={classes.container}>
+             <CancelExportModal open={this.state.modalOpen} accept={this.cancel} reject={this.toggleModal}></CancelExportModal>
                 <List>
+                     <ListItem style={{ justifyContent: "center" }}>
+                        <Typography
+                            style={{ color: "#efefef" }}
+                            component="h4"
+                            variant="h4"
+                        >
+                            <Button  color="secondary" onClick={this.toggleModal}>Go back to project {!encoding ? "(and cancel encoding)" : "" }</Button>
+                        </Typography>
+                    </ListItem>
+
                     {encoding ? (
                         <DoneExporting classes={classes} />
                     ) : (
