@@ -14,14 +14,20 @@ const styles = theme => ({
         flexWrap: "wrap",
         justifyContent: "space-around",
         overflow: "hidden",
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,
+
     },
     gridList: {
-        width: 500,
+        width: 1200,
         height: 450
     },
     icon: {
-        color: "rgba(0, 0, 0, 0.74)"
+        color: "rgba(255, 255, 255, 0.74)",
+        backgroundColor: "rgba(0, 0, 0, 0.74)",
+
+    },
+    tile: {
+        width: 150,
     }
 });
 
@@ -30,20 +36,12 @@ function TitlebarGridList(props) {
 
     return (
         <div className={classes.root}>
-            <GridList cellHeight={180} className={classes.gridList}>
-                <GridListTile
-                    key="Subheader"
-                    cols={2}
-                    style={{ height: "auto" }}
-                >
-                    <ListSubheader component="div">
-                        Audio reactive
-                    </ListSubheader>
-                </GridListTile>
+            <GridList cols={3} cellHeight={180} className={classes.gridList}>
+
                 {Object.keys(props.tiles).map(key => {
                     const tile = props.tiles[key];
                     return (
-                        <GridListTile key={key}>
+                        <GridListTile key={key} className={classes.tile}>
                             <img src={tile.img} alt={key} />
                             <GridListTileBar
                                 title={key}

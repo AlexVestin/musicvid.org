@@ -73,7 +73,7 @@ export default class StarField extends BaseItem {
     constructor(info) {
         super(info);
         this.name = "Star Nest";
-        this.__setUpFolder(info, this.name);
+        
 
         this.geo = new THREE.PlaneGeometry(2,2);
         this.mat = new ShaderToyMaterial(fragmentShader, 
@@ -103,7 +103,7 @@ export default class StarField extends BaseItem {
         this.brightenToAudio = true;
         this.brightenMultipler = 1;
         this.brightness = 1.0;
-        this.setUpGUI(this.folder);
+        this.__setUpFolder(info, this.name);
         this.impactAnalyser = new ImpactAnalyser(this.folder);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;

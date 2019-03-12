@@ -4,7 +4,8 @@ import getItemClassFromText from '../items'
 //import OrbitControls from '../controls/OrbitControls';
 
 export default class Scene3DPerspective {
-    constructor(gui, resolution) {   
+    constructor(gui, resolution, remove) {
+        this.remove = remove;   
         this.resolution = resolution;     
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45, resolution.width / resolution.height, 0.1, 10000 );
@@ -33,10 +34,23 @@ export default class Scene3DPerspective {
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
+        this.settingsFolder.add(this, "removeMe").name("remove layer");
+    }
+
+    removeMe = () => {
+        while(this.items.length > 0) {
+            console.log(this.items)
+            this.items[0].dispose();
+            this.scene.remove(this.items[0].mesh);
+            this.items.pop();
+        }
+
+        this.remove(this);
     }
 
     removeItem = (item) => {
         const index = this.items.findIndex(e => e === item);
+        this.scene.remove(this.items[index].mesh);
         this.items.splice(index, 1);
     }
 
@@ -55,7 +69,7 @@ export default class Scene3DPerspective {
                 height: this.resolution.height,
                 scene: this.scene,
                 camera: this.camera,
-                remove: this.remove
+                remove: this.removeItem
             };
             
             const itemClass = getItemClassFromText("perspective", name);

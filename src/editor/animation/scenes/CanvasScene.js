@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import getItemClassFromText from '../items'
 
 export default class CanvasScene {
-    constructor(gui, resolution) {        
+    constructor(gui, resolution, remove) {
+        this.remove = remove;     
         this.canvas = document.createElement("canvas",);
         this.canvas.width = resolution.width;
         this.canvas.height = resolution.height;
@@ -31,6 +32,16 @@ export default class CanvasScene {
         })
     }
 
+    removeMe = () => {
+        while(this.items.length > 0) {
+            this.items[0].dispose();
+            this.scene.remove(this.items[0].mesh);
+            this.items.pop();
+        }
+
+        this.remove(this);
+    }
+
     setUpGui = (gui) => {
         this.gui = gui;
         this.folder = gui.addFolder("Canvas Scene");
@@ -41,6 +52,7 @@ export default class CanvasScene {
 
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
+        this.settingsFolder.add(this, "removeMe");
     }
 
     addItem = () => {

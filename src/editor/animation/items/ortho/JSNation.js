@@ -8,6 +8,7 @@ import BaseItem from '../BaseItem'
 export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {
         super(info);
+
         this.name = "JSnation";
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
@@ -40,6 +41,8 @@ export default class JSNationSpectrum extends BaseItem {
         this.keepBins = 40;
         this.prevArr = [];
         this.minRadius = this.size / 4;
+        this.invertSpectrum = false;
+        this.spectrumRotation = 0;
 
         //SHAKE 
         this.waveSpeedX = 1;
@@ -121,11 +124,15 @@ export default class JSNationSpectrum extends BaseItem {
         spFolder.add(this, "smoothingPoints", [1,2,3,4,5,7,8,9]);
         spFolder.add(this, "spectrumHeightScalar",0, 1.0);
         spFolder.add(this, "smoothingTimeConstant", 0, 0.95);
-        folder.add(this.mesh.position, "x", -2, 2, 0.01);
-        folder.add(this.mesh.position, "y", -2, 2, 0.01);
+        folder.add(this.mesh.position, "x", -2, 2);
+        folder.add(this.mesh.position, "y", -2, 2);
         folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));
 
         folder.add(this.ctx, "shadowBlur", 0, 100);
+        folder.add(this.mesh.rotation, "z", -3.14, 3.14).name("Rotation");
+        folder.add(this, "spectrumRotation", 0, Math.PI / 2, 0.00001);
+        folder.add(this, "invertSpectrum");
+        
         folder.add(this, "exp", 0, 10);
         
         this.folders.push(spFolder);
@@ -169,11 +176,14 @@ export default class JSNationSpectrum extends BaseItem {
             this.ctx.shadowColor = this.colors[s];
 
             let len = curSpectrum.length;
+
+            const invert = this.invertSpectrum ? -1 : 1; 
             for (let i = 0; i < len; i++) {
-                let t = Math.PI * (i / (len - 1)) - Math.PI / 2;
+                let t = Math.PI * (i / (len - 1)) - Math.PI / 2 + this.spectrumRotation;
                 let dropoff  = 1 - Math.pow(i / len, this.exp);
                 let r = curRad + Math.pow(curSpectrum[i] * this.spectrumHeightScalar * 1, this.exponents[s]) * dropoff;
-                points.push({x: r * Math.cos(t), y: r * Math.sin(t)});
+                
+                points.push({x: r * Math.cos(t), y: invert * r * Math.sin(t)});
             }
 
             this.drawPoints(points);

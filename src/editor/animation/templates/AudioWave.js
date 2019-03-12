@@ -7,7 +7,7 @@ export default class Manager extends WebGLManager {
 
     setUpScene() {
         this.fftSize = 2048;
-        this.scenes.push(new OrthographicScene(this.layersFolder, this.resolution));
+        this.scenes.push(new OrthographicScene(this.layersFolder, this.resolution, this.removeScene));
         
         const it0 = this.scenes[0].addItemFromText("Background");
         const it1 = this.scenes[0].addItemFromText("TimeRep");

@@ -7,8 +7,8 @@ import WebGLManager from '../WebGLManager'
 export default class Monstercat extends WebGLManager {
 
     setUpScene() {
-        const particlesScene = new PerspectiveScene(this.layersFolder, this.resolution); 
-        const spectrumBarsScene = new CanvasScene(this.layersFolder, this.resolution); 
+        const particlesScene = new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene); 
+        const spectrumBarsScene = new CanvasScene(this.layersFolder, this.resolution, this.removeScene); 
         particlesScene.camera.position.y = 0;
         particlesScene.camera.position.z = 300;
         particlesScene.camera.updateMatrixWorld();

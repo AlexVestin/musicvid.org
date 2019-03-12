@@ -6,7 +6,7 @@ import WebGLManager from '../WebGLManager'
 export default class Manager extends WebGLManager {
 
     setUpScene() {
-        const scene = new OrthographicScene(this.layersFolder, this.resolution);
+        const scene = new OrthographicScene(this.layersFolder, this.resolution, this.removeScene);
     
         const it0 = scene.addItemFromText("SimplicityGalaxy");
         const it1 = scene.addItemFromText("SpriteTextMask");

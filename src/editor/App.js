@@ -75,7 +75,8 @@ class App extends PureComponent {
         this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
 
         const url = new URL(window.location.href);
-        const template = url.searchParams.get("template");
+        const template = url.searchParams.get("template") || "EmptyTemplate";
+        
         import("./animation/templates/" + template + ".js")
             .then(AnimationManager => {
                 this.animationManager = new AnimationManager.default(this.gui);

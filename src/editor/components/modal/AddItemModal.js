@@ -6,8 +6,27 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ItemContent from './ItemContent'
+import { withStyles } from '@material-ui/core/styles';
 
 import { items } from 'editor/animation/items'
+
+
+
+const styles = theme => ({
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto',
+    width: 'fit-content',
+  },
+  formControl: {
+    marginTop: theme.spacing.unit * 2,
+    minWidth: 120,
+  },
+  formControlLabel: {
+    marginTop: theme.spacing.unit,
+  },
+});
 
 class ScrollDialog extends React.Component {
   state = {
@@ -16,24 +35,23 @@ class ScrollDialog extends React.Component {
 
   render() {
     const itemTiles = items[this.props.index];
-
+    const { classes } = this.props;
 
     return (
-      <div>
 
         <Dialog
           open={this.props.open}
-          scroll={this.state.scroll}
-          aria-labelledby="scroll-dialog-title"
+          aria-labelledby="max-width-dialog-title"
+          fullWidth={true}
+          maxWidth="lg"
+          fullheight
         >
           <DialogTitle id="scroll-dialog-title">Add Item</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Add item to project:
             </DialogContentText>
-
           <ItemContent tiles={itemTiles} onSelect={this.props.onSelect}></ItemContent>
-
           </DialogContent>
           <DialogActions>
             <Button onClick={() => this.props.onSelect()} color="primary">
@@ -42,9 +60,8 @@ class ScrollDialog extends React.Component {
 
           </DialogActions>
         </Dialog>
-      </div>
     );
   }
 }
+export default withStyles(styles)(ScrollDialog);
 
-export default ScrollDialog;

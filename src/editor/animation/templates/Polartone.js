@@ -7,7 +7,7 @@ export default class Manager extends WebGLManager {
 
     setUpScene() {
         this.fftSize = 2048;
-        this.scenes.push(new CanvasScene(this.layersFolder, this.resolution));
+        this.scenes.push(new CanvasScene(this.layersFolder, this.resolution, this.removeScene));
         const it1 = this.scenes[0].addItemFromText("Polartone2D");
         it1.setUpGUI(this.overviewFolder, "Polartone");
         

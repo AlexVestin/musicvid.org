@@ -3,13 +3,13 @@ import * as THREE from 'three';
 import getItemClassFromText from '../items'
 
 export default class Scene3DOrtho {
-    constructor(gui, resolution) {        
+    constructor(gui, resolution, remove) {
+        this.remove = remove;        
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 10 );
         this.camera.position.z = 1;
         this.resolution = resolution;
         this.items = [];
-
         this.setUpGui(gui);
         
     }
@@ -20,18 +20,28 @@ export default class Scene3DOrtho {
         })
     }
 
+    removeMe = () => {
+        while(this.items.length > 0) {
+            this.items[0].dispose();
+            this.items.pop();
+        }
+        this.remove(this);
+    }
+
     setUpGui = (gui) => {
         this.gui = gui;
         this.folder = gui.addFolder("Scene3D Ortho");
-        this.overviewFolder = gui.root.__folders["Overview"];
+        this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
+        this.settingsFolder.add(this, "removeMe");
     }
 
     removeItem = (item) => {
         const index = this.items.findIndex(e => e === item);
+        this.scene.remove(this.items[index].mesh);
         this.items.splice(index, 1);
     }
 
@@ -44,7 +54,7 @@ export default class Scene3DOrtho {
                 height: this.resolution.height,
                 scene: this.scene,
                 camera: this.camera,
-                remove: this.remove
+                remove: this.removeItem
             };
     
     

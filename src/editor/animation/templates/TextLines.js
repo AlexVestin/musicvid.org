@@ -6,7 +6,7 @@ import PerspectiveScene from '../scenes/PerspectiveScene';
 export default class Manager extends WebGLManager {
 
     setUpScene() {
-        this.scenes.push(new PerspectiveScene(this.layersFolder, this.resolution));
+        this.scenes.push(new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene));
         
         const it0 = this.scenes[0].addItemFromText("TextLines");
         it0.mesh.position.y = 30;

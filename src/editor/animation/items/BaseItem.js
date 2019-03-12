@@ -20,6 +20,10 @@ export default class BaseItem {
         }
     }
 
+    dispose = () => {
+
+    }
+
     setFolderName = (name) => {
         
         this.folder.name = name;
@@ -29,6 +33,11 @@ export default class BaseItem {
     __setUpFolder = (info, name) =>  {
         this.folder = this.setUpGUI(info.gui, name);
         this.ovFolder = this.setUpGUI(info.overviewFolder, name);
+        this.__gui = info.gui;
+        this.__overviewFolder = info.gui;
+
+        
+
     }
  
     __addFolder = (folder) => {
@@ -49,6 +58,7 @@ export default class BaseItem {
     }
 
     setUpGUI = (gui, name) => {
+        
         const folder = gui.addFolder(name);
         /* ADD STUFF TO FOLDER HERE */
         return this.__addFolder(folder);

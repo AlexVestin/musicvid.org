@@ -41,16 +41,23 @@ export default class WebGLManager {
          this.drawAttribution = false;
     }
 
+    removeScene = (scene) => {
+        scene.folder.parent.removeFolder(scene.folder);
+        const index = this.scenes.findIndex(e => e === scene);
+        this.scenes.splice(index, 1);
+    }
+
+
     addScene = () => {
         this.modalRef.toggleModal(8).then((sceneName) => {
             let scene;
             if(sceneName) {
                 if(sceneName === "canvas") {
-                    scene = new CanvasScene(this.layersFolder, this.resolution);
+                    scene = new CanvasScene(this.layersFolder, this.resolution, this.removeScene);
                 }else if(sceneName === "ortho") {
-                    scene = new OrthographicScene(this.layersFolder, this.resolution);
+                    scene = new OrthographicScene(this.layersFolder, this.resolution, this.removeScene);
                 }else if(sceneName === "perspective") {
-                    scene = new PerspectiveScene(this.layersFolder, this.resolution);
+                    scene = new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene);
                 }
             }
          

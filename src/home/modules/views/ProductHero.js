@@ -45,17 +45,16 @@ function ProductHero(props) {
             No payments, watermarks or sign-ups!
       </Typography>
       <Button
-        disabled
         color="secondary"
         variant="contained"
         size="large"
         className={classes.button}
         style={{textAlign: "center", color: "rgb(40,40,42)"}}
         component={linkProps => (
-          <Link {...linkProps} href="/projects" variant="button" />
+          <Link {...linkProps} href="/editor" variant="button" />
         )}
       >
-        View Projects
+        Open empty template
       </Button>
       <Typography variant="body2" color="inherit" className={classes.more}>
         Scroll down to view featured templates
