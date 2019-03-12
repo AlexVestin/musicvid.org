@@ -19,7 +19,7 @@ import FunctionController from './FunctionController';
 import BooleanController from './BooleanController';
 import common from '../utils/common';
 
-const ControllerFactory = function(object, property) {
+const ControllerFactory = function(object, property, root = null) {
   const initialValue = object[property];
 
   // Providing options?

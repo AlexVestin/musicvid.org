@@ -59,13 +59,16 @@ export default class CanvasScene {
         this.gui.__root.modalRef.toggleModal(2);
     }
 
-    update = (time, audioData) => {
+    update = (time, audioData, shouldIncrement) => {
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
+
+        
         this.items.forEach(item =>  {
             this.ctx.save();
-            item.update(time, audioData)
+            item.update(time, audioData, shouldIncrement);
             this.ctx.restore();
-        });
+        });    
+        
         this.tex.needsUpdate = true;
     }
 }

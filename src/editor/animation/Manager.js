@@ -19,7 +19,6 @@ export default class WebGLManager {
                     this.exitFullscreen(this.canvasMountRef);
                 }
                 this.inFullScreen = !this.inFullScreen;
-                
             }
         })
     }

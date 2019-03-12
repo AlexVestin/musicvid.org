@@ -159,10 +159,10 @@ export default class WebGLManager {
         console.log("Implement this");
     }
 
-    update = (time, audioData) => {
+    update = (time, audioData, shouldIncrement) => {
         this.renderer.clear();        
         this.scenes.forEach(scene => {
-            scene.update(time, audioData);
+            scene.update(time, audioData, shouldIncrement);
             this.renderer.render(scene.scene, scene.camera);
         }); 
         

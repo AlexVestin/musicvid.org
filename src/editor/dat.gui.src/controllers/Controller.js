@@ -88,8 +88,15 @@ class Controller {
    */
   setValue(newValue) {
     this.object[this.property] = newValue;
+
     if (this.__onChange) {
       this.__onChange.call(this, newValue);
+    }
+
+    if( this.object.folder) {
+      this.object.folder.__root.onChange(newValue);
+    }else {
+      console.log("No root for this input");
     }
 
     this.updateDisplay();

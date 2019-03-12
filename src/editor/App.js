@@ -42,6 +42,10 @@ class App extends PureComponent {
         this.firstLoad = true;
         this.fastLoad = true;
         this.pauseTime = 0;
+        this.lastTime = 0;
+        this.lastAudioData = {frequencyData: [], timeData: []};
+
+        this.gui.onChange = (d) => console.log(d);
 
         this.canvasRef = React.createRef();
         this.modalRef = React.createRef();
@@ -120,32 +124,41 @@ class App extends PureComponent {
 
     stop = () => {
         if (this.audio) this.audio.stop();
-
         if (this.animationManager) this.animationManager.stop();
         this.setState({ playing: false, time: 0 });
         this.pauseTime = 0;
+        this.lastTime = 0;
+        this.lastAudioData = {frequencyData: [], timeData: []};
     };
 
     update = () => {
-        if (!this.encoding) {
-
+        const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
+        if (!disabled) {
             this.canvasRef.current.begin();
+            
+            let time, audioData;
             if (this.state.playing && this.state.time < this.audio.duration) {
-                const time = (performance.now() - this.startTime) / 1000;
+                time = (performance.now() - this.startTime) / 1000;
+                audioData = this.audio.getAudioData(time);
                 this.setState({ time });
-                const audioData = this.audio.getAudioData(time);
-                this.animationManager.update(time, audioData);
-                
-            }
-
-            requestAnimationFrame(this.update);
+                this.animationManager.update(time, audioData, true);
+                this.lastTime = time;
+                this.lastAudioData = audioData;
+            }else {
+                this.animationManager.update(this.lastTime, this.lastAudioData, false);
+            }     
+            
+            
             this.canvasRef.current.end();
         }
+
+
+        if(!this.encoding)
+            requestAnimationFrame(this.update);
     };
 
     encoderDone = () => {
         this.setState({ doneEncoding: true });
-        
     };
 
     cancelEncoder = () => {
@@ -250,6 +263,7 @@ class App extends PureComponent {
     render() {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
         const { progress } = this.state;
+        
         return (
             <div className={classes.container}>
                 {

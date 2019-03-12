@@ -12,7 +12,7 @@ function hexToRgb(hex) {
         : null;
 }
 
-export default class JSNationSpectrum extends BaseItem {
+export default class MonsterCat extends BaseItem {
     constructor(info) {
         super();
         this.canvas = info.canvas;
@@ -40,6 +40,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.analyser = new SpectrumAnalyser(this.folder);
 
         this.animTime = 0.5;
+        this.lastArray = [];
 
         this.__attribution = {
             showAttribution: true,
@@ -95,7 +96,7 @@ export default class JSNationSpectrum extends BaseItem {
         return folder;
     };
 
-    update = (time, audioData) => {
+    update = (time, audioData, shouldIncrement) => {
         const {
             spectrumHeight,
             spectrumWidth,
@@ -107,7 +108,15 @@ export default class JSNationSpectrum extends BaseItem {
             positionY,
         } = this;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        const array = this.analyser.analyse(audioData.frequencyData);
+
+        let array; 
+        if(shouldIncrement) {
+            array = this.analyser.analyse(audioData.frequencyData);
+            this.lastArray = array;
+        }else {
+            array = this.lastArray;
+        }
+        
         const rgb = hexToRgb(this.color);
         this.ctx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${
             this.shadowAlpha

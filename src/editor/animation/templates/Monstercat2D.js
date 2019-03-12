@@ -7,6 +7,7 @@ import WebGLManager from '../WebGLManager'
 export default class Monstercat extends WebGLManager {
 
     setUpScene() {
+        console.log("?")
         const particlesScene = new PerspectiveScene(this.layersFolder, this.resolution); 
         const spectrumBarsScene = new CanvasScene(this.layersFolder, this.resolution); 
         particlesScene.camera.position.y = 0;

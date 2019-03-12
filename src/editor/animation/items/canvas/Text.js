@@ -2,10 +2,7 @@
 import BaseItem from '../BaseItem'
 import fonts from 'editor/util/Fonts'
 
-
-
-
-export default class Polartone extends BaseItem {
+export default class Text extends BaseItem {
     constructor(info) {
         super();
         this.canvas = info.canvas;
@@ -80,8 +77,7 @@ export default class Polartone extends BaseItem {
             this.ctx.lineWidth= this.shadowLineWidth;
             this.ctx.strokeText(this.text, x, y);
         }
-        this.ctx.shadowBlur = 0;
-        
+        this.ctx.shadowBlur = 0;        
         this.ctx.fillStyle = this.fillStyle;
         this.ctx.globalAlpha = this.globalAlpha; 
            

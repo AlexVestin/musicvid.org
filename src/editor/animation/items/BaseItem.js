@@ -13,7 +13,12 @@ export default class BaseItem {
         imageUrl: ""
     }
 
-    update = () => {}
+    // handles all updates in the render-loop 
+    update = (time, audioData) => {}
+
+    // should handle all drawing, but not update ANY stuff
+    render = (time) => {}
+
     stop = () => {}
     play = () => {}
     setUpGUI =  () => {}

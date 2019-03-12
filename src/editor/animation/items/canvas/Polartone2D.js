@@ -147,10 +147,8 @@ export default class Polartone extends BaseItem {
             this.positions.push([x, y])
         }
         
+        this.externalCtx.drawImage(this.internalCanvas, 0, 0, this.internalCanvas.width, this.internalCanvas.height);
        
     };
-
-    render = () => {
-        this.externalCtx.drawImage(this.internalCanvas, 0, 0, this.internalCanvas.width, this.internalCanvas.height);
-    }   
+ 
 }

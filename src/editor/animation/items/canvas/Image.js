@@ -2,9 +2,10 @@
 import BaseItem from '../BaseItem'
 import { loadImage } from 'editor/util/ImageLoader';
 
-export default class Image extends BaseItem {
+export default class SImage extends BaseItem {
     constructor(info) {
         super();
+        console.log("-----------------------", info);
         this.gui = info.gui;
         this.canvas = info.canvas;
         this.ctx = info.ctx;

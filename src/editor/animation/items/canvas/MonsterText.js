@@ -6,7 +6,7 @@ const fonts = ["Montserrat", "Anton", "Carrois Gothic SC", "Arial", "Helvetica",
 
 
 
-export default class Polartone extends BaseItem {
+export default class TextBar extends BaseItem {
     constructor(info) {
         super();
         this.canvas = info.canvas;
@@ -16,9 +16,6 @@ export default class Polartone extends BaseItem {
         this.font = "Montserrat";
         this.mainFontSize = 80;
     
-        
-       
-        
         
         this.firstRow = "Artist";
         this.secondRow = "Song";
@@ -73,19 +70,16 @@ export default class Polartone extends BaseItem {
 
     
 
-    update = (time, data) => { 
-        
+    update = (time, data, shouldIncrement) => { 
+
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
         this.ctx.textAlign = this.textAlign;    
-
-     };
-
-     render = () => {
         const {width,height} = this.canvas;
         const x = this.positionX * width;
         const y = this.positionY * height;
         this.ctx.fillText(this.text, x, y)
-     }
+
+     };
 }
 
 

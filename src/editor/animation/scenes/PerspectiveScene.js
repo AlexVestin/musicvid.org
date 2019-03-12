@@ -58,7 +58,9 @@ export default class Scene3DPerspective {
         this.gui.modalRef.toggleModal(2);
     }
 
-    update = (time, audioData) => {
-        this.items.forEach(item => item.update(time, audioData));
+    update = (time, audioData, shouldIncrement) => {
+        if(shouldIncrement) {
+            this.items.forEach(item => item.update(time, audioData));
+        }
     }
 }
