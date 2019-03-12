@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import items from '../items'
+import getItemClassFromText from '../items'
 
 export default class Scene3DOrtho {
     constructor(gui, resolution) {        
@@ -23,29 +23,42 @@ export default class Scene3DOrtho {
     setUpGui = (gui) => {
         this.gui = gui;
         this.folder = gui.addFolder("Scene3D Ortho");
+        this.overviewFolder = gui.root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
+        this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
     }
 
+    removeItem = (item) => {
+        const index = this.items.findIndex(e => e === item);
+        this.items.splice(index, 1);
+    }
+
     addItemFromText = (name) => {
-        const info = {
-            gui: this.itemsFolder,
-            width: this.resolution.width,
-            height: this.resolution.height,
-            scene: this.scene,
-            camera: this.camera,
-        };
-
-
-        const item = new items[name](info)
-        this.items.push(item);
-        return item;
+        if(name) {
+            const info = {
+                gui: this.itemsFolder,
+                overviewFolder: this.overviewFolder,
+                width: this.resolution.width,
+                height: this.resolution.height,
+                scene: this.scene,
+                camera: this.camera,
+                remove: this.remove
+            };
+    
+    
+            const itemClass = getItemClassFromText("ortho", name);
+            const item = new itemClass(info);
+            this.items.push(item);
+            return item;
+        }
+     
     }
 
     addItem = () => {
-        this.gui.__root.onParentSelect = this.addItemFromText;
-        this.gui.__root.modalRef.toggleModal(2);
+        const ref = this.itemsFolder.__root.modalRef;
+        ref.toggleModal(6).then(this.addItemFromText);
     }
 
     update = (time, audioData, shouldIncrement) => {

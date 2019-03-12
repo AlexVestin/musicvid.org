@@ -15,7 +15,9 @@ function hexToRgb(hex) {
 
 export default class Polartone extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
+
+        this.name = "Polartone";
         // Cant clear the canvas so create internal canvas for this item
         this.aspect = info.height / info.width;
         this.internalCanvas = document.createElement("canvas");
@@ -49,7 +51,7 @@ export default class Polartone extends BaseItem {
         this.context.globalAlpha = this.baseStrokeAlpha 
 
         this.context.strokeStyle = 'rgb(0,0,0)'
-        this.folder = this.setUpGUI(info.gui, "Polartone");
+        this.__setUpFolder(info, this.name);
 
         this.__attribution = {
             showAttribution: true,
@@ -97,8 +99,7 @@ export default class Polartone extends BaseItem {
         folder.addColor(this, "strokeStyle")
         
         folder.addColor(this, "backgroundColor").onChange(this.stop);
-
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, data) => {

@@ -3,9 +3,10 @@ import * as THREE from "three";
 import BaseItem from '../BaseItem'
 import { addOrthoMeshControls } from 'editor/util/AddMeshControls';
 
-export default class Polartone extends BaseItem{
+export default class AudioWave extends BaseItem{
     constructor(info) {
-        super();
+        super(info);
+        this.name = "Audio Wave";
 
         this.amplitude = 1.0;
         this.extent = 0.1;
@@ -33,7 +34,7 @@ export default class Polartone extends BaseItem{
         material.wireframe = false;
         info.scene.add( this.line );
         this.line.position.y = this.positionY;
-        this.folder = this.setUpGUI(info.gui, "Polartone");
+        this.__setUpFolder(info, this.name);
     }
 
     setUpGUI = (gui, name) => {
@@ -45,7 +46,7 @@ export default class Polartone extends BaseItem{
         folder.add(this.line.material, "linewidth", 0, 10, 1).onChange(()=>this.line.material.needsUpdate = true);
 
         addOrthoMeshControls(this, this.line, folder);
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, data) => {

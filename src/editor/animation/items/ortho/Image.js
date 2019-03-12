@@ -7,7 +7,8 @@ import { addOrthoMeshControls } from 'editor/util/AddMeshControls'
 export default class Image extends BaseItem{
 
     constructor(info) {
-        super();
+        super(info);
+        this.name = "Image";
         this.gui = info.gui;
         this.scene = info.scene;
 
@@ -17,7 +18,7 @@ export default class Image extends BaseItem{
 
         const url = "./img/solar.jpeg";
         this.loadNewBackground(url);
-        this.folder = this.setUpGUI(this.gui, "Background");
+        this.__setUpFolder(info, this.name);
     }
 
     async changeImage() {
@@ -37,7 +38,7 @@ export default class Image extends BaseItem{
         folder.add(this, "changeImage");
         addOrthoMeshControls(this, this.mesh, folder);
         folder.updateDisplay();
-        return folder;
+        return this.__addFolder(folder);
     }
 
     setBackground = (texture) => {

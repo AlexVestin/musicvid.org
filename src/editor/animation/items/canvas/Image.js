@@ -4,8 +4,8 @@ import { loadImage } from 'editor/util/ImageLoader';
 
 export default class SImage extends BaseItem {
     constructor(info) {
-        super();
-        console.log("-----------------------", info);
+        super(info);
+        this.name = "Image";
         this.gui = info.gui;
         this.canvas = info.canvas;
         this.ctx = info.ctx;
@@ -21,9 +21,11 @@ export default class SImage extends BaseItem {
         this.shouldDrawShadow = true;
         this.shadowBlur = 12;
         this.shadowColor = "#000000";
-        this.folder = this.setUpGUI(info.gui, "Polartone");
+        
         this.ctx.fillStyle = "#FFFFFF";
         this.image = new Image();
+
+        this.__setUpFolder(info, this.name);
     }
 
     loadNewImage() {
@@ -37,12 +39,10 @@ export default class SImage extends BaseItem {
         folder.add(this, "positionY");
         folder.add(this, "width");
         folder.add(this, "height");
-
-
         folder.add(this, "shouldDrawShadow");
         folder.addColor(this, "shadowColor");
         folder.addColor(this.ctx, "fillStyle");
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, data) => { 

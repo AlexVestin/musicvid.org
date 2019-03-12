@@ -2,15 +2,14 @@
 import * as THREE from "three";
 import BaseItem from '../BaseItem'
 import { addOrthoMeshControls }  from 'editor/util/AddMeshControls'
-
-
-const fonts = ["Montserrat", "Anton", "Carrois Gothic SC", "Arial", "Helvetica", "Times New Roman", "Times", "Courier New", "Courier", "Verdana", "Georgia", "Palatino", "Garamond", "Bookman", "Comic Sans MS"]
+import fonts from 'editor/util/Fonts'
 
 
 
-export default class Polartone extends BaseItem {
+export default class SpriteText extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
+        this.name = "Sprite Text";
         this.canvas = document.createElement("canvas");
         this.textureResolutionWidth = 1024;
         this.textureResolutionHeight = 512;
@@ -44,12 +43,12 @@ export default class Polartone extends BaseItem {
         this.geo = new THREE.PlaneGeometry(2, this.aspect);
         this.mesh = new THREE.Mesh(this.geo, this.mat);
         this.mesh.scale.set(this.textureScale, this.textureScale, this.textureScale)
-        this.folder = this.setUpGUI(info.gui, "Polartone");
 
         this.updateText();
         info.scene.add(this.mesh);
 
         this.ctx.fillStyle = "#FFFFFF";
+        this.__setUpFolder(info, this.name);
     }
 
     setText = (text, x, y, options) => {
@@ -96,8 +95,7 @@ export default class Polartone extends BaseItem {
 
         folder.addColor(this.ctx, "fillStyle");
         addOrthoMeshControls(this, this.mesh, folder);
-
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, data) => {  };

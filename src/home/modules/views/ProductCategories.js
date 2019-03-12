@@ -19,9 +19,6 @@ const styles = theme => ({
 });
 
 
-
-
-
 function ProductCategories(props) {
   const { classes } = props;
 

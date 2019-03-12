@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import items from '../items'
+import getItemClassFromText from '../items'
 
 export default class CanvasScene {
     constructor(gui, resolution) {        
@@ -33,36 +33,50 @@ export default class CanvasScene {
 
     setUpGui = (gui) => {
         this.gui = gui;
-        this.folder = gui.addFolder("Scene3D Ortho");
+        this.folder = gui.addFolder("Canvas Scene");
+        this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
+        this.itemsFolder.add(this, "addItem");
+
+
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
     }
 
-    addItemFromText = (name) => {
-        const info = {
-            gui: this.itemsFolder,
-            width: this.resolution.width,
-            height: this.resolution.height,
-            canvas: this.canvas,
-            ctx: this.ctx
-        };
-
-
-        const item = new items[name](info)
-        this.items.push(item);
-        return item;
-    }
-
     addItem = () => {
-        this.gui.__root.onParentSelect = this.addItemFromText;
-        this.gui.__root.modalRef.toggleModal(2);
+        const ref = this.itemsFolder.__root.modalRef;
+        ref.toggleModal(5).then(this.addItemFromText);
     }
+
+    removeItem = (item) => {
+        const index = this.items.findIndex(e => e === item);
+        this.items.splice(index, 1);
+    }
+
+    addItemFromText = (name) => {
+        if(name) {
+            const info = {
+                gui: this.itemsFolder,
+                overviewFolder: this.overviewFolder,
+                width: this.resolution.width,
+                height: this.resolution.height,
+                canvas: this.canvas,
+                ctx: this.ctx,
+                remove: this.removeItem
+            };
+    
+            const itemClass = getItemClassFromText("canvas", name);
+            const item = new itemClass(info);
+            this.items.push(item);
+            return item;
+        }
+      
+    }
+
 
     update = (time, audioData, shouldIncrement) => {
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
 
-        
         this.items.forEach(item =>  {
             this.ctx.save();
             item.update(time, audioData, shouldIncrement);

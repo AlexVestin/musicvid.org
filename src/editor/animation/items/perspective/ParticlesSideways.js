@@ -49,7 +49,9 @@ var fleckVelocity = maxParticleVelocity * fleckVelocityScalar;
 
 export default class Particles extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
+
+        this.name = "Star Particles";
 
         this.amplitude = 16.5;
         this.baseSpeed = 300.0;
@@ -257,7 +259,7 @@ export default class Particles extends BaseItem {
 
         info.scene.add(this.mesh);
         
-        this.folder = this.setUpGUI(info.gui, "Particles");
+        this.__setUpFolder(info, this.name);
         
 
         this.__attribution = {
@@ -280,13 +282,14 @@ export default class Particles extends BaseItem {
     }
 
     setUpGUI = (gui, name) => {
+        console.log(gui, name);
         const folder = gui.addFolder(name);
         folder.add(this, "amplitude", 0, 10, 0.1);
         folder.add(this, "baseSpeed", 0, 10);
 
         this.analyser = new ImpactAnalyser(folder);
         this.analyser.deltaDecay = 2; 
-        return folder;
+        return this.__addFolder(folder);
     }
 
     isInView(particle) {

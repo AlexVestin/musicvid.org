@@ -33,8 +33,9 @@ const vertexShader = [
 
 export default class Box extends BaseItem {
     constructor(info) {
-        super();
-        this.folder = info.gui.addFolder("Plane");
+        super(info);
+        this.name = "Text Lines";
+        this.__setUpFolder(info, this.name);
         var loader = new THREE.FontLoader();
 
         this.uniforms = {
@@ -69,7 +70,7 @@ export default class Box extends BaseItem {
         const folder = gui.addFolder(name);
         folder.add(this, "text").onChange(this.init);
         addMeshControls(this, this.mesh, folder);
-        return folder;
+        return this.__addFolder(folder);
     }
 
     fontLoaded = (font) => {

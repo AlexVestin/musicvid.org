@@ -93,10 +93,8 @@ class Controller {
       this.__onChange.call(this, newValue);
     }
 
-    if( this.object.folder) {
-      this.object.folder.__root.onChange(newValue);
-    }else {
-      console.log("No root for this input");
+    if( this.object.updateDisplay) {
+      this.object.updateDisplay();
     }
 
     this.updateDisplay();

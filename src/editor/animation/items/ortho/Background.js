@@ -42,7 +42,8 @@ const fragmentShader = [
 export default class Background extends BaseItem {
 
     constructor(info) {
-        super();
+        super(info);
+        this.name = "Background";
         this.gui = info.gui;
         this.scene = info.scene;
         this.brightenToAudio = true;
@@ -69,7 +70,7 @@ export default class Background extends BaseItem {
 
         const url = "./img/space.jpeg";
         loadImageTextureFromChoice(url, this.setBackground);
-        this.folder = this.setUpGUI(this.gui, "Background");
+        this.__setUpFolder(info, this.name);
     }
 
     changeImage() {
@@ -98,7 +99,7 @@ export default class Background extends BaseItem {
         this.impactAnalyser.deltaDecay = 20;
         addOrthoMeshControls(this, this.mesh, folder);
         folder.updateDisplay();
-        return folder;
+        return this.__addFolder(folder);
     }
 
     setBackground = (texture) => {

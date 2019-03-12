@@ -33,6 +33,15 @@ export default function(props) {
                 Check out the contributors in the meantime! (but don't navigate
                 away from or close the tab)
             </Typography>
+
+            <Typography
+                style={{ color: "#efefef" }}
+                component="h6"
+                variant="h6"
+            >
+                (Also the exporting takes a while)
+            </Typography>
+            
         </ListItem>
     );
 }

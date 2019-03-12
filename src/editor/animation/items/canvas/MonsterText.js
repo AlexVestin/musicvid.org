@@ -8,7 +8,8 @@ const fonts = ["Montserrat", "Anton", "Carrois Gothic SC", "Arial", "Helvetica",
 
 export default class TextBar extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
+        this.name ="MonsterText";
         this.canvas = info.canvas;
         this.ctx = info.ctx;
         this.aspect = info.width/info.height;
@@ -37,6 +38,7 @@ export default class TextBar extends BaseItem {
 
         this.ctx.fillStyle = "#FFFFFF";
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
+        this.__setUpFolder(info, this.name);
     }
 
     updateFont = () => {
@@ -64,8 +66,7 @@ export default class TextBar extends BaseItem {
         folder.addColor(this, "shadowColor");
         folder.add(this, "lineWidth", 0, 30);
         folder.addColor(this.ctx, "fillStyle");
-
-        return folder;
+        return this.__addFolder(folder);
     };
 
     

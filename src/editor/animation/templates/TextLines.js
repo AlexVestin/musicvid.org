@@ -13,8 +13,10 @@ export default class Manager extends WebGLManager {
         const it1 = this.scenes[0].addItemFromText("TextLines");
         it1.text = "Song"; 
         it1.mesh.position.y = -20;
-        it0.setUpGUI(this.overviewFolder, "TextLines");
-        it1.setUpGUI(this.overviewFolder, "TextLines");
+
+        it0.updateDisplay();
+        it1.updateDisplay();
+
         
         this.overviewFolder.onResize();
         

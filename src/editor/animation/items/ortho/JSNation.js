@@ -7,7 +7,8 @@ import BaseItem from '../BaseItem'
 
 export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {
-        super();
+        super(info);
+        this.name = "JSnation";
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         
@@ -61,7 +62,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
         this.emblem = new Emblem("./img/mvlogo.png");     
-        this.folder = this.setUpGUI(info.gui, "JSNation");
+        this.__setUpFolder(info, this.name);
         
         this.ctx.shadowBlur = 12;
         info.scene.add(this.mesh);
@@ -126,7 +127,10 @@ export default class JSNationSpectrum extends BaseItem {
 
         folder.add(this.ctx, "shadowBlur", 0, 100);
         folder.add(this, "exp", 0, 10);
-        return folder;
+        
+        this.folders.push(spFolder);
+        this.folders.push(emFolder);
+        return this.__addFolder(folder);
     }
 
     calcRadius = function(multiplier) {

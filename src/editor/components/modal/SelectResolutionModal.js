@@ -4,7 +4,8 @@ import Resolution from './Resolution'
 import LoadImage from './LoadImage' 
 import AudioModal from './AudioModal'
 import LicenseModal from './LicenseModal'
-
+import AddItemModal from './AddItemModal'
+import AddSceneModal from './AddSceneModal'
 
 export default class SelectResolutionModal extends PureComponent {
 
@@ -54,14 +55,18 @@ export default class SelectResolutionModal extends PureComponent {
         this.onParentSelect(info);
     }
     render() {
-        const { modalOpen } = this.state;
+        const { modalOpen, index } = this.state;
+        console.log((index >4 && index < 8) )
         return (    
 
                 <div className={classes.container}>
-                    {this.state.index === 1 && <AudioModal open={modalOpen} onSelect={(res) => this.onSelect(res)}></AudioModal> }
-                    {this.state.index === 0 && <Resolution open={modalOpen} onSelect={(res) => this.onSelect(res)}></Resolution> }
-                    {this.state.index === 3 && <LoadImage  open={modalOpen} onSelect={this.onSelect}></LoadImage> }
-                    {this.state.index === 4 && <LicenseModal items={this.__items} open={modalOpen} accept={this.accept} reject={this.reject}></LicenseModal> }
+                    {index === 1 && <AudioModal open={modalOpen} onSelect={this.onSelect}></AudioModal> }
+                    {index === 0 && <Resolution open={modalOpen} onSelect={this.onSelect}></Resolution> }
+                    {index === 3 && <LoadImage  open={modalOpen} onSelect={this.onSelect}></LoadImage> }
+                    {index === 4 && <LicenseModal open={modalOpen} items={this.__items} accept={this.accept} reject={this.reject}></LicenseModal> }
+                    {(index >4 && index < 8) && <AddItemModal open={modalOpen} onSelect={this.onSelect} index={index - 5}></AddItemModal>}
+                    {index === 8 && <AddSceneModal open={modalOpen} onSelect={this.onSelect} index={index - 5}></AddSceneModal>}
+
 
                 </div>
         )

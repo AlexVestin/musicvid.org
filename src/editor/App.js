@@ -148,7 +148,6 @@ class App extends PureComponent {
                 this.animationManager.update(this.lastTime, this.lastAudioData, false);
             }     
             
-            
             this.canvasRef.current.end();
         }
 

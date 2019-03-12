@@ -7,7 +7,6 @@ import WebGLManager from '../WebGLManager'
 export default class Monstercat extends WebGLManager {
 
     setUpScene() {
-        console.log("?")
         const particlesScene = new PerspectiveScene(this.layersFolder, this.resolution); 
         const spectrumBarsScene = new CanvasScene(this.layersFolder, this.resolution); 
         particlesScene.camera.position.y = 0;
@@ -21,7 +20,6 @@ export default class Monstercat extends WebGLManager {
 
         const image = spectrumBarsScene.addItemFromText("Image2D");
         image.loadNewImage();
-        image.setUpGUI(this.overviewFolder, "Image");
         image.positionX = 0.14;
         image.positionY = 0.55;         
 
@@ -55,16 +53,17 @@ export default class Monstercat extends WebGLManager {
         remixText.textAlign = "left";
 
 
-        artistText.setUpGUI(this.overviewFolder, "Artist text");
-        songText.setUpGUI(this.overviewFolder, "Song text");
-        remixText.setUpGUI(this.overviewFolder, "Remix Text");
+        artistText.setFolderName("Artist Text");
+        songText.setFolderName("Song Text");
+        remixText.setFolderName("Remix Text");
+
+        artistText.updateDisplay();
+        songText.updateDisplay();
+        remixText.updateDisplay();
 
         this.scenes.push(spectrumBarsScene);
-        bars.setUpGUI(this.overviewFolder, "Bars")
-
 
         const it1 = particlesScene.addItemFromText("ParticlesSideways");
-        it1.setUpGUI(this.overviewFolder, "Particles");
         this.overviewFolder.onResize();
     }
 }

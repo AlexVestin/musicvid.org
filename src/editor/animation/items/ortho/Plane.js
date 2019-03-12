@@ -3,8 +3,9 @@ import BaseItem from '../BaseItem'
 
 export default class Plane extends BaseItem {
     constructor(info) {
-        super();
-        this.folder = info.gui.addFolder("Plane");
+        super(info);
+        this.name = "Plane";
+        this.__setUpFolder(info, this.name);
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.MeshBasicMaterial({color: "red"}));
         this.color = 0xFF0000;
         this.folder.addColor(this, "color").onChange(this.onColorChange);

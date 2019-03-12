@@ -14,7 +14,8 @@ function hexToRgb(hex) {
 
 export default class MonsterCat extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
+        this.name = "Bars";
         this.canvas = info.canvas;
         this.ctx = info.ctx;
 
@@ -36,7 +37,7 @@ export default class MonsterCat extends BaseItem {
         this.positionX = 0.5;
         this.positionY = 0.5;
 
-        this.folder = this.setUpGUI(info.gui, "Bars");
+        this.__setUpFolder(info, this.name);
         this.analyser = new SpectrumAnalyser(this.folder);
 
         this.animTime = 0.5;
@@ -93,7 +94,7 @@ export default class MonsterCat extends BaseItem {
         folder.add(this, "barHeightMultiplier", 0, 25.0, 0.01);
         folder.add(this, "shadowOffsetX", 0, 100);
         folder.add(this, "shadowOffsetY", 0, 100);
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, audioData, shouldIncrement) => {
@@ -107,7 +108,6 @@ export default class MonsterCat extends BaseItem {
             positionX,
             positionY,
         } = this;
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         let array; 
         if(shouldIncrement) {

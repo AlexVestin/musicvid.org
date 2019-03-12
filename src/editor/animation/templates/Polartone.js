@@ -22,6 +22,10 @@ export default class Manager extends WebGLManager {
         
         it2.setUpGUI(this.overviewFolder, "Artist Text");
         it3.setUpGUI(this.overviewFolder, "Song text");
+
+        it2.updateDisplay();
+        it3.updateDisplay();
+
                 
         this.overviewFolder.onResize();
         

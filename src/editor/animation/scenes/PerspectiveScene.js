@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import items from '../items'
+import getItemClassFromText from '../items'
 //import OrbitControls from '../controls/OrbitControls';
 
 export default class Scene3DPerspective {
@@ -28,9 +28,16 @@ export default class Scene3DPerspective {
     setUpGui = (gui) => {
         this.gui = gui;
         this.folder = gui.addFolder("Scene3D Perspective");
+        this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
+        this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
+    }
+
+    removeItem = (item) => {
+        const index = this.items.findIndex(e => e === item);
+        this.items.splice(index, 1);
     }
 
     stop = () => {
@@ -40,22 +47,28 @@ export default class Scene3DPerspective {
     }
 
     addItemFromText = (name) => {
-        const info = {
-            gui: this.itemsFolder,
-            width: this.resolution.width,
-            height: this.resolution.height,
-            scene: this.scene,
-            camera: this.camera
-        };
+        if(name) {
+            const info = {
+                gui: this.itemsFolder,
+                overviewFolder: this.overviewFolder,
+                width: this.resolution.width,
+                height: this.resolution.height,
+                scene: this.scene,
+                camera: this.camera,
+                remove: this.remove
+            };
+            
+            const itemClass = getItemClassFromText("perspective", name);
+            const item = new itemClass(info);
+            this.items.push(item);
+            return item;
+        }
         
-        const item = new items[name](info)
-        this.items.push(item);
-        return item;
     }
 
     addItem = () => {
-        this.modalRef.onParentSelect = this.addItemFromText;
-        this.gui.modalRef.toggleModal(2);
+        const ref = this.itemsFolder.__root.modalRef;
+        ref.toggleModal(7).then(this.addItemFromText);
     }
 
     update = (time, audioData, shouldIncrement) => {

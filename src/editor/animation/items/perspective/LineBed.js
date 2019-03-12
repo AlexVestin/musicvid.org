@@ -6,7 +6,8 @@ import BaseItem from '../BaseItem'
 export default class PointBed extends BaseItem {
     
     constructor(info) {
-        super();
+        super(info);
+        this.name = "LineBed";
         this.prevArr = [];
         this.amplitude = 2.5;
 
@@ -44,13 +45,13 @@ export default class PointBed extends BaseItem {
 
 
         info.scene.add(this.group);
-        this.folder = this.setUpGUI(info.gui, "Polartone");
+        this.__setUpFolder(info, this.name);
     }
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
         folder.add(this, "amplitude");
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, data) => {

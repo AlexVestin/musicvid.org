@@ -3,9 +3,10 @@ import * as THREE from "three";
 import SpectrumAnalyser from 'editor/audio/SpectrumAnalyser'
 import BaseItem from '../BaseItem'
 
-export default class JSNationSpectrum extends BaseItem {
+export default class SideLobes extends BaseItem {
     constructor(info)  {
-        super();
+        super(info);
+        this.name = "Sidelobes";
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         
@@ -39,7 +40,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
         this.barHeightMultiplier = 1.3;
-        this.folder = this.setUpGUI(info.gui, "Bars");
+        this.__setUpFolder(info, this.name);
         
         this.ctx.shadowBlur = 12;
 
@@ -79,7 +80,7 @@ export default class JSNationSpectrum extends BaseItem {
         folder.add(this, "barHeightMultiplier", 0, 6.0, 0.01);
         folder.add(this.ctx, "shadowOffsetX", 0, 100);
         folder.add(this.ctx, "shadowOffsetY", 0, 100);
-        return folder;
+        return this.__addFolder(folder);
     }
 
     calcRadius = function(multiplier) {

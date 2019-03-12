@@ -31,9 +31,10 @@ const fragmentShader = [
 ].join("\n");
 
 
-export default class Polartone extends BaseItem {
+export default class SpriteTextMask extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
+        this.name = "Sprite Text Mask";
         this.canvas = document.createElement("canvas");
         this.textureResolutionWidth = 1024;
         this.textureResolutionHeight = 1024;
@@ -79,7 +80,7 @@ export default class Polartone extends BaseItem {
         //this.mat = new THREE.MeshBasicMaterial({map:tex, transparent: true});
         this.geo = new THREE.PlaneGeometry(2,2 * this.aspect);
         this.mesh = new THREE.Mesh(this.geo, this.mat);
-        this.folder = this.setUpGUI(info.gui, "Polartone");
+        this.__setUpFolder(info, this.name);
 
         const scale = 0.46;
         this.mesh.scale.set(scale, scale, scale);
@@ -137,7 +138,7 @@ export default class Polartone extends BaseItem {
         folder.add(this, "font", fonts).onChange(this.updateText);
         folder.add(this, "fontSize", 0, 300).onChange(this.updateText);
         addOrthoMeshControls(this, this.mesh, folder);
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, data) => {  };

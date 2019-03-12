@@ -71,8 +71,9 @@ const fragmentShader = [
 
 export default class StarField extends BaseItem {
     constructor(info) {
-        super();
-        this.folder = info.gui.addFolder("StarField");
+        super(info);
+        this.name = "Star Nest";
+        this.__setUpFolder(info, this.name);
 
         this.geo = new THREE.PlaneGeometry(2,2);
         this.mat = new ShaderToyMaterial(fragmentShader, 
@@ -144,8 +145,7 @@ export default class StarField extends BaseItem {
         folder.add(this.mat.uniforms.distfading, "value").name("distfading");
         folder.add(this.mat.uniforms.saturation, "value").name("saturation");
 
-
-        return folder;
+        return this.__addFolder(folder);
     }
 
     update = (time, audioData) => {

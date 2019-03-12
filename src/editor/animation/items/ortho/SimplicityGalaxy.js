@@ -78,9 +78,10 @@ const fragmentShader = [
     "}"
 ].join("\n");
 
-export default class Aurora extends BaseItem {
+export default class SimplicityGalaxy extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
+        this.name = "Simplicity Galaxy";
         this.geo = new THREE.PlaneGeometry(2, 2);
         this.mat = new ShaderToyMaterial(fragmentShader, {
             uniforms: {
@@ -103,7 +104,7 @@ export default class Aurora extends BaseItem {
         this.brightenMultipler = 1;
         this.brightness = 1.0;
 
-        this.folder = this.setUpGUI(info.gui, "Aurora");
+        this.__setUpFolder(info, this.name);
         this.impactAnalyser = new ImpactAnalyser(this.folder);
         this.spectrumAnalyser = new SpectrumAnalyser(this.folder);
         this.spectrumAnalyser.minDecibel = -100;
@@ -142,7 +143,7 @@ export default class Aurora extends BaseItem {
         folder.add(this, "brightenMultipler");
         folder.add(this, "limit");
         folder.add(this, "mult");
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, audioData) => {

@@ -2,6 +2,10 @@
 
 import * as THREE from 'three'
 import AttribItem from './items/ortho/Attribution'
+import CanvasScene from './scenes/CanvasScene';
+import OrthographicScene from './scenes/OrthographicScene';
+import PerspectiveScene from './scenes/PerspectiveScene';
+
 
 export default class WebGLManager {
 
@@ -15,8 +19,6 @@ export default class WebGLManager {
         this.audio = null;
         this.inFullScreen = false;
 
-        
-       
         document.body.addEventListener("keyup", (e) => {
             if(e.keyCode === 70) {
                 if(!this.inFullScreen) {
@@ -39,6 +41,25 @@ export default class WebGLManager {
          this.drawAttribution = false;
     }
 
+    addScene = () => {
+        this.modalRef.toggleModal(8).then((sceneName) => {
+            let scene;
+            if(sceneName) {
+                if(sceneName === "canvas") {
+                    scene = new CanvasScene(this.layersFolder, this.resolution);
+                }else if(sceneName === "ortho") {
+                    scene = new OrthographicScene(this.layersFolder, this.resolution);
+                }else if(sceneName === "perspective") {
+                    scene = new PerspectiveScene(this.layersFolder, this.resolution);
+                }
+            }
+         
+
+            this.scenes.push(scene);
+        });
+
+    }
+
     init = ( resolution ) => {
         this.resolution = resolution;
         this.width = resolution.width;
@@ -47,6 +68,7 @@ export default class WebGLManager {
         this.setUpAttrib();
         this.overviewFolder = this.gui.__folders["Overview"];
         this.layersFolder = this.gui.__folders["Layers"];
+        this.layersFolder.add(this, "addScene");
         
         // Set up internal canvas to keep canvas size on screen consistent
         this.externalCtx = this.canvasMountRef.getContext("2d");

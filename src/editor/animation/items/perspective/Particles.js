@@ -49,7 +49,7 @@ class ParticleData {
 
 export default class Particles extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
         this.maxParticleCount = 1200; // particle count at 1080p
         this.particleMaxSpawnRate = 8; // max particles to spawn each frame. this takes effect during particle initlzn.
         this.particleOpacityMin = 0.9;
@@ -128,8 +128,7 @@ export default class Particles extends BaseItem {
         
         folder.add(this, "movementAmplitude");
         folder.add(this, "sizeMult", 0, 5.0, 0.01).onChange(() => this.updateSizes());
-
-        return folder;
+        return this.__addFolder(folder);
     }
 
     changeColor = () => {
@@ -165,6 +164,7 @@ export default class Particles extends BaseItem {
 
         
         this.initializeParticles();
+        
         this.scene.add(this.particleSystem);
     }
 

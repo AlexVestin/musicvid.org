@@ -4,7 +4,7 @@ import fonts from 'editor/util/Fonts'
 
 export default class Text extends BaseItem {
     constructor(info) {
-        super();
+        super(info);
         this.canvas = info.canvas;
         this.ctx = info.ctx;
 
@@ -27,7 +27,8 @@ export default class Text extends BaseItem {
 
         
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
-        this.folder = this.setUpGUI(info.gui, "Polartone");
+
+        this.__setUpFolder(info, "Text");
     }
 
     updateFont = () => {
@@ -61,8 +62,7 @@ export default class Text extends BaseItem {
         folder.add(this, "globalAlpha", 0, 1);
 
         folder.addColor(this, "fillStyle");
-
-        return folder;
+        return this.__addFolder(folder);
     };
 
     update = (time, data) => { 

@@ -24,15 +24,9 @@ export default class Manager extends WebGLManager {
         
         it2.updateText();
         it3.updateText();
-        it2.folder.updateDisplay();
-        it3.folder.updateDisplay();
+        it2.updateDisplay();
+        it3.updateDisplay();
 
-
-        it0.setUpGUI(this.overviewFolder, "Background");
-        it1.setUpGUI(this.overviewFolder, "TimeRep");
-        it2.setUpGUI(this.overviewFolder, "SpriteText");
-        it3.setUpGUI(this.overviewFolder, "SpriteText2");
-    
         this.overviewFolder.onResize();
         
     }
