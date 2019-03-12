@@ -1,7 +1,7 @@
 
 
 import WebGLManager from '../WebGLManager'
-import PerspectiveScene from '../common/scenes/PerspectiveScene';
+import PerspectiveScene from '../scenes/PerspectiveScene';
 
 export default class Manager extends WebGLManager {
 

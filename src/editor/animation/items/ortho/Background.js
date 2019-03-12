@@ -1,10 +1,10 @@
 
 import * as THREE from 'three'
-import ImpactAnalyser from '../../../audio/ImpactAnalyser'
-import { loadImageTexture, loadImageTextureFromChoice } from '../../../util/ImageLoader';
-import { addOrthoMeshControls } from '../../../util/AddMeshControls';
+import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import { loadImageTexture, loadImageTextureFromChoice } from 'editor/util/ImageLoader';
+import { addOrthoMeshControls } from 'editor/util/AddMeshControls';
 
-import BaseItem from './BaseItem'
+import BaseItem from '../BaseItem'
 
 const vertexShader = [
     "varying vec2 vUv;",

@@ -1,8 +1,8 @@
 
 
 import Manager from '../Manager'
-import { initQuad, createTexture, makeProgram } from '../common/shaders/CommonFunctions'
-import SHADERS from '../common/shaders/OutrunTheRain'
+import { initQuad, createTexture, makeProgram } from '../shaders/CommonFunctions'
+import SHADERS from '../shaders/OutrunTheRain'
 
 
 

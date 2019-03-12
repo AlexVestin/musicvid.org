@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import ShaderToyMaterial from '../../../util/ShaderToyMaterial'
-import ImpactAnalyser from '../../../audio/ImpactAnalyser'
-import BaseItem from './BaseItem'
+import ShaderToyMaterial from 'editor/util/ShaderToyMaterial'
+import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import BaseItem from '../BaseItem'
 
 
 

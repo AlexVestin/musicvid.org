@@ -1,7 +1,7 @@
 
 
 
-import BaseItem from './BaseItem'
+import BaseItem from '../BaseItem'
 
 
 export default class AttributionGL extends BaseItem {

@@ -1,8 +1,8 @@
 
 import * as THREE from 'three'
-import {loadImageTexture} from '../../../util/ImageLoader'
-import BaseItem from './BaseItem'
-import { addOrthoMeshControls } from '../../../util/AddMeshControls'
+import {loadImageTexture} from 'editor/util/ImageLoader'
+import BaseItem from '../BaseItem'
+import { addOrthoMeshControls } from 'editor/util/AddMeshControls'
 
 export default class Image extends BaseItem{
 

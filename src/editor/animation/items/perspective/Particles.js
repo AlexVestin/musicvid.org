@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import ImpactAnalyser from '../../../audio/ImpactAnalyser'
-import BaseItem from './BaseItem'
+import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import BaseItem from '../BaseItem'
  
 
 const vertShader =

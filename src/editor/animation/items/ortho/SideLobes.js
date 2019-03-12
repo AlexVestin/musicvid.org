@@ -1,7 +1,7 @@
 
 import * as THREE from "three";
-import SpectrumAnalyser from '../../../audio/SpectrumAnalyser'
-import BaseItem from './BaseItem'
+import SpectrumAnalyser from 'editor/audio/SpectrumAnalyser'
+import BaseItem from '../BaseItem'
 
 export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {

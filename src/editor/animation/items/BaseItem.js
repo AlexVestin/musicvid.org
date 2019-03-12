@@ -1,4 +1,4 @@
-import license from '../../../util/License'
+import license from 'editor/util/License'
 
 export default class BaseItem {
     LICENSE = license;

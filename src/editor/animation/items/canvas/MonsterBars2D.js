@@ -1,4 +1,4 @@
-import SpectrumAnalyser from "../../../../audio/SpectrumAnalyser";
+import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
 import BaseItem from "../BaseItem";
 
 function hexToRgb(hex) {

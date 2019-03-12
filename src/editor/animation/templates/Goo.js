@@ -1,8 +1,8 @@
 
 
 import Manager from '../Manager'
-import { initQuad, createTexture, makeProgram } from '../common/shaders/CommonFunctions'
-import SHADERS from '../common/shaders/Goo'
+import { initQuad, createTexture, makeProgram } from '../shaders/CommonFunctions'
+import SHADERS from '../shaders/Goo'
 
 export default class Man extends Manager {
 

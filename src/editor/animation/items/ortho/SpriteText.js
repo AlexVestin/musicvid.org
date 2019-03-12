@@ -1,7 +1,7 @@
 
 import * as THREE from "three";
-import BaseItem from './BaseItem'
-import { addOrthoMeshControls }  from '../../../util/AddMeshControls'
+import BaseItem from '../BaseItem'
+import { addOrthoMeshControls }  from 'editor/util/AddMeshControls'
 
 
 const fonts = ["Montserrat", "Anton", "Carrois Gothic SC", "Arial", "Helvetica", "Times New Roman", "Times", "Courier New", "Courier", "Verdana", "Georgia", "Palatino", "Garamond", "Bookman", "Comic Sans MS"]

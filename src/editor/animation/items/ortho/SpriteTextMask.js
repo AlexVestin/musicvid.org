@@ -1,9 +1,9 @@
 
 import * as THREE from "three";
-import BaseItem from './BaseItem'
-import { addOrthoMeshControls } from '../../../util/AddMeshControls'
-import fonts from '../../../util/Fonts'
-import { loadImageTexture } from '../../../util/ImageLoader';
+import BaseItem from '../BaseItem'
+import { addOrthoMeshControls } from 'editor/util/AddMeshControls'
+import fonts from 'editor/util/Fonts'
+import { loadImageTexture } from 'editor/util/ImageLoader';
 
 
 

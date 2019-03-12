@@ -1,9 +1,9 @@
 
 import * as THREE from "three";
-import { smooth, toWebAudioForm, getByteSpectrum } from '../../../audio/analyse_functions'
-import { loadImage } from '../../../util/ImageLoader'
+import { smooth, toWebAudioForm, getByteSpectrum } from 'editor/audio/analyse_functions'
+import { loadImage } from 'editor/util/ImageLoader'
 import Emblem from "./Emblem";
-import BaseItem from './BaseItem'
+import BaseItem from '../BaseItem'
 
 export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {

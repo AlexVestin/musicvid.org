@@ -1,7 +1,7 @@
 
 
-import CanvasScene from '../common/scenes/CanvasScene'
-import PerspectiveScene from '../common/scenes/PerspectiveScene'
+import CanvasScene from '../scenes/CanvasScene'
+import PerspectiveScene from '../scenes/PerspectiveScene'
 import WebGLManager from '../WebGLManager'
 
 export default class Monstercat extends WebGLManager {

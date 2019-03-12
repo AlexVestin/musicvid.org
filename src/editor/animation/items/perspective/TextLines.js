@@ -1,8 +1,8 @@
 
 import * as THREE from "three";
-import BaseItem from './BaseItem'
-import addMeshControls from '../../../util/AddMeshControls'
-import ImpactAnalyser from '../../../audio/ImpactAnalyser'
+import BaseItem from '../BaseItem'
+import addMeshControls from 'editor/util/AddMeshControls'
+import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 
  
 

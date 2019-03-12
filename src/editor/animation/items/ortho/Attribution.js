@@ -2,7 +2,7 @@
 
 
 import * as THREE from "three";
-import BaseItem from './BaseItem'
+import BaseItem from '../BaseItem'
 
 
 export default class Attribution extends BaseItem {

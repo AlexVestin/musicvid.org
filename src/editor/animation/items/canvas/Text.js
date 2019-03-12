@@ -1,6 +1,6 @@
 
 import BaseItem from '../BaseItem'
-import fonts from '../../../../util/Fonts'
+import fonts from 'editor/util/Fonts'
 
 
 

@@ -74,15 +74,18 @@ export default class Polartone extends BaseItem {
     
 
     update = (time, data) => { 
-        const {width,height} = this.canvas;
-        const x = this.positionX * width;
-        const y = this.positionY * height;
+        
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
         this.ctx.textAlign = this.textAlign;    
 
-
-        this.ctx.fillText(this.text, x, y)
      };
+
+     render = () => {
+        const {width,height} = this.canvas;
+        const x = this.positionX * width;
+        const y = this.positionY * height;
+        this.ctx.fillText(this.text, x, y)
+     }
 }
 
 

@@ -1,8 +1,7 @@
 import * as THREE from "three";
-import BaseItem from './BaseItem'
+import BaseItem from '../BaseItem'
 
-
-export default class Box extends BaseItem {
+export default class Plane extends BaseItem {
     constructor(info) {
         super();
         this.folder = info.gui.addFolder("Plane");

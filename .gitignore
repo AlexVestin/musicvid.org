@@ -26,11 +26,11 @@ yarn-error.log*
 
 
 # Licensed shaders
-/src/editor/animation/common/item/Noise.js
-/src/editor/animation/common/item/HexaGone.js
-/src/editor/animation/common/item/OverTheMoon.js
-/src/editor/animation/common/shaders/Filaments.js
-/src/editor/animation/common/shaders/Sinuous.js
+/src/editor/animation/item/Noise.js
+/src/editor/animation/item/HexaGone.js
+/src/editor/animation/item/OverTheMoon.js
+/src/editor/animation/shaders/Filaments.js
+/src/editor/animation/shaders/Sinuous.js
 
 
 

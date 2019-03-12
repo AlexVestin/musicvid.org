@@ -1,8 +1,8 @@
 
 import BaseItem from '../BaseItem'
-import { loadImage } from '../../../../util/ImageLoader';
+import { loadImage } from 'editor/util/ImageLoader';
 
-export default class Polartone extends BaseItem {
+export default class Image extends BaseItem {
     constructor(info) {
         super();
         this.gui = info.gui;

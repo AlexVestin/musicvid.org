@@ -1,7 +1,7 @@
 
 
 import * as THREE from 'three'
-import AttribItem from './common/items/Attribution'
+import AttribItem from './items/ortho/Attribution'
 
 export default class WebGLManager {
 

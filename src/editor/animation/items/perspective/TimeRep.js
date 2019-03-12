@@ -1,7 +1,7 @@
 
 import * as THREE from "three";
-import BaseItem from './BaseItem'
-import { addOrthoMeshControls } from '../../../util/AddMeshControls';
+import BaseItem from '../BaseItem'
+import { addOrthoMeshControls } from 'editor/util/AddMeshControls';
 
 export default class Polartone extends BaseItem{
     constructor(info) {
@@ -20,10 +20,7 @@ export default class Polartone extends BaseItem{
         this.positionY  = 0.35;
         this.textureScale = 1.0;
         this.aspect = info.width/info.height;
-
-        
         this.prevArr = [];
-
 
         this.geometry = new THREE.BufferGeometry();
         this.linePositions = new Float32Array( 1024 * 3 ); // 3 vertices per point

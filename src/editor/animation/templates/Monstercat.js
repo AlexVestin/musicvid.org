@@ -1,7 +1,7 @@
 
 
-import OrthographicScene from '../common/scenes/OrthographicScene'
-import PerspectiveScene from '../common/scenes/PerspectiveScene'
+import OrthographicScene from '../scenes/OrthographicScene'
+import PerspectiveScene from '../scenes/PerspectiveScene'
 import WebGLManager from '../WebGLManager'
 
 export default class Monstercat extends WebGLManager {

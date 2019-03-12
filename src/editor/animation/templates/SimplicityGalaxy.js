@@ -1,6 +1,6 @@
 
 
-import OrthographicScene from '../common/scenes/OrthographicScene'
+import OrthographicScene from '../scenes/OrthographicScene'
 import WebGLManager from '../WebGLManager'
 
 export default class Manager extends WebGLManager {
