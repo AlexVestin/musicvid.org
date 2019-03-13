@@ -28,6 +28,10 @@ const styles = theme => ({
     },
     tile: {
         width: 150,
+        
+    },
+    tileBar: {
+        backgroundColor: "black"
     }
 });
 
@@ -42,8 +46,9 @@ function TitlebarGridList(props) {
                     const tile = props.tiles[key];
                     return (
                         <GridListTile key={key} className={classes.tile}>
-                            <img src={tile.img} alt={key} />
+                            {tile.img && <img src={tile.img} alt={key} style={{backgroundColor: "#000"}} />}
                             <GridListTileBar
+                                 className={classes.tileBar}
                                 title={key}
                                 subtitle={<span>by: {tile.authors}</span>}
                                 actionIcon={

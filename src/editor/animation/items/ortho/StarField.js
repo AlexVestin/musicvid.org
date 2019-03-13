@@ -148,11 +148,12 @@ export default class StarField extends BaseItem {
         return this.__addFolder(folder);
     }
 
-    update = (time, audioData) => {
+    update = (time, audioData, shouldIncrement) => {
         this.mat.uniforms.iTime.value = time;
         if(this.brightenToAudio && this.impactAnalyser) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData) ;
             this.mat.uniforms.spe.value = this.brightness + impact * this.brightenMultipler * -0.0005;
         }
     }
+    
 }

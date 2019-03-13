@@ -69,7 +69,7 @@ function ProductCategories(props) {
       title: 'Sinuous',
       width: '38%',
       templateName:"Sinuous",
-      attrib: "Samuel C. (@stormoid)",
+      attrib: "nmz (@stormoid)",
       attribUrl: "https://www.shadertoy.com/user/nimitz",
       twitter: "https://twitter.com/stormoid",
       license: "Attribution Required"
@@ -91,7 +91,7 @@ function ProductCategories(props) {
       title: 'Electric Noise',
       width: '40%',
       templateName: "Noise",
-      attrib: "Samuel C. (@stormoid)",
+      attrib: "nmz (@stormoid)",
       attribUrl: "https://www.shadertoy.com/user/nimitz",
       twitter: "https://twitter.com/stormoid",
       license: "Attribution Required"

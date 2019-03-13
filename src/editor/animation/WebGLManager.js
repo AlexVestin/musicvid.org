@@ -25,8 +25,7 @@ export default class WebGLManager {
                     this.fullscreen(this.canvasMountRef);
                 }
                 
-                this.inFullScreen = !this.inFullScreen;
-                
+                this.inFullScreen = !this.inFullScreen;       
             }
         })
     }
@@ -59,12 +58,9 @@ export default class WebGLManager {
                 }else if(sceneName === "perspective") {
                     scene = new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene);
                 }
-            }
-         
-
-            this.scenes.push(scene);
+                this.scenes.push(scene);
+            } 
         });
-
     }
 
     init = ( resolution ) => {

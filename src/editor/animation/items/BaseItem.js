@@ -21,7 +21,8 @@ export default class BaseItem {
     }
 
     dispose = () => {
-
+        if(this.ovFolder)
+            this.ovFolder.parent.removeFolder(this.ovFolder);
     }
 
     setFolderName = (name) => {

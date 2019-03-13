@@ -26,38 +26,38 @@ import Monstercat2D from './canvas/MonsterBars2D'
 import Text2D from './canvas/Text'
 import Image2D from './canvas/Image'
 import Polartone2D from './canvas/Polartone2D'
+import BeatCounter from './canvas/BeatCounter'
+
 
 
 const perspectiveItems = {
-    Particles: {class: Particles},
-    TimeRep: {class: TimeRep},
-    LineBed: {class: LineBed},
-    ParticlesSideways: {class: ParticlesSideways},
-    TextLines: {class: TextLines}
+    Particles: { authors: "@Caseif & @Incept", url:"https://github.com/caseif/js.nation", class: Particles, img: "img/items/Particles.png"},
+    TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},
+    LineBed: { authors: "GamleGaz", class: LineBed, img: "img/items/LineBEd.png"},
+    ParticlesSideways: {url:"https://github.com/caseif/vis.js", authors: "@Caseif & @Incept", class: ParticlesSideways, img: "img/items/ParticlesSideways.png"},
+    TextLines: {class: TextLines, img: "img/items/TextLines.png"}
 }
 
 const canvasItems = {
-    Monstercat2D: {class: Monstercat2D},
-    Text2D: {class: Text2D},
-    Image2D: {class: Image2D},
-    Polartone2D: {class: Polartone2D},
+    Monstercat2D: { url:"https://github.com/caseif/vis.js", authors: "@Caseif & @Incept", class: Monstercat2D,  img: "img/items/MonsterBars.png" },
+    Text2D: {class: Text2D, img: "img/items/Text2D.png"} ,
+    Image2D: {class: Image2D, img: "img/items/Image.png"},
+    Polartone2D: {class: Polartone2D, img: "img/items/Polartone.png", url: "https://github.com/mattdesl/Polartone", authors: "Mattdesl"},
+    BeatCounter: {class: BeatCounter}
 }
 
 
 const orthoItems = {
     JSNation: {img: "img/items/JSnation.png", authors: "@Caseif & @Incept", url:"https://github.com/caseif/js.nation", class: JSNation},
-    Plane: { class: Plane },
     Background: { class: Background },
-    StarField: {img: "img/items/StarField.png", class: StarField },
-    SideLobes: { class: SideLobes },
+    StarField: {img: "img/items/StarNest.png", class: StarField },
     Noise: {img: "img/items/Noise.png", authors: "nmz (@Stormoid)", url: "https://www.shadertoy.com/view/ldlXRS", class: Noise},
     SimplicityGalaxy: {img: "img/items/SimplicityGalaxy.png", url: "https://www.shadertoy.com/view/MslGWN", authors: "CBS", class: SimplicityGalaxy},
     HexaGone: {img: "img/items/HexaGone.png", url: "https://www.shadertoy.com/view/wsl3WB", authors: "BigWIngs", class: HexaGone},
-    OverTheMoon: {img: "img/items/OverTheMoon.png", url: "https://www.shadertoy.com/view/4s33zf", authors: "BigWIngs", class: OverTheMoon},
-    UniverseWithin: {img: "img/items/UniverseWithing.png", url: "https://www.shadertoy.com/view/lscczl", authors: "BigWIngs", class: UniverseWithin},
+    UniverseWithin: {img: "img/items/UniverseWithin.png", url: "https://www.shadertoy.com/view/lscczl", authors: "BigWIngs", class: UniverseWithin},
     Image: {class: Image},
-    SpriteTextMask: {class: SpriteTextMask},
-    SpriteText: {class: SpriteText}
+    SpriteTextMask: {class: SpriteTextMask, img: "img/items/StarField.png"},
+    SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"}
 }
 
 

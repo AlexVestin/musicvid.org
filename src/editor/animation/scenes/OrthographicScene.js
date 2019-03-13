@@ -1,6 +1,7 @@
 
 import * as THREE from 'three';
 import getItemClassFromText from '../items'
+import OrbitControls from '../controls/OrbitControls';
 
 export default class Scene3DOrtho {
     constructor(gui, resolution, remove) {
@@ -10,6 +11,8 @@ export default class Scene3DOrtho {
         this.camera.position.z = 1;
         this.resolution = resolution;
         this.items = [];
+        this.gui = gui;
+        this.setUpControls();
         this.setUpGui(gui);
         
     }
@@ -28,8 +31,12 @@ export default class Scene3DOrtho {
         this.remove(this);
     }
 
+    setUpControls = () => {
+        this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef)
+    }
+
     setUpGui = (gui) => {
-        this.gui = gui;
+        
         this.folder = gui.addFolder("Scene3D Ortho");
         this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
@@ -37,6 +44,7 @@ export default class Scene3DOrtho {
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
         this.settingsFolder.add(this, "removeMe");
+        this.settingsFolder.add(this.controls, "enabled")
     }
 
     removeItem = (item) => {

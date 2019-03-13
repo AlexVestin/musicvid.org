@@ -37,7 +37,7 @@ export default class PointBed extends BaseItem {
             );
 
 
-            var material = new THREE.MeshBasicMaterial({color: color});
+            const material = new THREE.MeshBasicMaterial({color: color});
             const mesh = new THREE.Line(geometry, material)
             this.particles.push(mesh);
             this.group.add(mesh)

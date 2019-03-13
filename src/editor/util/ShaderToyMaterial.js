@@ -77,6 +77,7 @@ export default class ShaderToyMaterial extends THREE.RawShaderMaterial {
     }
 
     update() {
+        /*
         if (this.uniforms.iTime) {
             this.uniforms.iTime.value = this.clock.getElapsedTime();
         }
@@ -119,7 +120,7 @@ export default class ShaderToyMaterial extends THREE.RawShaderMaterial {
         }
 
 
-        requestAnimationFrame(() => { this.update() });
+        requestAnimationFrame(() => { this.update() });*/
     }
 
 

@@ -61,7 +61,7 @@ export default class Exporter {
                 this.encodeAudioFrame();
             }else{
                 const audioData = this.sound.getAudioData(this.time);
-                this.animationManager.update(this.time, audioData);
+                this.animationManager.update(this.time, audioData, true);
                 this.time += 1 / this.fps;
                 this.encodeVideoFrame();
             }

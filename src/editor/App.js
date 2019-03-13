@@ -40,7 +40,7 @@ class App extends PureComponent {
         };
        
         this.firstLoad = true;
-        this.fastLoad = true;
+        this.fastLoad = false;
         this.pauseTime = 0;
         this.lastTime = 0;
         this.lastAudioData = {frequencyData: [], timeData: []};

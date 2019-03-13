@@ -104,7 +104,7 @@ export default class SpriteTextMask extends BaseItem {
 
     updateText = () => {
         const {width,height} = this.canvas;
-        this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0,0,width, height);
         
         this.ctx.textAlign = "center";
         this.tex.needsUpdate = true;

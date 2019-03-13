@@ -50,6 +50,7 @@ class ParticleData {
 export default class Particles extends BaseItem {
     constructor(info) {
         super(info);
+        this.name = "Particles";
         this.maxParticleCount = 1200; // particle count at 1080p
         this.particleMaxSpawnRate = 8; // max particles to spawn each frame. this takes effect during particle initlzn.
         this.particleOpacityMin = 0.9;
@@ -83,8 +84,7 @@ export default class Particles extends BaseItem {
         this.color = 0xFFFFFF;
         this.baseSpeed = 1.0;
         this.movementAmplitude = 1.0;
-        this.folder = this.setUpGUI(info.gui, "Particles");
-        
+        this.__setUpFolder(info, this.name);
        
 
         this.impactAnalyser = new ImpactAnalyser(this.folder); 

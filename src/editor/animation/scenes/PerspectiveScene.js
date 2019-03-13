@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
 import getItemClassFromText from '../items'
-//import OrbitControls from '../controls/OrbitControls';
+import OrbitControls from '../controls/OrbitControls';
 
 export default class Scene3DPerspective {
     constructor(gui, resolution, remove) {
@@ -19,15 +19,17 @@ export default class Scene3DPerspective {
 
         this.modalRef = gui.modalRef;
         this.items = [];
-        this.setUpGui(gui);
+        this.gui = gui;
         this.setUpControls();
+        this.setUpGui(gui);
+        
     }
     
     setUpControls = () => {
-        //this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef)
+        this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef)
     }
     setUpGui = (gui) => {
-        this.gui = gui;
+        
         this.folder = gui.addFolder("Scene3D Perspective");
         this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
@@ -35,11 +37,11 @@ export default class Scene3DPerspective {
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
         this.settingsFolder.add(this, "removeMe").name("remove layer");
+        this.settingsFolder.add(this.controls, "enabled")
     }
 
     removeMe = () => {
         while(this.items.length > 0) {
-            console.log(this.items)
             this.items[0].dispose();
             this.scene.remove(this.items[0].mesh);
             this.items.pop();

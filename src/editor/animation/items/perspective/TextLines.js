@@ -35,7 +35,7 @@ export default class Box extends BaseItem {
     constructor(info) {
         super(info);
         this.name = "Text Lines";
-        this.__setUpFolder(info, this.name);
+        
         var loader = new THREE.FontLoader();
 
         this.uniforms = {
@@ -62,7 +62,7 @@ export default class Box extends BaseItem {
         this.loaded = false;
         this.mesh =  new THREE.Mesh(new THREE.Geometry(), this.shaderMaterial);
         this.scene.add( this.mesh );
-
+        this.__setUpFolder(info, this.name);
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
     }
 

@@ -49,7 +49,14 @@ class SimpleDialog extends React.Component {
         };
     };
 
-    toggleModal = () => this.setState({modalOpen: !this.state.modalOpen}); 
+    toggleModal = () => { 
+        if(!this.props.encoding) {
+            this.setState({modalOpen: !this.state.modalOpen});
+        }else {
+            this.props.cancel();
+        }
+    
+    } 
 
     cancel = () => {
         this.props.cancel();
