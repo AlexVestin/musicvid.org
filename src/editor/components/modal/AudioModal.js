@@ -71,14 +71,13 @@ class SimpleDialog extends React.Component {
                     </ListItemAvatar>
                     <ListItemText primary="Load file from computer" />
                     </ListItem>
-                    <ListItem button onClick={this.loadAudioFromURL}>
+                    <ListItem disabled button onClick={this.loadAudioFromURL}>
                     <ListItemAvatar>
                         <Avatar className={classes.avatar}>
                         <Cloud />
                         </Avatar>
                     </ListItemAvatar>
-                      <ListItemText onClick={this.loadSampleAudio} primary="Use sample audio file"  secondary="Reverie by Nomyn"/>
-                    
+                      <ListItemText  onClick={this.loadSampleAudio} primary="Use sample audio file"  secondary="Reverie by Nomyn"/>
                     </ListItem>
                 </List>
                 </div>

@@ -9,7 +9,6 @@ export default class Manager extends WebGLManager {
         this.fftSize = 2048;
         this.scenes.push(new CanvasScene(this.layersFolder, this.resolution, this.removeScene));
         const it1 = this.scenes[0].addItemFromText("Polartone2D");
-        it1.setUpGUI(this.overviewFolder, "Polartone");
         
         const it2 = this.scenes[0].addItemFromText("Text2D");
         const it3 = this.scenes[0].addItemFromText("Text2D");
@@ -20,8 +19,6 @@ export default class Manager extends WebGLManager {
         it3.fontSize = 30;
         it3.fillStyle = "#000000";
         
-        it2.setUpGUI(this.overviewFolder, "Artist Text");
-        it3.setUpGUI(this.overviewFolder, "Song text");
 
         it2.updateDisplay();
         it3.updateDisplay();

@@ -282,7 +282,6 @@ export default class Particles extends BaseItem {
     }
 
     setUpGUI = (gui, name) => {
-        console.log(gui, name);
         const folder = gui.addFolder(name);
         folder.add(this, "amplitude", 0, 10, 0.1);
         folder.add(this, "baseSpeed", 0, 10);

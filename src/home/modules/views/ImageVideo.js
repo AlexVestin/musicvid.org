@@ -164,14 +164,18 @@ class Image extends PureComponent {
                     ref={this.videoMountRef}
                 >
                     <Fade in={mouseOver} timeout={1000}>
-                        <video
-                            loop
-                            autoPlay
-                            className={classes.vidSrc}
-                            poster={image.url}
-                            src={image.src}
-                            style={{ display: mouseOver ? "" : "none" }}
-                        />
+                    <div>
+                        {mouseOver && 
+                            <video
+                                loop
+                                autoPlay
+                                className={classes.vidSrc}
+                                poster={image.url}
+                                src={image.src}
+                                style={{ display: mouseOver ? "" : "none" }}
+                            />
+                            }
+                        </div>
                     </Fade>
                     <Fade in={!mouseOver} timeout={600}>
                         <div

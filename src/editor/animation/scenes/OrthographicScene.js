@@ -14,13 +14,22 @@ export default class Scene3DOrtho {
         this.gui = gui;
         this.setUpControls();
         this.setUpGui(gui);
-        
     }
+
 
     stop = () => {
         this.items.forEach(item => {
             item.stop();
         })
+    }
+
+    updateCamera = () => {
+        this.controls.dispose();
+        this.setUpControls();
+    }
+
+    resetCamera =  () => {
+        this.controls.reset();
     }
 
     removeMe = () => {
@@ -33,6 +42,7 @@ export default class Scene3DOrtho {
 
     setUpControls = () => {
         this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef)
+        this.controls.enabled = false;
     }
 
     setUpGui = (gui) => {
@@ -43,8 +53,10 @@ export default class Scene3DOrtho {
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
-        this.settingsFolder.add(this, "removeMe");
-        this.settingsFolder.add(this.controls, "enabled")
+        
+        this.settingsFolder.add(this, "resetCamera");
+        this.settingsFolder.add(this.controls, "enabled").name("Controls enabled");
+        this.settingsFolder.add(this, "removeMe").name("Remove this scene");
     }
 
     removeItem = (item) => {

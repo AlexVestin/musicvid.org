@@ -11,9 +11,9 @@ export default class Manager extends WebGLManager {
         this.scenes.push(new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene));
         this.scenes.push(new OrthographicScene(this.layersFolder, this.resolution, this.removeScene));
         
-        const it1 = this.scenes[0].addItemFromText("Background");
-        const it2 = this.scenes[1].addItemFromText("Particles");
-        const it3 = this.scenes[2].addItemFromText("JSNation");
+        this.scenes[0].addItemFromText("Background");
+        this.scenes[1].addItemFromText("Particles");
+        this.scenes[2].addItemFromText("JSNation");
         
         this.gui.__folders["Overview"].onResize();
         
