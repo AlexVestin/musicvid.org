@@ -371,13 +371,22 @@ const GUI = function(pars) {
       dom.addClass(this.__ul, GUI.CLASS_CLOSED);
 
       if(params.addButtons) {
-        this.upButton = document.createElement("button");
-        this.upButton.innerHTML = "move up";
-        titleRow.appendChild(this.upButton);
-        this.downButton = document.createElement("button");
-        titleRow.appendChild(this.downButton);
-        this.downButton.innerHTML = "move down";
+        const div = document.createElement("div");
+        const upIcon = document.createElement("span");
+        const downIcon = document.createElement("span");
 
+
+        this.downButton = document.createElement("button");
+        div.appendChild(this.downButton);
+        this.downButton.appendChild(downIcon);
+        titleRow.appendChild(div);
+        this.upButton = document.createElement("button");
+        this.upButton.appendChild(upIcon);
+        div.appendChild(this.upButton);
+
+
+        dom.addClass(downIcon, 'downIcon');
+        dom.addClass(upIcon, 'upIcon');
       }
       
 

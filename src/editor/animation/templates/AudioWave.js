@@ -8,8 +8,8 @@ export default class Manager extends WebGLManager {
         this.fftSize = 2048;
         this.scenes.push(this.addOrthoScene());
         
-        const it0 = this.scenes[0].addItemFromText("Background");
-        const it1 = this.scenes[0].addItemFromText("TimeRep");
+        this.scenes[0].addItemFromText("Background");
+        this.scenes[0].addItemFromText("TimeRep");
         const it2 = this.scenes[0].addItemFromText("SpriteText");
         const it3 = this.scenes[0].addItemFromText("SpriteText");
         it2.mesh.position.y = 0.70;

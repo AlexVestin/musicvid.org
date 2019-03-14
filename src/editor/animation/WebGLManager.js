@@ -61,7 +61,6 @@ export default class WebGLManager {
 
         if(!up &&  index < ch.length - 1) {
             list.insertBefore(list.children[index+1], list.children[index]);
-
             this.scenes.splice(index-1, 1);
             this.scenes.splice(index, 0, scene);
         }
