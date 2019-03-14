@@ -4,7 +4,8 @@ import getItemClassFromText from '../items'
 import OrbitControls from '../controls/OrbitControls';
 
 export default class Scene3DPerspective {
-    constructor(gui, resolution, remove) {
+    constructor(gui, resolution, remove, moveScene) {
+        this.__moveScene = moveScene;
         this.remove = remove;   
         this.resolution = resolution;     
         this.scene = new THREE.Scene();
@@ -39,14 +40,16 @@ export default class Scene3DPerspective {
     }
     setUpGui = (gui) => {
         
-        this.folder = gui.addFolder("Scene3D Perspective");
+        this.folder = gui.addFolder("Scene3D Perspective", true, true);
+        this.folder.upFunction = () => this.__moveScene(true, this);
+        this.folder.downFunction = () => this.__moveScene(false, this);
         this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
-        this.settingsFolder.add(this, "resetCamera");
-        this.settingsFolder.add(this.controls, "enabled").name("Controls enabled");
+        this.cameraFolder.add(this, "resetCamera");
+        this.cameraFolder.add(this.controls, "enabled").name("Controls enabled");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
     }
 

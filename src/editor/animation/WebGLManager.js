@@ -46,17 +46,50 @@ export default class WebGLManager {
         this.scenes.splice(index, 1);
     }
 
+    moveScene = (up, scene) => {
+        
+        const folder = scene.folder.domElement.parentElement;
+        const list = folder.parentElement;
+        const ch =  Array.prototype.slice.call(list.children);
+        const index = ch.indexOf( folder );
+
+        if(up && index > 1 && index !== ch.length) {
+            list.insertBefore(list.children[index], list.children[index-1]);
+            this.scenes.splice(index-1, 1);
+            this.scenes.splice(index-2, 0, scene);
+        }
+
+        if(!up &&  index < ch.length - 1) {
+            list.insertBefore(list.children[index+1], list.children[index]);
+
+            this.scenes.splice(index-1, 1);
+            this.scenes.splice(index, 0, scene);
+        }
+
+        console.log(this.scenes);
+    }
+
+    addOrthoScene = () => {
+        return new OrthographicScene(this.layersFolder, this.resolution, this.removeScene, this.moveScene);
+    }
+    addCanvasScene = () => {
+        return new CanvasScene(this.layersFolder, this.resolution, this.removeScene,this.moveScene);
+    }
+    addPerspectiveScene = () => {
+        return new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene, this.moveScene);
+    }
+
 
     addScene = () => {
         this.modalRef.toggleModal(8).then((sceneName) => {
             let scene;
             if(sceneName) {
                 if(sceneName === "canvas") {
-                    scene = new CanvasScene(this.layersFolder, this.resolution, this.removeScene);
+                    scene = this.addOrthoScene();
                 }else if(sceneName === "ortho") {
-                    scene = new OrthographicScene(this.layersFolder, this.resolution, this.removeScene);
+                    scene =  this.addCanvasScene();
                 }else if(sceneName === "perspective") {
-                    scene = new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene);
+                    scene = this.addPerspectiveScene();
                 }
                 this.scenes.push(scene);
             } 
@@ -142,6 +175,30 @@ export default class WebGLManager {
         this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
         this.gui.__folders["Settings"].add(this, "clearAlpha", 0, 1, 0.001).onChange(this.setClear);
         this.gui.__folders["Settings"].add(this, "drawAttribution").onChange(this.updateAttribution);
+        this.gui.__folders["Settings"].add(this, "enableAllControls");
+        this.gui.__folders["Settings"].add(this, "disableAllControls");
+        this.gui.__folders["Settings"].add(this, "resetAllCameras");
+
+    }
+
+    resetAllCameras = () => {
+        this.scenes.forEach(scene => {
+            scene.resetCamera();
+        })
+    }
+
+    disableAllControls = () => {
+        this.scenes.forEach(scene => {
+            scene.controls.enabled = false;
+            scene.cameraFolder.updateDisplay();
+        })
+    }
+
+    enableAllControls = () => {
+        this.scenes.forEach(scene => {
+            scene.controls.enabled = true;
+            scene.cameraFolder.updateDisplay();
+        })
     }
 
     exitFullscreen(canvas) {
@@ -189,6 +246,7 @@ export default class WebGLManager {
         this.scenes.forEach(scene => {
             scene.update(time, audioData, shouldIncrement);
             this.renderer.render(scene.scene, scene.camera);
+            this.renderer.clearDepth();
         }); 
         
 

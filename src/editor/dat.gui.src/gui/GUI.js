@@ -370,6 +370,17 @@ const GUI = function(pars) {
 
       dom.addClass(this.__ul, GUI.CLASS_CLOSED);
 
+      if(params.addButtons) {
+        this.upButton = document.createElement("button");
+        this.upButton.innerHTML = "move up";
+        titleRow.appendChild(this.upButton);
+        this.downButton = document.createElement("button");
+        titleRow.appendChild(this.downButton);
+        this.downButton.innerHTML = "move down";
+
+      }
+      
+
       dom.addClass(titleRow, 'title');
       dom.bind(titleRow, 'click', onClickTitle);
     }
@@ -585,22 +596,7 @@ common.extend(
       removeListeners(this);
     },
 
-    recAddFolderCopy: function(name, folderToCopy)  {
-
-    },
-
-    addFolderCopy: function(name, folderToCopy, useTitleRow = true) {
-      const li = document.createElement('li');
-      const dme = folderToCopy.domElement.cloneNode(true);      
-      li.appendChild(dme);
-      this.__ul.appendChild(li);
-      this.__folders[name] = Object.assign(folderToCopy);
-      this.__folders[name].li = li;
-      this.onResize();
-      dom.addClass(li, 'folder');
-
-
-    },
+    
 
     /**
      * Creates a new subfolder GUI instance.
@@ -610,15 +606,15 @@ common.extend(
      * name
      * @instance
      */
-    addFolder: function(name, useTitleRow = true) {
+    addFolder: function(name, useTitleRow = true, addButtons = false) {
       // We have to prevent collisions on names in order to have a key
       // by which to remember saved values
      
       if (this.__folders[name] !== undefined) {
-        let s = "", i = name.length -1 ;
+          let s = "", i = name.length -1 ;
           while (!isNaN(parseInt(name[i--], 10)) && i >= 0) 
             s+= name[i+1];
-          name = s === "" ? name + "1" : Number(s);
+          name =  (s === "") ? (name + "1") : name
 
           console.log("hack to allow folders with he same name");
           /*
@@ -626,7 +622,12 @@ common.extend(
           ' name "' + name + '"');*/
       }
 
-      const newGuiParams = { name: name, parent: this, useTitleRow: useTitleRow };
+      const newGuiParams = { 
+        name: name, 
+        parent: this, 
+        useTitleRow: useTitleRow, 
+        addButtons: addButtons, 
+      };
 
       // We need to pass down the autoPlace trait so that we can
       // attach event listeners to open/close folder actions to
@@ -647,6 +648,29 @@ common.extend(
       const gui = new GUI(newGuiParams);
       this.__folders[name] = gui;
 
+      if(addButtons) {
+        gui.downButton.onclick = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+    
+          if(gui.downFunction) {
+            gui.downFunction();
+          }
+        }
+    
+        gui.upButton.onclick = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+    
+          if(gui.downFunction) {
+            gui.upFunction();
+          }
+        }
+      }
+      
+
+  
+
       if(!this.__root) {
         gui.__root = this;
       }else {
@@ -654,7 +678,7 @@ common.extend(
       }
   
 
-      const li = addRow(this, gui.domElement);
+      const li = addRow(this, gui.domElement);      
       this.__folders[name].li = li;
       dom.addClass(li, 'folder');
       return gui;
@@ -893,12 +917,17 @@ function addRow(gui, newDom, liBefore) {
   const li = document.createElement('li');
   if (newDom) {
     li.appendChild(newDom);
+  
   }
+
 
   if (liBefore) {
     gui.__ul.insertBefore(li, liBefore);
+   
   } else {
     gui.__ul.appendChild(li);
+    
+
   }
   gui.onResize();
   return li;
@@ -1175,8 +1204,9 @@ function add(gui, object, property, params) {
   container.appendChild(name);
   container.appendChild(controller.domElement);
 
+  
   const li = addRow(gui, container, params.before);
-
+  
   dom.addClass(li, GUI.CLASS_CONTROLLER_ROW);
   if (controller instanceof ColorController) {
     dom.addClass(li, 'color');

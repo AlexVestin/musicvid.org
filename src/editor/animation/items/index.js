@@ -52,7 +52,7 @@ const orthoItems = {
     Background: { class: Background },
     StarField: {img: "img/items/StarNest.png", class: StarField },
     Noise: {img: "img/items/Noise.png", authors: "nmz (@Stormoid)", url: "https://www.shadertoy.com/view/ldlXRS", class: Noise},
-    SimplicityGalaxy: {img: "img/items/SimplicityGalaxy.png", url: "https://www.shadertoy.com/view/MslGWN", authors: "CBS", class: SimplicityGalaxy},
+    //SimplicityGalaxy: {img: "img/items/SimplicityGalaxy.png", url: "https://www.shadertoy.com/view/MslGWN", authors: "CBS", class: SimplicityGalaxy},
     HexaGone: {img: "img/items/HexaGone.png", url: "https://www.shadertoy.com/view/wsl3WB", authors: "BigWIngs", class: HexaGone},
     UniverseWithin: {img: "img/items/UniverseWithin.png", url: "https://www.shadertoy.com/view/lscczl", authors: "BigWIngs", class: UniverseWithin},
     Image: {class: Image},

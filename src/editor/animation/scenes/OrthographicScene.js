@@ -4,7 +4,8 @@ import getItemClassFromText from '../items'
 import OrbitControls from '../controls/OrbitControls';
 
 export default class Scene3DOrtho {
-    constructor(gui, resolution, remove) {
+    constructor(gui, resolution, remove, moveScene) {
+        this.__moveScene = moveScene;
         this.remove = remove;        
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 10 );
@@ -47,15 +48,17 @@ export default class Scene3DOrtho {
 
     setUpGui = (gui) => {
         
-        this.folder = gui.addFolder("Scene3D Ortho");
+        this.folder = gui.addFolder("Scene3D Ortho", true, true);
+        this.folder.upFunction = () => this.__moveScene(true, this);
+        this.folder.downFunction = () => this.__moveScene(false, this);
         this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
         
-        this.settingsFolder.add(this, "resetCamera");
-        this.settingsFolder.add(this.controls, "enabled").name("Controls enabled");
+        this.cameraFolder.add(this, "resetCamera");
+        this.cameraFolder.add(this.controls, "enabled").name("Controls enabled");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
     }
 

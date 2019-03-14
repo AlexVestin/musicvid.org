@@ -1,22 +1,18 @@
 
 
-import CanvasScene from '../scenes/CanvasScene'
-import PerspectiveScene from '../scenes/PerspectiveScene'
+
 import WebGLManager from '../WebGLManager'
 
 export default class Monstercat extends WebGLManager {
 
     setUpScene() {
-        const particlesScene = new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene); 
-        const spectrumBarsScene = new CanvasScene(this.layersFolder, this.resolution, this.removeScene); 
+        const particlesScene = this.addPerspectiveScene(); 
+        const spectrumBarsScene = this.addCanvasScene(); 
         particlesScene.camera.position.y = 0;
         particlesScene.camera.position.z = 300;
         particlesScene.camera.updateMatrixWorld();
         this.scenes.push(particlesScene);
-
-        const bars = spectrumBarsScene.addItemFromText("Monstercat2D");
-
-
+        spectrumBarsScene.addItemFromText("Monstercat2D");
 
         const image = spectrumBarsScene.addItemFromText("Image2D");
         image.loadNewImage();
@@ -38,7 +34,6 @@ export default class Monstercat extends WebGLManager {
         artistText.positionY = baseHeight;
         artistText.fontSize = baseFontSize;
         artistText.textAlign = "left";
-        
         
         songText.text  ="TRACKNAME";
         songText.positionX = x;
@@ -63,7 +58,7 @@ export default class Monstercat extends WebGLManager {
 
         this.scenes.push(spectrumBarsScene);
 
-        const it1 = particlesScene.addItemFromText("ParticlesSideways");
+        particlesScene.addItemFromText("ParticlesSideways");
         this.overviewFolder.onResize();
     }
 }
