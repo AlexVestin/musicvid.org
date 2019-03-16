@@ -53,8 +53,8 @@ export default class Particles extends BaseItem {
 
         this.name = "Star Particles";
 
-        this.amplitude = 16.5;
-        this.baseSpeed = 300.0;
+        this.amplitude = 9.5;
+        this.baseSpeed = 18.0;
         this.camera = info.camera;
         var particleCount = baseParticleCount;
         this.resRatio = info.width / 1920;
@@ -88,6 +88,7 @@ export default class Particles extends BaseItem {
             transparent: true
         });
         this.pMaterial.alphaTest = alphaTest;
+        this.particleColor = "#ffffff";
 
         this.fleckMaterial = new THREE.PointsMaterial({
             color: color,
@@ -97,6 +98,7 @@ export default class Particles extends BaseItem {
             blending: THREE.AdditiveBlending,
             transparent: true
         });
+        this.fleckColor = "#ffffff";
 
         this.fleckMaterial.alphaTest = alphaTest;
 
@@ -108,6 +110,7 @@ export default class Particles extends BaseItem {
             blending: THREE.AdditiveBlending,
             transparent: true
         });
+        this.bokehColor = "#ffffff";
 
         this.bokehMaterial.alphaTest = alphaTest;
 
@@ -271,6 +274,12 @@ export default class Particles extends BaseItem {
                     social1: {type: "website", url: "https://caseif.net/"},
                     social2: {type: "github", url: "https://github.com/caseif"},
                 },
+                {
+                    name: "Incept", 
+                    social1: {type: "youtube", url: "https://www.youtube.com/channel/UCS12_l2kLigIPaXjRRmbdNA"},
+                    social2: {type: "github", url: "https://github.com/itsIncept"},
+
+                }
             ],
             projectUrl: "https://github.com/caseif/vis.js",
             description: "",
@@ -283,8 +292,16 @@ export default class Particles extends BaseItem {
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
-        folder.add(this, "amplitude", 0, 10, 0.1);
-        folder.add(this, "baseSpeed", 0, 10);
+        folder.add(this, "amplitude", 0, 200, 0.1);
+        folder.add(this, "baseSpeed", 0, 500);
+
+        folder.add(this.fleckSystem, "visible").name("Fleck system visible");
+        folder.addColor(this, "fleckColor").onChange(() => { this.fleckMaterial.color = new THREE.Color(this.fleckColor); });
+        folder.add(this.particleSystem, "visible").name("Particle system visible");
+        folder.addColor(this, "particleColor").onChange(() => { this.pMaterial.color = new THREE.Color(this.particleColor); });
+        folder.add(this.bokehSystem, "visible").name("Bokeh system visible");
+        folder.addColor(this, "bokehColor").onChange(() => { this.bokehMaterial.color = new THREE.Color(this.bokehColor); });
+
 
         this.analyser = new ImpactAnalyser(folder);
         this.analyser.deltaDecay = 2; 

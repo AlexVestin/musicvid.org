@@ -50,8 +50,8 @@ export default class Text extends BaseItem {
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
         folder.add(this, "text");
-        folder.add(this, "positionX");
-        folder.add(this, "positionY");
+        folder.add(this, "positionX", 0, 1, 0.0001);
+        folder.add(this, "positionY", 0, 1, 0.0001);
         folder.add(this, "font", fonts)
         folder.add(this, "fontSize", 0, 300)
         folder.add(this, "shouldDrawShadow");

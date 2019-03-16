@@ -36,11 +36,11 @@ export default class MonsterCat extends BaseItem {
         this.spectrumHeight = info.height;
         this.positionX = 0.5;
         this.positionY = 0.5;
-
+        this.animTime = 0.5;
         this.__setUpFolder(info, this.name);
         this.analyser = new SpectrumAnalyser(this.folder);
 
-        this.animTime = 0.5;
+        
         this.lastArray = [];
 
         this.__attribution = {
@@ -84,7 +84,7 @@ export default class MonsterCat extends BaseItem {
         const folder = gui.addFolder(name);
 
         folder.addColor(this, "color");
-
+        folder.add(this, "animTime", 0, 10);
         folder.add(this, "barWidth", 0, 20, 1);
         folder.add(this, "positionX");
         folder.add(this, "positionY");
@@ -92,8 +92,8 @@ export default class MonsterCat extends BaseItem {
         folder.add(this, "shadowBlur", 0, 100);
         folder.add(this, "shadowAlpha", 0, 1, 0.001);
         folder.add(this, "barHeightMultiplier", 0, 25.0, 0.01);
-        folder.add(this, "shadowOffsetX", 0, 100);
-        folder.add(this, "shadowOffsetY", 0, 100);
+        folder.add(this, "shadowOffsetX", -300, 300);
+        folder.add(this, "shadowOffsetY", -300, 300);
         return this.__addFolder(folder);
     };
 
@@ -125,6 +125,7 @@ export default class MonsterCat extends BaseItem {
         this.ctx.shadowOffsetX = this.shadowOffsetX;
         this.ctx.shadowOffsetY = this.shadowOffsetY;
         this.ctx.fillStyle = this.color;
+        
 
 
         this.spectrumWidth = this.spectrumSize * (this.barWidth + this.spectrumSpacing);
