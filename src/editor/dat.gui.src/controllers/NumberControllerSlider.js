@@ -75,7 +75,12 @@ class NumberControllerSlider extends NumberController {
       dom.unbind(window, 'mouseup', onMouseUp);
       if (_this.__onFinishChange) {
         _this.__onFinishChange.call(_this, _this.getValue());
+        
       }
+
+      _this.__onFinishUndo(_this);
+    
+      
     }
 
     function onTouchStart(e) {
@@ -100,6 +105,8 @@ class NumberControllerSlider extends NumberController {
       if (_this.__onFinishChange) {
         _this.__onFinishChange.call(_this, _this.getValue());
       }
+
+      _this.__onFinishUndo(_this);
     }
 
     this.updateDisplay();

@@ -1,19 +1,14 @@
 
 import * as THREE from 'three';
-import getItemClassFromText from '../items'
-import OrbitControls from '../controls/OrbitControls';
-
-export default class CanvasScene {
+import Scene from './Scene'
+export default class CanvasScene extends Scene{
     constructor(gui, resolution, remove, moveScene) {
-        this.remove = remove;     
-        this.__moveScene = moveScene;
-        console.log(this.__moveScene);
+        super(gui, resolution, remove, moveScene)
         this.canvas = document.createElement("canvas",);
         this.canvas.width = resolution.width;
         this.canvas.height = resolution.height;
         this.ctx = this.canvas.getContext("2d");
-        this.resolution = resolution;
-        this.items = [];
+       
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 20 );
         this.camera.position.z = 1.0;
@@ -23,92 +18,16 @@ export default class CanvasScene {
         this.tex.generateMipmaps = false;
 
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
-        
         this.scene.add(this.mesh);
+        
+        this.MODAL_REF_NR = 5;
+        this.TYPE = "canvas";
+        this.folder.name = this.TYPE + " scene";
 
-        this.gui = gui;
-        this.setUpControls();
-        this.setUpGui(gui);
-    }
-
-    updateCamera = () => {
-        this.controls.dispose();
         this.setUpControls();
     }
 
-    resetCamera =  () => {
-        this.controls.reset();
-    }
-
-    stop = () => {
-        this.items.forEach(item => {
-            item.stop();
-        })
-    }
-
-    setUpControls = () => {
-        this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef)
-        this.controls.enabled = false;
-    }
-
-    removeMe = () => {
-        while(this.items.length > 0) {
-            this.items[0].dispose();
-            this.scene.remove(this.items[0].mesh);
-            this.items.pop();
-        }
-
-        this.remove(this);
-    }
-
-    setUpGui = (gui) => {
-        this.folder = gui.addFolder("Canvas Scene", true, true);
-        this.folder.upFunction = () => this.__moveScene(true, this);
-        this.folder.downFunction = () => this.__moveScene(false, this);
-
-        this.overviewFolder = gui.__root.__folders["Overview"];
-        this.itemsFolder = this.folder.addFolder("Items");
-        this.itemsFolder.add(this, "addItem");
-
-
-        this.cameraFolder = this.folder.addFolder("Camera");
-        this.settingsFolder = this.folder.addFolder("Settings");
-        this.cameraFolder.add(this, "resetCamera");
-        this.cameraFolder.add(this.controls, "enabled").name("Controls enabled");
-        this.settingsFolder.add(this, "removeMe").name("Remove this scene");
-    }
-
-    addItem = () => {
-        const ref = this.itemsFolder.__root.modalRef;
-        ref.toggleModal(5).then(this.addItemFromText);
-    }
-
-    removeItem = (item) => {
-        const index = this.items.findIndex(e => e === item);
-        this.items.splice(index, 1);
-    }
-
-    addItemFromText = (name) => {
-        if(name) {
-            const info = {
-                gui: this.itemsFolder,
-                overviewFolder: this.overviewFolder,
-                width: this.resolution.width,
-                height: this.resolution.height,
-                canvas: this.canvas,
-                ctx: this.ctx,
-                remove: this.removeItem
-            };
     
-            const itemClass = getItemClassFromText("canvas", name);
-            const item = new itemClass(info);
-            this.items.push(item);
-            return item;
-        }
-      
-    }
-
-
     update = (time, audioData, shouldIncrement) => {
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
 

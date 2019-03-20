@@ -18,7 +18,7 @@ export default class Image extends BaseItem{
 
         const url = "./img/solar.jpeg";
         this.loadNewBackground(url);
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
     }
 
     async changeImage() {

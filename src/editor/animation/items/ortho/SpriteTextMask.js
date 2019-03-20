@@ -80,7 +80,7 @@ export default class SpriteTextMask extends BaseItem {
         //this.mat = new THREE.MeshBasicMaterial({map:tex, transparent: true});
         this.geo = new THREE.PlaneGeometry(2,2 * this.aspect);
         this.mesh = new THREE.Mesh(this.geo, this.mat);
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
 
         const scale = 0.46;
         this.mesh.scale.set(scale, scale, scale);

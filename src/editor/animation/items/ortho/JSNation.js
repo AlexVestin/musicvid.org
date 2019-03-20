@@ -5,6 +5,13 @@ import { loadImage } from 'editor/util/ImageLoader'
 import Emblem from "./Emblem";
 import BaseItem from '../BaseItem'
 
+/**
+ * My Extension of js.nation
+ *
+ *  Copyright @caseif https://github.com/caseif/js.nation
+ *  @license GPL-3.0
+ */
+
 export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {
         super(info);
@@ -17,6 +24,8 @@ export default class JSNationSpectrum extends BaseItem {
         this.canvas.width = this.size;
         this.canvas.height = this.size;
 
+
+        
         this.colors = ["#FFFFFF", "#FFFF00", "#FF0000", "#FF66FF", "#333399", "#0000FF", "#33CCFF", "#00FF00"];
         this.spectrumCount = 8;
         this.exponents = [1, 1.12, 1.14, 1.30, 1.33, 1.36, 1.50, 1.52];
@@ -65,7 +74,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
         this.emblem = new Emblem("./img/mvlogo.png");     
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
         
         this.ctx.shadowBlur = 12;
         info.scene.add(this.mesh);
@@ -124,6 +133,13 @@ export default class JSNationSpectrum extends BaseItem {
         spFolder.add(this, "smoothingPoints", [1,2,3,4,5,7,8,9]);
         spFolder.add(this, "spectrumHeightScalar",0, 1.0);
         spFolder.add(this, "smoothingTimeConstant", 0, 0.95);
+        const colFolder = spFolder.addFolder("colors");
+
+        
+        this.colors.forEach( ( color, i) => {
+            this["color" + String(i)] = color;    
+            colFolder.addColor(this, "color" + String(i));
+        })
         folder.add(this.mesh.position, "x", -2, 2);
         folder.add(this.mesh.position, "y", -2, 2);
         folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));
@@ -135,8 +151,6 @@ export default class JSNationSpectrum extends BaseItem {
         
         folder.add(this, "exp", 0, 10);
         
-        this.folders.push(spFolder);
-        this.folders.push(emFolder);
         return this.__addFolder(folder);
     }
 
@@ -171,9 +185,10 @@ export default class JSNationSpectrum extends BaseItem {
             let curSpectrum = this.smooth(this.spectrumCache[Math.max(this.spectrumCache.length - this.delays[s] - 1, 0)], this.smoothMargins[s]);
             let points = [];
 
-            this.ctx.fillStyle = this.colors[s];
-            this.ctx.strokeStyle = this.colors[s];
-            this.ctx.shadowColor = this.colors[s];
+            const col = this["color" + String(s)]
+            this.ctx.fillStyle = col;
+            this.ctx.strokeStyle = col;
+            this.ctx.shadowColor = col;
 
             let len = curSpectrum.length;
 

@@ -34,7 +34,7 @@ export default class AudioWave extends BaseItem{
         material.wireframe = false;
         info.scene.add( this.line );
         this.line.position.y = this.positionY;
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
     }
 
     setUpGUI = (gui, name) => {

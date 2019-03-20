@@ -1,8 +1,28 @@
 import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
+
+
 import LinearProgress from "@material-ui/core/LinearProgress";
+
+
+let formatTime = (seconds) => {
+    let m = String(Math.floor((seconds % 3600) / 60));
+    let s = String(seconds % 60).split(".")[0];
+
+    if (m.length === 1) m = "0" + m;
+    if (s.length === 1) s = "0" + s;
+
+    let formatted = m + ":" + s;
+
+
+    return formatted;
+}
+
+
+
 export default function(props) {
+    
     return (
         <ListItem
             style={{
@@ -17,6 +37,17 @@ export default function(props) {
                 variant="h2"
             >
                 Exporting
+            </Typography>
+
+            <Typography
+                style={{ color: "#efefef", textAlign:"center" }}
+                component="h6"
+                variant="h6"
+            >
+
+                { props.progress > 0.01 ? formatTime(props.timeLeft) + " left": "Calculating time left..."}
+                <br/>
+                {" " + String(props.progress * 100).substr(0, 6) + "% done"}
             </Typography>
             <div className={props.classes.root}>
                 <LinearProgress

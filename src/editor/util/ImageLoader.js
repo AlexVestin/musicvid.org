@@ -40,22 +40,26 @@ export function loadImageTextureFromChoice(selected, callback) {
     }
 }
 
-
 export async function loadImage(ref, callback) {
-    if (ref.currentPromise && !ref.currentPromise.done) {
-        await ref.currentPromise;
-    }
-    ref.toggleModal(3).then(selected => {
-        loadImageFromChoice(selected, callback);
+    return new Promise(async (resolve, reject) => {
+        if (ref.currentPromise && !ref.currentPromise.done) {
+            await ref.currentPromise;
+        }
+        ref.toggleModal(3).then(selected => {
+            loadImageFromChoice(selected, callback);
+            resolve(selected);
+        });
     });
 }
 
 export async function loadImageTexture(ref, callback) {
-    if (ref.currentPromise && !ref.currentPromise.done) {
-        await ref.currentPromise;
-    }
-
-    ref.toggleModal(3).then(selected => {
-       loadImageTextureFromChoice(selected, callback);
+    return new Promise(async (resolve, reject) => {
+        if (ref.currentPromise && !ref.currentPromise.done) {
+            await ref.currentPromise;
+        }
+        ref.toggleModal(3).then(selected => {
+            loadImageTextureFromChoice(selected, callback);
+            resolve(selected);
+        });
     });
 }

@@ -66,7 +66,7 @@ export default class Polartone extends BaseItem {
         this.context.globalAlpha = this.baseStrokeAlpha;
 
         this.context.strokeStyle = "rgb(0,0,0)";
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
 
         this.__attribution = {
             showAttribution: true,

@@ -50,13 +50,10 @@ export default class Background extends BaseItem {
         this.brightenMultipler = 1;
         this.vignetteAmount = 0.3;
 
-        this.texture = new THREE.Texture();
-        this.texture.generateMipmaps = false;
-        this.texture.magFilter = THREE.LinearFilter;
-        this.texture.minFilter = THREE.LinearFilter;
+
         this.material = new THREE.ShaderMaterial( {
             uniforms: { 
-                texture1: {type: "t", value: this.texture }, 
+                texture1: {type: "t", value: null }, 
                 vignette_amt: {value: 0.3}, 
                 should_vignette: {value: true}, 
                 should_mirror: {value: true} 
@@ -70,12 +67,21 @@ export default class Background extends BaseItem {
 
         const url = "./img/space.jpeg";
         loadImageTextureFromChoice(url, this.setBackground);
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
+        this.prevFile = url;
     }
 
     changeImage() {
         const ref = this.folder.__root.modalRef; 
-        loadImageTexture(ref, this.setBackground);
+        loadImageTexture(ref, this.setBackground).then(file => {
+            this.__addUndoAction(this.undoChangeImage, this.prevFile);
+            this.prevFile = file;
+        });
+    }
+
+    undoChangeImage = (file) => {
+        loadImageTextureFromChoice(file, this.setBackground);
+        this.prevFile = file;
     }
     
 

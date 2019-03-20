@@ -1,3 +1,4 @@
+
 /**
  * dat-gui JavaScript Controller Library
  * http://code.google.com/p/dat-gui
@@ -20,12 +21,13 @@
 class Controller {
   constructor(object, property) {
     this.initialValue = object[property];
-
+    this.previousValue = object[property];
     /**
      * Those who extend this class will put their DOM elements in here.
      * @type {DOMElement}
      */
     this.domElement = document.createElement('div');
+
 
     /**
      * The object to manipulate
@@ -63,9 +65,12 @@ class Controller {
    * @returns {Controller} this
    */
   onChange(fnc) {
+    
     this.__onChange = fnc;
     return this;
   }
+
+ 
 
   /**
    * Specify that a function fire every time someone "finishes" changing
@@ -78,6 +83,8 @@ class Controller {
    */
   onFinishChange(fnc) {
     this.__onFinishChange = fnc;
+
+    
     return this;
   }
 
@@ -86,7 +93,9 @@ class Controller {
    *
    * @param {Object} newValue The new value of <code>object[property]</code>
    */
-  setValue(newValue) {
+
+  undo(newValue) {
+    this.previousValue = this.object[this.property];
     this.object[this.property] = newValue;
 
     if (this.__onChange) {
@@ -97,7 +106,30 @@ class Controller {
       this.object.updateDisplay();
     }
 
-    this.updateDisplay();
+
+      this.updateDisplay();
+    return this;
+  }
+  __onFinishUndo(controller) {
+    const root = controller.parent.getRoot();
+    root.addUndoItem({controller: controller, prevValue: this.previousValue, type: "value"});
+    this.previousValue = this.object[this.property];
+  }
+  
+  setValue(newValue) {
+    
+  
+    this.object[this.property] = newValue;
+
+    if (this.__onChange) {
+      this.__onChange.call(this, newValue);
+    }
+
+    if( this.object.updateDisplay) {
+      this.object.updateDisplay();
+    }
+
+      this.updateDisplay();
     return this;
   }
 

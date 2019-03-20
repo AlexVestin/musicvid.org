@@ -66,6 +66,9 @@ class NumberControllerBox extends NumberController {
       if (_this.__onFinishChange) {
         _this.__onFinishChange.call(_this, _this.getValue());
       }
+
+      _this.__onFinishUndo(_this);
+    
     }
 
     function onBlur() {

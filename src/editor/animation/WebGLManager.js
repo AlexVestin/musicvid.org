@@ -43,7 +43,16 @@ export default class WebGLManager {
     removeScene = (scene) => {
         scene.folder.parent.removeFolder(scene.folder);
         const index = this.scenes.findIndex(e => e === scene);
+        const it = {func: this.undoRemoveScene, args: {scene, index}, type: "action"}
+        this.gui.getRoot().addUndoItem(it);
         this.scenes.splice(index, 1);
+    }
+
+    undoRemoveScene = (ele) => {
+        const scenes = this.scenes;
+        const fold = ele.index === scenes.length ? null : scenes[ele.index].folder;
+        ele.scene.setUpGui(fold);
+        this.scenes.splice(ele.index, 0, ele.scene)
     }
 
     moveScene = (up, scene) => {
@@ -64,8 +73,6 @@ export default class WebGLManager {
             this.scenes.splice(index-1, 1);
             this.scenes.splice(index, 0, scene);
         }
-
-        console.log(this.scenes);
     }
 
     addOrthoScene = () => {

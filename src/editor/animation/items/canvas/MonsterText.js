@@ -38,7 +38,7 @@ export default class TextBar extends BaseItem {
 
         this.ctx.fillStyle = "#FFFFFF";
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
     }
 
     updateFont = () => {

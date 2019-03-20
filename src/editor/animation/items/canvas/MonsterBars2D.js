@@ -1,6 +1,14 @@
 import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
 import BaseItem from "../BaseItem";
 
+
+/**
+ * My Extension of vis.js
+ *
+ *  Copyright @caseif https://github.com/caseif/vis.js
+ *  @license BSD-new (New BSD License)
+ */
+
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
@@ -37,7 +45,7 @@ export default class MonsterCat extends BaseItem {
         this.positionX = 0.5;
         this.positionY = 0.5;
         this.animTime = 0.5;
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
         this.analyser = new SpectrumAnalyser(this.folder);
 
         

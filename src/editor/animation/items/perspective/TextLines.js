@@ -62,7 +62,7 @@ export default class Box extends BaseItem {
         this.loaded = false;
         this.mesh =  new THREE.Mesh(new THREE.Geometry(), this.shaderMaterial);
         this.scene.add( this.mesh );
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
     }
 

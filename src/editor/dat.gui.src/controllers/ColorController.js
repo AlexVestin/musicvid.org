@@ -203,6 +203,8 @@ class ColorController extends Controller {
       if (_this.__onFinishChange) {
         _this.__onFinishChange.call(_this, _this.__color.toOriginal());
       }
+
+      _this.__onFinishUndo(_this);
     }
 
     this.__saturation_field.appendChild(valueField);

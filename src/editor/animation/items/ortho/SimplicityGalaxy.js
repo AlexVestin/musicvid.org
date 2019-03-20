@@ -104,7 +104,7 @@ export default class SimplicityGalaxy extends BaseItem {
         this.brightenMultipler = 1;
         this.brightness = 1.0;
 
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
         this.impactAnalyser = new ImpactAnalyser(this.folder);
         this.spectrumAnalyser = new SpectrumAnalyser(this.folder);
         this.spectrumAnalyser.minDecibel = -100;

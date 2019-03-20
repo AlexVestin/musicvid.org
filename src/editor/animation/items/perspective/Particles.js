@@ -1,7 +1,16 @@
 import * as THREE from 'three';
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 import BaseItem from '../BaseItem'
- 
+
+
+/**
+ * My Extension of js.nation
+ *
+ *  Copyright @caseif https://github.com/caseif/js.nation
+ * @license GPL-3.0
+ */
+
+
 
 const vertShader =
     `attribute float size;
@@ -84,9 +93,8 @@ export default class Particles extends BaseItem {
         this.color = 0xFFFFFF;
         this.baseSpeed = 1.0;
         this.movementAmplitude = 1.0;
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
        
-
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
         this.impactAnalyser.amplitude = 2.5;
         this.impactAnalyser.endBin = 80;

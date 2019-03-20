@@ -101,10 +101,16 @@ const GUI = function(pars) {
 
   dom.addClass(this.domElement, CSS_NAMESPACE);
 
+  this.__undoLog = [];
+  this.__undoLogSize = 64;
+  this.__redoLog = [];
+
   /**
    * Nested GUI's by name
    * @ignore
    */
+
+  
   this.__folders = {};
 
   this.__controllers = [];
@@ -266,10 +272,10 @@ const GUI = function(pars) {
           return params.name;
         },
         set: function(v) {
-          // TODO Check for collisions among sibling folders
+          // TODO Check for collisions among sibling folders¨
           params.name = v;
           if (titleRow) {
-            titleRow.innerHTML = params.name;
+            titleRow.firstChild.nodeValue = params.name;
           }
         }
       },
@@ -532,6 +538,28 @@ common.extend(
       );
     },
 
+    addUndoItem: function(item) {
+      this.__undoLog.push(item);
+      if(this.__undoLog.length > this.__undoLogSize) {
+        this.__undoLog.shift();
+      }
+    },
+    undo: function() {
+
+      console.log(this.__undoLog)
+      
+      if(this.__undoLog.length > 0) {
+        const item = this.__undoLog.pop();
+        if(item.type === "value") {
+          item.controller.undo(item.prevValue);
+          item.controller.previousValue = item.prevValue;
+        }else  if(item.type === "action") {
+          item.func(item.args);
+        }
+        
+      }
+    },
+
     /**
      * Adds a new color controller to the GUI.
      *
@@ -615,7 +643,7 @@ common.extend(
      * name
      * @instance
      */
-    addFolder: function(name, useTitleRow = true, addButtons = false) {
+    addFolder: function(name, useTitleRow = true, addButtons = false, before = null) {
       // We have to prevent collisions on names in order to have a key
       // by which to remember saved values
      
@@ -685,9 +713,8 @@ common.extend(
       }else {
         gui.__root = this.__root;
       }
-  
-
-      const li = addRow(this, gui.domElement);      
+      const beforeLi = before ? before.li : null;
+      const li = addRow(this, gui.domElement, beforeLi);      
       this.__folders[name].li = li;
       dom.addClass(li, 'folder');
       return gui;
@@ -1199,6 +1226,8 @@ function add(gui, object, property, params) {
   if (params.before instanceof Controller) {
     params.before = params.before.__li;
   }
+
+  controller.parent = gui;
 
   recallSavedValue(gui, controller);
 

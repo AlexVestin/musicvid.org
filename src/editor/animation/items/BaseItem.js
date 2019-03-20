@@ -15,7 +15,11 @@ export default class BaseItem {
     }
 
     constructor(info) {
+       
+
         if(info) {
+            this.__gui = info.gui;
+            this.__overviewFolder = info.overviewFolder;
             this.parentRemove = info.remove; 
         }
     }
@@ -26,19 +30,23 @@ export default class BaseItem {
     }
 
     setFolderName = (name) => {
-        
         this.folder.name = name;
         this.ovFolder.name = name;
+        this.name = name;
     }
 
-    __setUpFolder = (info, name) =>  {
-        this.folder = this.setUpGUI(info.gui, name);
-        this.ovFolder = this.setUpGUI(info.overviewFolder, name);
-        this.__gui = info.gui;
-        this.__overviewFolder = info.gui;
+    __setUpFolder = () =>  {
+        this.folder = this.setUpGUI(this.__gui, this.name);
+        this.ovFolder = this.setUpGUI(this.__overviewFolder, this.name);
+    }
 
-        
+    __addUndoAction = (func, args) => {
+        const item = {func: func, args: args, type: "action"}
+        this.folder.getRoot().addUndoItem(item);
+    }
 
+    __reAdd = () => {
+        this.__setUpFolder();
     }
  
     __addFolder = (folder) => {
@@ -49,7 +57,7 @@ export default class BaseItem {
 
     remove = () => {
         if(!this.parentRemove) {
-            console.log("CALL super WITH ARGUMENTS")
+            console.log("CALL SUPER WITH ARGUMENTS")
             return;
         }
 

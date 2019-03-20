@@ -48,7 +48,7 @@ export default class SpriteText extends BaseItem {
         info.scene.add(this.mesh);
 
         this.ctx.fillStyle = "#FFFFFF";
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
     }
 
     setText = (text, x, y, options) => {

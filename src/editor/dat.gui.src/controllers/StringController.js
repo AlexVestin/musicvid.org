@@ -39,6 +39,8 @@ class StringController extends Controller {
       if (_this.__onFinishChange) {
         _this.__onFinishChange.call(_this, _this.getValue());
       }
+
+       _this.__onFinishUndo(_this);
     }
 
     this.__input = document.createElement('input');

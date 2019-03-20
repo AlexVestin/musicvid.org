@@ -25,7 +25,7 @@ export default class SImage extends BaseItem {
         this.ctx.fillStyle = "#FFFFFF";
         this.image = new Image();
 
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
     }
 
     loadNewImage() {

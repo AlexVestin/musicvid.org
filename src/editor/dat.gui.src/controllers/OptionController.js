@@ -72,6 +72,7 @@ class OptionController extends Controller {
     if (this.__onFinishChange) {
       this.__onFinishChange.call(this, this.getValue());
     }
+    this.__onFinishUndo(this);
     return toReturn;
   }
 

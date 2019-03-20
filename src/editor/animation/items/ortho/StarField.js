@@ -103,7 +103,7 @@ export default class StarField extends BaseItem {
         this.brightenToAudio = true;
         this.brightenMultipler = 1;
         this.brightness = 1.0;
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
         this.impactAnalyser = new ImpactAnalyser(this.folder);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;

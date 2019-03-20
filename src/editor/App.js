@@ -69,6 +69,9 @@ class App extends PureComponent {
             if (e.keyCode === 32) {
                 this.play();
             }
+            if (e.keyCode === 90 && e.ctrlKey) {
+                this.gui.undo();
+            }
         });
 
         this.gui.modalRef = this.modalRef.current;

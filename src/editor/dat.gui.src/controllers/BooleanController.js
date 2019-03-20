@@ -46,6 +46,9 @@ class BooleanController extends Controller {
 
   setValue(v) {
     const toReturn = super.setValue(v);
+    this.__onFinishUndo(this);
+
+    
     if (this.__onFinishChange) {
       this.__onFinishChange.call(this, this.getValue());
     }

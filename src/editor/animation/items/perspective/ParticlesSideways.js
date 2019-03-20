@@ -1,5 +1,11 @@
 //FROM https://github.com/caseif/vis.js
 
+/**
+ * My Extension of vis.js
+ *
+ *  Copyright @caseif https://github.com/caseif/vis.js
+ */
+
 import * as THREE from "three";
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 import BaseItem from "../BaseItem";
@@ -262,7 +268,7 @@ export default class Particles extends BaseItem {
 
         info.scene.add(this.mesh);
         
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
         
 
         this.__attribution = {

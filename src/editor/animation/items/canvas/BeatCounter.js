@@ -19,7 +19,7 @@ export default class BeatCounter extends BaseItem {
         this.color5 = "#00FFFF";
         this.color6= "#FF0000";
         this.color7 = "#FF0000";
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
     }
 
     updateFont = () => {

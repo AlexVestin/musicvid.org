@@ -30,6 +30,7 @@ const styles = {
 class SimpleDialog extends React.Component {
     state = {modalOpen: false};
     componentDidMount() {
+        this.startTime = performance.now();
         window.onbeforeunload = function(event) {
             // do stuff here
             event.returnValue =
@@ -66,6 +67,9 @@ class SimpleDialog extends React.Component {
     render() {
         const { classes, progress, encoding } = this.props;
         const items = this.props.items;
+        const dt = (performance.now() - this.startTime) / 1000;
+        const timeLeft = (dt / progress) - dt;
+
 
         return (
             <div className={classes.container}>
@@ -84,7 +88,7 @@ class SimpleDialog extends React.Component {
                     {encoding ? (
                         <DoneExporting classes={classes} />
                     ) : (
-                        <WhileExporting classes={classes} progress={progress} />
+                        <WhileExporting timeLeft={timeLeft} classes={classes} progress={progress} />
                     )}
 
                     <ListItem style={{ justifyContent: "center" }}>

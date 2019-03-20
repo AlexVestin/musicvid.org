@@ -45,7 +45,7 @@ export default class PointBed extends BaseItem {
 
 
         info.scene.add(this.group);
-        this.__setUpFolder(info, this.name);
+        this.__setUpFolder();
     }
 
     setUpGUI = (gui, name) => {
