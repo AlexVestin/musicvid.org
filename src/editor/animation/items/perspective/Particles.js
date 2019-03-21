@@ -144,6 +144,10 @@ export default class Particles extends BaseItem {
         this.pMaterial.uniforms.color.value = new THREE.Color(this.color)
     }
 
+    get mesh() {
+        return this.particleSystem;
+    }
+
 
     setUp = ()  => {
         this.particlesGeom = new THREE.BufferGeometry();

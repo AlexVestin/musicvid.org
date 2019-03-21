@@ -55,7 +55,12 @@ export default class WebGLManager {
         this.scenes.splice(ele.index, 0, ele.scene)
     }
 
-    moveScene = (up, scene) => {
+    moveScene = (args) => {
+        let { up, scene } = args;
+        if(!args.undoAction) {
+            const it = {func: this.moveScene, args: {up: !up, scene:scene, undoAction: true}, type: "action"}
+            this.gui.getRoot().addUndoItem(it);
+        }
         
         const folder = scene.folder.domElement.parentElement;
         const list = folder.parentElement;

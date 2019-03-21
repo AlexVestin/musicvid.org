@@ -72,14 +72,17 @@ export default class Background extends BaseItem {
     }
 
     changeImage() {
+        this.folder.getRoot().__disabled = true;
         const ref = this.folder.__root.modalRef; 
         loadImageTexture(ref, this.setBackground).then(file => {
+            this.folder.getRoot().__disabled = false;
             this.__addUndoAction(this.undoChangeImage, this.prevFile);
             this.prevFile = file;
         });
     }
 
     undoChangeImage = (file) => {
+        this.folder.getRoot().__disabled = true;
         loadImageTextureFromChoice(file, this.setBackground);
         this.prevFile = file;
     }
@@ -109,6 +112,7 @@ export default class Background extends BaseItem {
     }
 
     setBackground = (texture) => {
+        this.folder.getRoot().__disabled = false;
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.generateMipMaps = false;

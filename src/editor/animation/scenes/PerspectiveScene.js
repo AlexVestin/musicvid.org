@@ -11,7 +11,7 @@ export default class Scene3DPerspective extends Scene {
       
         this.MODAL_REF_NR = 7;
         this.TYPE = "perspective";
-        //this.folder.name = this.TYPE + " scene";
+        this.folder.name = this.TYPE + " scene";
         this.setUpControls();
     }
 }

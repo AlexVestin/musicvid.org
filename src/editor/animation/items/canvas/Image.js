@@ -24,12 +24,26 @@ export default class SImage extends BaseItem {
         
         this.ctx.fillStyle = "#FFFFFF";
         this.image = new Image();
+        this.prevImage = null;
 
         this.__setUpFolder();
     }
 
+    setImage = (img) => {
+        this.image = img;
+    }
+
+    undoLoadImage = (img) => {
+        const ref = this.gui.__root.modalRef; 
+        loadImage(ref, this.setImage);
+    }
+
     loadNewImage() {
-        loadImage(this.gui.__root.modalRef, (img) => this.image = img);
+        const ref = this.gui.__root.modalRef; 
+        loadImage(ref, this.setImage).then(file => {
+            this.__addUndoAction(this.undoLoadImage, file);
+            this.prevImage = file;
+        });
     }
 
     setUpGUI = (gui, name) => {

@@ -4,6 +4,7 @@
  * My Extension of vis.js
  *
  *  Copyright @caseif https://github.com/caseif/vis.js
+ *  @license BSD-new (New BSD License) 
  */
 
 import * as THREE from "three";

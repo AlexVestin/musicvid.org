@@ -126,8 +126,8 @@ export default class JSNationSpectrum extends BaseItem {
         const spFolder = folder.addFolder("Spectrum");
         spFolder.add(this, "drawType", ["fill", "stroke"]);
         spFolder.add(this, "lineWidth", 0, 10.0, 1)
-        spFolder.add(this, "startBin", 0, 8192*2, 1)
-        spFolder.add(this, "keepBins", 0, 8192*2, 1)
+        spFolder.add(this, "startBin", 0, 100, 1)
+        spFolder.add(this, "keepBins", 10, 300, 1)
 
         spFolder.add(this, "smoothingPasses", [1,2,3,4,5,6,7,8,9]);
         spFolder.add(this, "smoothingPoints", [1,2,3,4,5,7,8,9]);
@@ -145,7 +145,6 @@ export default class JSNationSpectrum extends BaseItem {
         folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));
 
         folder.add(this.ctx, "shadowBlur", 0, 100);
-        folder.add(this.mesh.rotation, "z", -3.14, 3.14).name("Rotation");
         folder.add(this, "spectrumRotation", 0, Math.PI / 2, 0.00001);
         folder.add(this, "invertSpectrum");
         
@@ -162,10 +161,11 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     update = (time, audioData) => {
-        this.ctx.clearRect(0,0, this.size, this.size);
+        this.ctx.clearRect(-10,-10, this.size+10, this.size+10);
         if (this.spectrumCache.length >= this.maxBufferSize) {
             this.spectrumCache.shift();
         }
+
 
         const subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
         

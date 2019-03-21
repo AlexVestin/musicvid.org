@@ -40,7 +40,7 @@ export default class ControllerContainer extends PureComponent {
     
         this.MBitBitrate = 7.2;
         this.fps = 60;
-        this.preset =  "fast";
+        this.preset =  "veryfast";
         this.presetLookup = [
             "ultrafast",
             "veryfast",

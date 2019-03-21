@@ -30,8 +30,8 @@ export default class Scene {
     setUpGui = (before =  null) => {
         const gui = this.gui;
         this.folder = gui.addFolder(this.TYPE  + " scene", true, true, before);
-        this.folder.upFunction = () => this.__moveScene(true, this);
-        this.folder.downFunction = () => this.__moveScene(false, this);
+        this.folder.upFunction = () => this.__moveScene({up: true, scene: this});
+        this.folder.downFunction = () => this.__moveScene({up: false, scene: this});
         this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
         this.itemsFolder.add(this, "addItem");
@@ -56,6 +56,8 @@ export default class Scene {
 
     removeItem = (item) => {
         const index = this.items.findIndex(e => e === item);
+
+        console.log(this.TYPE, this.items[index].mesh, index)
         if(this.TYPE !== "canvas")
             this.scene.remove(this.items[index].mesh);
         this.items.splice(index, 1);

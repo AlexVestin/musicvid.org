@@ -104,6 +104,7 @@ const GUI = function(pars) {
   this.__undoLog = [];
   this.__undoLogSize = 64;
   this.__redoLog = [];
+  this.__disabled = false;
 
   /**
    * Nested GUI's by name
@@ -545,9 +546,8 @@ common.extend(
       }
     },
     undo: function() {
-
-      console.log(this.__undoLog)
-      
+      console.log(this.__disabled, "disabled?")
+    if(!this.__disabled) {
       if(this.__undoLog.length > 0) {
         const item = this.__undoLog.pop();
         if(item.type === "value") {
@@ -558,6 +558,8 @@ common.extend(
         }
         
       }
+    }      
+     
     },
 
     /**

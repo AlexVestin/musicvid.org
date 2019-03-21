@@ -68,7 +68,9 @@ class SimpleDialog extends React.Component {
         const { classes, progress, encoding } = this.props;
         const items = this.props.items;
         const dt = (performance.now() - this.startTime) / 1000;
-        const timeLeft = (dt / progress) - dt;
+        //  Very cool scientific constant that predicts export time
+        let timeLeft = (1.55*dt / progress) - dt* (1 + Math.pow(progress, 3));
+        if(timeLeft < 0) timeLeft = 0;
 
 
         return (

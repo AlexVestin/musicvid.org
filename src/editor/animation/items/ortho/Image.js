@@ -18,12 +18,16 @@ export default class Image extends BaseItem{
 
         const url = "./img/solar.jpeg";
         this.loadNewBackground(url);
+        this.prevFile = url;
         this.__setUpFolder();
     }
 
     async changeImage() {
         const ref = this.folder.__root.modalRef; 
-        loadImageTexture(ref, this.setBackground);
+        loadImageTexture(ref, this.setBackground).then(file => {
+            this.__addUndoAction(this.undoChangeImage, this.prevFile);
+            this.prevFile = file;
+        });
     }
     
     update = (time, audioData) => {
