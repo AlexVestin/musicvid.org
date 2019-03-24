@@ -71,7 +71,7 @@ class SimpleDialog extends React.Component {
                     </ListItemAvatar>
                     <ListItemText primary="Load file from computer" />
                     </ListItem>
-                    <ListItem disabled button onClick={this.loadAudioFromURL}>
+                    <ListItem button onClick={this.loadAudioFromURL}>
                     <ListItemAvatar>
                         <Avatar className={classes.avatar}>
                         <Cloud />

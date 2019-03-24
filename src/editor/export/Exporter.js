@@ -91,7 +91,8 @@ export default class Exporter {
     }
 
     saveBlob = (vid) => {
-        FileSaver.saveAs(new Blob([vid], { type: 'video/mp4' }), this.fileName);
-        this.ondone();
+        const blob = new Blob([vid], { type: 'video/mp4' });
+        FileSaver.saveAs(blob, this.fileName);
+        this.ondone(blob, this.fileName);
     }    
 }

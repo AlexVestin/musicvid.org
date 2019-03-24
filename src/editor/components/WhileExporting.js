@@ -54,7 +54,7 @@ export default function(props) {
                 component="h6"
                 variant="h6"
             >
-                Check out the authors of the visualizations in the meantime! (but don't close the tab)
+                Check out the creators that made this video possible in the meantime! (but don't close the tab)
             </Typography>
 
             <Typography

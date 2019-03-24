@@ -67,6 +67,22 @@ class AlertDialog extends React.Component {
                                 color="inherit"
                                 style={{ fontSize: 18 }}
                             >
+                                {`Audio: `}
+                            </Typography>
+                            <Typography
+                                component="h6"
+                                variant="h6"
+                                color="inherit"
+                                style={{ fontSize: 15 }}
+                            >
+                            Nomyn - Reverie
+                            </Typography>
+                            <Typography
+                                component="h6"
+                                variant="h6"
+                                color="inherit"
+                                style={{ fontSize: 18 }}
+                            >
                                 {`Visuals made by: `}
                             </Typography>
                             {Object.keys(authors).map(key => {

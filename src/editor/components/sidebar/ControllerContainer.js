@@ -59,16 +59,13 @@ export default class ControllerContainer extends PureComponent {
     }
 
     startEncoding = () => {
-        const { checkLicense, disabled, startEncoding } = this.props;
+        const { disabled, startEncoding } = this.props;
         if(!disabled) {
-            checkLicense().then(() => {
-                const bitrate = this.MBitBitrate * Math.pow(10, 6);
+            const bitrate = this.MBitBitrate * Math.pow(10, 6);
                 const preset = this.presetLookup.findIndex(e => e === this.preset);
-                startEncoding({fps: this.fps, bitrate: bitrate, preset: preset, fileName: this.fileName})
-            });
-           
+                
+            startEncoding({fps: this.fps, bitrate: bitrate, preset: preset, fileName: this.fileName})
         }
-       
     }
 
     render() {

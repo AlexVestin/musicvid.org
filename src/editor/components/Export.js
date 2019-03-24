@@ -11,6 +11,23 @@ import blue from "@material-ui/core/colors/blue";
 import ExportCard from "./ExportCard";
 import Button from "@material-ui/core/Button";
 
+
+
+const audioItem =  {
+    name: "Nomyn - Reverie",
+    imageUrl: "img/items/reverie.jpg",
+    projectUrl: "https://nomyn.bandcamp.com/track/reverie",
+    authors: [ {
+        name: "Nomyn",
+        social1: {type: "soundcloud", url: "https://soundcloud.com/nomyn"},
+        social2: {type: "twitter", url: "https://twitter.com/nomynmusic"},
+
+    }]
+
+    
+};
+
+
 const styles = {
     root: {
         marginTop: 30,
@@ -65,7 +82,7 @@ class SimpleDialog extends React.Component {
     }
 
     render() {
-        const { classes, progress, encoding } = this.props;
+        const { classes, progress, encoding, fileName, blobFile, usingSampleAudio } = this.props;
         const items = this.props.items;
         const dt = (performance.now() - this.startTime) / 1000;
         //  Very cool scientific constant that predicts export time
@@ -83,12 +100,12 @@ class SimpleDialog extends React.Component {
                             component="h4"
                             variant="h4"
                         >
-                            <Button  color="secondary" onClick={this.toggleModal}>Go back to project {!encoding ? "(and cancel encoding)" : "" }</Button>
+                            <Button  style={{color: !encoding ? '#ff3366' : '#12FF12'}} onClick={this.toggleModal}>Go back to project {!encoding ? "(and cancel encoding)" : "" }</Button>
                         </Typography>
                     </ListItem>
 
                     {encoding ? (
-                        <DoneExporting classes={classes} />
+                        <DoneExporting fileBlob={blobFile} fileName={fileName} classes={classes} />
                     ) : (
                         <WhileExporting timeLeft={timeLeft} classes={classes} progress={progress} />
                     )}
@@ -102,6 +119,10 @@ class SimpleDialog extends React.Component {
                             Creators
                         </Typography>
                     </ListItem>
+
+                    {usingSampleAudio && <ListItem style={{ justifyContent: "center" }}>
+                        <ExportCard item={audioItem} />
+                    </ListItem>}
 
                     {items.map(item => {
                         if (item.showAttribution) {

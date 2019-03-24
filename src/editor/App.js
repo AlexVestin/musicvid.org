@@ -36,7 +36,9 @@ class App extends PureComponent {
             loaded: false,
             progress: 0,
             encoding: false,
-            doneEncoding: false
+            doneEncoding: false,
+            file: null,
+            fileName: ""
         };
        
         this.firstLoad = true;
@@ -160,8 +162,9 @@ class App extends PureComponent {
             requestAnimationFrame(this.update);
     };
 
-    encoderDone = () => {
-        this.setState({ doneEncoding: true });
+    encoderDone = (file, fileName) => {
+        this.file = file;
+        this.setState({doneEncoding: true, fileName: fileName})
     };
 
     cancelEncoder = () => {
@@ -194,28 +197,32 @@ class App extends PureComponent {
     onAudioProgress = e => {
         this.setState({ progress: e });
     };
-    startEncoding = selected => {
-        const config = {
-            video: {
-                width: this.resolution.width,
-                height: this.resolution.height,
-                fps: selected.fps,
-                bitrate: selected.bitrate,
-                presetIdx: selected.preset
-            },
-            fileName: selected.fileName,
-            animationManager: this.animationManager,
-            duration: this.state.audioDuration,
-            sound: this.audio
-        };
 
-        this.exporter = new Exporter(
-            config,
-            this.encoderReady,
-            this.encoderDone,
-            this.onProgress
-        );
-        this.encoding = true;
+    startEncoding = selected => {
+
+        this.checkLicense().then(() => {
+            const config = {
+                video: {
+                    width: this.resolution.width,
+                    height: this.resolution.height,
+                    fps: selected.fps,
+                    bitrate: selected.bitrate,
+                    presetIdx: selected.preset
+                },
+                fileName: selected.fileName,
+                animationManager: this.animationManager,
+                duration: this.state.audioDuration,
+                sound: this.audio
+            };
+    
+            this.exporter = new Exporter(
+                config,
+                this.encoderReady,
+                this.encoderDone,
+                this.onProgress
+            );
+            this.encoding = true; 
+        });
     };
 
     seek = time => {
@@ -242,6 +249,7 @@ class App extends PureComponent {
             this.canvasRef.current.setSize(this.resolution);
             return;
         }
+        this.usingSampleAudio = selected === "https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3";
         this.loadNewAudio(selected).then(this.audioReady);
     };
 
@@ -254,6 +262,7 @@ class App extends PureComponent {
                 if (item.license === license.REQUIRE_ATTRIBUTION) {
                     this.modalRef.current.openLicenseModal(
                         items,
+                        this.usingSampleAudio,
                         resolve,
                         reject
                     );
@@ -266,8 +275,8 @@ class App extends PureComponent {
     };
     render() {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
-        const { progress } = this.state;
-        
+        const { progress, fileName } = this.state;
+
         return (
             <div className={classes.container}>
                 {
@@ -282,8 +291,10 @@ class App extends PureComponent {
                         encoding={this.state.doneEncoding}
                         cancel={this.cancelEncoder}
                         progress={progress}
-
+                        blobFile={this.file}
+                        fileName={fileName}
                         items={this.__items}
+                        usingSampleAudio={this.usingSampleAudio}
                     />
                 ) : (
                     <React.Fragment>
