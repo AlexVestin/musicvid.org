@@ -110,6 +110,9 @@ class App extends PureComponent {
                 .onChange(() => this.audio.setFFTSize(this.audio.fftSize));
             this.firstLoad = false;
         }
+        if(duration > 8*60) {
+            this.modalRef.current.toggleModal(10)
+        }
 
         this.animationManager.setAudio(this.audio);
         this.setState({ audioDuration: duration, audioLoaded: true });
@@ -250,7 +253,10 @@ class App extends PureComponent {
             return;
         }
         this.usingSampleAudio = selected === "https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3";
-        this.loadNewAudio(selected).then(this.audioReady);
+        if(!this.audio || this.audio.infile !== selected) {
+            this.loadNewAudio(selected).then(this.audioReady);
+        }
+        
     };
 
     checkLicense = () => {

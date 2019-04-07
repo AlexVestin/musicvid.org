@@ -96,9 +96,9 @@ export default class WebGLManager {
             let scene;
             if(sceneName) {
                 if(sceneName === "canvas") {
-                    scene = this.addOrthoScene();
+                    scene = this.addCanvasScene();
                 }else if(sceneName === "ortho") {
-                    scene =  this.addCanvasScene();
+                    scene =  this.addOrthoScene();
                 }else if(sceneName === "perspective") {
                     scene = this.addPerspectiveScene();
                 }

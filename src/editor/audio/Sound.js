@@ -8,6 +8,7 @@ export default class Audio {
         this.playBufferSource = this.audioCtx.createBufferSource();
         this.loaded = false;
         this.fftSize = 2048 * 8;
+        
         this.volume = 1;
         this.exportWindowSize = 2048;
         this.exportFrameIdx = 0;
@@ -125,7 +126,8 @@ export default class Audio {
     };
 
     onload = ev => {
-        this.audioCtx.decodeAudioData(ev.target.result, buffer => {
+        this.audioCtx.decodeAudioData(ev.target.result).then(buffer => {
+            console.log(buffer.duration)
             this.bufferSource = this.audioCtx.createBufferSource();
             this.bufferSource.buffer = buffer;
             this.duration = buffer.duration;
@@ -181,6 +183,8 @@ export default class Audio {
             if (event.lengthComputable) {
                 const percentComplete = event.loaded / event.total;
                 this.onProgress(Math.max(percentComplete-0.02, 0));
+
+                console.log(percentComplete)
               }
         };
     }

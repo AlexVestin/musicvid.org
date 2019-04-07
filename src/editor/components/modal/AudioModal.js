@@ -36,6 +36,8 @@ class SimpleDialog extends React.Component {
 
         this.fileRef.current.onchange = () => {
             this.props.onSelect(this.fileRef.current.files[0]);
+            //Hack to allow same file to be chosen again, mostly for debugging
+            this.fileRef.current.value="";
         }
     }
 

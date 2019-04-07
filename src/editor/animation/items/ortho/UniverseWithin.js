@@ -6,9 +6,6 @@ import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 import BaseItem from '../BaseItem'
 import fragShader from '../../shaders/licensed/UniverseWithin'
 
-
-
-
 export default class UniverseWithin extends BaseItem {
     constructor(info) {
         super(info);

@@ -6,6 +6,8 @@ import AudioModal from "./AudioModal";
 import LicenseModal from "./LicenseModal";
 import AddItemModal from "./AddItemModal";
 import AddSceneModal from "./AddSceneModal";
+import LongAudioWarningModal from "./LongAudioWarningModal";
+
 
 export default class SelectResolutionModal extends PureComponent {
     constructor(props) {
@@ -57,7 +59,7 @@ export default class SelectResolutionModal extends PureComponent {
     };
     render() {
         const { modalOpen, index } = this.state;
-        console.log(index > 4 && index < 8);
+        console.log(index);
         return (
             <div className={classes.container}>
                 {index === 1 && (
@@ -90,6 +92,13 @@ export default class SelectResolutionModal extends PureComponent {
                         open={modalOpen}
                         onSelect={this.onSelect}
                         index={index - 5}
+                    />
+                )}
+
+                {index === 10 && (
+                    <LongAudioWarningModal
+                        open={modalOpen}
+                        onSelect={this.onSelect}
                     />
                 )}
             </div>

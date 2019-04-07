@@ -52,7 +52,7 @@ class SimpleDialog extends React.Component {
                           <AddPhotoAlternate />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary="Add new 3D scene with Orthographic Camera (2d)" />
+                    <ListItemText primary="2D WebGL scene" />
                     </ListItem>
 
                     <ListItem button  onClick={() => this.props.onSelect("perspective")}>
@@ -61,7 +61,7 @@ class SimpleDialog extends React.Component {
                           <AddPhotoAlternate />
                           </Avatar>
                       </ListItemAvatar>
-                      <ListItemText primary="Add new 3D scene with Perspective Camera (3d)" />
+                      <ListItemText primary="3D WebGL Scene" />
                     </ListItem>
 
                     <ListItem button onClick={() => this.props.onSelect("canvas")}>
@@ -70,7 +70,7 @@ class SimpleDialog extends React.Component {
                           <AddPhotoAlternate />
                           </Avatar>
                       </ListItemAvatar>
-                      <ListItemText primary="Add new 2D scene." />
+                      <ListItemText primary="2D Canvas scene." />
                     </ListItem>
                 </List>
                 </div>
