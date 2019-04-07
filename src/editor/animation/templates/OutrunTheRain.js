@@ -5,7 +5,6 @@ import { initQuad, createTexture, makeProgram } from '../shaders/CommonFunctions
 import SHADERS from '../shaders/OutrunTheRain'
 
 
-
 const WIDTH = 1280;
 const HEIGHT = 720;
 
