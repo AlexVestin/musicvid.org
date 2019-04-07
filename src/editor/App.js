@@ -43,7 +43,7 @@ class App extends PureComponent {
        
         this.firstLoad = true;
         this.fastLoad = false;
-        this.pauseTime = 0;
+        this.timeOffset = 0;
         this.lastTime = 0;
         this.lastAudioData = {frequencyData: [], timeData: []};
 
@@ -121,12 +121,12 @@ class App extends PureComponent {
     play = () => {
         if (!this.state.playing) {
             this.setState({ playing: true });
-            const t = this.state.time + this.pauseTime;
+            const t = this.state.time;
             this.audio.play(t);
-            this.startTime = performance.now() - this.pauseTime * 1000;
-        } else {
+            this.startTime = performance.now();
+        } else {    
+            this.timeOffset = this.state.time;
             this.setState({ playing: false });
-            this.pauseTime = (performance.now() - this.startTime) / 1000;
             this.audio.stop();
         }
     };
@@ -135,7 +135,7 @@ class App extends PureComponent {
         if (this.audio) this.audio.stop();
         if (this.animationManager) this.animationManager.stop();
         this.setState({ playing: false, time: 0 });
-        this.pauseTime = 0;
+        this.timeOffset = 0;
         this.lastTime = 0;
         this.lastAudioData = {frequencyData: [], timeData: []};
     };
@@ -147,7 +147,7 @@ class App extends PureComponent {
             
             let time, audioData;
             if (this.state.playing && this.state.time < this.audio.duration) {
-                time = (performance.now() - this.startTime) / 1000;
+                time = (performance.now() - this.startTime) / 1000 + this.timeOffset;
                 audioData = this.audio.getAudioData(time);
                 this.setState({ time });
                 this.animationManager.update(time, audioData, true);
@@ -229,11 +229,12 @@ class App extends PureComponent {
     };
 
     seek = time => {
+        this.timeOffset = time;
+        this.startTime  = performance.now();
         if (this.state.playing) {
             this.audio.play(time);
         }
-
-        this.startTime = performance.now() - time * 1000;
+       
         this.setState({ time: time });
     };
 
@@ -253,9 +254,7 @@ class App extends PureComponent {
             return;
         }
         this.usingSampleAudio = selected === "https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3";
-        if(!this.audio || this.audio.infile !== selected) {
-            this.loadNewAudio(selected).then(this.audioReady);
-        }
+        this.loadNewAudio(selected).then(this.audioReady);
         
     };
 
