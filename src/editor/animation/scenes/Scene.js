@@ -56,8 +56,6 @@ export default class Scene {
 
     removeItem = (item) => {
         const index = this.items.findIndex(e => e === item);
-
-        console.log(this.TYPE, this.items[index].mesh, index)
         if(this.TYPE !== "canvas")
             this.scene.remove(this.items[index].mesh);
         this.items.splice(index, 1);
@@ -79,9 +77,15 @@ export default class Scene {
         })
     }
 
+    getInfoObject = () => {
+        if(this.TYPE === "canvas") {
+            
+        }
+    }
+
     addItemFromText = (name, fromTemplate=true) => {
         if(name) {
-            const info = {
+            let info = {
                 gui: this.itemsFolder,
                 overviewFolder: this.overviewFolder,
                 width: this.resolution.width,
@@ -90,6 +94,10 @@ export default class Scene {
                 camera: this.camera,
                 remove: this.removeItem
             };
+
+            if(this.TYPE  === "canvas") {
+                info = {...info, ctx: this.ctx, canvas: this.canvas};
+            }
             
             const itemClass = getItemClassFromText(this.TYPE, name);
             const item = new itemClass(info);

@@ -27,6 +27,7 @@ import Text2D from './canvas/Text'
 import Image2D from './canvas/Image'
 import Polartone2D from './canvas/Polartone2D'
 import BeatCounter from './canvas/BeatCounter'
+import JSNation2D from './canvas/JSNation'
 
 
 
@@ -43,12 +44,13 @@ const canvasItems = {
     Text2D: {class: Text2D, img: "img/items/Text2D.png"} ,
     Image2D: {class: Image2D, img: "img/items/Image.png"},
     Polartone2D: {class: Polartone2D, img: "img/items/Polartone.png", url: "https://github.com/mattdesl/Polartone", authors: "Mattdesl"},
-    BeatCounter: {class: BeatCounter}
+    BeatCounter: {class: BeatCounter},
+    JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D}
 }
 
 
 const orthoItems = {
-    JSNation: {img: "img/items/JSnation.png", authors: "@Caseif & @Incept", url:"https://github.com/caseif/js.nation", class: JSNation},
+    JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", url:"https://github.com/caseif/js.nation", class: JSNation},
     Background: { class: Background },
     StarField: {img: "img/items/StarNest.png", class: StarField },
     Noise: {img: "img/items/Noise.png", authors: "nmz (@Stormoid)", url: "https://www.shadertoy.com/view/ldlXRS", class: Noise},

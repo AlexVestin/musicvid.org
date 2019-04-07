@@ -992,6 +992,7 @@ function markPresetModified(gui, modified) {
 function augmentController(gui, li, controller) {
   controller.__li = li;
   controller.__gui = gui;
+  
 
   common.extend(controller, /** @lends Controller.prototype */ {
     /**
@@ -1063,7 +1064,7 @@ function augmentController(gui, li, controller) {
   if (controller instanceof NumberControllerSlider) {
     const box = new NumberControllerBox(controller.object, controller.property,
       { min: controller.__min, max: controller.__max, step: controller.__step });
-
+      box.parent = controller.parent;
     common.each(['updateDisplay', 'onChange', 'onFinishChange', 'step', 'min', 'max'], function(method) {
       const pc = controller[method];
       const pb = box[method];
