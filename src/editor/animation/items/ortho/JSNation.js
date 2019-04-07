@@ -54,6 +54,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.spectrumRotation = 0;
 
         //SHAKE 
+        this.emblemExponential = 0.8;
         this.waveSpeedX = 1;
         this.waveSpeedY = 1;
         this.waveFrameX = 0;
@@ -74,6 +75,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
         this.emblem = new Emblem("./img/mvlogo.png");     
+    
         this.__setUpFolder();
         
         this.ctx.shadowBlur = 12;
@@ -119,10 +121,10 @@ export default class JSNationSpectrum extends BaseItem {
         emFolder.addColor(this.emblem, "circleFillColor");
         emFolder.add(this.emblem, "circleSizeScale", 0, 2.0);
         
-        emFolder.add(this, "emblemExaggeration", 0.0, 2.50);
+        emFolder.add(this, "emblemExponential", 0.2, 1.6, 0.00001);
+        emFolder.add(this, "emblemExaggeration", 0.0, 5.0, 0.00001);
+        emFolder.add(this, "minRadius", 10, this.size / 4);
 
-
-        
         const spFolder = folder.addFolder("Spectrum");
         spFolder.add(this, "drawType", ["fill", "stroke"]);
         spFolder.add(this, "lineWidth", 0, 10.0, 1)
@@ -134,7 +136,6 @@ export default class JSNationSpectrum extends BaseItem {
         spFolder.add(this, "spectrumHeightScalar",0, 1.0);
         spFolder.add(this, "smoothingTimeConstant", 0, 0.95);
         const colFolder = spFolder.addFolder("colors");
-
         
         this.colors.forEach( ( color, i) => {
             this["color" + String(i)] = color;    
@@ -143,13 +144,12 @@ export default class JSNationSpectrum extends BaseItem {
         folder.add(this.mesh.position, "x", -2, 2);
         folder.add(this.mesh.position, "y", -2, 2);
         folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));
+        
 
         folder.add(this.ctx, "shadowBlur", 0, 100);
         folder.add(this, "spectrumRotation", 0, Math.PI / 2, 0.00001);
         folder.add(this, "invertSpectrum");
-        
-        folder.add(this, "exp", 0, 10);
-        
+            
         return this.__addFolder(folder);
     }
 
@@ -166,15 +166,13 @@ export default class JSNationSpectrum extends BaseItem {
             this.spectrumCache.shift();
         }
 
-
         const subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
-        
         const dbfs = toWebAudioForm(subSpectrum, this.prevArr, this.smoothingTimeConstant, audioData.frequencyData.length);
-        
+
         this.prevArr = dbfs;
         const byteSpectrumArray = getByteSpectrum(dbfs, -40, -30);
         const spectrum  = smooth(byteSpectrumArray, this);
-        const mult = Math.pow(this.multiplier(spectrum), 0.8) * this.emblemExaggeration;
+        const mult = Math.pow(this.multiplier(spectrum), this.emblemExponential) * this.emblemExaggeration;
 
         this.shake(mult / 32);
         let curRad = this.calcRadius(mult);

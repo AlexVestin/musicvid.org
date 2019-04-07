@@ -31,9 +31,8 @@ yarn-error.log*
 /src/editor/animation/items/ortho/HexaGone.js
 /src/editor/animation/items/ortho/OverTheMoon.js
 
-/src/editor/animation/shaders/Noise.js
-/src/editor/animation/shaders/Filaments.js
-/src/editor/animation/shaders/Sinuous.js
+/src/editor/animation/shaders/licensed/
+
 
 
 

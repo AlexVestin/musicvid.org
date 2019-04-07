@@ -21,10 +21,7 @@ const audioItem =  {
         name: "Nomyn",
         social1: {type: "soundcloud", url: "https://soundcloud.com/nomyn"},
         social2: {type: "twitter", url: "https://twitter.com/nomynmusic"},
-
-    }]
-
-    
+    }]   
 };
 
 
