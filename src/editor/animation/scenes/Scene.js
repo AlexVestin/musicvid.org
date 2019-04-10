@@ -14,19 +14,41 @@ export default class Scene {
     }
 
     updateCamera = () => {
+        
+        const enabled = this.controls.enabled;
         this.controls.dispose();
-        this.setUpControls();
+        this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef);
+        this.controls.handleMouseUp = this.handleMouseUp;
+        this.controls.enabled = enabled;
     }
 
     resetCamera =  () => {
         this.controls.reset();
+    }
+
+    undoCameraMovement = (matrix) => {
+        const { camera } = this;
+       
+        camera.matrix.fromArray(matrix);
+        camera.matrix.decompose(camera.position, camera.quaternion, camera.scale); 
+        this.lastCameraArray = this.camera.matrix.toArray();
+    }
+
+    handleMouseUp = () => {
+        if(this.items.length > 0) {
+            this.gui.getRoot().addUndoItem({type: "action", func: this.undoCameraMovement, args: this.lastCameraArray});
+            this.lastCameraArray = this.camera.matrix.toArray();
+        }
     }
     
     setUpControls = () => {
         this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef);
         this.controls.enabled = false;
         this.cameraFolder.add(this.controls, "enabled").name("Controls enabled");
+        this.controls.handleMouseUp = this.handleMouseUp;
+        this.lastCameraArray = this.camera.matrix.toArray();
     }
+
     setUpGui = (before =  null) => {
         const gui = this.gui;
         this.folder = gui.addFolder(this.TYPE  + " scene", true, true, before);
@@ -39,6 +61,12 @@ export default class Scene {
         this.settingsFolder = this.folder.addFolder("Settings");
         this.cameraFolder.add(this, "resetCamera");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
+
+        
+        this.items.forEach(item =>  {
+            item.__gui = this.itemsFolder;
+            item.__setUpFolder();
+        })
     }
 
     removeMe = () => {
@@ -50,21 +78,31 @@ export default class Scene {
                 this.scene.remove(this.items[0].mesh);
             this.items.pop();
         }*/
-        
-        this.remove(this);
+        this.items.forEach(item => {
+            item.ovFolder.parent.removeFolder(item.ovFolder);
+        })
+        this.remove({scene: this});
     }
 
-    removeItem = (item) => {
+    removeItem = (args) => {
+        const {item, undoAction} = args;
+
         const index = this.items.findIndex(e => e === item);
         if(this.TYPE !== "canvas")
             this.scene.remove(this.items[index].mesh);
-        this.items.splice(index, 1);
 
-        const it = {func: this.undoRemoveItem, args: item, type: "action"}
-        this.folder.getRoot().addUndoItem(it);
+        item.folder.parent.removeFolder(item.folder);
+        item.ovFolder.parent.removeFolder(item.ovFolder);
+        this.items.splice(index, 1);
+        if(!undoAction) {
+            const it = {func: this.undoRemoveItem, args: { item, undoAction: true}, type: "action"}
+            this.folder.getRoot().addUndoItem(it);
+        }
+
     }
 
-    undoRemoveItem = (item) => {
+    undoRemoveItem = (args) => {
+        const {item} = args;
         this.items.push(item);
         item.__setUpFolder();
         if(item.type !== "canvas")
@@ -104,7 +142,7 @@ export default class Scene {
             this.items.push(item);
 
             if(!fromTemplate) {
-                const it = {func: this.removeItem, args: item, type: "action"}
+                const it = {func: this.removeItem, args: { item, undoAction: true} , type: "action"}
                 this.folder.getRoot().addUndoItem(it);
             }
           

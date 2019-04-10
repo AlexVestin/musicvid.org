@@ -546,8 +546,8 @@ common.extend(
       }
     },
     undo: function() {
-      console.log(this.__disabled, "disabled?")
     if(!this.__disabled) {
+
       if(this.__undoLog.length > 0) {
         const item = this.__undoLog.pop();
         if(item.type === "value") {

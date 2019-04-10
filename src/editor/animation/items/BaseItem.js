@@ -61,9 +61,9 @@ export default class BaseItem {
             return;
         }
 
-        this.folder.parent.removeFolder(this.folder);
-        this.ovFolder.parent.removeFolder(this.ovFolder);
-        this.parentRemove(this);
+        //this.folder.parent.removeFolder(this.folder);
+        //this.ovFolder.parent.removeFolder(this.ovFolder);
+        this.parentRemove({item: this});
     }
 
     setUpGUI = (gui, name) => {

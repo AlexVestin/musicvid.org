@@ -94,11 +94,11 @@ class Controller {
    * @param {Object} newValue The new value of <code>object[property]</code>
    */
 
-  undo(newValue) {
+  undo(newValue, dontCallOnChange=false) {
     this.previousValue = this.object[this.property];
     this.object[this.property] = newValue;
 
-    if (this.__onChange) {
+    if (this.__onChange & !dontCallOnChange) {
       this.__onChange.call(this, newValue);
     }
 

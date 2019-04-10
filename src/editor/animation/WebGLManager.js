@@ -40,15 +40,21 @@ export default class WebGLManager {
          this.drawAttribution = false;
     }
 
-    removeScene = (scene) => {
+    removeScene = (args) => {
+        const { scene, undoAction } = args;
         scene.folder.parent.removeFolder(scene.folder);
         const index = this.scenes.findIndex(e => e === scene);
-        const it = {func: this.undoRemoveScene, args: {scene, index}, type: "action"}
-        this.gui.getRoot().addUndoItem(it);
         this.scenes.splice(index, 1);
+
+        if(!undoAction) {
+            const it = {func: this.undoRemoveScene, args: {scene, index}, type: "action"}
+            this.gui.getRoot().addUndoItem(it);
+        }
+        
     }
 
     undoRemoveScene = (ele) => {
+        console.log("undo remove scene")
         const scenes = this.scenes;
         const fold = ele.index === scenes.length ? null : scenes[ele.index].folder;
         ele.scene.setUpGui(fold);
@@ -93,8 +99,8 @@ export default class WebGLManager {
 
     addScene = () => {
         this.modalRef.toggleModal(8).then((sceneName) => {
-            let scene;
             if(sceneName) {
+                let scene;
                 if(sceneName === "canvas") {
                     scene = this.addCanvasScene();
                 }else if(sceneName === "ortho") {
@@ -103,7 +109,8 @@ export default class WebGLManager {
                     scene = this.addPerspectiveScene();
                 }
                 this.scenes.push(scene);
-            } 
+                this.gui.getRoot().addUndoItem({type: "action", args: { scene, undoAction: true}, func: this.removeScene});
+            };
         });
     }
 
@@ -130,8 +137,6 @@ export default class WebGLManager {
         this.canvasMountRef = ref;
         this.externalCtx = ref.getContext("2d");
     }
-
-    
 
     getAllItems = () => {
         const items = [];
@@ -195,21 +200,21 @@ export default class WebGLManager {
     resetAllCameras = () => {
         this.scenes.forEach(scene => {
             scene.resetCamera();
-        })
+        });
     }
 
     disableAllControls = () => {
         this.scenes.forEach(scene => {
             scene.controls.enabled = false;
             scene.cameraFolder.updateDisplay();
-        })
+        });
     }
 
     enableAllControls = () => {
         this.scenes.forEach(scene => {
             scene.controls.enabled = true;
             scene.cameraFolder.updateDisplay();
-        })
+        });
     }
 
     exitFullscreen(canvas) {

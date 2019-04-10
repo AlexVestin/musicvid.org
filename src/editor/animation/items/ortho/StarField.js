@@ -74,7 +74,6 @@ export default class StarField extends BaseItem {
         super(info);
         this.name = "Star Nest";
         
-
         this.geo = new THREE.PlaneGeometry(2,2);
         this.mat = new ShaderToyMaterial(fragmentShader, 
             {

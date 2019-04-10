@@ -23,9 +23,7 @@ class App extends PureComponent {
 
         this.hideStats = true;
         this.settingsFolder = this.gui.addFolder("Settings", false);
-        this.settingsFolder
-            .add(this, "hideStats")
-            .onChange(() => this.canvasRef.current.hideStats(this.hideStats));
+      
         this.exportFolder = this.gui.addFolder("Export", false);
         this.state = {
             videoLoaded: false,
@@ -101,6 +99,12 @@ class App extends PureComponent {
                     this.modalRef.current.toggleModal(0).then(this.onSelect);
                 }
             });
+
+        this.settingsFolder
+        .add(this, "hideStats")
+        .onChange(() => {
+            this.canvasRef.current.hideStats(this.hideStats) 
+        });
     };
 
     audioReady = duration => {

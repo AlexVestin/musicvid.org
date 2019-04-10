@@ -523,9 +523,7 @@ export default class OrbitControls extends THREE.EventDispatcher  {
 	}
 
 	function handleMouseUp( event ) {
-
-		// console.log( 'handleMouseUp' );
-
+		scope.handleMouseUp();
 	}
 
 	function handleMouseWheel( event ) {
@@ -675,7 +673,7 @@ export default class OrbitControls extends THREE.EventDispatcher  {
 
 	function handleTouchEnd( event ) {
 
-		//console.log( 'handleTouchEnd' );
+		console.log( 'handleTouchEnd' );
 
 	}
 

@@ -7,6 +7,7 @@ export default class Text extends BaseItem {
         super(info);
         this.canvas = info.canvas;
         this.ctx = info.ctx;
+        this.name = "Text";
 
         this.fontSize = 30;
         this.font = "Montserrat";
@@ -28,7 +29,7 @@ export default class Text extends BaseItem {
         
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
 
-        this.__setUpFolder(info, "Text");
+        this.__setUpFolder();
     }
 
     updateFont = () => {
