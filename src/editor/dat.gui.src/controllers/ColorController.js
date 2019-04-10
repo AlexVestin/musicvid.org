@@ -31,7 +31,11 @@ class ColorController extends Controller {
 
     const _this = this;
 
+    
+
     this.domElement = document.createElement('div');
+    this.domElement.style.width = "122px";
+
 
     dom.makeSelectable(this.domElement, false);
 

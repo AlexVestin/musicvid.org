@@ -364,11 +364,13 @@ const GUI = function(pars) {
     }
 
     if(params.useTitleRow !== false) {
+      
       const titleRowName = document.createTextNode(params.name);
+      
       dom.addClass(titleRowName, 'controller-name');
 
       titleRow = addRow(_this, titleRowName);
-
+      _this.title = titleRow;
       const onClickTitle = function(e) {
         e.preventDefault();
         _this.closed = !_this.closed;
@@ -379,6 +381,7 @@ const GUI = function(pars) {
 
       if(params.addButtons) {
         const div = document.createElement("div");
+        dom.addClass(div, "buttonContainer");
         const upIcon = document.createElement("span");
         const downIcon = document.createElement("span");
 

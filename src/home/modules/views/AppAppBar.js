@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import AppBar from '../components/AppBar';
+import classNames from 'classnames';
+
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 
 const styles = theme => ({
@@ -55,7 +57,45 @@ function AppAppBar(props) {
           >
             {'musicvid.org'}
           </Link>
-          <div className={classes.right}></div>
+          <div className={classes.right}>
+          <Link
+              color="inherit"
+              variant="h6"
+              underline="none"
+              className={classes.rightLink}
+              href="/tutorial"
+            >
+              {'Videos'}
+            </Link>
+
+            <Link
+              color="inherit"
+              variant="h6"
+              underline="none"
+              className={classes.rightLink}
+              href="/about"
+            >
+              {'help'}
+            </Link>
+
+            <Link
+              color="inherit"
+              variant="h6"
+              underline="none"
+              className={classes.rightLink}
+              href="/sign-in"
+            >
+              {'Sign In'}
+            </Link>
+            <Link
+              variant="h6"
+              underline="none"
+              className={classNames(classes.rightLink, classes.linkSecondary)}
+              href="/sign-up"
+            >
+              {'Sign Up'}
+            </Link>
+          </div>
         </Toolbar>
       </AppBar>
       <div className={classes.placeholder} />

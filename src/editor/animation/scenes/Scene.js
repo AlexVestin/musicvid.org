@@ -56,9 +56,14 @@ export default class Scene {
         this.folder.downFunction = () => this.__moveScene({up: false, scene: this});
         this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
+        
+        this.itemsFolder.title.style.backgroundColor = "#090909";
+        console.log(this.itemsFolder.li, this.itemsFolder)
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
+        this.cameraFolder.title.style.backgroundColor = "#090909";
         this.settingsFolder = this.folder.addFolder("Settings");
+        this.settingsFolder.title.style.backgroundColor = "#090909";
         this.cameraFolder.add(this, "resetCamera");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
 

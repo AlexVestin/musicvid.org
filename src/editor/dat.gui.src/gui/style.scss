@@ -75,6 +75,7 @@ $input-color: lighten($background-color, 8.5%);
   }
 
   li {
+   
 
     &:not(.folder) {
       background: $background-color;
@@ -119,17 +120,19 @@ $input-color: lighten($background-color, 8.5%);
       justify-content: space-between;
 
       padding-left: 16px;
-      background: #000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+      
+      background: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+      background-color: #000;
       cursor: pointer;
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    & div  {
+    & .buttonContainer  {
       display: flex;
       flex-direction: row;
     }
 
-    & div button {
+    & .buttonContainer button {
       border: none;
       background-color: Transparent;
       background-repeat:no-repeat;
@@ -143,11 +146,11 @@ $input-color: lighten($background-color, 8.5%);
       align-items: center;
     }
 
-    & div button:hover {
+    & .buttonContainer button:hover {
       background-color: rgba(255, 255, 255, 0.2);
     }
 
-    & div button .upIcon {
+    & .buttonContainer button .upIcon {
       display: block;
       text-indent: -9999px;
 
@@ -157,11 +160,9 @@ $input-color: lighten($background-color, 8.5%);
      background-size: 16px 16px;
       //background: url("baseline-keyboard_arrow_down-24px.svg") no-repeat;
       background:   url("1x/baseline_keyboard_arrow_up_white_18dp.png") no-repeat;
-
-
       
     }
-    & div button .downIcon {
+    & .buttonContainer button .downIcon {
       display: block;
       text-align: center;
       text-indent: -9999px;

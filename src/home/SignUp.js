@@ -2,6 +2,7 @@ import withRoot from './modules/withRoot';
 // --- Post bootstrap -----
 import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
@@ -14,18 +15,17 @@ import { email, required } from './modules/form/validation';
 import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
-import compose from 'docs/src/modules/utils/compose';
 
 const styles = theme => ({
   form: {
-    marginTop: theme.spacing(6),
+    marginTop: theme.spacing.unit * 6,
   },
   button: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 2,
   },
   feedback: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
@@ -35,7 +35,7 @@ class SignUp extends React.Component {
   };
 
   validate = values => {
-    const errors = required(['firstName', 'lastName', 'email', 'password'], values, this.props);
+    const errors = required(['userName' , 'email', 'password'], values, this.props);
 
     if (!errors.email) {
       const emailError = email(values.email, values, this.props);
@@ -62,7 +62,7 @@ class SignUp extends React.Component {
               Sign Up
             </Typography>
             <Typography variant="body2" align="center">
-              <Link href="/premium-themes/onepirate/sign-in" underline="always">
+              <Link href="/sign-in" underline="always">
                 Already have an account?
               </Link>
             </Typography>
@@ -74,29 +74,16 @@ class SignUp extends React.Component {
           >
             {({ handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit} className={classes.form} noValidate>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      autoFocus
-                      component={RFTextField}
-                      autoComplete="fname"
-                      fullWidth
-                      label="First name"
-                      name="firstName"
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      component={RFTextField}
-                      autoComplete="lname"
-                      fullWidth
-                      label="Last name"
-                      name="lastName"
-                      required
-                    />
-                  </Grid>
-                </Grid>
+                  <Field
+                    autoFocus
+                    component={RFTextField}
+                    autoComplete="uname"
+                    fullWidth
+                    label="User Name"
+                    name="userName"
+                    required
+                  />
+
                 <Field
                   autoComplete="email"
                   component={RFTextField}

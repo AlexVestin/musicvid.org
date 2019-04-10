@@ -78,7 +78,7 @@ export default class JSNationSpectrum extends BaseItem {
 
         this.__attribution = {
             showAttribution: true,
-            name:"Trap Nation Viusalizer",
+            name:"Trap Nation Visualizer",
             authors: [
                 {
                     name: "caseif", 
@@ -231,9 +231,7 @@ export default class JSNationSpectrum extends BaseItem {
     direction = (cur) => {
         let d =  cur > 0 ? 1 : -1;
         const pull = d * Math.pow(Math.abs(cur), 0.08);
-        const dir = pull + Math.random();
-        console.log("DIRECTION:", dir > 1.0 ? -1 : 1)
-        
+        const dir = pull + Math.random();        
         return dir > 1.0 ? -1 : 1; 
     }
 
@@ -257,15 +255,11 @@ export default class JSNationSpectrum extends BaseItem {
         }
 
         
-        console.log("waveX:",this.waveSpeedX, "waveY:", this.waveSpeedY)
-
         let trigFuncX = this.trigX === 0 ? Math.cos : Math.sin;
         let trigFuncY = this.trigY === 0 ? Math.cos : Math.sin;
 
         let dx = trigFuncX(this.waveFrameX) * this.maxShakeDisplacement * this.waveAmplitudeX * multiplier * this.movementAmount;
         let dy = trigFuncY(this.waveFrameY) * this.maxShakeDisplacement * this.waveAmplitudeY * multiplier * this.movementAmount;
-
-        console.log(dx, dy)
 
         this.sumShakeX += dx;
         this.sumShakeY += dy;

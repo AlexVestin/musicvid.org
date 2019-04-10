@@ -199,7 +199,7 @@ $button-height: 20px;
   .slider {
     float: left;
     width: 66%;
-    margin-left: -5px;
+    //margin-left: -5px;
     margin-right: 0;
     height: 19px;
     margin-top: 4px;
@@ -234,7 +234,7 @@ $button-height: 20px;
   .selector {
     display: none;
     position: absolute;
-    margin-left: -9px;
+    margin-left: -3px;
     margin-top: 23px;
     z-index: 10;
   }
