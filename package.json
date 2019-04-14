@@ -35,7 +35,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy-prod": "aws s3 sync ./build  s3://musicvid.org/ --delete",
+    "deploy-dev": "aws s3 sync ./build s3://mvid2.org/ --delete"
   },
   "eslintConfig": {
     "extends": "react-app"

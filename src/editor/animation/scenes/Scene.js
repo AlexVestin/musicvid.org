@@ -24,6 +24,7 @@ export default class Scene {
 
     resetCamera =  () => {
         this.controls.reset();
+        this.cameraFolder.updateDisplay();
     }
 
     undoCameraMovement = (matrix) => {
@@ -32,21 +33,42 @@ export default class Scene {
         camera.matrix.fromArray(matrix);
         camera.matrix.decompose(camera.position, camera.quaternion, camera.scale); 
         this.lastCameraArray = this.camera.matrix.toArray();
+        this.cameraFolder.updateDisplay();
     }
 
     handleMouseUp = () => {
-        if(this.items.length > 0) {
-            this.gui.getRoot().addUndoItem({type: "action", func: this.undoCameraMovement, args: this.lastCameraArray});
-            this.lastCameraArray = this.camera.matrix.toArray();
+        this.gui.getRoot().addUndoItem({type: "action", func: this.undoCameraMovement, args: this.lastCameraArray});
+        this.lastCameraArray = this.camera.matrix.toArray();
+        this.cameraFolder.updateDisplay();
+
+    }
+
+    updateCameraMatrix = () => {
+        this.camera.updateMatrixWorld();
+        this.camera.updateProjectionMatrix();
+
+        if(this.controls.enabled) {
+            this.controls.update();
         }
+        
     }
     
     setUpControls = () => {
         this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef);
         this.controls.enabled = false;
-        this.cameraFolder.add(this.controls, "enabled").name("Controls enabled");
+        this.cameraFolder.add(this.controls, "enabled").name("Orbitcontrols enabled");
         this.controls.handleMouseUp = this.handleMouseUp;
         this.lastCameraArray = this.camera.matrix.toArray();
+
+        this.cameraXController = this.cameraFolder.add(this.camera.position, "x", -10, 10, 0.001).name("positionX").onChange(this.updateCameraMatrix);
+        this.cameraYController = this.cameraFolder.add(this.camera.position, "y", -10, 10, 0.001).name("positionY").onChange(this.updateCameraMatrix);
+        this.cameraZController = this.cameraFolder.add(this.camera.position, "z", -10, 10, 0.001).name("positionZ").onChange(this.updateCameraMatrix);
+
+        this.cameraFolder.add(this.camera.rotation, "x", -Math.PI, Math.PI, 0.0001).name("rotationX").onChange(this.updateCameraMatrix);
+        this.cameraFolder.add(this.camera.rotation, "y", -Math.PI, Math.PI, 0.0001).name("rotationY").onChange(this.updateCameraMatrix);
+        this.cameraFolder.add(this.camera.rotation, "z", -Math.PI, Math.PI, 0.0001).name("rotationZ").onChange(this.updateCameraMatrix);
+
+        this.cameraFolder.add(this.camera, "zoom", -10, 10, 0.001).onChange(this.updateCameraMatrix);
     }
 
     setUpGui = (before =  null) => {
@@ -57,17 +79,16 @@ export default class Scene {
         this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
         
-        this.itemsFolder.title.style.backgroundColor = "#090909";
-        console.log(this.itemsFolder.li, this.itemsFolder)
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
-        this.cameraFolder.title.style.backgroundColor = "#090909";
         this.settingsFolder = this.folder.addFolder("Settings");
-        this.settingsFolder.title.style.backgroundColor = "#090909";
         this.cameraFolder.add(this, "resetCamera");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
-
         
+        //this.itemsFolder.title.style.backgroundColor = "#090909";
+        //this.cameraFolder.title.style.backgroundColor = "#090909";
+        //this.settingsFolder.title.style.backgroundColor = "#090909";
+
         this.items.forEach(item =>  {
             item.__gui = this.itemsFolder;
             item.__setUpFolder();

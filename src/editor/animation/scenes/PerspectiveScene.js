@@ -13,5 +13,15 @@ export default class Scene3DPerspective extends Scene {
         this.TYPE = "perspective";
         this.folder.name = this.TYPE + " scene";
         this.setUpControls();
+        this.cameraXController.min(-1000);
+        this.cameraYController.min(-1000);
+        this.cameraZController.min(-1000);
+
+        this.cameraXController.max(1000);
+        this.cameraYController.max(1000);
+        this.cameraZController.max(1000);
+        this.cameraXController.step(0.2);
+        this.cameraYController.step(0.2);
+        this.cameraZController.step(0.2);
     }
 }

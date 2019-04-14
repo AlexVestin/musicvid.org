@@ -33,7 +33,7 @@ import JSNation2D from './canvas/JSNation'
 
 const perspectiveItems = {
     Particles: { authors: "@Caseif & @Incept", url:"https://github.com/caseif/js.nation", class: Particles, img: "img/items/Particles.png"},
-    TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},
+    
     LineBed: { authors: "GamleGaz", class: LineBed, img: "img/items/LineBEd.png"},
     ParticlesSideways: {url:"https://github.com/caseif/vis.js", authors: "@Caseif & @Incept", class: ParticlesSideways, img: "img/items/ParticlesSideways.png"},
     TextLines: {class: TextLines, img: "img/items/TextLines.png"}
@@ -53,6 +53,7 @@ const orthoItems = {
     JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", url:"https://github.com/caseif/js.nation", class: JSNation},
     Background: { class: Background },
     StarField: {img: "img/items/StarNest.png", class: StarField },
+    TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},
     Noise: {img: "img/items/Noise.png", authors: "nmz (@Stormoid)", url: "https://www.shadertoy.com/view/ldlXRS", class: Noise},
     //SimplicityGalaxy: {img: "img/items/SimplicityGalaxy.png", url: "https://www.shadertoy.com/view/MslGWN", authors: "CBS", class: SimplicityGalaxy},
     HexaGone: {img: "img/items/HexaGone.png", url: "https://www.shadertoy.com/view/wsl3WB", authors: "BigWIngs", class: HexaGone},
