@@ -1,6 +1,18 @@
 import React, { PureComponent } from 'react'
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
+import AutomationsList from './AutomationsList'
+import classes from './AutomationsModal.module.scss';
+
+
+
+
+const customAutomations = [
+  {name: "Point Automation", description: "Keyframe like automations", type: "point"},
+  {name: "Audio Reactive Automation", description: "Uses the impact analyser to automate a value", type: "audio"},
+  {name: "Math Input Automation", description: "Use a formula/script to make a custom automation", type: "math"},
+  {name: "Modulation Automation", description: "Modulate a value using bpm and sine waves", type: "modulation"},
+]
 
 export default class AddNewAutomation extends PureComponent {
 
@@ -9,33 +21,39 @@ export default class AddNewAutomation extends PureComponent {
     this.props.addMathAutomation();
   }
 
+  onSelect = (automation) => {
+    switch(automation.type) {
+      case "point":
+        this.props.addPointAutomation();
+        break;
+      case "audio":
+        this.props.addAudioAutomation();
+        break;
+      case "math":
+        this.props.addMathAutomation();
+        break;
+      case "modulation":
+        this.props.addModulationAutomation();
+        break;
+      default:
+        alert("faulty selety")
+    }
+  }
+
   render() {
     return (
-      <div>
-          <Typography variant="h4">
+      <div className={classes.container}>
+      <div >
+          <Typography variant="h6">
               Add new automation
           </Typography>
 
-          <Typography variant="h6">
+          <Typography variant="h8">
               Custom automations
           </Typography>
-          <div style={{display:"flex", justifyContent:"row"}}> 
-            <Button onClick={this.addTimedAutomation}>Add timed automations</Button>
-            <Button onClick={this.props.addAudioAutomation}>Add audio reactive automation</Button>
-            <Button onClick={this.addMathAutomation}>Add user input automation </Button>
-          </div>
 
-          <Typography variant="h6">
-              Preset automations
-          </Typography>
-
-          <div style={{display:"flex", justifyContent:"row"}}> 
-            <Button>Add timed automations</Button>
-            <Button>Add audio reactive automation</Button>
-            <Button>Add user input automation </Button>
-          </div>
-
-          <Button onClick={this.props.back}>Go back</Button>
+          <AutomationsList onSelect={this.onSelect} automations={customAutomations}></AutomationsList>
+      </div>
       </div>
     )
   }

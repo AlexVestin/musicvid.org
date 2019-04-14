@@ -54,7 +54,6 @@ export default class WebGLManager {
     }
 
     undoRemoveScene = (ele) => {
-        console.log("undo remove scene")
         const scenes = this.scenes;
         const fold = ele.index === scenes.length ? null : scenes[ele.index].folder;
         ele.scene.setUpGui(fold);
@@ -148,6 +147,10 @@ export default class WebGLManager {
         return items;
     }
 
+    manageAutomations = () => {
+        this.gui.getRoot().modalRef.toggleModal(12);
+    }
+
     setClear = () => {
         this.renderer.setClearColor(this.clearColor);
         this.renderer.setClearAlpha(this.clearAlpha);
@@ -194,7 +197,7 @@ export default class WebGLManager {
         this.gui.__folders["Settings"].add(this, "enableAllControls");
         this.gui.__folders["Settings"].add(this, "disableAllControls");
         this.gui.__folders["Settings"].add(this, "resetAllCameras");
-
+        this.gui.__folders["Settings"].add(this, "manageAutomations");
     }
 
     resetAllCameras = () => {

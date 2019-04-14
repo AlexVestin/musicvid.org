@@ -116,6 +116,17 @@ export default class ModalContainer extends PureComponent {
                         index={index - 5}
                     />
                 )}
+
+                {index === 12 &&  (
+                    <AutomationsModal
+                        mainMenu={true}
+                        open={modalOpen}
+                        onSelect={this.onSelect}
+                        gui={this.props.gui}
+                        item={this.args}
+                        index={index - 5}
+                    />
+                )}
             </div>
         );
     }

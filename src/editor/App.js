@@ -180,6 +180,15 @@ class App extends PureComponent {
         this.lastAudioData = {frequencyData: [], timeData: []};
     };
 
+
+    applyAutomation = (time, audioData) => {
+        const automations = this.gui.getRoot().__automations;
+        automations.forEach(item => {
+            item.update(time, audioData);
+            item.apply();
+        })
+    }
+
     update = () => {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
         if (!disabled) {
@@ -190,6 +199,8 @@ class App extends PureComponent {
                 time = (performance.now() - this.startTime) / 1000 + this.timeOffset;
                 audioData = this.audio.getAudioData(time);
                 this.setState({ time });
+
+                this.applyAutomation(time, audioData);
                 this.animationManager.update(time, audioData, true);
                 this.lastTime = time;
                 this.lastAudioData = audioData;

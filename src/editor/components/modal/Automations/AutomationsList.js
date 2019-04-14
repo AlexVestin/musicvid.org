@@ -34,17 +34,18 @@ function getIcon(type)  {
 
 function FolderList(props) {
     const { classes, automations } = props;
+    console.log(props);
     return (
         <List className={classes.root}>
             {automations.map(automation => {
                 return (
-                    <ListItem button onClick={() => this.props.onSelect(automation)}>
+                    <ListItem button onClick={() => props.onSelect(automation)}>
                         <Avatar>
                             {getIcon(automation.type)}
                         </Avatar>
                         <ListItemText
                             primary={automation.name}
-                            secondary="Jan 9, 2014"
+                            secondary={automation.description}
                         />
                     </ListItem>
                 );

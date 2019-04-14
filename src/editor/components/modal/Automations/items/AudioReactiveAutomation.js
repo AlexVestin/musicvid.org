@@ -12,7 +12,6 @@ export default class AudioReactiveAutomation extends Automation {
     }
 
     update = (time, audioData) => {
-        this.value = this.impactAnalyser(audioData.frequencyData);
+        this.value = this.impactAnalyser.analyse(audioData.frequencyData);
     }
-
 }

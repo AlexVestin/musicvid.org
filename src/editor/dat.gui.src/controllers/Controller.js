@@ -21,8 +21,10 @@
 class Controller {
   constructor(object, property) {
     this.initialValue = object[property];
+    this.preAutomationValue = object[property];
     this.previousValue = object[property];
     this.__activeAutomations = [];
+    
     /**
      * Those who extend this class will put their DOM elements in here.
      * @type {DOMElement}
@@ -98,6 +100,7 @@ class Controller {
   undo(newValue, dontCallOnChange=false) {
     this.previousValue = this.object[this.property];
     this.object[this.property] = newValue;
+    this.preAutomationValue = newValue;
 
     if (this.__onChange & !dontCallOnChange) {
       this.__onChange.call(this, newValue);
@@ -106,9 +109,6 @@ class Controller {
     if( this.object.updateDisplay) {
       this.object.updateDisplay();
     }
-
-    
-
 
       this.updateDisplay();
     return this;

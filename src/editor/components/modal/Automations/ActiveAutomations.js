@@ -36,23 +36,10 @@ const styles = theme => ({
   },
 });
 
-let id = 0;
-function createData(name, baseValue, type) {
-  id += 1;
-  return { id, name, type, baseValue };
-}
 
-const rows = [
-  createData('Shake', 159, "="),
-  createData('Audio reactive', 237, "-"),
-  createData('Eclair', 262, "*"),
-  createData('Cupcake', 305, "+"),
-  createData('Gingerbread', 356, "+"),
-];
 
 function CustomizedTable(props) {
   const { classes, item } = props;
-    console.log(item);
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -64,19 +51,22 @@ function CustomizedTable(props) {
 
             <CustomTableCell align="right"></CustomTableCell>
             <CustomTableCell align="right"></CustomTableCell>
+            <CustomTableCell align="right"></CustomTableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
-            <TableRow className={classes.row} key={row.id}>
+          {item.__activeAutomations.map(row => (
+            <TableRow className={classes.row} key={row.automation.__id}>
               <CustomTableCell component="th" scope="row">
-                {row.name}
+                {row.automation.name}
               </CustomTableCell>
-              <CustomTableCell align="right">{row.baseValue}</CustomTableCell>
-              <CustomTableCell align="right">{row.type}</CustomTableCell>
+                <CustomTableCell align="right">{item.object[item.property]}</CustomTableCell>
+                <CustomTableCell align="right">{row.type}</CustomTableCell>
+                <CustomTableCell align="right"><Button>Edit</Button></CustomTableCell>
+                <CustomTableCell align="right"><Button>move up</Button><Button>move down</Button></CustomTableCell>
+                <CustomTableCell align="right"><Button style={{color: "red"}}>remove</Button></CustomTableCell>
 
-              <CustomTableCell align="right"><Button>Edit</Button></CustomTableCell>
-              <CustomTableCell align="right"><Button>move up</Button><Button>move down</Button></CustomTableCell>
             </TableRow>
           ))}
         </TableBody>

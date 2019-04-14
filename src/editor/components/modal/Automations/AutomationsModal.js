@@ -5,13 +5,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { withStyles } from "@material-ui/core/styles";
-import SelectAutomation from './SelectAutomation'
+import SelectAutomation from "./SelectAutomation";
 import ConfigureAutomations from "./ConfigureAutomations";
 import AddNewAutomation from "./AddNewAutomation";
 
 // audio automation
-import AudioAutomation from './items/AudioReactiveAutomation'
-import ItemContainer from './ItemContainer'
+import AudioAutomation from "./items/AudioReactiveAutomation";
+import ItemContainer from "./ItemContainer";
 const styles = theme => ({
     form: {
         display: "flex",
@@ -29,20 +29,51 @@ const styles = theme => ({
 });
 
 class ScrollDialog extends React.Component {
-    state = {
-        scroll: "paper",
-        index: 0
-    };
 
+    constructor(props) {
+        super(props);
 
-    addAudioAutomation = () => {
-      const root = this.props.gui.getRoot();
-      this.selectedAutomation = new AudioAutomation(root);
-      this.setState({index: 3});
+        this.homeIndex = 0;
+        if(props.mainMenu)
+            this.homeIndex = 1;
+
+        this.state = {
+            scroll: "paper",
+            index: this.homeIndex
+        };
     }
 
+    onSelect = automation => {
+        const { item } = this.props;
+        if(this.props.mainMenu) {
+            this.selectedAutomation = automation;
+            this.setState({index: 3});
+        }else {
+            const link = { automation, type: "*", item };
+            item.__activeAutomations.push(link);
+            automation.__items.push(link);
+            this.setState({ index: this.homeIndex });
+        }
+    }
+
+    addAudioAutomation = () => {
+        const root = this.props.gui.getRoot();
+        this.selectedAutomation = new AudioAutomation(root);
+        this.setState({ index: 3 });
+    };
+
+    back = () => {
+        const { index } = this.state;
+        let newIndex = this.homeIndex;
+        if (index === 3) {
+            newIndex = 1;
+        }
+
+        this.setState({ index: newIndex });
+    };
+
     render() {
-        const { gui, item } = this.props;
+        const { item } = this.props;
         const { index } = this.state;
         const rootGui = this.props.gui.getRoot();
         return (
@@ -50,10 +81,11 @@ class ScrollDialog extends React.Component {
                 open={this.props.open}
                 aria-labelledby="max-width-dialog-title"
                 fullWidth={true}
-                maxWidth="lg"
+                maxWidth="md"
                 fullheight
             >
                 <DialogTitle id="scroll-dialog-title">Automations</DialogTitle>
+
                 <DialogContent>
                     {index === 0 && (
                         <ConfigureAutomations
@@ -66,38 +98,39 @@ class ScrollDialog extends React.Component {
                         <SelectAutomation
                             item={item}
                             gui={rootGui}
-                            back={() => this.setState({ index: 0 })}
+                            back={() => this.setState({ index: this.homeIndex })}
                             addNewAutomation={() => this.setState({ index: 2 })}
-
+                            onSelect={this.onSelect}
                         />
                     )}
 
                     {index === 2 && (
                         <AddNewAutomation
                             item={item}
-                            back={() => this.setState({ index: 0 })}
+                            back={() => this.setState({ index: this.homeIndex })}
                             addAudioAutomation={this.addAudioAutomation}
                             addMathAutomation={this.addAudioAutomation}
                             addPointsAutomation={this.addAudioAutomation}
                         />
                     )}
 
-                  {index === 3 && (
+                    {index === 3 && (
                         <ItemContainer
                             item={this.selectedAutomation}
                             back={() => this.setState({ index: 1 })}
                         />
                     )}
-
-                   
                 </DialogContent>
 
                 <DialogActions>
+                    {index !== this.homeIndex && (
+                        <Button onClick={this.back}> Go back</Button>
+                    )}
                     <Button
                         onClick={() => this.props.onSelect()}
                         color="primary"
                     >
-                        Cancel
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>
