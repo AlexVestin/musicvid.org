@@ -24,7 +24,6 @@ import requestAnimationFrame from '../utils/requestAnimationFrame';
 import CenteredDiv from '../dom/CenteredDiv';
 import dom from '../dom/dom';
 import common from '../utils/common';
-
 import styleSheet from './style.scss'; // CSS to embed in build
 
 css.inject(styleSheet);
@@ -105,6 +104,8 @@ const GUI = function(pars) {
   this.__undoLogSize = 64;
   this.__redoLog = [];
   this.__disabled = false;
+
+  this.__automations = [];
 
   /**
    * Nested GUI's by name
@@ -1259,7 +1260,16 @@ function add(gui, object, property, params) {
   }
 
   augmentController(gui, li, controller);
-
+  
+  if(controller instanceof NumberControllerSlider || controller instanceof NumberControllerBox){
+    const sd = document.createElement("button");
+    sd.innerHTML = "A";
+    sd.onclick = () => {
+      gui.getRoot().modalRef.toggleModal(11, true, controller);
+    }
+    
+    controller.domElement.appendChild(sd);
+  }
   gui.__controllers.push(controller);
 
   return controller;

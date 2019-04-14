@@ -6,7 +6,6 @@ import ParticlesSideways  from './perspective/ParticlesSideways'
 import TextLines from './perspective/TextLines' 
 
 // ortho items
-import JSNation from './ortho/JSNation'
 import TimeRep from './ortho/TimeRep'
 import Plane from './ortho/Plane'
 import Background from './ortho/Background'
@@ -50,7 +49,6 @@ const canvasItems = {
 
 
 const orthoItems = {
-    JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", url:"https://github.com/caseif/js.nation", class: JSNation},
     Background: { class: Background },
     StarField: {img: "img/items/StarNest.png", class: StarField },
     TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},

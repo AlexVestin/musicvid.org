@@ -6,6 +6,7 @@ import AppBar from '../components/AppBar';
 import classNames from 'classnames';
 
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
+import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
   container: {
@@ -57,6 +58,8 @@ function AppAppBar(props) {
           >
             {'musicvid.org'}
           </Link>
+
+          <Typography variant="h6" style={{color: "#ff3366", marginLeft: 6}}> ALPHA</Typography>
           <div className={classes.right}>
           <Link
               color="inherit"

@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import classes from "./SelectResolutionModal.module.scss";
+import classes from "./ModalContainer.module.scss";
 import Resolution from "./Resolution";
 import LoadImage from "./LoadImage";
 import AudioModal from "./AudioModal";
@@ -7,9 +7,11 @@ import LicenseModal from "./LicenseModal";
 import AddItemModal from "./AddItemModal";
 import AddSceneModal from "./AddSceneModal";
 import LongAudioWarningModal from "./LongAudioWarningModal";
+import AutomationsModal from "./Automations/AutomationsModal";
 
 
-export default class SelectResolutionModal extends PureComponent {
+
+export default class ModalContainer extends PureComponent {
     constructor(props) {
         super(props);
 
@@ -42,12 +44,15 @@ export default class SelectResolutionModal extends PureComponent {
         };
     };
 
-    async toggleModal(idx, open) {
+    async toggleModal(idx, open, args=null) {
         this.currentPromise = new Promise((resolve, reject) => {
             let i = idx ? idx : this.state.index;
             let o = open ? open : !this.state.modalOpen;
+            if(args)
+                this.args=args;
             this.setState({ modalOpen: o, index: i });
             this.onParentSelect = resolve;
+            
         });
 
         return this.currentPromise;
@@ -59,7 +64,7 @@ export default class SelectResolutionModal extends PureComponent {
     };
     render() {
         const { modalOpen, index } = this.state;
-        console.log(index);
+
         return (
             <div className={classes.container}>
                 {index === 1 && (
@@ -99,6 +104,16 @@ export default class SelectResolutionModal extends PureComponent {
                     <LongAudioWarningModal
                         open={modalOpen}
                         onSelect={this.onSelect}
+                    />
+                )}
+
+                {index === 11 &&  (
+                    <AutomationsModal
+                        open={modalOpen}
+                        onSelect={this.onSelect}
+                        gui={this.props.gui}
+                        item={this.args}
+                        index={index - 5}
                     />
                 )}
             </div>

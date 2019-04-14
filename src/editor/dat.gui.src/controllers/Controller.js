@@ -22,6 +22,7 @@ class Controller {
   constructor(object, property) {
     this.initialValue = object[property];
     this.previousValue = object[property];
+    this.__activeAutomations = [];
     /**
      * Those who extend this class will put their DOM elements in here.
      * @type {DOMElement}
@@ -105,6 +106,8 @@ class Controller {
     if( this.object.updateDisplay) {
       this.object.updateDisplay();
     }
+
+    
 
 
       this.updateDisplay();

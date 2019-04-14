@@ -115,7 +115,7 @@ class NumberControllerBox extends NumberController {
     });
 
     this.updateDisplay();
-
+  
     this.domElement.appendChild(this.__input);
   }
 

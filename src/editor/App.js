@@ -5,7 +5,7 @@ import withHeader from "./components/header/Header";
 import * as dat from "./dat.gui.src";
 import Canvas from "./components/canvas/Canvas";
 import TrackContainer from "./components/track/TrackContainer";
-import ModalContainer from "./components/modal/SelectResolutionModal";
+import ModalContainer from "./components/modal/ModalContainer";
 import Sound from "./audio/Sound";
 import Exporter from "./export/Exporter";
 import license from "./util/License";
@@ -40,7 +40,7 @@ class App extends PureComponent {
         };
        
         this.firstLoad = true;
-        this.fastLoad = false;
+        this.fastLoad = true;
         this.timeOffset = 0;
         this.lastTime = 0;
         this.lastAudioData = {frequencyData: [], timeData: []};
@@ -119,7 +119,6 @@ class App extends PureComponent {
         ctx.strokeStyle ="#000";
         ctx.beginPath();
         const midPoint = canvas.height / 2;
-        
         ctx.moveTo(0, midPoint);
         for(var i = 0; i < audioData.length; i+= stepSize) {
             const x = Math.floor(i / stepSize);
@@ -133,7 +132,6 @@ class App extends PureComponent {
             ctx.moveTo(x, midPoint-y);
             ctx.lineTo(x, midPoint+y);
             ctx.moveTo(x+1, midPoint);
-            
         }
 
         ctx.stroke();
@@ -334,6 +332,7 @@ class App extends PureComponent {
                     <ModalContainer
                         ref={this.modalRef}
                         onSelect={this.onSelect}
+                        gui={this.gui}
                     />
                 }
 

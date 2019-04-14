@@ -175,6 +175,7 @@ $button-height: 20px;
 
   /** Controller-half (right) */
   .c {
+    display: flex;
     float: left;
     width: 60%;
     position: relative;
@@ -186,23 +187,24 @@ $button-height: 20px;
     margin-top: 4px;
     padding: 3px;
     width: 100%;
-    float: right;
+    margin-right: 10px;
+
   }
 
   /** Shorter number boxes when slider is present. */
   .has-slider input[type=text] {
-    width: 30%;
+    width: 60px;
     /*display: none;*/
     margin-left: 0;
   }
 
   .slider {
-    float: left;
     width: 66%;
     //margin-left: -5px;
-    margin-right: 0;
+    margin-right: 10px;
     height: 19px;
     margin-top: 4px;
+
   }
 
   .slider-fg {
