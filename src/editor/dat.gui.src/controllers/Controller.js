@@ -24,6 +24,7 @@ class Controller {
     this.preAutomationValue = object[property];
     this.previousValue = object[property];
     this.__activeAutomations = [];
+    this.__updateCounter = 0;
     
     /**
      * Those who extend this class will put their DOM elements in here.

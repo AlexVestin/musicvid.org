@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 
@@ -12,13 +11,14 @@ const styles = theme => ({
     root: {
         display: "flex",
         flexWrap: "wrap",
-        justifyContent: "space-around",
+        alignItems: "center",
+        justifyContent: "center",
         overflow: "hidden",
         backgroundColor: theme.palette.background.paper,
 
     },
     gridList: {
-        width: 1200,
+        width: "70%",
         height: 450
     },
     icon: {
@@ -31,7 +31,8 @@ const styles = theme => ({
         
     },
     tileBar: {
-        backgroundColor: "black"
+        backgroundColor: "black",
+       
     }
 });
 

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Typography } from '@material-ui/core';
+import { Typography, Dialog } from '@material-ui/core';
 import AutomationsList from './AutomationsList'
 import classes from './AutomationsModal.module.scss';
 
@@ -38,19 +38,21 @@ export default class AddNewAutomation extends PureComponent {
 
   render() {
     return (
-      <div className={classes.container}>
-      <div >
-          <Typography variant="h6">
-              Add new automation
-          </Typography>
+        <Dialog open={this.props.open}>
+            <div className={classes.container}>
+            <div >
+                <Typography variant="h6">
+                    Add new automation
+                </Typography>
 
-          <Typography variant="h8">
-              Custom automations
-          </Typography>
+                <Typography variant="h8">
+                    Custom automations
+                </Typography>
 
-          <AutomationsList onSelect={this.onSelect} automations={customAutomations}></AutomationsList>
-      </div>
-      </div>
+                <AutomationsList onSelect={this.props.onSelect} automations={customAutomations}></AutomationsList>
+            </div>
+            </div>
+      </Dialog>
     )
   }
 }

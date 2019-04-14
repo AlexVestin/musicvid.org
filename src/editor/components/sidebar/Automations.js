@@ -1,0 +1,78 @@
+import React, { PureComponent } from "react";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+
+import AutomationsList from "../modal/Automations/AutomationsList";
+import ItemContainer from "../modal/Automations/ItemContainer";
+
+import AudioAutomation from "../modal/Automations/items/AudioReactiveAutomation";
+
+import classes from "./Automations.module.scss";
+
+export default class Automations extends PureComponent {
+    state = { index: 0 };
+
+    onSelect = () => {
+        const rootGui = this.props.gui.getRoot();
+        rootGui.modalRef.toggleModal(13).then(selected => {
+            const root = this.props.gui.getRoot();
+            this.selectedAutomation = new AudioAutomation(root);
+            this.setState({ index: 1 });
+        });
+    };
+
+    onSelectAutomation = (automation) => {
+        this.selectedAutomation = automation;
+        this.setState({ index: 1 });
+    }
+
+    render() {
+        const { index } = this.state;
+        const rootGui = this.props.gui.getRoot();
+        const automations = rootGui.__automations;
+        return (
+            <div className={classes.container}>
+                <div className={classes.column}>
+                    {index === 0 && (
+                        <React.Fragment>
+                             <Typography variant="h4" style={{color: "white"}}>
+                                    Automations 
+                            </Typography>
+
+                            {automations.length > 0 ? (
+                               
+                                <AutomationsList
+                                    onSelect={this.onSelectAutomation}
+                                    automations={automations}
+                                />
+                            ) : (
+                                <Typography variant="h6" color="secondary">
+                                    There are currently no automations! <br />
+                                    You can add a new one using the button below
+                                </Typography>
+                            )}
+
+                            <Button
+                                onClick={this.onSelect}
+                                style={{ color: "#efefef" }}
+                            >
+                                Add new automation
+                            </Button>
+                        </React.Fragment>
+                    )}
+                    {index === 1 && (
+                        <div>
+                        <ItemContainer
+                            item={this.selectedAutomation}
+                            back={() => this.setState({ index: 0 })}
+                        >
+                            hello
+                        </ItemContainer>
+                        <Button style={{color:"#efefef"}} onClick={() => this.setState({index: 0})}>Back</Button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+}

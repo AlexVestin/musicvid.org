@@ -8,6 +8,7 @@ import AddItemModal from "./AddItemModal";
 import AddSceneModal from "./AddSceneModal";
 import LongAudioWarningModal from "./LongAudioWarningModal";
 import AutomationsModal from "./Automations/AutomationsModal";
+import AddNewAutomation from './Automations/AddNewAutomationModal'
 
 
 
@@ -52,7 +53,6 @@ export default class ModalContainer extends PureComponent {
                 this.args=args;
             this.setState({ modalOpen: o, index: i });
             this.onParentSelect = resolve;
-            
         });
 
         return this.currentPromise;
@@ -125,6 +125,14 @@ export default class ModalContainer extends PureComponent {
                         gui={this.props.gui}
                         item={this.args}
                         index={index - 5}
+                    />
+                )}
+
+                {index === 13 &&  (
+                    <AddNewAutomation
+                        open={modalOpen}
+                        onSelect={this.onSelect}
+                        gui={this.props.gui}
                     />
                 )}
             </div>

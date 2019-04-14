@@ -7,8 +7,15 @@ export default class ItemContainer extends PureComponent {
 
         this.item = props.item;
         this.state = { name: this.item.name };
+        this.inputRef =React.createRef();
     }
 
+    componentDidMount = () => {
+        this.inputRef.current.onkeyup = (event) => {
+            event.stopPropagation();
+            event.preventDefault(); 
+        }
+    }
     updateName = e => {
         const val = e.target.value;
         this.setState({ name: val });
@@ -19,7 +26,10 @@ export default class ItemContainer extends PureComponent {
         const { item, onSelect } = this.props;
         return (
             <div>
-                <input value={this.state.name} onChange={this.updateName} />
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", color: "#efefef", marginBottom: 5, marginTop: 10}}>
+                    <div>Name: </div>
+                    <input ref={this.inputRef} value={this.state.name} onChange={this.updateName} />
+                </div>
                 {item.type === "audio" && (
                     <AudioReactiveItem onSelect={onSelect} item={item} />
                 )}
