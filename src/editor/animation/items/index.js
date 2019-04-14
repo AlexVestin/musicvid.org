@@ -1,13 +1,13 @@
 
 // perspective items
 import Particles from './perspective/Particles'
-import TimeRep from './perspective/TimeRep'
 import LineBed from './perspective/LineBed'
 import ParticlesSideways  from './perspective/ParticlesSideways' 
 import TextLines from './perspective/TextLines' 
 
 // ortho items
 import JSNation from './ortho/JSNation'
+import TimeRep from './ortho/TimeRep'
 import Plane from './ortho/Plane'
 import Background from './ortho/Background'
 import StarField from './ortho/StarField'

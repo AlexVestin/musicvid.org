@@ -51,10 +51,9 @@ export default class ControllerContainer extends PureComponent {
         ];
         this.fileName = "myvid.mp4";
         folder.add(this, "fileName");
-        const advFolder = folder.addFolder("Advanced settings");
-        advFolder.add(this, "fps", [24, 25, 30, 48, 60]);
-        advFolder.add(this, "preset", this.presetLookup)
-        advFolder.add(this, "MBitBitrate", 0, 20, 0.1);
+        folder.add(this, "fps", [24, 25, 30, 48, 60]);
+        folder.add(this, "preset", this.presetLookup)
+        folder.add(this, "MBitBitrate", 0, 20, 0.1);
         folder.add(this, "startEncoding");
     }
 

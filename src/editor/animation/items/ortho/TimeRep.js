@@ -54,7 +54,6 @@ export default class AudioWave extends BaseItem{
         const bufferLength = audioData.length;
         var linePos = this.line.geometry.attributes.position.array;
 
-        console.log(this.line.material)
         if(bufferLength * 3 !== linePos.length) {
             this.geometry = new THREE.BufferGeometry();
             this.linePositions = new Float32Array( bufferLength * 3 ); // 3 vertices per point

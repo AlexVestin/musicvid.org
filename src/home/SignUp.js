@@ -119,6 +119,7 @@ class SignUp extends React.Component {
                   disabled={submitting || sent}
                   color="secondary"
                   fullWidth
+                  onClick={() => alert("Accounts are coming soon™")}
                 >
                   {submitting || sent ? 'In progress…' : 'Sign Up'}
                 </FormButton>

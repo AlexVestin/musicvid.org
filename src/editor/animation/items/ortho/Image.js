@@ -23,11 +23,7 @@ export default class Image extends BaseItem{
     }
 
     async changeImage() {
-        const ref = this.folder.__root.modalRef; 
-        loadImageTexture(ref, this.setBackground).then(file => {
-            this.__addUndoAction(this.undoChangeImage, this.prevFile);
-            this.prevFile = file;
-        });
+        loadImageTexture(this, "setBackground")
     }
     
     update = (time, audioData) => {

@@ -66,25 +66,22 @@ export default class Background extends BaseItem {
         this.scene.add(this.mesh);
 
         const url = "./img/space.jpeg";
+        this.prevFile = url;
         loadImageTextureFromChoice(url, this.setBackground);
         this.__setUpFolder();
-        this.prevFile = url;
+        
     }
 
     changeImage() {
-        this.folder.getRoot().__disabled = true;
-        const ref = this.folder.__root.modalRef; 
-        loadImageTexture(ref, this.setBackground).then(file => {
-            this.folder.getRoot().__disabled = false;
-            this.__addUndoAction(this.undoChangeImage, this.prevFile);
-            this.prevFile = file;
-        });
+        loadImageTexture(this, "setBackground");
     }
 
-    undoChangeImage = (file) => {
-        this.folder.getRoot().__disabled = true;
-        loadImageTextureFromChoice(file, this.setBackground);
-        this.prevFile = file;
+    setBackground = (texture) => {
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.generateMipMaps = false;
+        this.material.uniforms.texture1.value = texture;
+        this.material.needsUpdate = true;
     }
     
 
@@ -109,14 +106,5 @@ export default class Background extends BaseItem {
         addOrthoMeshControls(this, this.mesh, folder);
         folder.updateDisplay();
         return this.__addFolder(folder);
-    }
-
-    setBackground = (texture) => {
-        this.folder.getRoot().__disabled = false;
-        texture.minFilter = THREE.LinearFilter;
-        texture.magFilter = THREE.LinearFilter;
-        texture.generateMipMaps = false;
-        this.material.uniforms.texture1.value = texture;
-        this.material.needsUpdate = true;
     }
 }

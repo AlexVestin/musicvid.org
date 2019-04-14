@@ -96,10 +96,10 @@ export default class SpriteTextMask extends BaseItem {
         texture.generateMipMaps = false;
         this.mat.uniforms.texture2.value = texture;
         this.mat.needsUpdate = true;
-        
     }
+    
     changeBackroundImage = () => {
-        loadImageTexture(this.folder.__root.modalRef, this.setBackground)
+        loadImageTexture(this, "setBackground");
     }
 
     updateText = () => {

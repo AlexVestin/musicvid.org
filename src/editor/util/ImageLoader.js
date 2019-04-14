@@ -52,14 +52,22 @@ export async function loadImage(ref, callback) {
     });
 }
 
-export async function loadImageTexture(ref, callback) {
+export async function loadImageTexture(obj, func) {
+    const ref = obj.folder.getRoot().modalRef; 
     return new Promise(async (resolve, reject) => {
         if (ref.currentPromise && !ref.currentPromise.done) {
             await ref.currentPromise;
         }
         ref.toggleModal(3).then(selected => {
-            loadImageTextureFromChoice(selected, callback);
+            loadImageTextureFromChoice(selected, obj[func]);
             resolve(selected);
+            
+
+            obj.__addUndoAction((file) => {
+                obj.prevFile = file;
+                loadImageTextureFromChoice(file, obj[func]);
+            }, obj.prevFile);
+            obj.prevFile = selected;
         });
     });
 }

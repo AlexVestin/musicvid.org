@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 import BaseItem from '../BaseItem'
+import { loadImageTexture } from 'editor/util/ImageLoader';
 
 
 /**
@@ -28,11 +29,16 @@ const vertShader =
 
 const fragShader =
     `uniform sampler2D texture; 
+    uniform bool flipY;
     varying float vAlpha; 
     varying vec3 vColor; 
     void main() { 
         gl_FragColor = vec4(vColor, vAlpha); 
-        gl_FragColor = gl_FragColor * texture2D(texture, gl_PointCoord); 
+        if(flipY)
+            gl_FragColor = gl_FragColor * texture2D(texture, gl_PointCoord); 
+        else 
+            gl_FragColor = gl_FragColor * texture2D(texture, 1.-gl_PointCoord); 
+
     }`;
 
 
@@ -93,15 +99,26 @@ export default class Particles extends BaseItem {
         this.color = 0xFFFFFF;
         this.baseSpeed = 1.0;
         this.movementAmplitude = 1.0;
-        this.__setUpFolder();
+        this.useCustomParticleImage = false;
+
+        
+        
        
+      
+       
+
+        this.texLoader = new THREE.TextureLoader();
+        this.texLoader.crossOrigin = "";
+        this.setUp();
+
+        
+        this.__setUpFolder();
+        this.folder.updateDisplay();
+
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
         this.impactAnalyser.amplitude = 2.5;
         this.impactAnalyser.endBin = 80;
         this.impactAnalyser.deltaDecay = 0.3;
-        this.folder.updateDisplay();
-        this.setUp();
-
         this.__attribution = {
             showAttribution: true,
             name:"Particles",
@@ -129,6 +146,11 @@ export default class Particles extends BaseItem {
 
     setUpGUI = (gui, name) => {
         const folder = gui.addFolder(name);
+        folder.add(this, "changeParticleImage");
+        folder.add(this, "resetParticleImage");
+        folder.add(this.pMaterial.uniforms.flipY, "value").name("Flip vertically")
+
+        
         folder.add(this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
         folder.addColor(this, "color").onChange(this.changeColor);
         folder.add(this, "particleMinSpeed", 0, 10);
@@ -140,7 +162,6 @@ export default class Particles extends BaseItem {
     }
 
     changeColor = () => {
-
         this.pMaterial.uniforms.color.value = new THREE.Color(this.color)
     }
 
@@ -148,21 +169,28 @@ export default class Particles extends BaseItem {
         return this.particleSystem;
     }
 
+    changeParticleImage() {
+        loadImageTexture(this, "setParticleImage");
+    }
+    
+    setParticleImage = (tex) => {
+        tex.minFilter = THREE.LinearFilter;
+        this.pMaterial.uniforms.texture.value = tex;
+    }
+
+    resetParticleImage() {
+        const texLoc = "./img/particle.png";
+        const particleTexture = this.texLoader.load(texLoc);
+        this.setParticleImage(particleTexture);
+    }
 
     setUp = ()  => {
         this.particlesGeom = new THREE.BufferGeometry();
-        let texLoader = new THREE.TextureLoader();
-        texLoader.crossOrigin = "";
-
-        const texLoc = "./img/particle.png";
-        
-
-        const particleTexture = texLoader.load(texLoc);
-        particleTexture.minFilter = THREE.LinearFilter;
-
+       
         let uniforms = {
             color: { type: "c", value: new THREE.Color(0xFFFFFF)},
-            texture: { type: "t", value: particleTexture }
+            texture: { type: "t", value: new THREE.Texture() },
+            flipY: { value: false}
         };
 
         this.pMaterial = new THREE.ShaderMaterial({
@@ -174,13 +202,14 @@ export default class Particles extends BaseItem {
             depthTest: false
         });
 
-        
+        this.resetParticleImage();
         this.initializeParticles();
         
         this.scene.add(this.particleSystem);
     }
 
     update = function(time, audioData) {
+
         if(this.particleSystem) {
             const multiplier = this.impactAnalyser.analyse(audioData.frequencyData) * this.movementAmplitude;
             for (let i = 0; i < this.maxParticleCount / 2; i++) {

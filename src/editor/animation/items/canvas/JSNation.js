@@ -151,7 +151,7 @@ export default class JSNationSpectrum extends BaseItem {
 
         folder.add(this, "x", -2, 2);
         folder.add(this, "y", -2, 2);
-        folder.add(this, "scale", -2, 6);
+        folder.add(this, "scale", 0.01, 6);
 
         folder.add(this.ctx, "shadowBlur", 0, 100);
         folder.add(this, "spectrumRotation", 0, Math.PI / 2, 0.00001);

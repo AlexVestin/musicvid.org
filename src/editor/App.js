@@ -49,11 +49,13 @@ class App extends PureComponent {
 
         this.canvasRef = React.createRef();
         this.modalRef = React.createRef();
+        this.audioWaveCanvas = React.createRef();
     }
 
     loadNewAudioFile = () => {
         this.modalRef.current.toggleModal(1, true).then(this.onSelect);
     };
+
 
     componentDidMount = () => {
         if (!this.fastLoad) {
@@ -107,6 +109,40 @@ class App extends PureComponent {
         });
     };
 
+    generateAudioWave = (audioData) => {
+        const canvas =this.audioWaveCanvas.current; 
+        const ctx = canvas.getContext("2d");
+        const nrPointsToDraw = canvas.clientWidth;
+        const stepSize = Math.floor(audioData.length / nrPointsToDraw);
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        ctx.strokeStyle ="#000";
+        ctx.beginPath();
+        const midPoint = canvas.height / 2;
+        
+        ctx.moveTo(0, midPoint);
+        for(var i = 0; i < audioData.length; i+= stepSize) {
+            const x = Math.floor(i / stepSize);
+            let sum = 0;
+
+            const ij = 8;
+            for(var j = i; j < i + stepSize; j+=ij) { 
+                sum += Math.abs(audioData[j]);
+            }
+            const y = 1 + Math.floor((ij * sum / stepSize) * canvas.height);
+            ctx.moveTo(x, midPoint-y);
+            ctx.lineTo(x, midPoint+y);
+            ctx.moveTo(x+1, midPoint);
+            
+        }
+
+        ctx.stroke();
+    }
+
+    toggleMuted = () => {
+        this.audio.toggleMuted();
+    }
+
     audioReady = duration => {
         if (this.firstLoad) {
             this.audioFolder
@@ -117,6 +153,8 @@ class App extends PureComponent {
         if(duration > 8*60) {
             this.modalRef.current.toggleModal(10)
         }
+
+        this.generateAudioWave(this.audio.combinedAudioData);
 
         this.animationManager.setAudio(this.audio);
         this.setState({ audioDuration: duration, audioLoaded: true });
@@ -159,6 +197,10 @@ class App extends PureComponent {
                 this.lastAudioData = audioData;
             }else {
                 this.animationManager.update(this.lastTime, this.lastAudioData, false);
+
+                if(this.state.time >= this.audio.duration && this.state.playing) {
+                    this.play();
+                }
             }     
             
             this.canvasRef.current.end();
@@ -342,7 +384,11 @@ class App extends PureComponent {
                                 seek={this.seek}
                                 playing={this.state.playing}
                                 audio={this.audio}
-                            />
+                                canvas={this.audioWaveCanvas}
+                                toggleMuted={this.toggleMuted}
+                            >
+                                <canvas ref={this.audioWaveCanvas} className={classes.audioWaveCanvas}></canvas>
+                            </TrackContainer>
                         </div>
                     </React.Fragment>
                 )}

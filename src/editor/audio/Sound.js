@@ -10,6 +10,8 @@ export default class Audio {
         this.fftSize = 2048 * 8;
         
         this.volume = 1;
+        this.storedVolume = 1;
+        this.muted = false;
         this.exportWindowSize = 2048;
         this.exportFrameIdx = 0;
         this.gui = gui;
@@ -75,6 +77,7 @@ export default class Audio {
             this.playBufferSource.stop();
         }
 
+
         this.playBufferSource = this.audioCtx.createBufferSource();
         this.playBufferSource.buffer = this.bufferSource.buffer;
         this.gainNode = this.audioCtx.createGain();
@@ -93,6 +96,18 @@ export default class Audio {
             this.combinedAudioData[i] = (leftAudio[i] + rightAudio[i]) / 2;
         }
     };
+
+    toggleMuted = () => {
+        this.muted =  !this.muted;
+        if(this.muted) {
+            this.storedVolume = this.volume;
+            this.setVolume(0);
+        }else {
+            this.setVolume(this.storedVolume);
+        }
+
+        
+    }
 
     getAudioData = time => {
         const halfWindowSize = this.fftSize / 2;
@@ -127,7 +142,6 @@ export default class Audio {
 
     onload = ev => {
         this.audioCtx.decodeAudioData(ev.target.result).then(buffer => {
-            console.log(buffer.duration)
             this.bufferSource = this.audioCtx.createBufferSource();
             this.bufferSource.buffer = buffer;
             this.duration = buffer.duration;
@@ -183,8 +197,6 @@ export default class Audio {
             if (event.lengthComputable) {
                 const percentComplete = event.loaded / event.total;
                 this.onProgress(Math.max(percentComplete-0.02, 0));
-
-                console.log(percentComplete)
               }
         };
     }

@@ -34,7 +34,7 @@ export default class TrackContainer extends PureComponent {
 
     constructor() {
         super();
-
+        this.state = {muted: false};
         this.mountRef = React.createRef();
         this.seekRef = React.createRef();
     }
@@ -46,7 +46,12 @@ export default class TrackContainer extends PureComponent {
         }
     }
 
+    toggleMuted = () => {
+        this.props.toggleMuted();
+        this.setState({muted: !this.state.muted});
+    }
 
+   
     render() {
 
         const ele = this.seekRef.current;
@@ -59,8 +64,6 @@ export default class TrackContainer extends PureComponent {
                 <div className={classes.trackContainer}>
                     <div className={classes.controls}>
 
-                        
-
                         <div className={classes.buttons}>
                             <PlayButton img={this.props.playing ? pauseimg : playimg} disabled={this.props.disabled} onClick={this.props.play}></PlayButton>
                             <PlayButton img={stopimg} disabled={this.props.disabled} onClick={this.props.stop}></PlayButton>
@@ -72,11 +75,19 @@ export default class TrackContainer extends PureComponent {
 
                     </div>
                     <div onClick={this.seek} className={classes.seeker} ref={this.seekRef}>
+
                         <div onClick={this.seek} style={{ width: seekerWidth }} className={classes.seekerOverlay}></div>
+                        {this.props.children}
                     </div>
 
                     <div className={classes.volumeContainer}>
-                        <img style={{width: 20, height: 20}} src={volumeimg} alt="volume"></img>
+
+                        {this.state.muted &&
+                            <svg style={{width: 20, height: 20, position: "absolute", pointerEvents: "none"}} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="0" y1="80" x2="100" y2="20" stroke="red" stroke-width="10" />
+                            </svg>
+                        }
+                        <img onClick={this.toggleMuted} style={{cursor: "pointer", width: 20, height: 20}} src={volumeimg} alt="volume"></img>
                         <Slider disabled={this.props.disabled} audio={this.props.audio} style={{marginLeft: 10}}></Slider>
                     </div>
                     

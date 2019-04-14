@@ -113,6 +113,7 @@ class SignIn extends React.Component {
                   size="large"
                   color="secondary"
                   fullWidth
+                  onClick={() => alert("Accounts are coming soon™")}
                 >
                   {submitting || sent ? 'In progress…' : 'Sign In'}
                 </FormButton>
