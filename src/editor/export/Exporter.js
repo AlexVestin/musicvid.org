@@ -20,6 +20,7 @@ export default class Exporter {
         this.frames             = [];
         this.videoEncoder       = new VideoEncoder(this.initEncoder);
         this.presetIdx          = config.video.presetIdx;
+        this.gui                = config.gui.getRoot();
     }
 
 
@@ -61,6 +62,12 @@ export default class Exporter {
                 this.encodeAudioFrame();
             }else{
                 const audioData = this.sound.getAudioData(this.time);
+                const automations = this.gui.getRoot().__automations;
+                automations.forEach(item => {
+                    item.update(this.time, audioData);
+                    item.apply();
+                })
+
                 this.animationManager.update(this.time, audioData, true);
                 this.time += 1 / this.fps;
                 this.encodeVideoFrame();

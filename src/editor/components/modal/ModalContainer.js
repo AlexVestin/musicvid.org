@@ -62,6 +62,7 @@ export default class ModalContainer extends PureComponent {
         this.setState({ modalOpen: false });
         this.onParentSelect(info);
     };
+    
     render() {
         const { modalOpen, index } = this.state;
 

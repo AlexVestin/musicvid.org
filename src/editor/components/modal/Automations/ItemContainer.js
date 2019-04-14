@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import AudioReactiveItem from "./AudioReactiveItem";
+import InputItem from "./MathInputItem";
 
 export default class ItemContainer extends PureComponent {
     constructor(props) {
@@ -7,7 +8,7 @@ export default class ItemContainer extends PureComponent {
 
         this.item = props.item;
         this.state = { name: this.item.name };
-        this.inputRef =React.createRef();
+        this.inputRef = React.createRef();
     }
 
     componentDidMount = () => {
@@ -33,7 +34,7 @@ export default class ItemContainer extends PureComponent {
                 {item.type === "audio" && (
                     <AudioReactiveItem onSelect={onSelect} item={item} />
                 )}
-                {item.type === "math" && <div ref={this.mountRef} />}
+                {item.type === "math" && <InputItem onSelect={onSelect} item={item} />}
                 {item.type === "points" && <div ref={this.mountRef} />}
             </div>
         );

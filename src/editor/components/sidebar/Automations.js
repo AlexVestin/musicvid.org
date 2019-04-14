@@ -6,6 +6,8 @@ import AutomationsList from "../modal/Automations/AutomationsList";
 import ItemContainer from "../modal/Automations/ItemContainer";
 
 import AudioAutomation from "../modal/Automations/items/AudioReactiveAutomation";
+import MathAutomation from "../modal/Automations/items/InputAutomation";
+
 
 import classes from "./Automations.module.scss";
 
@@ -16,7 +18,17 @@ export default class Automations extends PureComponent {
         const rootGui = this.props.gui.getRoot();
         rootGui.modalRef.toggleModal(13).then(selected => {
             const root = this.props.gui.getRoot();
-            this.selectedAutomation = new AudioAutomation(root);
+            switch(selected.type) {
+                case "audio":
+                this.selectedAutomation = new AudioAutomation(root);
+                    break;
+                case "math":
+                    this.selectedAutomation = new MathAutomation(root);
+                    break;
+                default:
+                console.log("unknown type")
+            }
+            
             this.setState({ index: 1 });
         });
     };

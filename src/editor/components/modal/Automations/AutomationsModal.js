@@ -12,6 +12,9 @@ import AddNewAutomation from "./AddNewAutomation";
 // audio automation
 import AudioAutomation from "./items/AudioReactiveAutomation";
 import ItemContainer from "./ItemContainer";
+
+//Input automation
+import InputAutomation from "./items/InputAutomation";
 const styles = theme => ({
     form: {
         display: "flex",
@@ -45,21 +48,21 @@ class ScrollDialog extends React.Component {
 
     onSelect = automation => {
         const { item } = this.props;
-        if(this.props.mainMenu) {
-            this.selectedAutomation = automation;
-            this.setState({index: 3});
-        }else {
-            const link = { automation, type: "*", item };
-            item.__activeAutomations.push(link);
-            automation.__items.push(link);
-            this.setState({ index: this.homeIndex });
-        }
+        const link = { type: "*", item };
+        automation.__items.push(link);
+        this.setState({ index: this.homeIndex });
     }
 
     addAudioAutomation = () => {
         const root = this.props.gui.getRoot();
         this.selectedAutomation = new AudioAutomation(root);
-        this.setState({ index: 3 });
+        this.onSelect(this.selectedAutomation);
+    };
+
+    addMathAutomation = () => {
+        const root = this.props.gui.getRoot();
+        this.selectedAutomation = new InputAutomation(root);
+        this.onSelect(this.selectedAutomation);
     };
 
     back = () => {
@@ -90,6 +93,7 @@ class ScrollDialog extends React.Component {
                     {index === 0 && (
                         <ConfigureAutomations
                             item={item}
+                            gui={rootGui}
                             selectAutomation={() => this.setState({ index: 1 })}
                         />
                     )}
@@ -109,8 +113,8 @@ class ScrollDialog extends React.Component {
                             item={item}
                             back={() => this.setState({ index: this.homeIndex })}
                             addAudioAutomation={this.addAudioAutomation}
-                            addMathAutomation={this.addAudioAutomation}
-                            addPointsAutomation={this.addAudioAutomation}
+                            addMathAutomation={this.addMathAutomation}
+                            addPointsAutomation={this.addPointsAutomation}
                         />
                     )}
 

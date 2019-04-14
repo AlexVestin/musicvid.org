@@ -18,12 +18,14 @@
  * @param {Object} object The object to be manipulated
  * @param {string} property The name of the property to be manipulated
  */
+
+import uuid from 'uuid/v4';
 class Controller {
   constructor(object, property) {
     this.initialValue = object[property];
     this.preAutomationValue = object[property];
     this.previousValue = object[property];
-    this.__activeAutomations = [];
+    this.__uuid = uuid();
     this.__updateCounter = 0;
     
     /**

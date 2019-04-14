@@ -270,7 +270,8 @@ class App extends PureComponent {
                 fileName: selected.fileName,
                 animationManager: this.animationManager,
                 duration: this.state.audioDuration,
-                sound: this.audio
+                sound: this.audio,
+                gui: this.gui
             };
     
             this.exporter = new Exporter(

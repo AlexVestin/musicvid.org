@@ -33,8 +33,8 @@ export default class Automation {
                     console.log("Wrong type in automation");
             }
 
-            //if(item.__updateCounter++ % 20 === 0) 
-                //item.updateDisplay();
+            if(item.__updateCounter++ % 30 === 0) 
+                item.updateDisplay();
         });
     }
 }
