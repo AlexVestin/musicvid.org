@@ -11,10 +11,14 @@ import AddNewAutomation from "./AddNewAutomation";
 
 // audio automation
 import AudioAutomation from "./items/AudioReactiveAutomation";
-import ItemContainer from "./ItemContainer";
+import ItemContainer from "./itemcomponents/ItemContainer";
 
 //Input automation
 import InputAutomation from "./items/InputAutomation";
+
+// Point automation
+import PointAutomation from "./items/PointAutomation";
+
 const styles = theme => ({
     form: {
         display: "flex",
@@ -59,6 +63,12 @@ class ScrollDialog extends React.Component {
         this.onSelect(this.selectedAutomation);
     };
 
+    addPointAutomation = () => {
+        const root = this.props.gui.getRoot();
+        this.selectedAutomation = new PointAutomation(root);
+        this.onSelect(this.selectedAutomation);
+    };
+
     addMathAutomation = () => {
         const root = this.props.gui.getRoot();
         this.selectedAutomation = new InputAutomation(root);
@@ -85,7 +95,6 @@ class ScrollDialog extends React.Component {
                 aria-labelledby="max-width-dialog-title"
                 fullWidth={true}
                 maxWidth="md"
-                fullheight
             >
                 <DialogTitle id="scroll-dialog-title">Automations</DialogTitle>
 
@@ -114,7 +123,7 @@ class ScrollDialog extends React.Component {
                             back={() => this.setState({ index: this.homeIndex })}
                             addAudioAutomation={this.addAudioAutomation}
                             addMathAutomation={this.addMathAutomation}
-                            addPointsAutomation={this.addPointsAutomation}
+                            addPointAutomation={this.addPointAutomation}
                         />
                     )}
 

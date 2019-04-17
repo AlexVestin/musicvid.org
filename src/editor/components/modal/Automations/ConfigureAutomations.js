@@ -22,7 +22,7 @@ export default class ConfigureAutomations extends PureComponent {
             const auto = automations[i];
             const idx = auto.__items.findIndex(e => e.item === item); 
             if(idx !== -1) {
-                autos.push( {name: auto.name, id: auto.__id, type: auto.__items[idx].type });
+                autos.push( {name: auto.name, id: auto.__id, item: auto.__items[idx] });
                 continue;
             }
         }

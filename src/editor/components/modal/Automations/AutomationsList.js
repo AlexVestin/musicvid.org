@@ -6,7 +6,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 
-
 import ImageIcon from "@material-ui/icons/Image";
 import WorkIcon from "@material-ui/icons/Work";
 import BeachAccessIcon from "@material-ui/icons/BeachAccess";
@@ -18,30 +17,27 @@ const styles = theme => ({
     }
 });
 
-function getIcon(type)  {
-    switch(type) {
+function getIcon(type) {
+    switch (type) {
         case "audio":
-            return <WorkIcon></WorkIcon>;
+            return <WorkIcon />;
         case "math":
-            return <ImageIcon></ImageIcon>;
+            return <ImageIcon />;
         case "points":
-            return <BeachAccessIcon></BeachAccessIcon>;
-        default: 
-            return <WorkIcon></WorkIcon>;
+            return <BeachAccessIcon />;
+        default:
+            return <WorkIcon />;
     }
 }
 
 function FolderList(props) {
     const { classes, automations } = props;
-    console.log(props);
     return (
         <List className={classes.root}>
             {automations.map(automation => {
                 return (
-                    <ListItem button onClick={() => props.onSelect(automation)}>
-                        <Avatar>
-                            {getIcon(automation.type)}
-                        </Avatar>
+                    <ListItem key={automation.name} button onClick={() => props.onSelect(automation)}>
+                        <Avatar>{getIcon(automation.type)}</Avatar>
                         <ListItemText
                             primary={automation.name}
                             secondary={automation.description}

@@ -42,7 +42,6 @@ const styles = theme => ({
 function CustomizedTable(props) {
     const { classes, item, automations } = props;
 
-    console.log("?????????????????????????", automations)
     return (
         <Paper className={classes.root}>
             <Table className={classes.table}>
@@ -72,11 +71,11 @@ function CustomizedTable(props) {
                                 {item.object[item.property]}
                             </CustomTableCell>
                             <CustomTableCell align="right">
-                                <select onChange={(e) => row.type = e.target.value}>
-                                  <option selected={row.type === "+" ? "selected" : ""} value="+">+</option>
-                                  <option selected={row.type === "-" ? "selected" : ""} value="-">-</option>
-                                  <option selected={row.type === "=" ? "selected" : ""} value="=">=</option>
-                                  <option selected={row.type === "*" ? "selected" : ""} value="*">*</option>
+                                <select defaultValue={row.item.type} onChange={(e) => row.item.type = e.target.value}>
+                                  <option value="+">+</option>
+                                  <option value="-">-</option>
+                                  <option value="=">=</option>
+                                  <option value="*">*</option>
                                 </select>
 
                             </CustomTableCell>

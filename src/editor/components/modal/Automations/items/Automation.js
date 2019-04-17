@@ -8,6 +8,7 @@ export default class Automation {
         this.name = "";
         this.value = 0;
         rootGui.__automations.push(this);
+        this.rootGui = rootGui;
     }
 
     update(){ alert("implement this"); }
@@ -33,7 +34,16 @@ export default class Automation {
                     console.log("Wrong type in automation");
             }
 
-            if(item.__updateCounter++ % 30 === 0) 
+            if(item.object[item.property] > item.__max)
+                item.object[item.property] = item.__max;
+            
+            if(item.object[item.property] < item.__min)
+                item.object[item.property] = item.__min;
+
+            if(item.__onChange) {
+                item.__onChange();
+            }
+            if(item.__updateCounter++ % this.rootGui.__automationConfigUpdateFrequency === 0) 
                 item.updateDisplay();
         });
     }

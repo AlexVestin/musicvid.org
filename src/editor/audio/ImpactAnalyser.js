@@ -11,13 +11,13 @@ export default function ImpactAnalyser(gui, object) {
     };
 
     // ----
-    const f1 = gui.addFolder("Impact Analysis Settings");
+    const f1 = gui.addFolder("Audio Impact Analysis Settings");
     addAttribute("startBin", 0, f1, { min: 0 });
     addAttribute("endBin", 1000, f1, { min: 0 });
 
     addAttribute("baseAmount", 1, f1, { min: 0 });
     addAttribute("enableImpactAnalysis", true, f1, { min: 0 });
-    addAttribute("amplitude", 64, f1, { min: 0 });
+    addAttribute("amplitude", 1, f1, { min: 0 });
     addAttribute("maxAmount", 280, f1, { min: 0 });
     addAttribute("minAmount", 0, f1, { min: 0 });
 
@@ -37,7 +37,7 @@ export default function ImpactAnalyser(gui, object) {
             }
         }
 
-        amount = amount * this.amplitude / 64;
+        amount = amount * this.amplitude / (64 * 16);
         if(amount > this.maxAmount) 
             amount = this.maxAmount;
         
@@ -47,6 +47,6 @@ export default function ImpactAnalyser(gui, object) {
 
         this.lastAmount = amount;
 
-        return this.amplitude * amount / 64;
+        return amount;
     }
 }

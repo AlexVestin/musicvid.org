@@ -104,8 +104,9 @@ const GUI = function(pars) {
   this.__undoLogSize = 64;
   this.__redoLog = [];
   this.__disabled = false;
-
   this.__automations = [];
+  this.__time = 0;
+  this.__automationConfigUpdateFrequency = 5;
 
   /**
    * Nested GUI's by name

@@ -1,10 +1,14 @@
 import React, { PureComponent } from "react";
 import AudioReactiveItem from "./AudioReactiveItem";
 import InputItem from "./MathInputItem";
+import PointItem from "./PointItem";
+
 
 export default class ItemContainer extends PureComponent {
     constructor(props) {
         super(props);
+
+        console.log(props);
 
         this.item = props.item;
         this.state = { name: this.item.name };
@@ -24,7 +28,7 @@ export default class ItemContainer extends PureComponent {
     };
 
     render() {
-        const { item, onSelect } = this.props;
+        const { item, onSelect, gui } = this.props;
         return (
             <div>
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", color: "#efefef", marginBottom: 5, marginTop: 10}}>
@@ -35,7 +39,7 @@ export default class ItemContainer extends PureComponent {
                     <AudioReactiveItem onSelect={onSelect} item={item} />
                 )}
                 {item.type === "math" && <InputItem onSelect={onSelect} item={item} />}
-                {item.type === "points" && <div ref={this.mountRef} />}
+                {item.type === "point" && <PointItem gui={gui} onSelect={onSelect} item={item} />}
             </div>
         );
     }

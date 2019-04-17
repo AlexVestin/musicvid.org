@@ -122,7 +122,7 @@ class Controller {
     this.previousValue = this.object[this.property];
   }
   
-  setValue(newValue) {
+  setValue(newValue, update=true) {
     
   
     this.object[this.property] = newValue;
@@ -134,7 +134,7 @@ class Controller {
     if( this.object.updateDisplay) {
       this.object.updateDisplay();
     }
-
+    
       this.updateDisplay();
     return this;
   }

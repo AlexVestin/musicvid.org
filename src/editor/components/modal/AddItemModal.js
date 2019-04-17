@@ -20,11 +20,11 @@ const styles = theme => ({
     width: 'fit-content',
   },
   formControl: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
     minWidth: 120,
   },
   formControlLabel: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
   },
 });
 
@@ -35,7 +35,6 @@ class ScrollDialog extends React.Component {
 
   render() {
     const itemTiles = items[this.props.index];
-    const { classes } = this.props;
 
     return (
 
@@ -44,7 +43,6 @@ class ScrollDialog extends React.Component {
           aria-labelledby="max-width-dialog-title"
           fullWidth={true}
           maxWidth="lg"
-          fullheight
         >
           <DialogTitle id="scroll-dialog-title">Add Item</DialogTitle>
           <DialogContent>

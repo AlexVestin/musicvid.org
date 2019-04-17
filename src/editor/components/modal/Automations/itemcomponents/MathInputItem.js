@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 
-export default class AudioReactiveItem extends PureComponent {
+export default class InputItem extends PureComponent {
     constructor(props) {
         super(props);
         this.item = props.item;

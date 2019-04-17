@@ -27,7 +27,7 @@ export default class WebGLManager {
                 
                 this.inFullScreen = !this.inFullScreen;       
             }
-        })
+        });
     }
 
     setUpAttrib() {
@@ -124,10 +124,15 @@ export default class WebGLManager {
         this.layersFolder.add(this, "addScene");
         
         // Set up internal canvas to keep canvas size on screen consistent
-        this.externalCtx = this.canvasMountRef.getContext("2d");
-        this.internalCanvas = document.createElement("canvas");
-        this.internalCanvas.width = this.width;
-        this.internalCanvas.height = this.height;
+        const canvasEl = this.canvasMountRef;
+        this.canvas = ('OffscreenCanvas' in window) ? canvasEl.transferControlToOffscreen() : canvasEl;
+        this.canvas.style = { width: 0, height: 0};
+
+        console.log(this.canvas);
+        //this.externalCtx = this.canvasMountRef.getContext("2d");
+        //this.internalCanvas = document.createElement("canvas");
+        //this.internalCanvas.width = this.width;
+        //this.internalCanvas.height = this.height;
         this.setUpRenderers();
         this.setUpScene();
     }
@@ -185,7 +190,7 @@ export default class WebGLManager {
     }
 
     setUpRenderers = () => {
-        this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, canvas: this.internalCanvas});
+        this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, canvas: this.canvas});
         this.renderer.autoClear = false;
         this.renderer.setClearColor('#000000');
         this.renderer.setSize(this.width, this.height);
@@ -198,6 +203,8 @@ export default class WebGLManager {
         this.gui.__folders["Settings"].add(this, "disableAllControls");
         this.gui.__folders["Settings"].add(this, "resetAllCameras");
         this.gui.__folders["Settings"].add(this, "manageAutomations");
+        this.gui.__folders["Settings"].add(this.gui, "__automationConfigUpdateFrequency", [1, 5, 30, 60]).name("configUpdateFrequency");
+
     }
 
     resetAllCameras = () => {
@@ -249,7 +256,7 @@ export default class WebGLManager {
     }
 
     stop = () => {
-        this.externalCtx.clearRect( 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
+        //this.externalCtx.clearRect( 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
         this.scenes.forEach(scene => {
             scene.stop();
         })
@@ -263,9 +270,12 @@ export default class WebGLManager {
     update = (time, audioData, shouldIncrement) => {
         this.renderer.clear();        
         this.scenes.forEach(scene => {
-            scene.update(time, audioData, shouldIncrement);
-            this.renderer.render(scene.scene, scene.camera);
-            this.renderer.clearDepth();
+            if(scene.TYPE !== "") {
+                scene.update(time, audioData, shouldIncrement);
+                this.renderer.render(scene.scene, scene.camera);
+                this.renderer.clearDepth();
+            }
+          
         }); 
         
 
@@ -273,7 +283,7 @@ export default class WebGLManager {
             this.renderer.render(this.attribScene, this.attribCamera);
         }
 
-        this.externalCtx.drawImage(this.internalCanvas, 0, 0, Math.floor(this.canvasMountRef.width), Math.floor(this.canvasMountRef.height));
+        //this.externalCtx.drawImage(this.internalCanvas, 0, 0, Math.floor(this.canvasMountRef.width), Math.floor(this.canvasMountRef.height));
     }
 
 }

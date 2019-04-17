@@ -3,10 +3,12 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import AutomationsList from "../modal/Automations/AutomationsList";
-import ItemContainer from "../modal/Automations/ItemContainer";
+import ItemContainer from "../modal/Automations/itemcomponents/ItemContainer";
 
 import AudioAutomation from "../modal/Automations/items/AudioReactiveAutomation";
 import MathAutomation from "../modal/Automations/items/InputAutomation";
+import PointAutomation from "../modal/Automations/items/PointAutomation";
+
 
 
 import classes from "./Automations.module.scss";
@@ -24,6 +26,9 @@ export default class Automations extends PureComponent {
                     break;
                 case "math":
                     this.selectedAutomation = new MathAutomation(root);
+                    break;
+                case "point":
+                    this.selectedAutomation = new PointAutomation(root);
                     break;
                 default:
                 console.log("unknown type")
@@ -77,6 +82,7 @@ export default class Automations extends PureComponent {
                         <ItemContainer
                             item={this.selectedAutomation}
                             back={() => this.setState({ index: 0 })}
+                            gui={rootGui}
                         >
                             hello
                         </ItemContainer>

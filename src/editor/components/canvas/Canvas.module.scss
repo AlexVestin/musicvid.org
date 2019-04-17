@@ -17,14 +17,16 @@ $border-radius: 0.5em;
 
 .canvas {
     border-radius: $border-radius;
+    transform-origin: 0 0;
+    //transform: scale(0.6);
 }
 .canvasMount {
     border-radius: $border-radius;
-
+    
     position: relative;
-    width: 680px;
-    height: 420px;
+
+    
     background-color: black;
-    margin-left: auto;
+    margin-left:auto;
     margin-right: auto;
 }

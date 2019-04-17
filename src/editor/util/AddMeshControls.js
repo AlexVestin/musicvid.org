@@ -13,8 +13,6 @@ export default function addPersMeshControls(parent, mesh, gui) {
         scaleY: 1.0,
         scaleZ: 1.0,
         scale: 1.0
-
-
     }
 
     const maxPos = 100;
@@ -30,6 +28,7 @@ export default function addPersMeshControls(parent, mesh, gui) {
     folder.add(obj, "scaleX", -10.0, 10.0, 0.1).onChange(() => mesh.scale.set(obj.scaleX * obj.scale, obj.scaleY * obj.scale, obj.scaleZ * obj.scale));
     folder.add(obj, "scaleY", -10.0, 10.0, 0.1).onChange(() => mesh.scale.set(obj.scaleX * obj.scale, obj.scaleY * obj.scale, obj.scaleZ * obj.scale));
     folder.add(obj, "scaleZ", -10.0, 10.0, 0.1).onChange(() => mesh.scale.set(obj.scaleX * obj.scale, obj.scaleY * obj.scale, obj.scaleZ * obj.scale));
+    folder.add(mesh.opacity,)
     return folder;
 }
 
@@ -55,6 +54,7 @@ export function addOrthoMeshControls(parent, mesh, gui) {
     const maxScale = 2.5;
     folder.add(mesh, "visible");
     folder.add(mesh.material, "wireframe");
+    folder.add(mesh.material, "opacity")
     folder.add(mesh.position, "x", -maxPos, maxPos, maxPos / 100);
     folder.add(mesh.position, "y", -maxPos, maxPos, maxPos / 100);
     folder.add(mesh.position, "z", -maxPos, maxPos, maxPos / 100);

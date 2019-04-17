@@ -5,7 +5,7 @@ import * as Stats from 'stats.js'
 export default class Canvas extends PureComponent {
     constructor() {
         super();
-        this.state = {aspectRatio: 1920 / 1080, width: 640, height: 480}; 
+        this.state = {aspectRatio: 1920 / 1080, width: 640, height: 480, scaleFactor: 0.5}; 
         this.height = 500;
         
         
@@ -34,19 +34,34 @@ export default class Canvas extends PureComponent {
     }
 
     setSize = (res) => {
+        const c = this.canvasRef.current; 
         this.aspectRatio = res.width / res.height;
-        this.setState({width: this.height * this.aspectRatio, height: this.height})
-        this.canvasRef.current.width = this.height * this.aspectRatio;
-        this.canvasRef.current.height = this.height;
+        
+
+        console.log(res.width)
+        let scaleFactor = 1.0;
+        if(res.width > 1500) {
+            scaleFactor = 0.4;
+        }else if(res.width > 700) {
+            scaleFactor = 0.6;
+        }
+
+        c.style.transform = `scale(${scaleFactor})`;
+
+        
+
+
+        this.setState({width: res.width * scaleFactor, height: res.height * scaleFactor})
     }
 
     getMountRef = () => this.canvasRef.current;
 
     render() {
         const { width, height } = this.state;
+
         return (
             <div className={classes.container} ref={this.containerRef}>
-                <div ref={this.canvasRef2} className={classes.canvasMount} style={{ width, height}}>
+                <div ref={this.canvasRef2} className={classes.canvasMount} style={{width: width, height: height}}>
                     <canvas className={classes.canvas}  ref={this.canvasRef} ></canvas>
                 </div>
             </div>

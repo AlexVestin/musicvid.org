@@ -40,7 +40,7 @@ class App extends PureComponent {
         };
        
         this.firstLoad = true;
-        this.fastLoad = true;
+        this.fastLoad = false;
         this.timeOffset = 0;
         this.lastTime = 0;
         this.lastAudioData = {frequencyData: [], timeData: []};
@@ -91,8 +91,9 @@ class App extends PureComponent {
             .then(() => {
                 if (this.fastLoad) {
                     this.resolution = { width: 1280, height: 720 };
-                    this.animationManager.init(this.resolution);
                     this.canvasRef.current.setSize(this.resolution);
+                    this.animationManager.init(this.resolution);
+                    
                     const rep = this.loadNewAudio(
                         "https://s3.eu-west-3.amazonaws.com/fysiklabb/Syn+Cole+-+Miami+82+(Lucas+Silow+Remix).mp3"
                     );
@@ -163,6 +164,7 @@ class App extends PureComponent {
             this.setState({ playing: true });
             const t = this.state.time;
             this.audio.play(t);
+            this.gui.__time = t;
             this.startTime = performance.now();
         } else {    
             this.timeOffset = this.state.time;
@@ -177,6 +179,7 @@ class App extends PureComponent {
         this.setState({ playing: false, time: 0 });
         this.timeOffset = 0;
         this.lastTime = 0;
+        this.gui.__time = 0;
         this.lastAudioData = {frequencyData: [], timeData: []};
     };
 
@@ -199,6 +202,7 @@ class App extends PureComponent {
                 time = (performance.now() - this.startTime) / 1000 + this.timeOffset;
                 audioData = this.audio.getAudioData(time);
                 this.setState({ time });
+                this.gui.__time = time;
 
                 this.applyAutomation(time, audioData);
                 this.animationManager.update(time, audioData, true);
@@ -290,7 +294,8 @@ class App extends PureComponent {
         if (this.state.playing) {
             this.audio.play(time);
         }
-       
+        
+        this.gui.__time = time;
         this.setState({ time: time });
     };
 
@@ -305,8 +310,9 @@ class App extends PureComponent {
         if (!this.resolution) {
             this.resolution = selected;
             this.modalRef.current.toggleModal(1, true).then(this.onSelect);
-            this.animationManager.init(this.resolution);
             this.canvasRef.current.setSize(this.resolution);
+            this.animationManager.init(this.resolution);
+            
             return;
         }
         this.usingSampleAudio = selected === "https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3";
