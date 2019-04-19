@@ -100,20 +100,12 @@ export default class Particles extends BaseItem {
         this.baseSpeed = 1.0;
         this.movementAmplitude = 1.0;
         this.useCustomParticleImage = false;
-
-        
-        
-       
-      
-       
-
         this.texLoader = new THREE.TextureLoader();
         this.texLoader.crossOrigin = "";
         this.setUp();
 
         
         this.__setUpFolder();
-        this.folder.updateDisplay();
 
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
         this.impactAnalyser.amplitude = 2.5;

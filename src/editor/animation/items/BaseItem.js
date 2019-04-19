@@ -36,8 +36,8 @@ export default class BaseItem {
     }
 
     __setUpFolder = () =>  {
-        this.folder = this.setUpGUI(this.__gui, this.name);
-        this.ovFolder = this.setUpGUI(this.__overviewFolder, this.name);
+        //this.folder = this.setUpGUI(this.__gui, this.name);
+        //this.ovFolder = this.setUpGUI(this.__overviewFolder, this.name);
     }
 
     __addUndoAction = (func, args) => {

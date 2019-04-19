@@ -11,7 +11,6 @@ import Plane from './ortho/Plane'
 import Background from './ortho/Background'
 import StarField from './ortho/StarField'
 import SideLobes from './ortho/SideLobes'
-import SimplicityGalaxy from './ortho/SimplicityGalaxy'
 import Image from './ortho/Image'
 import SpriteTextMask from './ortho/SpriteTextMask'
 import SpriteText from './ortho/SpriteText'
@@ -56,6 +55,8 @@ const orthoItems = {
 
 const licensed = true;
 if(licensed) {
+    //import SimplicityGalaxy from './ortho/SimplicityGalaxy'
+
     const licensedOrthoItems = [
         {path: './ortho/Noise.js', img: "img/items/Noise.png", authors: "nmz (@Stormoid)", url: "https://www.shadertoy.com/view/ldlXRS", name: "Noise"},
         {path: './ortho/HexaGone.js',img: "img/items/HexaGone.png", url: "https://www.shadertoy.com/view/wsl3WB", authors: "BigWIngs", name: "HexaGone"},
@@ -66,7 +67,7 @@ if(licensed) {
         import(`${item.path}`).then(Class => {
             orthoItems[item.name] = {...item, class: Class.default};
         })
-    })
+    });
 }
 
 

@@ -7,10 +7,14 @@ export default class Scene {
         this.__moveScene = moveScene;
         this.remove = remove;   
         this.resolution = resolution;     
-        this.modalRef = gui.modalRef;
+
         this.items = [];
-        this.gui = gui;
-        this.setUpGui();
+        if(gui) {
+            this.modalRef = gui.modalRef;
+            this.gui = gui;
+            this.setUpGui();
+        }
+        
     }
 
     updateCamera = () => {

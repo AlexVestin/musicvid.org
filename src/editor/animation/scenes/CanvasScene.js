@@ -22,9 +22,10 @@ export default class CanvasScene extends Scene{
         
         this.MODAL_REF_NR = 5;
         this.TYPE = "canvas";
-        this.folder.name = this.TYPE + " scene";
-
-        this.setUpControls();
+        if(this.folder) {
+            this.folder.name = this.TYPE + " scene";
+            this.setUpControls();
+        }  
     }
 
     

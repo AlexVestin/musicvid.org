@@ -23,7 +23,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.x = 0;
         this.y = 0;
 
-        this.colors = ["#FFFFFF", "#FFFF00", "#FF0000", "#FF66FF", "#333399", "#0000FF", "#33CCFF", "#00FF00"];
+        
         this.spectrumCount = 8;
         this.exponents = [1, 1.12, 1.14, 1.30, 1.33, 1.36, 1.50, 1.52];
         this.smoothMargins = [0, 2, 2, 3, 3, 3, 5, 5];
@@ -31,6 +31,13 @@ export default class JSNationSpectrum extends BaseItem {
         this.delays = [0, 1, 2, 3, 4, 5, 6, 7];
         this.maxBufferSize = Math.max.apply(null, this.delays);
         this.resMult = info.height / info.width;
+
+        this.colors = ["#FFFFFF", "#FFFF00", "#FF0000", "#FF66FF", "#333399", "#0000FF", "#33CCFF", "#00FF00"];
+        this.colors.forEach( (color,i) => {
+            this[`color${i}Enabled`] = true;
+            this[`color${i}Exponent`] = this.exponents[i];
+            this[`color${i}`] = color;   
+        });
 
         this.spectrumHeightScalar = 0.4;
         this.smoothingTimeConstant = 0.1;
@@ -208,6 +215,7 @@ export default class JSNationSpectrum extends BaseItem {
         const { width, height } = this.canvas;
         this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX,Math.floor(this.y * height / 2) + this.sumShakeY);
 
+        
         if(shouldUpdate) {
         
             if (this.spectrumCache.length >= this.maxBufferSize) {
@@ -249,7 +257,7 @@ export default class JSNationSpectrum extends BaseItem {
                         let r = curRad + Math.pow(curSpectrum[i] * this.spectrumHeightScalar * 1, exponent) * dropoff;
                         points.push({x: r * Math.cos(t), y: invert * r * Math.sin(t)});
                     }
-        
+                    
                     this.drawPoints(points);
                 }
                

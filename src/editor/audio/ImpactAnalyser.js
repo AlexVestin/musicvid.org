@@ -7,11 +7,16 @@ export default function ImpactAnalyser(gui, object) {
 
     let addAttribute = (name, value, folder, configs = {}) => {
         this[name] = value;
-        folder.add(this, name, configs.min, configs.max);
+        if(folder) {
+            folder.add(this, name, configs.min, configs.max);
+        }
+        
     };
 
     // ----
-    const f1 = gui.addFolder("Audio Impact Analysis Settings");
+    let f1;
+    if(gui)
+     f1 = gui.addFolder("Audio Impact Analysis Settings");
     addAttribute("startBin", 0, f1, { min: 0 });
     addAttribute("endBin", 1000, f1, { min: 0 });
 

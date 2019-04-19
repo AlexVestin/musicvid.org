@@ -96,44 +96,50 @@ export default class WebGLManager {
     }
 
 
+    addSceneFromText = (sceneName) => {
+        let scene;
+        if(sceneName === "canvas") {
+            scene = this.addCanvasScene();
+        }else if(sceneName === "ortho") {
+            scene =  this.addOrthoScene();
+        }else if(sceneName === "perspective") {
+            scene = this.addPerspectiveScene();
+        }
+        this.scenes.push(scene);
+        return scene;
+    }
+
     addScene = () => {
         this.modalRef.toggleModal(8).then((sceneName) => {
             if(sceneName) {
-                let scene;
-                if(sceneName === "canvas") {
-                    scene = this.addCanvasScene();
-                }else if(sceneName === "ortho") {
-                    scene =  this.addOrthoScene();
-                }else if(sceneName === "perspective") {
-                    scene = this.addPerspectiveScene();
-                }
-                this.scenes.push(scene);
+                const scene = this.addSceneFromText(sceneName);
                 this.gui.getRoot().addUndoItem({type: "action", args: { scene, undoAction: true}, func: this.removeScene});
             };
         });
     }
 
-    init = ( resolution ) => {
+    init = ( resolution, setUpFolders=true) => {
         this.resolution = resolution;
         this.width = resolution.width;
         this.height = resolution.height;
         this.aspect = this.width / this.height;
         this.setUpAttrib();
-        this.overviewFolder = this.gui.__folders["Overview"];
-        this.layersFolder = this.gui.__folders["Layers"];
-        this.layersFolder.add(this, "addScene");
+
+        if(setUpFolders) {
+            this.overviewFolder = this.gui.__folders["Overview"];
+            this.layersFolder = this.gui.__folders["Layers"];
+            this.layersFolder.add(this, "addScene");
+        }
+      
         
         // Set up internal canvas to keep canvas size on screen consistent
-        const canvasEl = this.canvasMountRef;
-        this.canvas = ('OffscreenCanvas' in window) ? canvasEl.transferControlToOffscreen() : canvasEl;
-        this.canvas.style = { width: 0, height: 0};
 
-        console.log(this.canvas);
+        this.canvas = this.canvasMountRef;
         //this.externalCtx = this.canvasMountRef.getContext("2d");
         //this.internalCanvas = document.createElement("canvas");
         //this.internalCanvas.width = this.width;
         //this.internalCanvas.height = this.height;
-        this.setUpRenderers();
+        this.setUpRenderers(setUpFolders);
         this.setUpScene();
     }
 
@@ -189,22 +195,24 @@ export default class WebGLManager {
         this.attribItem.setText(names, 0.75, -0.6);
     }
 
-    setUpRenderers = () => {
+    setUpRenderers = (setUpFolders=true) => {
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, canvas: this.canvas});
         this.renderer.autoClear = false;
         this.renderer.setClearColor('#000000');
         this.renderer.setSize(this.width, this.height);
         this.clearColor = "#000000";
         this.clearAlpha = 1.0;
-        this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
-        this.gui.__folders["Settings"].add(this, "clearAlpha", 0, 1, 0.001).onChange(this.setClear);
-        this.gui.__folders["Settings"].add(this, "drawAttribution").onChange(this.updateAttribution);
-        this.gui.__folders["Settings"].add(this, "enableAllControls");
-        this.gui.__folders["Settings"].add(this, "disableAllControls");
-        this.gui.__folders["Settings"].add(this, "resetAllCameras");
-        this.gui.__folders["Settings"].add(this, "manageAutomations");
-        this.gui.__folders["Settings"].add(this.gui, "__automationConfigUpdateFrequency", [1, 5, 30, 60]).name("configUpdateFrequency");
 
+        if(setUpFolders) {
+            this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
+            this.gui.__folders["Settings"].add(this, "clearAlpha", 0, 1, 0.001).onChange(this.setClear);
+            this.gui.__folders["Settings"].add(this, "drawAttribution").onChange(this.updateAttribution);
+            this.gui.__folders["Settings"].add(this, "enableAllControls");
+            this.gui.__folders["Settings"].add(this, "disableAllControls");
+            this.gui.__folders["Settings"].add(this, "resetAllCameras");
+            this.gui.__folders["Settings"].add(this, "manageAutomations");
+            this.gui.__folders["Settings"].add(this.gui, "__automationConfigUpdateFrequency", [1, 5, 30, 60]).name("configUpdateFrequency");
+        }
     }
 
     resetAllCameras = () => {
@@ -269,16 +277,15 @@ export default class WebGLManager {
 
     update = (time, audioData, shouldIncrement) => {
         this.renderer.clear();        
+        
         this.scenes.forEach(scene => {
             if(scene.TYPE !== "") {
                 scene.update(time, audioData, shouldIncrement);
                 this.renderer.render(scene.scene, scene.camera);
                 this.renderer.clearDepth();
-            }
-          
+            }          
         }); 
         
-
         if(this.drawAttribution) {
             this.renderer.render(this.attribScene, this.attribCamera);
         }

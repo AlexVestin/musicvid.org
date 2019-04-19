@@ -10,7 +10,9 @@ export default class Scene3DOrtho extends Scene {
         this.camera.position.z = 1;
         this.MODAL_REF_NR = 6;
         this.TYPE = "ortho";
-        this.folder.name = this.TYPE + " scene";
-        this.setUpControls();
+        if(this.folder) {
+            this.folder.name = this.TYPE + " scene";
+            this.setUpControls();
+        }    
     }
 }
