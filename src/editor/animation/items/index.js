@@ -53,8 +53,9 @@ const orthoItems = {
 }
 
 
-const licensed = true;
+const licensed = false;
 if(licensed) {
+    console.log("?=????????????????+0")
     //import SimplicityGalaxy from './ortho/SimplicityGalaxy'
 
     const licensedOrthoItems = [

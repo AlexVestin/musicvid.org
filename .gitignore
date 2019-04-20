@@ -24,7 +24,7 @@ yarn-debug.log*
 yarn-error.log*
 
 
-
+*.mp3
 # Licensed shaders
 /src/editor/animation/shaders/licensed/
 
