@@ -2,7 +2,7 @@
 
 import Manager from '../Manager'
 import { initQuad, loadTextureFromImage, createTexture, makeProgram, makeTextureProgram } from '../shaders/CommonFunctions'
-import SHADERS from '../shaders/licensed/Sinuous'
+import Sinuous from '../shaders'
 import ImpactAnalyser from '../../audio/ImpactAnalyser'
 import AttribItemGL from '../items/ortho/AttributionGL'
 import LICENSE from '../../util/License'
@@ -27,9 +27,9 @@ export default class Man extends Manager {
       this.drawAttribution = false;
       this.gui.__folders["Settings"].add(this, "drawAttribution").onChange(this.updateAttribution);
       const res = { w: this.width, h: this.height };
-      const prog1 = makeProgram(gl, SHADERS.fsA, res.w, res.h, { iChannel0: { type: "t", res}, iChannel1: {type: "t", res }});
-      const prog2 = makeProgram(gl, SHADERS.fsB, res.w, res.h, { iChannel0: { type: "t", res}, iChannel1: { type: "t", res} });
-      const prog3 = makeProgram(gl, SHADERS.fsC, res.w, res.h, { iChannel0: { type: "t", res} }, true);
+      const prog1 = makeProgram(gl, Sinuous.fsA, res.w, res.h, { iChannel0: { type: "t", res}, iChannel1: {type: "t", res }});
+      const prog2 = makeProgram(gl, Sinuous.fsB, res.w, res.h, { iChannel0: { type: "t", res}, iChannel1: { type: "t", res} });
+      const prog3 = makeProgram(gl, Sinuous.fsC, res.w, res.h, { iChannel0: { type: "t", res} }, true);
 
       this.program1 = { positions: prog1.positions, program: prog1.program, vp:  gl.getAttribLocation(prog1.program, 'aVertexPosition') };
       this.program2 = { positions: prog2.positions, program: prog2.program };

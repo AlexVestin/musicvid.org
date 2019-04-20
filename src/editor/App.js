@@ -7,7 +7,7 @@ import Canvas from "./components/canvas/Canvas";
 import TrackContainer from "./components/track/TrackContainer";
 import ModalContainer from "./components/modal/ModalContainer";
 import Sound from "./audio/Sound";
-import Exporter from "./export/Exporter";
+import Exporter from "./export/LocalExporter";
 import license from "./util/License";
 import ExportScreen from "./components/Export";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -173,6 +173,10 @@ class App extends PureComponent {
         }
     };
 
+    componentWillUnmount() {
+        this.stop();
+    }
+
     stop = () => {
         if (this.audio) this.audio.stop();
         if (this.animationManager) this.animationManager.stop();
@@ -194,7 +198,7 @@ class App extends PureComponent {
 
     update = () => {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
-        if (!disabled) {
+        if (!disabled && this.canvasRef.current) {
             this.canvasRef.current.begin();
             
             let time, audioData;
@@ -238,9 +242,11 @@ class App extends PureComponent {
             this.update();
             this.audio.exportFrameIdx = 0;
             
+            
             this.canvasRef.current.setSize(this.resolution);
             this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
             this.animationManager.refresh( this.gui.canvasMountRef)
+            console.log("canvas mount ref", this.gui.canvasMountRef);
         });
      
     };
@@ -248,6 +254,8 @@ class App extends PureComponent {
     encoderReady = () => {
         this.encoding = true;
         this.stop();
+
+        console.log("Encoder is ready but it doesnt exist?", this.exporter)
         this.exporter.encode();
         this.setState({ encoding: true });
     };
@@ -280,10 +288,11 @@ class App extends PureComponent {
     
             this.exporter = new Exporter(
                 config,
-                this.encoderReady,
                 this.encoderDone,
                 this.onProgress
             );
+
+            this.exporter.init(this.encoderReady);
             this.encoding = true; 
         });
     };

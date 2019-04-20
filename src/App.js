@@ -19,6 +19,8 @@ class Index extends PureComponent {
       <Router >
         <Switch >
           <Route path="/" exact component={Home}></Route>
+          <Route path="/index.html" exact component={Home}></Route>
+
           <Route path="/home" component={Home}></Route>
           <Route path="/projects" component={Home}></Route>
           <Route path="/editor" component={AppContainer}></Route>

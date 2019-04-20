@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import ShaderToyMaterial from 'editor/util/ShaderToyMaterial'
 import addNoise from 'editor/util/AddNoise'
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
-import fragmentShader from '../../shaders/licensed/Noise'
+import Noise from '../../shaders'
 import BaseItem from '../BaseItem'
 import { loadImageTextureFromChoice } from '../../../util/ImageLoader';
 
@@ -17,7 +17,7 @@ export default class StarField extends BaseItem {
         tex.wrapS = tex.wrapT = THREE.MirroredRepeatWrapping;
         tex.repeat.set(50, 1);
         this.geo = new THREE.PlaneGeometry(2,2);
-        this.mat = new ShaderToyMaterial(fragmentShader, 
+        this.mat = new ShaderToyMaterial(Noise, 
             {
                 uniforms: { 
                     iChannel0: {value: tex, type: "t"},

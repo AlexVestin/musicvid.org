@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import Link from '@material-ui/core/Link'
 import { withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import  { Redirect } from 'react-router-dom';
+
+
 import AppBar from '../components/AppBar';
 import classNames from 'classnames';
 
@@ -14,6 +17,7 @@ const styles = theme => ({
   },
   title: {
     fontSize: 24,
+    cursor:"pointer"
   },
   placeholder: toolbarStyles(theme).root,
   toolbar: {
@@ -35,76 +39,86 @@ const styles = theme => ({
     fontSize: 16,
     color: theme.palette.common.white,
     marginLeft: theme.spacing(3),
+    cursor: "pointer",
   },
   linkSecondary: {
     color: theme.palette.secondary.main,
   },
 });
 
-function AppAppBar(props) {
-  const { classes } = props;
 
-  return (
-    <div className={classes.container}>
-      <AppBar position="fixed">
-        <Toolbar className={classes.toolbar}>
-          <div className={classes.left} />
-          <Link
-            variant="h6"
-            underline="none"
-            color="inherit"
-            className={classes.title}
-            href="/"
-          >
-            {'musicvid.org'}
-          </Link>
 
-          <Typography variant="h6" style={{color: "#ff3366", marginLeft: 6}}> ALPHA</Typography>
-          <div className={classes.right}>
-          <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={classes.rightLink}
-              href="/tutorial"
-            >
-              {'Videos'}
-            </Link>
+class AppAppBar extends PureComponent {
+  state = { redirectTo: "" };
 
-            <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={classes.rightLink}
-              href="/about"
-            >
-              {'help'}
-            </Link>
+  render()  {
+    const { classes } = this.props;
+    if(this.state.redirectTo)
+      return <Redirect to={this.state.redirectTo}></Redirect>
 
-            <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={classes.rightLink}
-              href="/sign-in"
-            >
-              {'Sign In'}
-            </Link>
+    return (
+      <div className={classes.container}>
+        <AppBar position="fixed">
+          <Toolbar className={classes.toolbar}>
+            <div className={classes.left} />
             <Link
               variant="h6"
               underline="none"
-              className={classNames(classes.rightLink, classes.linkSecondary)}
-              href="/sign-up"
+              color="inherit"
+              className={classes.title}
+              onClick={() => this.setState({redirectTo: "/"})}
             >
-              {'Sign Up'}
+              {'musicvid.org'}
             </Link>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.placeholder} />
-    </div>
-  );
+  
+            <Typography variant="h6" style={{color: "#ff3366", marginLeft: 6}}> ALPHA</Typography>
+            <div className={classes.right}>
+            <Link
+                color="inherit"
+                variant="h6"
+                underline="none"
+                className={classes.rightLink}
+                onClick={() => this.setState({redirectTo: "/videos"})}
+              >
+                {'Videos'}
+              </Link>
+  
+              <Link
+                color="inherit"
+                variant="h6"
+                underline="none"
+                className={classes.rightLink}
+                onClick={() => this.setState({redirectTo: "/about"})}
+              >
+                {'help'}
+              </Link>
+  
+              <Link
+                color="inherit"
+                variant="h6"
+                underline="none"
+                className={classes.rightLink}
+                onClick={() => this.setState({redirectTo: "/sign-in"})}
+              >
+                {'Sign In'}
+              </Link>
+              <Link
+                variant="h6"
+                underline="none"
+                className={classNames(classes.rightLink, classes.linkSecondary)}
+                onClick={() => this.setState({redirectTo: "/sign-up"})}
+              >
+                {'Sign Up'}
+              </Link>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <div className={classes.placeholder} />
+      </div>
+    );
+  }
 }
+
 
 AppAppBar.propTypes = {
   classes: PropTypes.object.isRequired,

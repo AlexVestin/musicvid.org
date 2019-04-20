@@ -2,7 +2,7 @@
 
 import Manager from '../Manager'
 import { initQuad, createTexture, makeProgram } from '../shaders/CommonFunctions'
-import SHADERS from '../shaders/licensed/Filaments'
+import Filaments from '../shaders'
 import ImpactAnalyser from '../../audio/ImpactAnalyser'
 
 const WIDTH = 1280;
@@ -20,8 +20,8 @@ export default class Man extends Manager {
     setUpScene() {    
       const { gl } = this;    
       const res = {w: 1280, h: 720};
-      const prog1 = makeProgram(gl, SHADERS.fsA, WIDTH, HEIGHT, { iChannel0: { type: "t", res}});
-      const prog2 = makeProgram(gl, SHADERS.fsB, WIDTH, HEIGHT, { iChannel0: { type: "t", res} }, true);
+      const prog1 = makeProgram(gl, Filaments.fsA, WIDTH, HEIGHT, { iChannel0: { type: "t", res}});
+      const prog2 = makeProgram(gl, Filaments.fsB, WIDTH, HEIGHT, { iChannel0: { type: "t", res} }, true);
 
       this.program1 = { positions: prog1.positions, program: prog1.program, vp:  gl.getAttribLocation(prog1.program, 'aVertexPosition') };
       this.program2 = { positions: prog2.positions, program: prog2.program };

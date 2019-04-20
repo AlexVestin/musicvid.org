@@ -35,10 +35,7 @@ export default class Canvas extends PureComponent {
 
     setSize = (res) => {
         const c = this.canvasRef.current; 
-        this.aspectRatio = res.width / res.height;
         
-
-        console.log(res.width)
         let scaleFactor = 1.0;
         if(res.width > 1500) {
             scaleFactor = 0.4;
@@ -47,10 +44,6 @@ export default class Canvas extends PureComponent {
         }
 
         c.style.transform = `scale(${scaleFactor})`;
-
-        
-
-
         this.setState({width: res.width * scaleFactor, height: res.height * scaleFactor})
     }
 

@@ -1,0 +1,9 @@
+{
+    "name": "helloworld",
+    "main": "index.html",
+    "chromium-args": "--no-user-gesture-required" ,
+    "window": {
+      "toolbar": "true"
+    },
+    "fullscreen": "true"
+  }

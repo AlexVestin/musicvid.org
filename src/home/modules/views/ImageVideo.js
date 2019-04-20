@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import { withStyles } from "@material-ui/core/styles";
+import Redirect from 'react-router-dom/Redirect'
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Typography from "../components/Typography";
 import Fade from "@material-ui/core/Fade";
@@ -122,7 +123,7 @@ class Image extends PureComponent {
         this.videoRef = React.createRef();
         this.videoMountRef = React.createRef();
 
-        this.state = { mouseOver: false };
+        this.state = { mouseOver: false, redirectTo: "" };
     }
     componentDidMount = () => {};
 
@@ -142,11 +143,14 @@ class Image extends PureComponent {
     };
     render() {
         const { image, classes } = this.props;
-        const { mouseOver } = this.state;
+        const { mouseOver, redirectTo } = this.state;
+
+        if(redirectTo)
+            return <Redirect to={redirectTo}></Redirect>
 
         return (
             <ButtonBase
-                href={"editor?template=" + image.templateName}
+                onClick={() => this.setState({redirectTo: "editor?template=" + image.templateName})}
                 className={classes.imageWrapper}
                 style={{
                     width: image.width,

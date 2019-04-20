@@ -19,6 +19,10 @@ export default class WebGLManager {
         this.audio = null;
         this.inFullScreen = false;
 
+        this.clearColor = "#000000";
+        this.clearAlpha = 1.0;
+
+
         document.body.addEventListener("keyup", (e) => {
             if(e.keyCode === 70) {
                 if(!this.inFullScreen) {
@@ -145,7 +149,9 @@ export default class WebGLManager {
 
     refresh = (ref) => {
         this.canvasMountRef = ref;
-        this.externalCtx = ref.getContext("2d");
+        this.canvas = ref;
+        this.setUpRenderer();
+
     }
 
     getAllItems = () => {
@@ -195,13 +201,17 @@ export default class WebGLManager {
         this.attribItem.setText(names, 0.75, -0.6);
     }
 
-    setUpRenderers = (setUpFolders=true) => {
+    setUpRenderer() {
+
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, canvas: this.canvas});
         this.renderer.autoClear = false;
-        this.renderer.setClearColor('#000000');
         this.renderer.setSize(this.width, this.height);
-        this.clearColor = "#000000";
-        this.clearAlpha = 1.0;
+        this.setClear();        
+        
+    }
+
+    setUpRenderers = (setUpFolders=true) => {
+        this.setUpRenderer();
 
         if(setUpFolders) {
             this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
@@ -277,6 +287,8 @@ export default class WebGLManager {
 
     update = (time, audioData, shouldIncrement) => {
         this.renderer.clear();        
+
+        
         
         this.scenes.forEach(scene => {
             if(scene.TYPE !== "") {

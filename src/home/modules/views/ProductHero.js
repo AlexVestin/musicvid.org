@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import Link from 'react-router-dom/Link';
 import Button from '../components/Button';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
@@ -51,7 +51,7 @@ function ProductHero(props) {
         className={classes.button}
         style={{textAlign: "center", color: "rgb(40,40,42)"}}
         component={linkProps => (
-          <Link {...linkProps} href="/editor" variant="button" />
+          <Link {...linkProps} to="/editor" variant="button" />
         )}
       >
         Open empty template

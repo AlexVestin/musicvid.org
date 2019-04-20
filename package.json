@@ -36,11 +36,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp local/package.json build/",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy-prod": "aws s3 sync ./build  s3://musicvid.org/ --delete",
-    "deploy-dev": "aws s3 sync ./build s3://mvid2.org/ --delete"
+    "deploy-dev": "aws s3 sync ./build s3://mvid2.org/ --delete",
+    "nw":  " ~/Downloads/nwjs-v0.37.4-linux-x64/nw build/"
   },
   "eslintConfig": {
     "extends": "react-app"

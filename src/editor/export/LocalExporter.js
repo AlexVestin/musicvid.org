@@ -1,8 +1,4 @@
-
-import * as FileSaver from "file-saver";
-import VideoEncoder from './VideoEncodeWorker'
-
-export default class Exporter {
+export default class LocalExporter {
     constructor(config, ondone, onProgress) {
         this.onProgress         = onProgress;
         this.fps                = Number(config.video.fps);
@@ -17,33 +13,26 @@ export default class Exporter {
         this.animationManager   = config.animationManager;
         this.time               = 0;
         this.frames             = [];
-        
         this.presetIdx          = config.video.presetIdx;
         this.gui                = config.gui.getRoot();
+        this.canceled = false;
+
+        if(window.__init) {
+            window.__init({
+                fps: this.fps,
+                bitrate: this.videoBitrate,
+                width: this.width,
+                height: this.height,
+                presetIdx: this.presetIdx
+            });
+        }else {
+            alert("init not a ting");
+        }
     }
 
-    init = (onready) => {
-        this.onready = onready;
-        this.videoEncoder       = new VideoEncoder(this.initEncoder);
-    }
-
-
-    initEncoder = () => {
-        const videoConfig = {
-            w: this.width,
-            h: this.height,
-            bitrate: this.videoBitrate,
-            fps: this.fps,
-            presetIdx: this.presetIdx,
-        }
-
-        const audioConfig = {
-            channels: 2,
-            sampleRate: this.sound.sampleRate,
-            bitrate: 320000
-        }
-
-        this.videoEncoder.init(videoConfig, audioConfig, this.encoderInitialized, this.encode)
+    init = (cb) => {
+        this.onready = cb;
+        this.encoderInitialized();
     }
 
     encoderInitialized = () => {
@@ -54,8 +43,9 @@ export default class Exporter {
     }
 
     cancel = () => {
+        alert("cancel")
         this.canceled = true;
-        this.videoEncoder.close();
+        window.__close();
     }
 
     encode = () => {
@@ -76,36 +66,44 @@ export default class Exporter {
                 this.time += 1 / this.fps;
                 this.encodeVideoFrame();
             }
-    
-            this.videoEncoder.sendFrame();
-    
+        
             if(this.encodedVideoFrames % 15 === 0) 
                 this.onProgress(this.encodedVideoFrames, Math.floor(this.duration * this.fps))
     
             if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {
-                this.videoEncoder.close(this.saveBlob);
+                if(window.__close) {
+                    window.__close();
+                }else {
+                    alert("window.__close ? ")
+                }
+                
             }
 
-            
+
+            setTimeout(this.encode, 0);
         }
-       
     }
 
     encodeVideoFrame = () => {
-        this.pixels = this.animationManager.readPixels();
-        this.videoEncoder.queueFrame( {type: "video", pixels: this.pixels} );
-        this.pixels = null;
+
+        
+        if(window.__addImage) {
+            window.__addImage(this.animationManager.readPixels());
+        }else {
+            alert("add video? :(")
+        }
+
         this.encodedVideoFrames++;
+        
     }
+
 
     encodeAudioFrame = () => {
         const frame = this.sound.getEncodingFrame();
-        this.videoEncoder.queueFrame(frame);
+        if(window.__addAudio) {
+            window.__addAudio(frame); 
+        }else {
+            //alert("add audio? :(")
+        }
     }
-
-    saveBlob = (vid) => {
-        const blob = new Blob([vid], { type: 'video/mp4' });
-        FileSaver.saveAs(blob, this.fileName);
-        this.ondone(blob, this.fileName);
-    }    
 }
