@@ -17,7 +17,6 @@
     "mathjs": "^5.9.0",
     "node-sass": "^4.11.0",
     "perspective-camera": "^2.0.1",
-    "popper.js": "^1.15.0",
     "prop-types": "^15.7.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -35,13 +34,14 @@
     "validator": "^10.11.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && cp local/package.json build/",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy-prod": "aws s3 sync ./build  s3://musicvid.org/ --delete",
-    "deploy-dev": "aws s3 sync ./build s3://mvid2.org/ --delete",
-    "nw":  " ~/Downloads/nwjs-v0.37.4-linux-x64/nw build/"
+      "start": "react-scripts start",
+      "build": "react-scripts build && copyfiles local/package.json build/",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "deploy-prod": "aws s3 sync ./build  s3://musicvid.org/ --delete",
+      "deploy-dev": "aws s3 sync ./build s3://mvid2.org/ --delete",
+      "nw-linux":  " ~/Downloads/nwjs-v0.37.4-linux-x64/nw build/"
+      
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -51,5 +51,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "copyfiles": "^2.1.0"
+  }
 }
