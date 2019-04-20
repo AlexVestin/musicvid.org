@@ -56,6 +56,20 @@ function ProductHero(props) {
       >
         Open empty template
       </Button>
+
+      <Button
+        color="secondary"
+        disabled
+        variant="contained"
+        size="large"
+        className={classes.button}
+        style={{textAlign: "center", color: "rgb(40,40,42)"}}
+        component={linkProps => (
+          <Link {...linkProps} to="/editor" variant="button" />
+        )}
+      >
+        Get the desktop client
+      </Button>
       <Typography variant="body2" color="inherit" className={classes.more}>
         Scroll down to view featured templates
       </Typography>

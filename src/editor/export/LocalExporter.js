@@ -23,7 +23,8 @@ export default class LocalExporter {
                 bitrate: this.videoBitrate,
                 width: this.width,
                 height: this.height,
-                presetIdx: this.presetIdx
+                presetIdx: this.presetIdx,
+                sound: this.sound,
             });
         }else {
             alert("init not a ting");
@@ -72,11 +73,12 @@ export default class LocalExporter {
     
             if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {
                 if(window.__close) {
+                    window.__encodeAudio(this.sound);
                     window.__close();
+                    this.canceled = true;
                 }else {
                     alert("window.__close ? ")
                 }
-                
             }
 
 
@@ -88,7 +90,26 @@ export default class LocalExporter {
 
         
         if(window.__addImage) {
-            window.__addImage(this.animationManager.readPixels());
+            const pixels = this.animationManager.readPixels();
+
+            var width = this.animationManager.width;
+            var height = this.animationManager.height;
+           
+            var halfHeight = height / 2 | 0;  // the | 0 keeps the result an int
+            var bytesPerRow = width * 4;
+
+            // make a temp buffer to hold one row
+            var temp = new Uint8Array(width * 4);
+            for (var y = 0; y < halfHeight; ++y) {
+            var topOffset = y * bytesPerRow;
+                var bottomOffset = (height - y - 1) * bytesPerRow;
+
+                // make copy of a row on the top half
+                temp.set(pixels.subarray(topOffset, topOffset + bytesPerRow));
+                pixels.copyWithin(topOffset, bottomOffset, bottomOffset + bytesPerRow);
+                pixels.set(temp, bottomOffset);
+            }
+            window.__addImage(pixels);
         }else {
             alert("add video? :(")
         }

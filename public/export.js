@@ -1,6 +1,6 @@
 
 
-let proc;
+let proc, audioProc;
 
 window.onload = () => {
     alert(":D");
@@ -15,7 +15,8 @@ window.__init = (config) =>  {
             width,
             height,
             fps,
-            name
+            name, 
+            sound
         } = config;
 
         //const proc = spawn('ffmpeg', ['-pix_fmt', 'rgb32', '-s:v', '1280x720', '-f', 'rawvideo', '-i', 'pipe:0', '-framerate', '30', 'output.mp4']);
@@ -24,6 +25,7 @@ window.__init = (config) =>  {
         proc = spawn('ffmpeg', args);
 
         proc.stdout.on('data',  function (data) {
+            
             //alert(data.toString());
 
         });
@@ -33,10 +35,37 @@ window.__init = (config) =>  {
         });
 
         proc.on('exit', function() {
-            nw.App.closeAllWindows()
+            let args2 = ['-y', '-i', 'output.mp4' , '-f', 'fltp', '-ar', `${sound.sampleRate}`, '-i', '-',  `output.mp4`];
+
+            alert(sound.sampleRate);
+
+            audioProc = spawn('ffmpeg', args2);
+            const ch0 = new Float32Array(sound.bufferSource.buffer.getChannelData(0));
+            const ch1 =  new Float32Array(sound.bufferSource.buffer.getChannelData(1));
+
+            audioProc.stdin.write(Buffer.from(ch0));
+            audioProc.stdin.write(Buffer.from(ch1));
+
+            proc.stdout.on('data',  function (data) {
+                alert(data.toString());
+            });
+    
+
+            proc.stderr.on('data', function(data) {
+                alert(data.toString());
+            })
+
+            audioProc.on('exit', function() {
+                nw.App.closeAllWindows()
+            })
+            
         })
 
     }
+}
+
+window.__encodeAudio = (sound) => {
+
 }
 
 window.__addImage = (image) => {
