@@ -1,15 +1,13 @@
 
 
-import PlaneItem from './PlaneItem'
-import ImageMaterial from '../../materials/ImageMaterial';
+import MeshItem from '../MeshItem'
 
-export default class Background extends PlaneItem {
-
+export default class Background extends MeshItem {
     constructor(info) {
         super(info);
         this.name = "Background";     
-        this.material = new ImageMaterial();
-        this.mesh.material = this.material;
+        this.changeGeometry("Plane");
+        this.changeMaterial("ImageMaterial");        
         this.setUpFolder();
     }
 }

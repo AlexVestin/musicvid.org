@@ -12,6 +12,7 @@ export default class MeshItem extends BaseItem {
 
         this.type = info.type;
         this.mesh = new THREE.Mesh();
+        info.scene.add(this.mesh);
 
     
         this.materialFolders = [];
@@ -43,7 +44,11 @@ export default class MeshItem extends BaseItem {
             addPersControls(this, this.mesh, this._geoFol);
             addPersControls(this, this.mesh, this._geoOvFol);
         }
+    }
 
+    update = (time, audioData) => {
+        if(this.material)
+            this.material.updateMaterial(time, audioData);
     }
 
     newGeometryModal() {

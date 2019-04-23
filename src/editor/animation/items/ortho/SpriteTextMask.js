@@ -1,34 +1,9 @@
 
 import * as THREE from "three";
 import BaseItem from '../BaseItem'
-import { addOrthoMeshControls } from '../AddMeshControls'
 import fonts from 'editor/util/Fonts'
 import { loadImageTexture } from 'editor/util/ImageLoader';
 
-
-
-const vertexShader = [
-    "varying vec2 vUv;",
-    "void main() {",
-        "vUv = uv;",
-        "gl_Position =   projectionMatrix * modelViewMatrix * vec4(position,1.0);",
-    "}",
-].join("\n");
-
-const fragmentShader = [
-    "uniform sampler2D texture1;",
-    "uniform sampler2D texture2;",
-    "varying vec2 vUv;",
-
-    "void main() {",
-        "vec4 c = texture2D(texture1, vUv);",
-        "float alpha = 0.;",
-        "if(length(c.rgb) < 0.5)",
-            "alpha = 1.0 - length(c.rgb) * 2.;",
-            
-        "gl_FragColor = vec4(texture2D(texture2, vUv).rgb, alpha);",
-    "}"
-].join("\n");
 
 
 export default class SpriteTextMask extends BaseItem {
@@ -68,8 +43,8 @@ export default class SpriteTextMask extends BaseItem {
         
         this.tex = new THREE.CanvasTexture(this.canvas);
         this.mat = new THREE.ShaderMaterial({
-            vertexShader,
-            fragmentShader,
+            f:"vertexShader",
+            d:"fragmentShader",
             transparent: true,
             uniforms: {
                 texture1: { value: this.tex },
@@ -137,7 +112,6 @@ export default class SpriteTextMask extends BaseItem {
 
         folder.add(this, "font", fonts).onChange(this.updateText);
         folder.add(this, "fontSize", 0, 300).onChange(this.updateText);
-        addOrthoMeshControls(this, this.mesh, folder);
         return this.__addFolder(folder);
     };
 

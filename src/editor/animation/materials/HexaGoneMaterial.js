@@ -68,7 +68,9 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
         this.impactAnalyser =  new ImpactAnalyser(folder);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;
+        folder.add(this, "wireframe");
         folder.updateDisplay();
+        this.folder = folder;
         return folder;
     }
 }

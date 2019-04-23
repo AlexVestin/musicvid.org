@@ -35,13 +35,15 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && copy local/package.json build/",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy-prod": "aws s3 sync ./build  s3://musicvid.org/ --delete",
     "deploy-dev": "aws s3 sync ./build s3://mvid2.org/ --delete",
     "nw-linux": " ~/Downloads/nwjs-v0.37.4-linux-x64/nw build/",
-    "nw-windows": "C:/Users/alex/Desktop/nwjs-v0.37.4-win-x64/nw build/"
+    "nw-windows": "C:/Users/alex/Desktop/nwjs-v0.37.4-win-x64/nw build/",
+    "prepare": "python local/prepare.py",
+    "sync": "aws s3 sync C:/Users/alex/Desktop/mvid_deps/build s3://mvid-build/ --delete"
   },
   "eslintConfig": {
     "extends": "react-app"

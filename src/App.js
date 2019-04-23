@@ -5,6 +5,8 @@ import FAQ from './home/FAQ'
 import SignUp from './home/SignUp'
 import SignIn from './home/SignIn'
 import Missing from './home/Missing'
+import Downloads from './home/Downloads'
+
 
 
 
@@ -22,6 +24,8 @@ class Index extends PureComponent {
           <Route path="/index.html" exact component={Home}></Route>
 
           <Route path="/home" component={Home}></Route>
+          <Route path="/downloads" component={Downloads}></Route>
+
           <Route path="/projects" component={Home}></Route>
           <Route path="/editor" component={AppContainer}></Route>
           <Route path="/faq" component={FAQ}></Route>

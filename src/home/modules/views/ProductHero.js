@@ -49,7 +49,7 @@ function ProductHero(props) {
         variant="contained"
         size="large"
         className={classes.button}
-        style={{textAlign: "center", color: "rgb(40,40,42)"}}
+        style={{textAlign: "center", color: "rgb(20,20,22)"}}
         component={linkProps => (
           <Link {...linkProps} to="/editor" variant="button" />
         )}
@@ -58,17 +58,16 @@ function ProductHero(props) {
       </Button>
 
       <Button
-        color="secondary"
-        disabled
+        color="primary"
         variant="contained"
         size="large"
         className={classes.button}
-        style={{textAlign: "center", color: "rgb(40,40,42)"}}
+        style={{textAlign: "center", marginTop: 10, width: 255, backgroundColor: "#3333AA", fontSize: "0.825rem"}}
         component={linkProps => (
-          <Link {...linkProps} to="/editor" variant="button" />
+          <Link {...linkProps} to="/downloads" variant="button" />
         )}
       >
-        Get the desktop client
+        Download desktop client
       </Button>
       <Typography variant="body2" color="inherit" className={classes.more}>
         Scroll down to view featured templates

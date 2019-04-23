@@ -659,8 +659,6 @@ common.extend(
           while (!isNaN(parseInt(name[i--], 10)) && i >= 0) 
             s+= name[i+1];
           name =  (s === "") ? (name + "1") : name
-
-          console.log("hack to allow folders with he same name");
           /*
         throw new Error('You already have a folder in this GUI by the' +
           ' name "' + name + '"');*/
@@ -721,7 +719,6 @@ common.extend(
         gui.__root = this.__root;
       }
       const beforeLi = before ? before : null;
-      console.log(beforeLi, "before")
       const li = addRow(this, gui.domElement, beforeLi);      
       this.__folders[name].li = li;
       dom.addClass(li, 'folder');
@@ -966,8 +963,6 @@ function addRow(gui, newDom, liBefore) {
 
 
   if (liBefore) {
-    console.log("--------------------------", gui);
-    console.log(gui.__ul.lastChild)
     gui.__ul.insertBefore(li, gui.__ul.lastChild);
    
   } else {

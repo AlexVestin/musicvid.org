@@ -1,12 +1,12 @@
 
 import * as THREE from "three";
-import BaseItem from '../BaseItem'
+import MeshItem from '../BaseItem'
 import { addOrthoMeshControls }  from '../AddMeshControls'
 import fonts from 'editor/util/Fonts'
 
 
 
-export default class SpriteText extends BaseItem {
+export default class SpriteText extends MeshItem {
     constructor(info) {
         super(info);
         this.name = "Sprite Text";
@@ -35,8 +35,12 @@ export default class SpriteText extends BaseItem {
         this.shadowBlur = 12;
         this.lineWidth = 5;
         this.shadowColor = "#000000";
+
+        this.changeGeometry("Plane");
+        this.changeMaterial("MeshBasicMaterial");
         
         this.tex = new THREE.CanvasTexture(this.canvas);
+        this.material.map = this.tex;
         this.mat = new THREE.MeshBasicMaterial({transparent: true, map: this.tex})
 
         //this.mat = new THREE.MeshBasicMaterial({map:tex, transparent: true});
@@ -56,9 +60,6 @@ export default class SpriteText extends BaseItem {
         if(options.textAlign) this.textAlign = options.textAlign;
         if(options.shadowBlur) this.shadowBlur = options.shadowBlur; 
         if(options.lineWidth) this.lineWidth = options.lineWidth; 
-
-        
-
 
         this.text = text;
         this.positionX = x;

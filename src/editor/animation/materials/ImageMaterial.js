@@ -43,7 +43,7 @@ const fragmentShader = [
 
 export default class ImageMaterial extends THREE.ShaderMaterial{
 
-    constructor(undoAction) {
+    constructor(item) {
         super()
         
         this.brightenToAudio = true;
@@ -95,6 +95,7 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.impactAnalyser = new ImpactAnalyser(folder);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;
+        folder.add(this, "wireframe");
         folder.add(this, "changeImage");
         folder.add(this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
         folder.add(this, "brightenToAudio");

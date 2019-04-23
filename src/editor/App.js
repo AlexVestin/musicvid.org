@@ -7,7 +7,7 @@ import Canvas from "./components/canvas/Canvas";
 import TrackContainer from "./components/track/TrackContainer";
 import ModalContainer from "./components/modal/ModalContainer";
 import Sound from "./audio/Sound";
-import Exporter from "./export/LocalExporter";
+import Exporter from "./export/Exporter";
 import license from "./util/License";
 import ExportScreen from "./components/Export";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -246,7 +246,6 @@ class App extends PureComponent {
             this.canvasRef.current.setSize(this.resolution);
             this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
             this.animationManager.refresh( this.gui.canvasMountRef)
-            console.log("canvas mount ref", this.gui.canvasMountRef);
         });
      
     };

@@ -76,8 +76,6 @@ export default class Audio {
         if (this.playing) {
             this.playBufferSource.stop();
         }
-
-
         this.playBufferSource = this.audioCtx.createBufferSource();
         this.playBufferSource.buffer = this.bufferSource.buffer;
         this.gainNode = this.audioCtx.createGain();
@@ -90,7 +88,13 @@ export default class Audio {
 
     getAudioByteData = buffer => {
         this.combinedAudioData = new Float32Array(buffer.length);
+
         const leftAudio = buffer.getChannelData(0);
+        if(buffer.numberOfChannels === 1) {
+            this.combinedAudioData = leftAudio;
+            return;
+        }
+        
         const rightAudio = buffer.getChannelData(1);
         for (var i = 0; i < buffer.length; i++) {
             this.combinedAudioData[i] = (leftAudio[i] + rightAudio[i]) / 2;

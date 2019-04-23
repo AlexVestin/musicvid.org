@@ -5,15 +5,14 @@ import LineBed from './perspective/LineBed'
 import ParticlesSideways  from './perspective/ParticlesSideways' 
 import TextLines from './perspective/TextLines' 
 import SphereMesh from './perspective/SphereMesh' 
+import BasicMeshItem from './BasicMeshItem' 
 
 
 // ortho items
 import TimeRep from './ortho/TimeRep'
-import Plane from './ortho/Plane'
 import Background from './ortho/Background'
 import StarField from './ortho/StarField'
 import SideLobes from './ortho/SideLobes'
-import Image from './ortho/Image'
 import SpriteTextMask from './ortho/SpriteTextMask'
 import SpriteText from './ortho/SpriteText'
 
@@ -32,7 +31,8 @@ const perspectiveItems = {
     LineBed: { authors: "GamleGaz", class: LineBed, img: "img/items/LineBEd.png"},
     ParticlesSideways: {url:"https://github.com/caseif/vis.js", authors: "@Caseif & @Incept", class: ParticlesSideways, img: "img/items/ParticlesSideways.png"},
     TextLines: {class: TextLines, img: "img/items/TextLines.png"},
-    SphereMesh: {class: SphereMesh}
+    SphereMesh: {class: SphereMesh},
+    BasicMeshItem: {class: BasicMeshItem}
 }
 
 const canvasItems = {
@@ -41,7 +41,8 @@ const canvasItems = {
     Image2D: {class: Image2D, img: "img/items/Image.png"},
     Polartone2D: {class: Polartone2D, img: "img/items/Polartone.png", url: "https://github.com/mattdesl/Polartone", authors: "Mattdesl"},
     BeatCounter: {class: BeatCounter},
-    JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D}
+    JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D},
+    BasicMeshItem: {class: BasicMeshItem}
 }
 
 
@@ -50,11 +51,8 @@ const orthoItems = {
     StarField: {img: "img/items/StarNest.png", class: StarField },
     TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},
     //SimplicityGalaxy: {img: "img/items/SimplicityGalaxy.png", url: "https://www.shadertoy.com/view/MslGWN", authors: "CBS", class: SimplicityGalaxy},
-    Image: {class: Image},
     SpriteTextMask: {class: SpriteTextMask, img: "img/items/StarField.png"},
     SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"},
-    Plane: {class: Plane, img: "img/items/SpriteText.png"},
-
 }
 
 

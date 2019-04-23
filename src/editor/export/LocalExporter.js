@@ -17,14 +17,24 @@ export default class LocalExporter {
         this.gui                = config.gui.getRoot();
         this.canceled = false;
 
+        this.presetLookup = [
+            "ultrafast",
+            "veryfast",
+            "fast",
+            "medium",
+            "slow",
+            "veryslow"
+        ];
+
         if(window.__init) {
             window.__init({
                 fps: this.fps,
                 bitrate: this.videoBitrate,
                 width: this.width,
                 height: this.height,
-                presetIdx: this.presetIdx,
+                preset: this.presetLookup[this.presetIdx],
                 sound: this.sound,
+                name: this.fileName,
             });
         }else {
             alert("init not a ting");
@@ -44,29 +54,23 @@ export default class LocalExporter {
     }
 
     cancel = () => {
-        alert("cancel")
         this.canceled = true;
         window.__close();
     }
 
     encode = () => {
         if(!this.canceled ) {
-            const videoTs = (this.encodedVideoFrames / this.fps );
-            const audioTs = (this.sound.exportFrameIdx * this.sound.exportWindowSize) / this.sound.sampleRate; 
-            if( videoTs >= audioTs ) {
-                this.encodeAudioFrame();
-            }else{
-                const audioData = this.sound.getAudioData(this.time);
-                const automations = this.gui.getRoot().__automations;
-                automations.forEach(item => {
-                    item.update(this.time, audioData);
-                    item.apply();
-                })
 
-                this.animationManager.update(this.time, audioData, true);
-                this.time += 1 / this.fps;
-                this.encodeVideoFrame();
-            }
+            const audioData = this.sound.getAudioData(this.time);
+            const automations = this.gui.getRoot().__automations;
+            automations.forEach(item => {
+                item.update(this.time, audioData);
+                item.apply();
+            })
+
+            this.animationManager.update(this.time, audioData, true);
+            this.time += 1 / this.fps;
+            const sleepTime = this.encodeVideoFrame();
         
             if(this.encodedVideoFrames % 15 === 0) 
                 this.onProgress(this.encodedVideoFrames, Math.floor(this.duration * this.fps))
@@ -81,13 +85,12 @@ export default class LocalExporter {
                 }
             }
 
-
-            setTimeout(this.encode, 0);
+            setTimeout(this.encode, sleepTime);
         }
     }
 
     encodeVideoFrame = () => {
-
+        this.encodedVideoFrames++;   
         
         if(window.__addImage) {
             const pixels = this.animationManager.readPixels();
@@ -109,13 +112,12 @@ export default class LocalExporter {
                 pixels.copyWithin(topOffset, bottomOffset, bottomOffset + bytesPerRow);
                 pixels.set(temp, bottomOffset);
             }
-            window.__addImage(pixels);
+            return window.__addImage(pixels, this.encodedVideoFrames);
         }else {
             alert("add video? :(")
         }
 
-        this.encodedVideoFrames++;
-        
+        return 0;
     }
 
 
