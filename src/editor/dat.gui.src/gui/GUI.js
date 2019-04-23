@@ -720,7 +720,8 @@ common.extend(
       }else {
         gui.__root = this.__root;
       }
-      const beforeLi = before ? before.li : null;
+      const beforeLi = before ? before : null;
+      console.log(beforeLi, "before")
       const li = addRow(this, gui.domElement, beforeLi);      
       this.__folders[name].li = li;
       dom.addClass(li, 'folder');
@@ -965,7 +966,9 @@ function addRow(gui, newDom, liBefore) {
 
 
   if (liBefore) {
-    gui.__ul.insertBefore(li, liBefore);
+    console.log("--------------------------", gui);
+    console.log(gui.__ul.lastChild)
+    gui.__ul.insertBefore(li, gui.__ul.lastChild);
    
   } else {
     gui.__ul.appendChild(li);

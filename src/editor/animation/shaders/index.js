@@ -1,13 +1,13 @@
 
 try {
-    module.exports.OutrunTheRain = require('./licensed/OutrunTheRain');
-    module.exports.Noise = require('./licensed/Noise');
-    module.exports.Filaments = require('./licensed/Filaments');
-    module.exports.SimplicityGalaxy = require('./licensed/SimplicityGalaxy');
-    module.exports.UniverseWithin = require('./licensed/UniverseWithin');
-    module.exports.HexaGone = require('./licensed/HexaGone');
-    module.exports.Sinuous = require('./licensed/Sinuous');
-
+    module.exports = {
+        Noise: require('./licensed/Noise'),
+        Filaments: require('./licensed/Filaments'),
+        SimplicityGalaxy: require('./licensed/SimplicityGalaxy'),
+        UniverseWithin: require('./licensed/UniverseWithin'),
+        HexaGone: require('./licensed/HexaGone'),
+        Sinuous: require('./licensed/Sinuous')
+    };
 
 } catch (ex) {
     module.exports.OutrunTheRain = {};
@@ -17,5 +17,6 @@ try {
     module.exports.UniverseWithin = {};
     module.exports.HexaGone = {};
     module.exports.Sinuous = {};
-    alert("Shader is licensed and not implemented in this version.")
+    alert("Shader is licensed and not implemented in this version.", ex.message)
+    console.log(ex);
 }

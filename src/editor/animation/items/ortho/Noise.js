@@ -45,7 +45,7 @@ export default class StarField extends BaseItem {
 
         //GUi
         this.textureZoom = 4;
-        this.__setUpFolder(info, this.name);
+        this.setUpFolder(info, this.name);
         this.impactAnalyser = new ImpactAnalyser(this.folder);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;

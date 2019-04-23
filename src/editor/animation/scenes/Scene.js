@@ -134,8 +134,9 @@ export default class Scene {
     undoRemoveItem = (args) => {
         const {item} = args;
         this.items.push(item);
-        item.__setUpFolder();
-        if(item.type !== "canvas")
+
+        item.setUpFolder();
+        if(this.TYPE !== "canvas")
             this.scene.add(item.mesh);
     }
 
@@ -156,6 +157,7 @@ export default class Scene {
             let info = {
                 gui: this.itemsFolder,
                 overviewFolder: this.overviewFolder,
+                type: this.TYPE,
                 width: this.resolution.width,
                 height: this.resolution.height,
                 scene: this.scene,
@@ -188,7 +190,10 @@ export default class Scene {
 
     update = (time, audioData, shouldIncrement) => {
         if(shouldIncrement) {
-            this.items.forEach(item => item.update(time, audioData));
+            this.items.forEach(item =>  {
+                item.mesh.visible = (item.__startTime <= time && item.__endTime >= time);
+                item.update(time, audioData)  
+            });
         }
     }
 }

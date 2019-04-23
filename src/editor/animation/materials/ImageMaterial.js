@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { loadImageTexture, loadImageTextureFromChoice } from 'editor/util/ImageLoader';
+import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 
 const vertexShader = [
     "varying vec2 vUv;",
@@ -59,14 +60,17 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.transparent = true;
         this.vertexShader = vertexShader; 
         this.fragmentShader = fragmentShader;
-        
+         
         const url = "./img/space.jpeg";
         this.prevFile = url;
         loadImageTextureFromChoice(url, this.setBackground);  
     }
 
-    update = (impact) => {
-        this.uniforms.vignette_amt.value = this.vignetteAmount + impact * -this.brightenMultipler;
+    updateMaterial = (time, audioData) => {
+        if(this.impactAnalyser) {
+            const impact = this.impactAnalyser.analyse(audioData.frequencyData) ;
+            this.uniforms.vignette_amt.value = this.vignetteAmount + impact * -this.brightenMultipler;
+        }
     }
 
     changeImage() {
@@ -86,9 +90,11 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.folder.getRoot().addUndoItem(item); 
     }
     
-
-    setUpGUI = (f) => {
+    __setUpGUI = (f) => {
         const folder = f; 
+        this.impactAnalyser = new ImpactAnalyser(folder);
+        this.impactAnalyser.endBin = 60;
+        this.impactAnalyser.deltaDecay = 20;
         folder.add(this, "changeImage");
         folder.add(this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
         folder.add(this, "brightenToAudio");
@@ -97,5 +103,6 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         folder.add(this, "vignetteAmount").onChange(() => this.uniforms.value = this.vignetteAmount);
         folder.add(this.uniforms.should_mirror, "value", {name: "Mirror image"});
         this.folder = f;
+        return f;
     }
 }

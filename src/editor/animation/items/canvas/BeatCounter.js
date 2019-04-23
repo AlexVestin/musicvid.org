@@ -19,15 +19,14 @@ export default class BeatCounter extends BaseItem {
         this.color5 = "#00FFFF";
         this.color6= "#FF0000";
         this.color7 = "#FF0000";
-        this.__setUpFolder();
+        this.setUpFolder();
     }
 
     updateFont = () => {
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
         folder.add(this, "bpm", 0, 240);
         folder.add(this, "duration", 0, 0.5);
         folder.add(this, "timeSignatureDivider", [1,2,3,4,5,6,7]);

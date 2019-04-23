@@ -9,6 +9,8 @@ import AddSceneModal from "./AddSceneModal";
 import LongAudioWarningModal from "./LongAudioWarningModal";
 import AutomationsModal from "./Automations/AutomationsModal";
 import AddNewAutomation from './Automations/AddNewAutomationModal'
+import MaterialModal from "./MaterialModal";
+import GeometryModal from "./GeometryModal";
 
 
 
@@ -101,6 +103,14 @@ export default class ModalContainer extends PureComponent {
                     />
                 )}
 
+                {index === 9 &&  (
+                    <MaterialModal
+                        open={modalOpen}
+                        onSelect={this.onSelect}
+                        gui={this.props.gui}
+                    />
+                )}
+
                 {index === 10 && (
                     <LongAudioWarningModal
                         open={modalOpen}
@@ -131,6 +141,14 @@ export default class ModalContainer extends PureComponent {
 
                 {index === 13 &&  (
                     <AddNewAutomation
+                        open={modalOpen}
+                        onSelect={this.onSelect}
+                        gui={this.props.gui}
+                    />
+                )}
+
+                {index === 14 &&  (
+                    <GeometryModal
                         open={modalOpen}
                         onSelect={this.onSelect}
                         gui={this.props.gui}

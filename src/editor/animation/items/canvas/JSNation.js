@@ -82,7 +82,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.emblem = new Emblem("./img/mvlogo.png");   
 
     
-        this.__setUpFolder();
+        this.setUpFolder();
         this.ctx.shadowBlur = 12;
 
         this.__attribution = {
@@ -144,8 +144,8 @@ export default class JSNationSpectrum extends BaseItem {
         this.sumShakeY += dy;
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);        
+    __setUpGUI = (folder) => {
+                 
         const emFolder = folder.addFolder("Emblem");
         emFolder.add(this.emblem, "visible")
 

@@ -10,6 +10,6 @@ export default class Background extends PlaneItem {
         this.name = "Background";     
         this.material = new ImageMaterial();
         this.mesh.material = this.material;
-        this.__setUpFolder();
+        this.setUpFolder();
     }
 }

@@ -29,7 +29,7 @@ export default class Text extends BaseItem {
         
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
 
-        this.__setUpFolder();
+        this.setUpFolder();
     }
 
     updateFont = () => {
@@ -48,8 +48,8 @@ export default class Text extends BaseItem {
         this.positionY = y;
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "text");
         folder.add(this, "positionX", 0, 1, 0.0001);
         folder.add(this, "positionY", 0, 1, 0.0001);

@@ -1,7 +1,7 @@
 
 import * as THREE from "three";
 import BaseItem from '../BaseItem'
-import { addOrthoMeshControls }  from 'editor/util/AddMeshControls'
+import { addOrthoMeshControls }  from '../AddMeshControls'
 import fonts from 'editor/util/Fonts'
 
 
@@ -48,7 +48,7 @@ export default class SpriteText extends BaseItem {
         info.scene.add(this.mesh);
 
         this.ctx.fillStyle = "#FFFFFF";
-        this.__setUpFolder();
+        this.setUpFolder();
     }
 
     setText = (text, x, y, options) => {
@@ -83,8 +83,8 @@ export default class SpriteText extends BaseItem {
         this.updateText();
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "text").onChange(this.updateText);
         folder.add(this, "font", fonts).onChange(this.updateText);
         folder.add(this, "fontSize", 0, 300).onChange(this.updateText);

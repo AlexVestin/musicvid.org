@@ -45,7 +45,7 @@ export default class MonsterCat extends BaseItem {
         this.positionX = 0.5;
         this.positionY = 0.5;
         this.animTime = 0.5;
-        this.__setUpFolder();
+        this.setUpFolder();
         this.analyser = new SpectrumAnalyser(this.folder);
 
         
@@ -88,8 +88,8 @@ export default class MonsterCat extends BaseItem {
     };
 
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
 
         folder.addColor(this, "color");
         folder.add(this, "animTime", 0, 10);

@@ -45,11 +45,11 @@ export default class PointBed extends BaseItem {
 
 
         info.scene.add(this.group);
-        this.__setUpFolder();
+        this.setUpFolder();
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "amplitude");
         return this.__addFolder(folder);
     };

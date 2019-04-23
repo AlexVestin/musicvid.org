@@ -4,6 +4,8 @@ import Particles from './perspective/Particles'
 import LineBed from './perspective/LineBed'
 import ParticlesSideways  from './perspective/ParticlesSideways' 
 import TextLines from './perspective/TextLines' 
+import SphereMesh from './perspective/SphereMesh' 
+
 
 // ortho items
 import TimeRep from './ortho/TimeRep'
@@ -29,7 +31,8 @@ const perspectiveItems = {
     Particles: { authors: "@Caseif & @Incept", url:"https://github.com/caseif/js.nation", class: Particles, img: "img/items/Particles.png"},
     LineBed: { authors: "GamleGaz", class: LineBed, img: "img/items/LineBEd.png"},
     ParticlesSideways: {url:"https://github.com/caseif/vis.js", authors: "@Caseif & @Incept", class: ParticlesSideways, img: "img/items/ParticlesSideways.png"},
-    TextLines: {class: TextLines, img: "img/items/TextLines.png"}
+    TextLines: {class: TextLines, img: "img/items/TextLines.png"},
+    SphereMesh: {class: SphereMesh}
 }
 
 const canvasItems = {
@@ -49,15 +52,15 @@ const orthoItems = {
     //SimplicityGalaxy: {img: "img/items/SimplicityGalaxy.png", url: "https://www.shadertoy.com/view/MslGWN", authors: "CBS", class: SimplicityGalaxy},
     Image: {class: Image},
     SpriteTextMask: {class: SpriteTextMask, img: "img/items/StarField.png"},
-    SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"}
+    SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"},
+    Plane: {class: Plane, img: "img/items/SpriteText.png"},
+
 }
 
 
-const licensed = false;
+const licensed = true;
 if(licensed) {
-    console.log("?=????????????????+0")
     //import SimplicityGalaxy from './ortho/SimplicityGalaxy'
-
     const licensedOrthoItems = [
         {path: './ortho/Noise.js', img: "img/items/Noise.png", authors: "nmz (@Stormoid)", url: "https://www.shadertoy.com/view/ldlXRS", name: "Noise"},
         {path: './ortho/HexaGone.js',img: "img/items/HexaGone.png", url: "https://www.shadertoy.com/view/wsl3WB", authors: "BigWIngs", name: "HexaGone"},

@@ -42,6 +42,7 @@ export default class ShaderToyMaterial extends THREE.RawShaderMaterial {
         options.width = width;
         options.hieght = hieght;
 
+        
 
         let usedUniforms = ShaderToyMaterial.retriveUsedUniforms(shaderToySample);
 
@@ -56,19 +57,11 @@ export default class ShaderToyMaterial extends THREE.RawShaderMaterial {
             this.registerUpdate();
         }
 
-
-
-
-
-
         let data = this.createUniformsObject(usedUniforms, options);
 
         this.uniforms = data.prof;
         var finalfrag = frag + "\n" + data.code + "\n" + shaderToySample;
-
         this.fragmentShader = finalfrag;
-
-
     }
 
     registerUpdate() {

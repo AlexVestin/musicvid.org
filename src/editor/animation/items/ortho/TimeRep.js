@@ -1,7 +1,7 @@
 
 import * as THREE from "three";
 import BaseItem from '../BaseItem'
-import { addOrthoMeshControls } from 'editor/util/AddMeshControls';
+import { addOrthoMeshControls } from '../AddMeshControls'
 
 export default class AudioWave extends BaseItem{
     constructor(info) {
@@ -34,11 +34,11 @@ export default class AudioWave extends BaseItem{
         material.wireframe = false;
         info.scene.add( this.mesh );
         this.mesh.position.y = this.positionY;
-        this.__setUpFolder();
+        this.setUpFolder();
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "amplitude", 0, 10.0, 0.01);
         folder.add(this, "extent", 0, 2.0, 0.01);
         folder.add(this, "width", 0, 5.0, 0.01);

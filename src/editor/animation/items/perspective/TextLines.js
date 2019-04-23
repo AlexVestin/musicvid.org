@@ -1,7 +1,7 @@
 
 import * as THREE from "three";
 import BaseItem from '../BaseItem'
-import addMeshControls from 'editor/util/AddMeshControls'
+import addMeshControls from '../AddMeshControls'
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 
  
@@ -62,12 +62,12 @@ export default class Box extends BaseItem {
         this.loaded = false;
         this.mesh =  new THREE.Mesh(new THREE.Geometry(), this.shaderMaterial);
         this.scene.add( this.mesh );
-        this.__setUpFolder();
+        this.setUpFolder();
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "text").onChange(this.init);
         addMeshControls(this, this.mesh, folder);
         return this.__addFolder(folder);

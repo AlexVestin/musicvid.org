@@ -105,7 +105,7 @@ export default class Particles extends BaseItem {
         this.setUp();
 
         
-        this.__setUpFolder();
+        this.setUpFolder();
 
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
         this.impactAnalyser.amplitude = 2.5;
@@ -136,8 +136,8 @@ export default class Particles extends BaseItem {
         }
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "changeParticleImage");
         folder.add(this, "resetParticleImage");
         folder.add(this.pMaterial.uniforms.flipY, "value").name("Flip vertically")

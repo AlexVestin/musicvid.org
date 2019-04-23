@@ -269,7 +269,7 @@ export default class Particles extends BaseItem {
 
         info.scene.add(this.mesh);
         
-        this.__setUpFolder();
+        this.setUpFolder();
         
 
         this.__attribution = {
@@ -297,8 +297,8 @@ export default class Particles extends BaseItem {
         }
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "amplitude", 0, 200, 0.1);
         folder.add(this, "baseSpeed", 0, 500);
 

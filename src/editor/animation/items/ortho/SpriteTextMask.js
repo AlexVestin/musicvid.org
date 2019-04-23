@@ -1,7 +1,7 @@
 
 import * as THREE from "three";
 import BaseItem from '../BaseItem'
-import { addOrthoMeshControls } from 'editor/util/AddMeshControls'
+import { addOrthoMeshControls } from '../AddMeshControls'
 import fonts from 'editor/util/Fonts'
 import { loadImageTexture } from 'editor/util/ImageLoader';
 
@@ -80,7 +80,7 @@ export default class SpriteTextMask extends BaseItem {
         //this.mat = new THREE.MeshBasicMaterial({map:tex, transparent: true});
         this.geo = new THREE.PlaneGeometry(2,2 * this.aspect);
         this.mesh = new THREE.Mesh(this.geo, this.mat);
-        this.__setUpFolder();
+        this.setUpFolder();
 
         const scale = 0.46;
         this.mesh.scale.set(scale, scale, scale);
@@ -121,8 +121,8 @@ export default class SpriteTextMask extends BaseItem {
         this.updateText();
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "changeBackroundImage");
         folder.add(this, "topText").onChange(this.updateText);
         folder.add(this, "topFontSize").onChange(this.updateText);

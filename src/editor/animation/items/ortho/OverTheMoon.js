@@ -29,7 +29,7 @@ export default class OverTheMoon extends BaseItem {
         this.baseSpeed = 0.8;
 
         //GUi
-        this.__setUpFolder(info, this.name);
+        this.setUpFolder(info, this.name);
         this.impactAnalyser = new ImpactAnalyser(this.folder);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;

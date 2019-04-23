@@ -32,7 +32,7 @@ export default class SimplicityGalaxy extends BaseItem {
         this.brightenMultipler = 1;
         this.brightness = 1.0;
 
-        this.__setUpFolder();
+        this.setUpFolder();
         this.impactAnalyser = new ImpactAnalyser(this.folder);
         this.spectrumAnalyser = new SpectrumAnalyser(this.folder);
         this.spectrumAnalyser.minDecibel = -100;
@@ -64,8 +64,8 @@ export default class SimplicityGalaxy extends BaseItem {
 
     stop = () => {};
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "brightenToAudio");
         folder.add(this, "brightness");
         folder.add(this, "brightenMultipler");

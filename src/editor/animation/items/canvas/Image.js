@@ -26,7 +26,7 @@ export default class SImage extends BaseItem {
         this.image = new Image();
         this.prevImage = null;
 
-        this.__setUpFolder();
+        this.setUpFolder();
     }
 
     setImage = (img) => {
@@ -46,8 +46,8 @@ export default class SImage extends BaseItem {
         });
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "loadNewImage");
         folder.add(this, "positionX");
         folder.add(this, "positionY");

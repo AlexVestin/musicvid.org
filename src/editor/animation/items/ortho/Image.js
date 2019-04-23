@@ -2,7 +2,7 @@
 import * as THREE from 'three'
 import {loadImageTexture} from 'editor/util/ImageLoader'
 import BaseItem from '../BaseItem'
-import { addOrthoMeshControls } from 'editor/util/AddMeshControls'
+import { addOrthoMeshControls } from '../AddMeshControls'
 
 export default class Image extends BaseItem{
 
@@ -19,7 +19,7 @@ export default class Image extends BaseItem{
         const url = "./img/solar.jpeg";
         this.loadNewBackground(url);
         this.prevFile = url;
-        this.__setUpFolder();
+        this.setUpFolder();
     }
 
     async changeImage() {
@@ -33,8 +33,8 @@ export default class Image extends BaseItem{
         }
     }
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "changeImage");
         addOrthoMeshControls(this, this.mesh, folder);
         folder.updateDisplay();

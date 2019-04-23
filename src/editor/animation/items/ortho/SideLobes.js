@@ -40,7 +40,7 @@ export default class SideLobes extends BaseItem {
         this.tex.minFilter = THREE.LinearFilter;
         this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * this.resMult, 2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
         this.barHeightMultiplier = 1.3;
-        this.__setUpFolder();
+        this.setUpFolder();
         
         this.ctx.shadowBlur = 12;
 
@@ -70,8 +70,8 @@ export default class SideLobes extends BaseItem {
     }
 
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);        
+    __setUpGUI = (folder) => {
+                 
         folder.add(this.mesh.position, "x", -2, 2, 0.01);
         folder.add(this.mesh.position, "y", -2, 2, 0.01);
         folder.add(this, "scale", -2, 2).onChange(() => this.mesh.scale.set(this.scale, this.scale, 1));

@@ -66,7 +66,7 @@ export default class Polartone extends BaseItem {
         this.context.globalAlpha = this.baseStrokeAlpha;
 
         this.context.strokeStyle = "rgb(0,0,0)";
-        this.__setUpFolder();
+        this.setUpFolder();
 
         this.__attribution = {
             showAttribution: true,
@@ -115,8 +115,8 @@ export default class Polartone extends BaseItem {
         this.positions = [];
     };
 
-    setUpGUI = (gui, name) => {
-        const folder = gui.addFolder(name);
+    __setUpGUI = (folder) => {
+         
         folder.add(this, "songDuration");
         folder
             .add(this, "baseStrokeAlpha", 0, 1.0)
