@@ -76,6 +76,14 @@ class Controller {
     return this;
   }
 
+
+  disableAutomations() {
+    if(this.automationButton) {
+      this.automationButton.style.display = "none";
+    }
+    return this;
+  }
+
  
 
   /**

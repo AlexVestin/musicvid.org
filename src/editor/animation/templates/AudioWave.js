@@ -6,12 +6,12 @@ export default class Manager extends WebGLManager {
 
     setUpScene() {
         this.fftSize = 2048;
-        this.scenes.push(this.addOrthoScene());
+        const s = this.addSceneFromText("ortho");
         
-        this.scenes[0].addItemFromText("Background");
-        this.scenes[0].addItemFromText("TimeRep");
-        const it2 = this.scenes[0].addItemFromText("SpriteText");
-        const it3 = this.scenes[0].addItemFromText("SpriteText");
+        s.addItemFromText("Background");
+        s.addItemFromText("TimeRep");
+        const it2 = s.addItemFromText("SpriteText");
+        const it3 = s.addItemFromText("SpriteText");
         it2.mesh.position.y = 0.70;
         it2.text = "Artist";
         it2.font = "Verdana";

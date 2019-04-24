@@ -5,6 +5,7 @@ import AttribItem from './items/ortho/Attribution'
 import CanvasScene from './scenes/CanvasScene';
 import OrthographicScene from './scenes/OrthographicScene';
 import PerspectiveScene from './scenes/PerspectiveScene';
+import PostProcessing from './postprocessing/postprocessing';
 
 
 export default class WebGLManager {
@@ -21,7 +22,8 @@ export default class WebGLManager {
 
         this.clearColor = "#000000";
         this.clearAlpha = 1.0;
-
+        this.postprocessingEnabled = false;
+        
 
         document.body.addEventListener("keyup", (e) => {
             if(e.keyCode === 70) {
@@ -89,26 +91,18 @@ export default class WebGLManager {
         }
     }
 
-    addOrthoScene = () => {
-        return new OrthographicScene(this.layersFolder, this.resolution, this.removeScene, this.moveScene);
-    }
-    addCanvasScene = () => {
-        return new CanvasScene(this.layersFolder, this.resolution, this.removeScene,this.moveScene);
-    }
-    addPerspectiveScene = () => {
-        return new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene, this.moveScene);
-    }
-
 
     addSceneFromText = (sceneName) => {
         let scene;
         if(sceneName === "canvas") {
-            scene = this.addCanvasScene();
+            scene =  new CanvasScene(this.layersFolder, this.resolution, this.removeScene,this.moveScene);
         }else if(sceneName === "ortho") {
-            scene =  this.addOrthoScene();
+            scene =  new OrthographicScene(this.layersFolder, this.resolution, this.removeScene, this.moveScene);
         }else if(sceneName === "perspective") {
-            scene = this.addPerspectiveScene();
+            scene = new PerspectiveScene(this.layersFolder, this.resolution, this.removeScene, this.moveScene);
         }
+
+        this.postProcessing.addRenderPass(scene);
         this.scenes.push(scene);
         return scene;
     }
@@ -133,9 +127,7 @@ export default class WebGLManager {
             this.overviewFolder = this.gui.__folders["Overview"];
             this.layersFolder = this.gui.__folders["Layers"];
             this.layersFolder.add(this, "addScene");
-        }
-      
-        
+        }  
         // Set up internal canvas to keep canvas size on screen consistent
 
         this.canvas = this.canvasMountRef;
@@ -207,6 +199,8 @@ export default class WebGLManager {
         this.renderer.autoClear = false;
         this.renderer.setSize(this.width, this.height);
         this.setClear();        
+
+        this.postProcessing = new PostProcessing(this.width, this.height, { renderer: this.renderer, ovFolder: this.overviewFolder, gui: this.layersFolder});
         
     }
 
@@ -217,6 +211,8 @@ export default class WebGLManager {
             this.gui.__folders["Settings"].addColor(this, "clearColor").onChange(this.setClear);
             this.gui.__folders["Settings"].add(this, "clearAlpha", 0, 1, 0.001).onChange(this.setClear);
             this.gui.__folders["Settings"].add(this, "drawAttribution").onChange(this.updateAttribution);
+            this.gui.__folders["Layers"].add(this, "postprocessingEnabled");
+
             this.gui.__folders["Settings"].add(this, "enableAllControls");
             this.gui.__folders["Settings"].add(this, "disableAllControls");
             this.gui.__folders["Settings"].add(this, "resetAllCameras");
@@ -286,18 +282,22 @@ export default class WebGLManager {
     }
 
     update = (time, audioData, shouldIncrement) => {
-        this.renderer.clear();        
-
-        
-        
-        this.scenes.forEach(scene => {
-            if(scene.TYPE !== "") {
-                scene.update(time, audioData, shouldIncrement);
-                this.renderer.render(scene.scene, scene.camera);
-                this.renderer.clearDepth();
-            }          
-        }); 
-        
+        this.renderer.clear();     
+            
+        if(!this.postprocessingEnabled) {
+            this.scenes.forEach(scene => {
+                if(scene.TYPE !== "") {
+                    scene.update(time, audioData, shouldIncrement);
+                    this.renderer.render(scene.scene, scene.camera);
+                    this.renderer.clearDepth();
+                }          
+            });    
+        } else {
+            this.postProcessing.update(time, audioData, shouldIncrement);
+            this.renderer.clearDepth();
+            this.postProcessing.render();
+        }
+       
         if(this.drawAttribution) {
             this.renderer.render(this.attribScene, this.attribCamera);
         }

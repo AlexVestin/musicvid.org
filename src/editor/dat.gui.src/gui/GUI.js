@@ -1231,6 +1231,7 @@ function add(gui, object, property, params) {
     params.before = params.before.__li;
   }
 
+  if(controller)console.log(controller)
   controller.parent = gui;
 
   recallSavedValue(gui, controller);
@@ -1261,19 +1262,18 @@ function add(gui, object, property, params) {
   if(controller instanceof NumberControllerSlider || controller instanceof NumberControllerBox){
     const sd = document.createElement("button");
     sd.innerHTML = "A";
-    
-    
-      sd.style.marginTop = "2px";
-      sd.style.backgroundColor = "transparent";
-      sd.style.color = "#efefef";
-      sd.style.fontWeight = 400;
-      sd.style.cursor = "pointer";
-    
+    sd.style.marginTop = "2px";
+    sd.style.backgroundColor = "transparent";
+    sd.style.color = "#efefef";
+    sd.style.fontWeight = 400;
+    sd.style.cursor = "pointer";
+  
 
     sd.onclick = () => {
       gui.getRoot().modalRef.toggleModal(11, true, controller);
     }
     
+    controller.automationButton = sd;
     controller.domElement.appendChild(sd);
   }
   gui.__controllers.push(controller);

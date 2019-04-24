@@ -18,6 +18,12 @@ export default class MeshItem extends BaseItem {
         this.materialFolders = [];
     }
 
+    updateGeometry = (configs) => {
+        const  { GeomClass } = this;
+        this.geometry = new GeomClass(this.updateGeometry, configs);
+        this.mesh.geometry = this.geometry;
+    }
+
     changeGeometry(text) {
   
         let before = undefined;
@@ -28,7 +34,8 @@ export default class MeshItem extends BaseItem {
         }
     
         const GeometryClass = loadGeometryFromText(text);
-        this.geometry = new GeometryClass(this);
+        this.geometry = new GeometryClass(this.updateGeometry, {});
+        this.GeomClass = GeometryClass;
         this._geoFol  = this.folder.addFolder("Geometry Settings", true, false, before);
         this._geoOvFol  = this.ovFolder.addFolder("Geometry Settings", true, false, before);
         this.geometry.__setUpGUI(this._geoFol);

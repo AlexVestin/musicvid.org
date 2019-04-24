@@ -6,11 +6,11 @@ export default class Manager extends WebGLManager {
 
     setUpScene() {
         this.fftSize = 2048;
-        this.scenes.push(this.addCanvasScene());
-        this.scenes[0].addItemFromText("Polartone2D");
+        const scene = this.addSceneFromText("canvas");
+        scene.addItemFromText("Polartone2D");
     
-        const it2 = this.scenes[0].addItemFromText("Text2D");
-        const it3 = this.scenes[0].addItemFromText("Text2D");
+        const it2 = scene.addItemFromText("Text2D");
+        const it3 = scene.addItemFromText("Text2D");
         it2.positionY = 0.9 ;
         it2.fillStyle = "#000000";
         it2.fontSize = 65;

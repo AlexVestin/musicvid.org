@@ -6,12 +6,11 @@ import WebGLManager from '../WebGLManager'
 export default class Monstercat extends WebGLManager {
 
     setUpScene() {
-        const particlesScene = this.addPerspectiveScene(); 
-        const spectrumBarsScene = this.addCanvasScene(); 
+        const particlesScene = this.addSceneFromText("perspective"); 
+        const spectrumBarsScene = this.addSceneFromText("canvas"); 
         particlesScene.camera.position.y = 0;
         particlesScene.camera.position.z = 300;
         particlesScene.camera.updateMatrixWorld();
-        this.scenes.push(particlesScene);
         spectrumBarsScene.addItemFromText("Monstercat2D");
 
         const image = spectrumBarsScene.addItemFromText("Image2D");
@@ -55,10 +54,8 @@ export default class Monstercat extends WebGLManager {
         artistText.updateDisplay();
         songText.updateDisplay();
         remixText.updateDisplay();
-
-        this.scenes.push(spectrumBarsScene);
-
         particlesScene.addItemFromText("ParticlesSideways");
-        this.overviewFolder.onResize();
+
+        this.postProcessing.addEffectPass("glitch");
     }
 }

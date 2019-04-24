@@ -50,6 +50,7 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
     updateMaterial = (time, audioData) => {
         this.uniforms.iTime.value = time;
         if( this.impactAnalyser) {
+            
             const impact = this.impactAnalyser.analyse(audioData.frequencyData) ;
             this.time += this.baseSpeed * 0.01 + (time  - this.lastTime) * impact * this.amplitude / 10; 
             this.uniforms.iTime.value = this.time ;

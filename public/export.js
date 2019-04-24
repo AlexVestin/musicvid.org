@@ -27,8 +27,8 @@ window.__init = config => {
             "-",
             "-c:v",
             "libx264",
-            '-preset',
-            `${preset}`,
+            //'-preset',
+            //`${preset}`,
             `output.h264`
         ];
         alert(args.join(" "));

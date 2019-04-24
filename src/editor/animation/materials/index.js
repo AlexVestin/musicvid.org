@@ -10,8 +10,6 @@ import StarNestMaterial from './StarNestMaterial'
 
 
 
-
-
 const materials = {
     ImageMaterial: { class: ImageMaterial },
     HexaGone: {img: "img/items/HexaGone.png", class: HexaGoneMaterial },

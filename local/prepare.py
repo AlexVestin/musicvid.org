@@ -28,7 +28,7 @@ if os.path.isdir(sync_dir):
     os.makedirs(sync_dir)
 
 for platform in platforms:
-    build_dst =  dest + 'build_' + platform
+    build_dst =  dest + 'build_' + platform + "/musicvid.org"
     if os.path.isdir(build_dst):
         shutil.rmtree(build_dst)
         print("Removing: ", build_dst)
@@ -39,7 +39,7 @@ for platform in platforms:
         copytree(dest + platform, build_dst)
         print("zipping to", sync_dir+platform)
         
-        shutil.make_archive(sync_dir+platform, ext[platform], build_dst)
+        shutil.make_archive(sync_dir+'musicvid_'+platform, ext[platform], root_dir=dest + 'build_' + platform,  base_dir='musicvid.org')
 
     # Directories are the same
     except shutil.Error as e:
