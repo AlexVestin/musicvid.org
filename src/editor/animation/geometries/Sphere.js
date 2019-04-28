@@ -1,6 +1,8 @@
 
 import { SphereGeometry } from 'three';
-export default class Plane extends SphereGeometry {
+import serialize from '../Serialize'
+
+export default class Sphere extends SphereGeometry {
     constructor(info) {
         super(5, 32, 32);
 
@@ -8,5 +10,9 @@ export default class Plane extends SphereGeometry {
 
     __setUpGUI = ( ) => {
 
+    }
+
+    __serialize = () => {
+        return serialize(this);
     }
 }

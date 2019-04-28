@@ -72,6 +72,16 @@ class SimpleDialog extends React.Component {
                       </ListItemAvatar>
                       <ListItemText primary="2D Canvas scene." />
                     </ListItem>
+
+
+                    <ListItem button onClick={() => this.props.onSelect("effect")}>
+                      <ListItemAvatar >
+                          <Avatar className={classes.avatar}>
+                          <AddPhotoAlternate />
+                          </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary="Effect pass (requires postProcessingEnabled)." />
+                    </ListItem>
                 </List>
                 </div>
             </Dialog>

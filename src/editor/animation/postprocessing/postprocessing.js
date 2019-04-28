@@ -1,84 +1,76 @@
 
 
 import EffectComposer from './effectcomposer'
-import BloomPass from './passes/bloompass'
-import SepiaShader from './shaders/sepiashader'
-import ShaderPass from './passes/shaderpass';
-import ColorShader from './shaders/colorshader'
-import ColorPass from './passes/colorpass'
-import CopyShader from './shaders/copyshader'
-import SSAAPass from './passes/ssaapass'
-import GlitchPass from './passes/glitchpass'
-import HalftonePass from './passes/halftonepass';
-import PixelPass from './passes/pixelpass'
+import { loadPassFromText } from './passes'
 import RenderPass from './passes/renderpass'
 
-
 export default class PostProcessing {
-    constructor(width, height, info, isMain = false) {
+    constructor(width, height, info) {
         this.width = width;
         this.height = height;
 
-        const { renderer, gui, ovFolder } = info
+        const { renderer, gui, ovFolder, addEffect, moveItem, removeItem } = info;
+        this.removeItem = removeItem;
         this.gui = gui;
         this.ovFolder = ovFolder;
+        this.moveItem = moveItem;
+        this.addEffectToManager = addEffect;
         this.effectComposer = new EffectComposer(renderer)
         this.passes = [];
     }
 
+    addEffect = () => {
+        const ref = this.gui.getRoot().modalRef;
+        ref.toggleModal(15).then(selected => {
+            if(selected)
+                this.addEffectPass(selected);
+        })
+    }
+
+    remove = (pass, index) => {
+        this.effectComposer.passes.splice(index, 1);
+        this.passes.splice(index, 1);   
+        if(pass.ovFolder)
+            pass.ovFolder.parent.removeFolder(pass.ovFolder);
+    }
+
     addRenderPass = (obj) => {
-        const renderPass = new RenderPass( obj );
+        const renderPass = new RenderPass(obj);
+        obj.pass = renderPass;
         this.effectComposer.addPass(renderPass);
         this.passes.push(obj);   
-        this.effectComposer.passes.forEach((pass, i) => pass.clear = i === 0);
     }
 
     update = (time, audioData, shouldIncrement) => {
         this.passes.forEach( e => e.update(time, audioData, shouldIncrement) )
     }
 
+    move = (from, to, pass) => {
+        let obj = pass;
+        if(pass.isScene) {
+            obj = pass.pass;
+        }
+        this.passes.splice(from, 1);
+        this.passes.splice(to, 0, obj);
+
+        this.effectComposer.passes.splice(from, 1);
+        this.effectComposer.passes.splice(to, 0, obj);
+    }
+
     render = () => {
         this.effectComposer.render()
     }
 
-    setSize = (width, height) => {
-        this.effectComposer.setSize(width, height)
-    }
-
  
-    addEffectPass = (type, fileConfig) =>  {
-
-        var fx;
-        switch(type) {
-            case "PIXEL":
-                fx = new PixelPass({type, width: this.width, height: this.height, name: "Pixelpass"}, fileConfig);
-            break;
-            case "COLOR SHADER":
-                fx = new ColorPass(ColorShader, {name: "color", type}, fileConfig)
-                break;
-            case "sepia":
-                fx = new ShaderPass(SepiaShader)
-                break;
-            case "glitch":
-                fx = new GlitchPass();
-                break;
-            case "BLOOM":
-                fx = new BloomPass({type, name: "Bloom"}, 0.5, fileConfig)
-                break;
-            case "RGB HALFTONE":
-                fx = new HalftonePass({width: this.width, height: this.height, name: "halftone"}, fileConfig)
-                break;
-            default:
-                console.log("unknown EFFECTS type", type)
-                return
-        }
-
-        fx.__setUpGUI(this.gui);
-        
-        fx.__setUpGUI(this.ovFolder);
-        console.log(this.ovFolder);
+    addEffectPass = (type) =>  {
+        var fx = loadPassFromText(type);
+        fx.__moveItem = this.moveItem;
+        fx.removeMe = () =>  this.removeItem({scene: fx, undoAction: false });
+        fx.setUpGUI(this.gui, this.ovFolder);        
         this.passes.push(fx);
-        this.effectComposer.addPass(fx);        
+        this.effectComposer.addPass(fx);     
+        this.addEffectToManager(fx); 
+        return fx;
     }
 
     removeEffect = (config) =>  {

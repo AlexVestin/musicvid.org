@@ -11,6 +11,9 @@ import AutomationsModal from "./Automations/AutomationsModal";
 import AddNewAutomation from './Automations/AddNewAutomationModal'
 import MaterialModal from "./MaterialModal";
 import GeometryModal from "./GeometryModal";
+import EffectModal from "./EffectModal";
+import ProjectFile from './ProjectFile'
+import MemeModal from "./MemeModal";
 
 
 
@@ -153,6 +156,22 @@ export default class ModalContainer extends PureComponent {
                         onSelect={this.onSelect}
                         gui={this.props.gui}
                     />
+                )}
+
+                {index === 15 &&  (
+                    <EffectModal
+                        open={modalOpen}
+                        onSelect={this.onSelect}
+                        gui={this.props.gui}
+                    />
+                )}
+
+                {index === 16 && (
+                    <ProjectFile open={modalOpen} onSelect={this.onSelect} />
+                )}
+
+                {index === 17 && (
+                    <MemeModal open={modalOpen} onSelect={this.onSelect} />
                 )}
             </div>
         );

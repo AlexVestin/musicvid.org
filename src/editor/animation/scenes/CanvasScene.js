@@ -36,6 +36,7 @@ export default class CanvasScene extends Scene{
 
             if(item.__startTime <= time && item.__endTime >= time ) {
                 this.ctx.save();
+                item.applyAutomations();
                 item.update(time, audioData, shouldIncrement);
                 this.ctx.restore();
             } 

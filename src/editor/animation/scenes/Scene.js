@@ -6,7 +6,8 @@ export default class Scene {
     constructor(gui, resolution, remove, moveScene) {
         this.__moveScene = moveScene;
         this.remove = remove;   
-        this.resolution = resolution;     
+        this.resolution = resolution;  
+        this.isScene = true;   
 
         this.items = [];
         if(gui) {
@@ -15,6 +16,35 @@ export default class Scene {
             this.setUpGui();
         }
         
+    }
+
+    addItemRec = (item, setting) => {
+        Object.keys(setting).forEach(key => {
+            const val = setting[key];
+            if(key ===  "__uniforms") {
+                Object.keys(setting[key]).forEach(k => {
+                    console.log(setting[key])
+                    item.uniforms[k].value = setting[key][k];
+                })
+            }else {
+                if(val !== Object(val) ) {
+                    item[key] = val;
+                } else {
+                    this.addItemRec(item[key], setting[key]);
+                }
+            }
+           
+        })
+    }
+
+    addItems = (items) => {
+        items.forEach(item => {
+            const i = this.addItemFromText(item.__itemName);
+            this.addItemRec(i, item);
+            i.__setUniforms();
+            i.setFolderName(i.name);
+        })
+
     }
 
     updateCamera = () => {
@@ -31,6 +61,10 @@ export default class Scene {
         this.cameraFolder.updateDisplay();
     }
 
+    updateSettings = () => {
+
+    }
+
     undoCameraMovement = (matrix) => {
         const { camera } = this;
        
@@ -40,11 +74,11 @@ export default class Scene {
         this.cameraFolder.updateDisplay();
     }
 
+
     handleMouseUp = () => {
         this.gui.getRoot().addUndoItem({type: "action", func: this.undoCameraMovement, args: this.lastCameraArray});
         this.lastCameraArray = this.camera.matrix.toArray();
         this.cameraFolder.updateDisplay();
-
     }
 
     updateCameraMatrix = () => {
@@ -54,7 +88,6 @@ export default class Scene {
         if(this.controls.enabled) {
             this.controls.update();
         }
-        
     }
     
     setUpControls = () => {
@@ -71,8 +104,13 @@ export default class Scene {
         this.cameraFolder.add(this.camera.rotation, "x", -Math.PI, Math.PI, 0.0001).name("rotationX").onChange(this.updateCameraMatrix);
         this.cameraFolder.add(this.camera.rotation, "y", -Math.PI, Math.PI, 0.0001).name("rotationY").onChange(this.updateCameraMatrix);
         this.cameraFolder.add(this.camera.rotation, "z", -Math.PI, Math.PI, 0.0001).name("rotationZ").onChange(this.updateCameraMatrix);
-
         this.cameraFolder.add(this.camera, "zoom", -10, 10, 0.001).onChange(this.updateCameraMatrix);
+    }
+
+    setUpPassConfigs = () => {
+        this.settingsFolder.add(this.pass, "clear");
+        this.settingsFolder.add(this.pass, "clearDepth");
+        this.settingsFolder.add(this.pass, "needsSwap");
     }
 
     setUpGui = (before =  null) => {
@@ -171,6 +209,7 @@ export default class Scene {
             
             const itemClass = getItemClassFromText(this.TYPE, name);
             const item = new itemClass(info);
+            item.__itemName = name;
             this.items.push(item);
 
             if(!fromTemplate) {
@@ -192,6 +231,7 @@ export default class Scene {
         if(shouldIncrement) {
             this.items.forEach(item =>  {
                 item.mesh.visible = (item.__startTime <= time && item.__endTime >= time);
+                item.applyAutomations();
                 item.update(time, audioData)  
             });
         }

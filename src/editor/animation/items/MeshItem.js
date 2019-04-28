@@ -13,9 +13,17 @@ export default class MeshItem extends BaseItem {
         this.type = info.type;
         this.mesh = new THREE.Mesh();
         info.scene.add(this.mesh);
-
-    
         this.materialFolders = [];
+    
+        // Serialize mesh
+        this.mesh.__objectsToSerialize = [];
+        this.mesh.__objectsToSerialize.push("rotation");
+        this.mesh.__objectsToSerialize.push("position");
+        this.mesh.__objectsToSerialize.push("scale");
+
+        // Serialize material and geometry
+        this.__objectsToSerialize.push("mesh");
+        this.__objectsToSerialize.push("material");
     }
 
     updateGeometry = (configs) => {
@@ -52,6 +60,7 @@ export default class MeshItem extends BaseItem {
             addPersControls(this, this.mesh, this._geoOvFol);
         }
     }
+
 
     update = (time, audioData) => {
         if(this.material)

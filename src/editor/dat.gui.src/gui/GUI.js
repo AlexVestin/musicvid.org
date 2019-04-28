@@ -105,6 +105,8 @@ const GUI = function(pars) {
   this.__redoLog = [];
   this.__disabled = false;
   this.__automations = [];
+  this.__automationLinks = [];
+
   this.__time = 0;
   this.__automationConfigUpdateFrequency = 5;
 
@@ -1231,7 +1233,6 @@ function add(gui, object, property, params) {
     params.before = params.before.__li;
   }
 
-  if(controller)console.log(controller)
   controller.parent = gui;
 
   recallSavedValue(gui, controller);

@@ -15,6 +15,8 @@ import StarField from './ortho/StarField'
 import SideLobes from './ortho/SideLobes'
 import SpriteTextMask from './ortho/SpriteTextMask'
 import SpriteText from './ortho/SpriteText'
+import Meme from './ortho/Meme'
+
 
 // canvas items
 import Monstercat2D from './canvas/MonsterBars2D'
@@ -53,6 +55,7 @@ const orthoItems = {
     //SimplicityGalaxy: {img: "img/items/SimplicityGalaxy.png", url: "https://www.shadertoy.com/view/MslGWN", authors: "CBS", class: SimplicityGalaxy},
     SpriteTextMask: {class: SpriteTextMask, img: "img/items/StarField.png"},
     SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"},
+    Meme: {class: Meme}
 }
 
 

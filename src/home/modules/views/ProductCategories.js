@@ -68,7 +68,7 @@ function ProductCategories(props) {
       src: "vid/templates/SinuousX.mp4",
       title: 'Sinuous',
       width: '38%',
-      templateName:"Sinuous",
+      templateName:"Meme",
       attrib: "nmz (@stormoid)",
       attribUrl: "https://www.shadertoy.com/user/nimitz",
       twitter: "https://twitter.com/stormoid",

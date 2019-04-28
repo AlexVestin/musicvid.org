@@ -40,7 +40,7 @@ class App extends PureComponent {
         };
        
         this.firstLoad = true;
-        this.fastLoad = false;
+        this.fastLoad = true;
         this.timeOffset = 0;
         this.lastTime = 0;
         this.lastAudioData = {frequencyData: [], timeData: []};
@@ -95,7 +95,7 @@ class App extends PureComponent {
                     this.animationManager.init(this.resolution);
                     
                     const rep = this.loadNewAudio(
-                        "https://s3.eu-west-3.amazonaws.com/fysiklabb/Syn+Cole+-+Miami+82+(Lucas+Silow+Remix).mp3"
+                        "https://s3.eu-west-3.amazonaws.com/fysiklabb/3buyfour.wav"
                     );
                     rep.then(this.audioReady);
                 } else {
@@ -189,10 +189,15 @@ class App extends PureComponent {
 
 
     applyAutomation = (time, audioData) => {
-        const automations = this.gui.getRoot().__automations;
+        const root = this.gui.getRoot();
+        const automations = root.__automations;
+        const links = root.__automationLinks;
         automations.forEach(item => {
-            item.update(time, audioData);
-            item.apply();
+            item.update(time, audioData);    
+        });
+
+        links.forEach(link => {
+            link.automation.apply(link.controller, link.type);
         })
     }
 

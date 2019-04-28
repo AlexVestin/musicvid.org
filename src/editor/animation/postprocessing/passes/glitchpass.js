@@ -11,6 +11,9 @@ export default class GlitchPass extends Pass {
     constructor(dt_size) {
         super();
 
+        this.name = "Glitch pass";
+        this.TYPE = "GlitchPass";
+
         if (DigitalGlitch === undefined)
             console.error("THREE.GlitchPass relies on THREE.DigitalGlitch");
 
@@ -38,12 +41,11 @@ export default class GlitchPass extends Pass {
         this.generateTrigger();
 	}
 	
-	__setUpGUI = (f) => {
-		const folder = f.addFolder("Glitch pass");
+	__setUpGUI = (folder) => {
+      
 		folder.add(this, "dt_size").min(2).onChange(() => { this.uniforms["tDisp"].value = this.generateHeightmap(this.dt_size) });
 		folder.add(this, "threshold").min(0);
 		folder.add(this, "randomTrigger");
-
 
 		this.impactAnalyser = new ImpactAnalyser(folder);
 		this.impactAnalyser.endBin = 60;

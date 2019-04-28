@@ -14,9 +14,9 @@ export default class RenderPass extends Pass {
         this.clearColor = obj.clearColor;
         this.clearAlpha = obj.clearAlpha !== undefined ? obj.clearAlpha : 0;
 
-				this.clear = true;
-				this.clearDepth = false;
-				this.needsSwap = false;
+        this.clear = true;
+        this.clearDepth = false;
+        this.needsSwap = false;
 				
     }
 

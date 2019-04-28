@@ -2,13 +2,12 @@ import React, { PureComponent } from "react";
 import AudioReactiveItem from "./AudioReactiveItem";
 import InputItem from "./MathInputItem";
 import PointItem from "./PointItem";
+import Button from '@material-ui/core/Button'
 
 
 export default class ItemContainer extends PureComponent {
     constructor(props) {
         super(props);
-
-        console.log(props);
 
         this.item = props.item;
         this.state = { name: this.item.name };
@@ -28,7 +27,7 @@ export default class ItemContainer extends PureComponent {
     };
 
     render() {
-        const { item, onSelect, gui } = this.props;
+        const { item, onSelect, gui, onRemove } = this.props;
         return (
             <div>
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", color: "#efefef", marginBottom: 5, marginTop: 10}}>
@@ -40,6 +39,8 @@ export default class ItemContainer extends PureComponent {
                 )}
                 {item.type === "math" && <InputItem onSelect={onSelect} item={item} />}
                 {item.type === "point" && <PointItem gui={gui} onSelect={onSelect} item={item} />}
+
+                <Button onClick={() => onRemove(item)} style={{backgroundColor: "red", color: "white", marginTop: 30}}>remove</Button>
             </div>
         );
     }

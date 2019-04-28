@@ -5,6 +5,7 @@ export default class PointAutomation extends Automation {
         super(gui);
         this.type = "point";
         this.name = "Point Thing";
+        this.__objectsToSerialize = ["points"];
         this.points = [];
     }
 

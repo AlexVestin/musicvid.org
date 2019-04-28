@@ -24,6 +24,8 @@ export default class NoiseMaterial extends ShaderToyMaterial {
             }
         )
 
+        this.__objectsToSerialize = ["uniforms"];
+
         this.name = "Noise Animation";
         this.texLoader = new THREE.TextureLoader(); 
         this.prevFile = "noisy2.png";

@@ -56,6 +56,6 @@ export default class Monstercat extends WebGLManager {
         remixText.updateDisplay();
         particlesScene.addItemFromText("ParticlesSideways");
 
-        this.postProcessing.addEffectPass("glitch");
+        this.postProcessing.addEffectPass("GlitchPass");
     }
 }

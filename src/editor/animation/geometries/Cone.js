@@ -1,5 +1,7 @@
 
 import { ConeGeometry } from 'three';
+import serialize from '../Serialize'
+
 export default class Cone extends ConeGeometry {
     constructor(update, info) {
         const config = {
@@ -28,5 +30,9 @@ export default class Cone extends ConeGeometry {
         folder.add(this.configs, "heightSegments", 0, 100, 1).disableAutomations().onChange(this.uc);
         folder.add(this.configs, "thetaStart").disableAutomations().onChange(this.uc);
         folder.add(this.configs, "thetaLength", 0, 100, 1).disableAutomations().onChange(this.uc);
+    }
+
+    __serialize = () => {
+        return serialize(this);
     }
 }

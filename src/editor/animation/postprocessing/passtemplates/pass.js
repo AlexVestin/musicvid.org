@@ -2,6 +2,10 @@
 
 export default class Pass  {
     constructor(config) {
+        this.TYPE = "effect";
+        this.name = "pass";
+        this.isScene =  false;
+        this.__automations = [];
             // if set to true, the pass is processed by the composer
         this.enabled = true;
 
@@ -13,9 +17,39 @@ export default class Pass  {
 
         // if set to true, the result of the pass is rendered to screen. This is set automatically by EffectComposer.
         this.renderToScreen = false;
+
+        this.__objectsToSerialize = [];
+    }
+
+    removeMe = () => {
+        console.log("remove")
+    }
+
+    addBasicControls = (folder) => {
+        folder.add(this, "enabled");
+        folder.add(this, "clear");
+        folder.add(this, "needsSwap");
+    }
+
+    setUpGUI = (gui, ovFolder) => {
+        this.folder = gui.addFolder(this.name, true, true);
+        this.folder.upFunction = () => this.__moveItem({up: true, scene: this});
+        this.folder.downFunction = () => this.__moveItem({up: false, scene: this});
+        this.ovFolder = ovFolder.addFolder(this.name);
+
+        this.addBasicControls(this.folder);
+        this.addBasicControls(this.ovFolder);
+
+        this.__setUpGUI(this.folder);
+        this.__setUpGUI(this.ovFolder);
+
+        this.folder.add(this, "removeMe").name("Remove");
+        this.ovFolder.add(this, "removeMe").name("Remove");
     }
     __setUpGUI = () => {};
     update = () => {}
+
+    stop = ( ) => {}
 
     setSize(width, height) { }
 

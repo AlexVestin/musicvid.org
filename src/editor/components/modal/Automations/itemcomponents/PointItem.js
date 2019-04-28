@@ -8,7 +8,6 @@ export default class PointItem extends PureComponent {
         this.item = props.item;
         this.gui = props.gui;
 
-        this.state = {nrPoints: 0};
     }
 
     addPoint = () => {
@@ -21,8 +20,7 @@ export default class PointItem extends PureComponent {
         return (
             <div>
                 <PointList points={this.item.points}> </PointList>
-                {this.state.nrPoints}
-                <Button onClick={this.addPoint}>Add new point</Button>
+                <Button color="secondary" onClick={this.addPoint}>Add new point</Button>
             </div>
         );
     }

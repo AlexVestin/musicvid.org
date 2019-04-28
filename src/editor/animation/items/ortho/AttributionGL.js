@@ -18,7 +18,6 @@ export default class AttributionGL extends BaseItem {
         this.positionY  = 0;
         this.updateText();
         this.initTexture(gl);
-        
     }
 
     initTexture(gl) {

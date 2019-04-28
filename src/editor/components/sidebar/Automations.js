@@ -8,9 +8,6 @@ import ItemContainer from "../modal/Automations/itemcomponents/ItemContainer";
 import AudioAutomation from "../modal/Automations/items/AudioReactiveAutomation";
 import MathAutomation from "../modal/Automations/items/InputAutomation";
 import PointAutomation from "../modal/Automations/items/PointAutomation";
-
-
-
 import classes from "./Automations.module.scss";
 
 export default class Automations extends PureComponent {
@@ -37,6 +34,14 @@ export default class Automations extends PureComponent {
             this.setState({ index: 1 });
         });
     };
+
+    onRemove = (automation) => {
+        const rootGui = this.props.gui.getRoot();
+        const index = rootGui.__automations.findIndex(e => e === automation);
+        rootGui.__automations.splice(index, 1);
+        rootGui.__automationLinks = rootGui.__automationLinks.filter(link => link.automation !== automation)
+        this.setState({index: 0})
+    }
 
     onSelectAutomation = (automation) => {
         this.selectedAutomation = automation;
@@ -83,6 +88,7 @@ export default class Automations extends PureComponent {
                             item={this.selectedAutomation}
                             back={() => this.setState({ index: 0 })}
                             gui={rootGui}
+                            onRemove={this.onRemove}
                         >
                             hello
                         </ItemContainer>

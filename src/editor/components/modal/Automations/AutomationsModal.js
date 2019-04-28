@@ -9,6 +9,9 @@ import SelectAutomation from "./SelectAutomation";
 import ConfigureAutomations from "./ConfigureAutomations";
 import AddNewAutomation from "./AddNewAutomation";
 
+
+import uuid from 'uuid/v4';
+
 // audio automation
 import AudioAutomation from "./items/AudioReactiveAutomation";
 import ItemContainer from "./itemcomponents/ItemContainer";
@@ -52,8 +55,10 @@ class ScrollDialog extends React.Component {
 
     onSelect = automation => {
         const { item } = this.props;
-        const link = { type: "*", item };
-        automation.__items.push(link);
+        const link = { id: uuid(), type: "*", controller: item, automation };
+        const root = this.props.gui.getRoot();
+        root.__automationLinks.push(link);
+        
         this.setState({ index: this.homeIndex });
     }
 

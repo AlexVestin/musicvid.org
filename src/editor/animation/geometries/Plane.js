@@ -1,5 +1,6 @@
 
 import { PlaneGeometry } from 'three';
+import serialize from '../Serialize'
 
 
 export default class Plane extends PlaneGeometry {
@@ -25,5 +26,9 @@ export default class Plane extends PlaneGeometry {
         folder.add(this.configs, "height").disableAutomations().min(0).onChange(this.uc);
         folder.add(this.configs, "widthSegments").disableAutomations().min(0).step(1).onChange(this.uc);
         folder.add(this.configs, "heightSegments").disableAutomations().min(0).step(1).onChange(this.uc);
+    }
+
+    __serialize = () => {
+        return serialize(this);
     }
 }

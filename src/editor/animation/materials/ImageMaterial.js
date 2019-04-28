@@ -2,6 +2,10 @@ import * as THREE from 'three';
 import { loadImageTexture, loadImageTextureFromChoice } from 'editor/util/ImageLoader';
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 
+
+import serialize from '../Serialize'
+
+
 const vertexShader = [
     "varying vec2 vUv;",
     "void main() {",
@@ -88,6 +92,10 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
     __addUndoAction = (func, args) => {
         const item = {func: func, args: args, type: "action"};
         this.folder.getRoot().addUndoItem(item); 
+    }
+
+    __serialize = () => {
+        return serialize(this);
     }
     
     __setUpGUI = (f) => {

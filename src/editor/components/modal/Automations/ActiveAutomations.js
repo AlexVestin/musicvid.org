@@ -55,7 +55,6 @@ function CustomizedTable(props) {
 
                         <CustomTableCell align="right" />
                         <CustomTableCell align="right" />
-                        <CustomTableCell align="right" />
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -79,14 +78,7 @@ function CustomizedTable(props) {
                                 </select>
 
                             </CustomTableCell>
-                            <CustomTableCell align="right">
-                                <IconButton disabled>
-                                    <KeyboardArrowUp />
-                                </IconButton>
-                                <IconButton disabled>
-                                    <KeyboardArrowDown />
-                                </IconButton>
-                            </CustomTableCell>
+        
                             <CustomTableCell align="right">
                                 <Button onClick={() => props.remove(row)} style={{ color: "red" }}>remove</Button>
                             </CustomTableCell>

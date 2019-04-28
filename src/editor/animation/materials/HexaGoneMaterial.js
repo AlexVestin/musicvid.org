@@ -3,6 +3,9 @@ import ShaderToyMaterial from 'editor/util/ShaderToyMaterial'
 import fragShader from '../shaders/licensed/HexaGone'
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 
+import serialize from '../Serialize'
+
+
 export default class HexaGoneMaterial extends ShaderToyMaterial {
 
     constructor(item) {
@@ -56,6 +59,10 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
             this.uniforms.iTime.value = this.time ;
             this.lastTime = time;
         }
+    }
+
+    __serialize = () => {
+        return serialize(this);
     }
 
     __addUndoAction = (func, args) => {
