@@ -55,7 +55,7 @@ class ScrollDialog extends React.Component {
 
     onSelect = automation => {
         const { item } = this.props;
-        const link = { id: uuid(), type: "*", controller: item, automation };
+        const link = { id: uuid(), type: "*", controller: item, automation, aid: automation.__id, iid: item.object.__id };
         const root = this.props.gui.getRoot();
         root.__automationLinks.push(link);
         

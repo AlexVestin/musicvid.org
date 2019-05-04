@@ -118,7 +118,6 @@ export default class Scene {
         this.folder = gui.addFolder(this.TYPE  + " scene", true, true, before);
         this.folder.upFunction = () => this.__moveScene({up: true, scene: this});
         this.folder.downFunction = () => this.__moveScene({up: false, scene: this});
-        this.overviewFolder = gui.__root.__folders["Overview"];
         this.itemsFolder = this.folder.addFolder("Items");
         
         this.itemsFolder.add(this, "addItem");
@@ -146,9 +145,7 @@ export default class Scene {
                 this.scene.remove(this.items[0].mesh);
             this.items.pop();
         }*/
-        this.items.forEach(item => {
-            item.ovFolder.parent.removeFolder(item.ovFolder);
-        })
+
         this.remove({scene: this});
     }
 
@@ -160,7 +157,6 @@ export default class Scene {
             this.scene.remove(this.items[index].mesh);
 
         item.folder.parent.removeFolder(item.folder);
-        item.ovFolder.parent.removeFolder(item.ovFolder);
         this.items.splice(index, 1);
         if(!undoAction) {
             const it = {func: this.undoRemoveItem, args: { item, undoAction: true}, type: "action"}
@@ -194,7 +190,6 @@ export default class Scene {
         if(name) {
             let info = {
                 gui: this.itemsFolder,
-                overviewFolder: this.overviewFolder,
                 type: this.TYPE,
                 width: this.resolution.width,
                 height: this.resolution.height,

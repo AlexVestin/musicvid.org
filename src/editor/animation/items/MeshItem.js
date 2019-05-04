@@ -37,7 +37,6 @@ export default class MeshItem extends BaseItem {
         let before = undefined;
         if(this.geometry) {
             this.folder.removeFolder(this._geoFol);
-            this.ovFolder.removeFolder(this._geoOvFol);
             before = this.removeButton.__li;
         }
     
@@ -45,19 +44,14 @@ export default class MeshItem extends BaseItem {
         this.geometry = new GeometryClass(this.updateGeometry, {});
         this.GeomClass = GeometryClass;
         this._geoFol  = this.folder.addFolder("Geometry Settings", true, false, before);
-        this._geoOvFol  = this.ovFolder.addFolder("Geometry Settings", true, false, before);
         this.geometry.__setUpGUI(this._geoFol);
-        this.geometry.__setUpGUI(this._geoOvFol);
         
         this.mesh.geometry = this.geometry;
 
         if(this.type === "ortho") { 
             addOrthoMeshControls(this, this.mesh, this._geoFol);
-            addOrthoMeshControls(this, this.mesh, this._geoOvFol);
-
         } else {
             addPersControls(this, this.mesh, this._geoFol);
-            addPersControls(this, this.mesh, this._geoOvFol);
         }
     }
 
@@ -87,18 +81,14 @@ export default class MeshItem extends BaseItem {
         let before = undefined;
         if(this.material) {
             this.folder.removeFolder(this._matFol);
-            this.ovFolder.removeFolder(this._matOvFol);
             before = this.removeButton.__li;
         }
     
         const MaterialClass = loadMaterialFromText(text);
         this.material = new MaterialClass(this);
         this._matFol  = this.folder.addFolder("Material Settings", true, false, before);
-        this._matOvFol  = this.ovFolder.addFolder("Material Settings", true, false, before);
         this.material.__setUpGUI(this._matFol);
         this._matFol.add(this, "newMaterialmodal").name("Change material");
-        this._matOvFol = this.material.__setUpGUI(this._matOvFol);
-        this._matOvFol.add(this, "newMaterialmodal").name("Change material");
         this.mesh.material = this.material;
     }
 }

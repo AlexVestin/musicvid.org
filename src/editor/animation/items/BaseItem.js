@@ -1,8 +1,7 @@
 import license from "editor/util/License";
-import uuid from "uuid/v4";
-import serialize from "../Serialize";
+import SerializableObject from "../SerializableObject";
 
-export default class BaseItem {
+export default class BaseItem extends SerializableObject {
     LICENSE = license;
     folders = [];
     __attribution = {
@@ -16,28 +15,23 @@ export default class BaseItem {
     };
 
     constructor(info) {
+        super();
         this.__startTime = 0;
         this.__endTime = 600;
         this.name = "";
-        this.__id = uuid();
 
         if (info) {
             this.width = info.width;
             this.height = info.height;
 
             // Serializing for project files
-            this.__objectsToSerialize = [];
-            this.__automations = [];
-            this.__filesToLoad = [];
+            
+            this.__controllers = {};
             this.__scale = 1;
             this.__gui = info.gui;
-            this.__overviewFolder = info.overviewFolder;
             this.parentRemove = info.remove;
-            this.ovFolder = this.__overviewFolder.addFolder(this.name);
             this.folder = this.__gui.addFolder(this.name);
-
             this.preFolderSetup(this.folder);
-            this.preFolderSetup(this.ovFolder);
         }
     }
 
@@ -45,42 +39,24 @@ export default class BaseItem {
         console.log("sey iy up");
     };
 
-    __serializeRec = (obj, sobj) => {
-        if (obj.__objectsToSerialize) {
-            obj.__objectsToSerialize.forEach(key => {
-                if (key === "uniforms") {
-                    const unifs = obj[key];
-                    const uf = {};
-                    Object.keys(unifs).forEach(k => {
-                        const val = unifs[k].value;
-                        console.log(k, val);
-                        if (val !== Object(val)) {
-                            uf[k] = val;
-                        }
-                    });
-                    sobj.__uniforms = uf;
-                    return;
-                }
-
-                sobj[key] = serialize(obj[key]);
-                this.__serializeRec(obj[key], sobj[key]);
-            });
+    _add = (f, n, options) => {
+        const c = f.add(this, n, options.min, options.max, options.step);
+        let p = options.path;
+        if(!p) {
+            p = n;
         }
-    };
 
-    __serialize = () => {
-        const sobj = serialize(this);
-        this.__serializeRec(this, sobj);
-        return sobj;
-    };
+        if(this.__controllers[p])
+            alert("bad controller path")
 
-    dispose = () => {
-        if (this.ovFolder) this.ovFolder.parent.removeFolder(this.ovFolder);
-    };
+        this.__controllers[p] = c;
+        c.__path = p;
+    }
+
+
 
     setFolderName = name => {
         this.folder.name = name;
-        this.ovFolder.name = name;
         this.name = name;
         this.__nameDisplay.updateDisplay();
     };
@@ -101,9 +77,7 @@ export default class BaseItem {
     setUpFolder = () => {
         this.setFolderName(this.name);
         this.__setUpGUI(this.folder);
-        this.__setUpGUI(this.ovFolder);
         this.postFolderSetup(this.folder);
-        this.postFolderSetup(this.ovFolder);
 
         return this.folder;
     };
@@ -129,8 +103,6 @@ export default class BaseItem {
             return;
         }
 
-        //this.folder.parent.removeFolder(this.folder);
-        //this.ovFolder.parent.removeFolder(this.ovFolder);
         this.parentRemove({ item: this });
     };
 

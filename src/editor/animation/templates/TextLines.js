@@ -13,6 +13,5 @@ export default class Manager extends WebGLManager {
         it1.mesh.position.y = -20;
         it0.updateDisplay();
         it1.updateDisplay();
-        this.overviewFolder.onResize();
     }
 }

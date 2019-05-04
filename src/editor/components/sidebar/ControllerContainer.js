@@ -77,7 +77,6 @@ export default class ControllerContainer extends PureComponent {
             <div className={classes.container} >
                 <div className={classes.wrapper}>
                     <div className={classes.headerButtons}>
-                        <div onClick={()=>this.setState({index: 0})} style={{backgroundColor: index === 0 ? selectedColor : ""}}>overview</div>
                         <div onClick={()=>this.setState({index: 1})} style={{backgroundColor: index === 1 ? selectedColor : ""}}>layers</div>
                         <div onClick={()=>this.setState({index: 2})} style={{backgroundColor: index === 2 ? selectedColor : ""}}>automations</div>
                         <div onClick={()=>this.setState({index: 3})} style={{backgroundColor: index === 3 ? selectedColor : ""}}>audio</div>
@@ -87,7 +86,6 @@ export default class ControllerContainer extends PureComponent {
                     </div>
                     <div style={{width: "100%", height: 5, backgroundColor: "gray"}}></div>
                     <SimpleBar data-simplebar-force-visible style={{ width: "100%", height: "95%", borderBottom: "2px solid gray", borderLeft: "2px solid gray", borderRight: "2px solid gray" }}>
-                        {index === 0 && loaded && <GUIMount gui={gui.__folders["Overview"].domElement}></GUIMount>}
                         {index === 1 && loaded && <GUIMount gui={gui.__folders["Layers"].domElement}></GUIMount>}
                         {index === 2 && loaded && <Automations gui={gui}></Automations>}
                         {index === 3 && loaded && <GUIMount gui={gui.__folders["Audio"].domElement}></GUIMount>}

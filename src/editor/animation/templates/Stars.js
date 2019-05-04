@@ -6,6 +6,5 @@ export default class Stars extends WebGLManager {
     setUpScene() {
         const scene = this.addSceneFromText("ortho");
         scene.addItemFromText("StarField");
-        this.overviewFolder.onResize();
     }
 }

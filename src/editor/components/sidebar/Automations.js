@@ -39,7 +39,7 @@ export default class Automations extends PureComponent {
         const rootGui = this.props.gui.getRoot();
         const index = rootGui.__automations.findIndex(e => e === automation);
         rootGui.__automations.splice(index, 1);
-        rootGui.__automationLinks = rootGui.__automationLinks.filter(link => link.automation !== automation)
+        rootGui.__automationLinks = rootGui.__automationLinks.filter(link => link.automation !== automation);
         this.setState({index: 0})
     }
 

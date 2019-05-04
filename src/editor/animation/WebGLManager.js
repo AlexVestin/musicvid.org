@@ -74,10 +74,10 @@ export default class WebGLManager {
             settings: {}
         };
         projFile.settings = serialize(this);
-        projFile.automations = [];
-        rootGui.__automations.forEach(automation => {
-            projFile.automations.push(serialize(automation));
-        });
+        projFile.automations = serializeObject(rootGui.__automations);
+        projFile.automationLinks = serializeObject(rootGui.__automationLinks);
+
+
         
         this.scenes.forEach( (scene, i) => {
             const sceneConfig = {
@@ -237,7 +237,6 @@ export default class WebGLManager {
         this.setUpAttrib();
 
         if (setUpFolders) {
-            this.overviewFolder = this.gui.__folders["Overview"];
             this.layersFolder = this.gui.__folders["Layers"];
             this.layersFolder.add(this, "addScene");
         }
@@ -318,7 +317,6 @@ export default class WebGLManager {
         this.setClear();
         this.postProcessing = new PostProcessing(this.width, this.height, {
             renderer: this.renderer,
-            ovFolder: this.overviewFolder,
             gui: this.layersFolder,
             addEffect: this.addNewEffect,
             moveItem: this.moveScene,

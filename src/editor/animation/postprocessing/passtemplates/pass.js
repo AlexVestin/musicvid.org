@@ -31,20 +31,13 @@ export default class Pass  {
         folder.add(this, "needsSwap");
     }
 
-    setUpGUI = (gui, ovFolder) => {
+    setUpGUI = (gui) => {
         this.folder = gui.addFolder(this.name, true, true);
         this.folder.upFunction = () => this.__moveItem({up: true, scene: this});
         this.folder.downFunction = () => this.__moveItem({up: false, scene: this});
-        this.ovFolder = ovFolder.addFolder(this.name);
-
         this.addBasicControls(this.folder);
-        this.addBasicControls(this.ovFolder);
-
         this.__setUpGUI(this.folder);
-        this.__setUpGUI(this.ovFolder);
-
         this.folder.add(this, "removeMe").name("Remove");
-        this.ovFolder.add(this, "removeMe").name("Remove");
     }
     __setUpGUI = () => {};
     update = () => {}

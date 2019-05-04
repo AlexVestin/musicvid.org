@@ -27,6 +27,8 @@ class Controller {
     this.previousValue = object[property];
     this.__uuid = uuid();
     this.__updateCounter = 0;
+
+    object["__folder_"+property] = this;
     
     /**
      * Those who extend this class will put their DOM elements in here.

@@ -9,10 +9,9 @@ export default class PostProcessing {
         this.width = width;
         this.height = height;
 
-        const { renderer, gui, ovFolder, addEffect, moveItem, removeItem } = info;
+        const { renderer, gui, addEffect, moveItem, removeItem } = info;
         this.removeItem = removeItem;
         this.gui = gui;
-        this.ovFolder = ovFolder;
         this.moveItem = moveItem;
         this.addEffectToManager = addEffect;
         this.effectComposer = new EffectComposer(renderer)
@@ -30,8 +29,7 @@ export default class PostProcessing {
     remove = (pass, index) => {
         this.effectComposer.passes.splice(index, 1);
         this.passes.splice(index, 1);   
-        if(pass.ovFolder)
-            pass.ovFolder.parent.removeFolder(pass.ovFolder);
+
     }
 
     addRenderPass = (obj) => {
@@ -66,7 +64,6 @@ export default class PostProcessing {
         var fx = loadPassFromText(type);
         fx.__moveItem = this.moveItem;
         fx.removeMe = () =>  this.removeItem({scene: fx, undoAction: false });
-        fx.setUpGUI(this.gui, this.ovFolder);        
         this.passes.push(fx);
         this.effectComposer.addPass(fx);     
         this.addEffectToManager(fx); 

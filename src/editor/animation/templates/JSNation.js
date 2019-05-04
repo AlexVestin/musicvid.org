@@ -14,6 +14,5 @@ export default class Manager extends WebGLManager {
         
         
         this.postProcessing.addEffectPass("FilmPass");
-        this.overviewFolder.onResize();
     }
 }

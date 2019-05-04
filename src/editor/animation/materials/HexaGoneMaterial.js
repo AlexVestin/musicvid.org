@@ -1,10 +1,7 @@
 import * as THREE from 'three';
 import ShaderToyMaterial from 'editor/util/ShaderToyMaterial'
 import fragShader from '../shaders/licensed/HexaGone'
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
-
 import serialize from '../Serialize'
-
 
 export default class HexaGoneMaterial extends ShaderToyMaterial {
 
@@ -24,6 +21,7 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
         this.lastTime = 0;
         this.amplitude = 100;
         this.baseSpeed = 0.8;
+        this.impact = 1;
 
         this.transparent = true;
         
@@ -42,7 +40,9 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
             license: item.LICENSE.REQUIRE_ATTRIBUTION,
             changeDisclaimer: true,
             imageUrl: "img/templates/HexaGone.png"
-        }        
+        }     
+        
+        this.__item = item;
     }
 
     stop = () => {
@@ -52,13 +52,10 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
 
     updateMaterial = (time, audioData) => {
         this.uniforms.iTime.value = time;
-        if( this.impactAnalyser) {
-            
-            const impact = this.impactAnalyser.analyse(audioData.frequencyData) ;
-            this.time += this.baseSpeed * 0.01 + (time  - this.lastTime) * impact * this.amplitude / 10; 
-            this.uniforms.iTime.value = this.time ;
-            this.lastTime = time;
-        }
+        this.time += this.baseSpeed * 0.01 + (time  - this.lastTime) * this.impact * this.amplitude / 10; 
+        this.uniforms.iTime.value = this.time ;
+        this.lastTime = time;
+        
     }
 
     __serialize = () => {
@@ -72,13 +69,10 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
     
 
     __setUpGUI = (f) => {
-        const folder = f;
-        this.impactAnalyser =  new ImpactAnalyser(folder);
-        this.impactAnalyser.endBin = 60;
-        this.impactAnalyser.deltaDecay = 20;
-        folder.add(this, "wireframe");
-        folder.updateDisplay();
-        this.folder = folder;
-        return folder;
+        const i = this.__item;
+        i.addController(f, this, "impact", {min: 0, path: "material"});
+
+        this.folder = f;
+        return f;
     }
 }

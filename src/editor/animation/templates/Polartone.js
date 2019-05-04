@@ -20,6 +20,5 @@ export default class Manager extends WebGLManager {
         
         it2.updateDisplay();
         it3.updateDisplay();
-        this.overviewFolder.onResize();
     }
 }

@@ -22,6 +22,7 @@ export default class Plane extends PlaneGeometry {
     uc = () => this.updateGeometry(this.configs)
 
     __setUpGUI = (folder) => {
+        
         folder.add(this.configs, "width").disableAutomations().min(0).onChange(this.uc);
         folder.add(this.configs, "height").disableAutomations().min(0).onChange(this.uc);
         folder.add(this.configs, "widthSegments").disableAutomations().min(0).step(1).onChange(this.uc);

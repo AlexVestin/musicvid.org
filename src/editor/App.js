@@ -17,7 +17,6 @@ class App extends PureComponent {
         super();
         this.gui = new dat.GUI({ autoPlace: false, width: "100%" });
         this.layersFolder = this.gui.addFolder("Layers", false);
-        this.overviewFolder = this.gui.addFolder("Overview", false);
         this.audioFolder = this.gui.addFolder("Audio", false);
         this.audioFolder.add(this, "loadNewAudioFile");
 

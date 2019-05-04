@@ -8,6 +8,5 @@ export default class Manager extends WebGLManager {
         const scene = this.addSceneFromText("ortho");
         scene.addItemFromText("StarField");
         scene.addItemFromText("OverTheMoon");
-        this.overviewFolder.onResize();
     }
 }
