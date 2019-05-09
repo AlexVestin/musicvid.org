@@ -15,7 +15,6 @@ export default class Scene {
             this.gui = gui;
             this.setUpGui();
         }
-        
     }
 
 
@@ -23,9 +22,9 @@ export default class Scene {
         items.forEach(item => {
             const i = this.addItemFromText(item.__itemName);
             i.__setControllerValues(item.controllers);
+            i.__automations = item.__automations;
             i.setFolderName(i.name);
         })
-
     }
 
     updateCamera = () => {

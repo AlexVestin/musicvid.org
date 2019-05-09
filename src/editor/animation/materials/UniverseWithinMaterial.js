@@ -22,7 +22,7 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
         this.frequency = 0.02;
         this.moveToAudioImpact = true;
         this.numLayers = 4;
-        this.movementAmplitude = 1.0;
+        this.movementExaggeration = 5.0;
 
        
         item.__attribution = {
@@ -48,6 +48,9 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
             changeDisclaimer: true,
             imageUrl: "img/templates/UniverseWithin.png"
         };
+
+        this.path = "material";
+        this.__item = item;
     }
 
     updateMaterial = (time, audioData, shouldIncrement) => {
@@ -58,9 +61,8 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
         this.uniforms.iTime.value = time;
         if (this.moveToAudioImpact && this.impactAnalyser) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData);
-            this.time +=
-                this.baseSpeed * 0.01 +
-                (time - this.lastTime) * impact * 0.01 * this.movementAmplitude;
+
+            this.time +=this.baseSpeed * 0.01 + (time - this.lastTime) * impact  * this.movementExaggeration;
             this.uniforms.iTime.value = this.time;
         }
 
@@ -75,17 +77,19 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
     };
 
     __setUpGUI = folder => {
-        folder
-            .add(this, "numLayers", [1, 2, 4, 8])
-            .onChange(
-                () => (this.uniforms.NUM_LAYERS.value = this.numLayers)
-            );
-        folder.add(this, "amplitude", 0, 1, 0.001);
-        folder.add(this, "frequency", 0, 1, 0.01);
-        folder.add(this, "moveToAudioImpact");
-        folder.add(this, "baseSpeed", -50, 50, 0.1);
-        folder.add(this, "movementAmplitude", -10, 10, 0.1);
-        this.impactAnalyser = new ImpactAnalyser(folder);
+        const i = this.__item;
+        i.addController(folder, this, "numLayers", {values: [1, 2, 4, 8], min: 0, path: this.path}).onChange(
+            () => (this.uniforms.NUM_LAYERS.value = this.numLayers)
+        );
+
+        i.addController(folder, this, "amplitude", 0, 1, 0.001);
+        i.addController(folder, this, "frequency", 0, 1, 0.01);
+        i.addController(folder, this, "moveToAudioImpact");
+        i.addController(folder, this, "baseSpeed",  -50, 50, 0.1);
+        i.addController(folder, this, "movementExaggeration", -10, 10, 0.1);
+        i.addController(folder, this, "amplitude", 0, 1, 0.001);
+
+        this.impactAnalyser = new ImpactAnalyser(folder, i);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;
         return folder;

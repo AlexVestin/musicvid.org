@@ -2,7 +2,7 @@ import SerializableObject from '../../SerializableObject'
 export default class Pass  extends SerializableObject {
     constructor(config) {
         super();
-        this.TYPE = "effect";
+        this.TYPE = "CHANGE THIS IN PASS.JS";
         this.name = "pass";
         this.isScene =  false;
         this.__automations = [];

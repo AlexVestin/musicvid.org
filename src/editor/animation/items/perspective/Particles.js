@@ -136,20 +136,18 @@ export default class Particles extends BaseItem {
         }
     }
 
-    __setUpGUI = (folder) => {
-         
-        folder.add(this, "changeParticleImage");
-        folder.add(this, "resetParticleImage");
-        folder.add(this.pMaterial.uniforms.flipY, "value").name("Flip vertically")
+    __setUpGUI = (folder) => {         
+        this.addController(folder, this, "changeParticleImage");
+        this.addController(folder, this, "resetParticleImage");
+        this.addController(folder, this.pMaterial.uniforms.flipY, "value").name("Flip vertically")
 
+        this.addController(folder, this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
+        this.addController(folder, this, "color", {color: true}).onChange(this.changeColor);
+        this.addController(folder, this, "particleMinSpeed", 0, 10);
+        this.addController(folder, this, "baseSpeed", 0, 10);
         
-        folder.add(this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
-        folder.addColor(this, "color").onChange(this.changeColor);
-        folder.add(this, "particleMinSpeed", 0, 10);
-        folder.add(this, "baseSpeed", 0, 10);
-        
-        folder.add(this, "movementAmplitude");
-        folder.add(this, "sizeMult", 0, 5.0, 0.01).onChange(() => this.updateSizes());
+        this.addController(folder, this, "movementAmplitude");
+        this.addController(folder, this, "sizeMult", 0, 5.0, 0.01).onChange(() => this.updateSizes());
         return this.__addFolder(folder);
     }
 

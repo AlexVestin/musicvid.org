@@ -33,6 +33,12 @@ export default class WebGLManager {
             if (e.keyCode === 70) {
                 if (!this.inFullScreen) {
                     this.fullscreen(this.canvasMountRef);
+                }else {
+                    try {
+                        this.exitFullscreen()
+                    }catch(err) {
+                        console.log("Error exiting fullscreen");
+                    }
                 }
 
                 this.inFullScreen = !this.inFullScreen;
@@ -56,10 +62,8 @@ export default class WebGLManager {
             alert(":(");
         }
         auto.__id = template.__id;
-
         auto.__setUpValues(template);
         this.gui.getRoot().__automations[auto.__id] = auto;
-        console.log(template, auto);
     }
 
     loadProject = (file) => {
@@ -84,12 +88,10 @@ export default class WebGLManager {
                     s.controls.enabled = scene.controlsEnabled; 
                     s.addItems(scene.items);
                     s.updateSettings();
+                    Object.assign(s.pass, scene.__passSettings);
                 }else {
                     const e = this.postProcessing.addEffectPass(scene.__settings.TYPE);
                     e.__setControllerValues(scene.controllers);
-                    console.log("add?", scene.__settings.TYPE)
-
-                    
                 }
             })
         }
@@ -121,6 +123,7 @@ export default class WebGLManager {
             if(scene.isScene) {
                 let sceneConfig = {
                     __settings: serialize(scene),
+                    __passSettings: serialize(scene.pass),
                     items: []
                 }
                 
@@ -383,7 +386,8 @@ export default class WebGLManager {
                 .onChange(this.setClear);
             this.gui.__folders["Settings"]
                 .add(this, "clearAlpha", 0, 1, 0.001)
-                .onChange(this.setClear);
+                .onChange(this.setClear)
+                .disableAutomations();
             this.gui.__folders["Settings"]
                 .add(this, "drawAttribution")
                 .onChange(this.updateAttribution);

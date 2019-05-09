@@ -68,6 +68,9 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         const url = "./img/space.jpeg";
         this.prevFile = url;
         loadImageTextureFromChoice(url, this.setBackground);  
+
+        this.path = "material";
+        this.__item = item;
     }
 
     updateMaterial = (time, audioData) => {
@@ -98,20 +101,24 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         return serialize(this);
     }
     
-    __setUpGUI = (f) => {
-        const folder = f; 
-        this.impactAnalyser = new ImpactAnalyser(folder);
+    __setUpGUI = (folder) => {
+        const i = this.__item;
+        i.addController(folder, this, "wireframe");
+
+        
+        i.addController(folder, this, "changeImage");
+        i.addController(folder, this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
+        i.addController(folder,this, "brightenToAudio");
+        i.addController(folder,this, "brightenMultipler");           
+        i.addController(folder,this.uniforms.opacity, "value").name("opacity");
+        i.addController(folder,this, "vignetteAmount").onChange(() => this.uniforms.value = this.vignetteAmount);
+        i.addController(folder,this.uniforms.should_mirror, "value", {name: "Mirror image"});
+
+        this.impactAnalyser = new ImpactAnalyser(folder, i);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;
-        folder.add(this, "wireframe");
-        folder.add(this, "changeImage");
-        folder.add(this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
-        folder.add(this, "brightenToAudio");
-        folder.add(this, "brightenMultipler");           
-        folder.add(this.uniforms.opacity, "value").name("opacity");
-        folder.add(this, "vignetteAmount").onChange(() => this.uniforms.value = this.vignetteAmount);
-        folder.add(this.uniforms.should_mirror, "value", {name: "Mirror image"});
-        this.folder = f;
-        return f;
+       
+        this.folder = folder;
+        return folder;
     }
 }

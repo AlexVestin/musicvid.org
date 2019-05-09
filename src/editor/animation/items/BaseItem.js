@@ -114,7 +114,6 @@ export default class BaseItem extends SerializableObject {
 
     // handles all updates in the render-loop
     update = () => {};
-    applyAutomations = () => {};
     setTime = () => {};
     stop = () => {};
     play = () => {};

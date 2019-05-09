@@ -11,6 +11,7 @@ export default class FilmPass extends Pass {
     constructor(noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale) {
         super();
         this.name = "Film pass";
+        this.TYPE = "FilmPass";
 
         var shader = FilmShader;
 
@@ -34,10 +35,10 @@ export default class FilmPass extends Pass {
     }
 
     __setUpGUI = folder => {
-        folder.add(this.uniforms.grayscale, "value").name("Grayscale");
-        folder.add(this.uniforms.nIntensity, "value").name("nIntensity");
-        folder.add(this.uniforms.sIntensity, "value").name("sIntensity");
-        folder.add(this.uniforms.sCount, "value").name("sCount");
+        this.addController(folder,this.uniforms.grayscale, "value", {path: "grayscale"}).name("Grayscale");
+        this.addController(folder,this.uniforms.nIntensity, "value", {path: "nIntensity"}).name("nIntensity");
+        this.addController(folder,this.uniforms.sIntensity, "value", {path: "sIntensity"}).name("sIntensity");
+        this.addController(folder,this.uniforms.sCount, "value", {path: "sCount"}).name("sCount");
     };
 
     render = (renderer, writeBuffer, readBuffer, deltaTime, maskActive) => {

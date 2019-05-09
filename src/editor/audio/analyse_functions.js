@@ -292,6 +292,9 @@ export function average(array, object) {
     const len = Math.min(array.length, endBin);
     if(startBin > len)
         return 0;
+    
+    if(endBin <= startBin)
+        return 0;
 
     for(var i = startBin; i < len; i++) {
         avg += array[i];

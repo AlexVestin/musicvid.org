@@ -17,6 +17,8 @@ export default class Automation extends SerializableObject {
     }
 
     apply = (item, type) => {
+
+        console.log(item.preAutomationValue)
         switch (type) {
             case "*":
                 item.object[item.property] =

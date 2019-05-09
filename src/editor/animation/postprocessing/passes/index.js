@@ -20,8 +20,16 @@ const passes = {
 };
 
 export function loadPassFromText(text) {
+    console.log(text);
+    if(text === "effect") {
+        alert("Text should not be effect")
+        return;
+    }
+        
     let C = passes[text].class;
     switch(text) {
+        case "FilmPass":
+            return new FilmPass();
         case "CopyPass":
             return new C(CopyShader);
         case "GlitchPass":

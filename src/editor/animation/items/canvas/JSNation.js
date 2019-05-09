@@ -18,12 +18,9 @@ export default class JSNationSpectrum extends BaseItem {
         this.name = "JSnation";
         this.canvas =info.canvas;
         this.ctx = info.ctx;
-
-
         this.x = 0;
         this.y = 0;
 
-        
         this.spectrumCount = 8;
         this.exponents = [1, 1.12, 1.14, 1.30, 1.33, 1.36, 1.50, 1.52];
         this.smoothMargins = [0, 2, 2, 3, 3, 3, 5, 5];
@@ -39,7 +36,7 @@ export default class JSNationSpectrum extends BaseItem {
             this[`color${i}`] = color;   
         });
 
-        this.spectrumHeightScalar = 0.4;
+        this.spectrumHeightScalar = 0.31;
         this.smoothingTimeConstant = 0.1;
         this.smoothingPasses = 1;
         this.smoothingPoints = 3;
@@ -76,11 +73,9 @@ export default class JSNationSpectrum extends BaseItem {
         this.minShakeScalar = 0.9;
         this.maxShakeScalar = 1.6;
         this.scale = 1.1;
-
-
-
         this.emblem = new Emblem("./img/mvlogo.png");   
-
+        this.previousPoints = [];
+        this.prevRad = this.minRadius;
     
         this.setUpFolder();
         this.ctx.shadowBlur = 12;
@@ -106,6 +101,8 @@ export default class JSNationSpectrum extends BaseItem {
             changeDisclaimer: true,
             imageUrl: "img/templates/JSNation.png"
         }
+
+        this.resetPoints();
     }
 
     changeEmblemImage = () => {
@@ -147,35 +144,34 @@ export default class JSNationSpectrum extends BaseItem {
     __setUpGUI = (folder) => {
                  
         const emFolder = folder.addFolder("Emblem");
-        emFolder.add(this.emblem, "visible")
 
-        emFolder.add(this, "changeEmblemImage")
-        emFolder.add(this.emblem, "shouldClipImageToCircle");
-        emFolder.add(this.emblem, "emblemSizeScale", 0.0, 2.0);
-        emFolder.add(this.emblem, "shouldFillCircle");
-        emFolder.addColor(this.emblem, "circleFillColor");
-        emFolder.add(this.emblem, "circleSizeScale", 0, 2.0);
+        this.addController(emFolder, this.emblem, "visible", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "shouldClipImageToCircle", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "emblemSizeScale", {path: "emblem", min: 0.0, max: 4.0});
+        this.addController(emFolder, this.emblem, "shouldFillCircle", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "circleFillColor", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "circleSizeScale", {path: "emblem", min: 0, max: 2.0});
 
         const moveFolder = folder.addFolder("Movement");
-        moveFolder.add(this, "emblemExponential", 0.2, 1.6, 0.00001);
-        moveFolder.add(this, "emblemExaggeration", 0.0, 5.0, 0.00001);
-        moveFolder.add(this, "minRadius", 10, this.canvas.width / 4);
-        moveFolder.add(this, "wave_DURATION", 0, Math.PI * 16);
-        moveFolder.add(this, "movementAmount", 0, 12);
-
-        moveFolder.add(this, "maxShakeIntensity", 0, 30);
-        moveFolder.add(this, "maxShakeDisplacement", 0, 180);
+        this.addController(moveFolder, this, "emblemExponential", {min: 0.2, max: 1.6, step: 0.00001})
+        this.addController(moveFolder, this, "emblemExaggeration", {min: 0.2, max: 5, step: 0.00001})
+        this.addController(moveFolder, this, "minRadius", {min: 10, max: this.canvas.width / 4})
+        this.addController(moveFolder, this, "wave_DURATION", {min: 0, max: Math.PI * 16})
+        this.addController(moveFolder, this, "movementAmount", {min: 0, max: 12})
+        this.addController(moveFolder, this, "maxShakeIntensity", {min: 0, max: 30})
+        this.addController(moveFolder, this, "maxShakeDisplacement", {min: 0, max: 180})
 
         const spFolder = folder.addFolder("Spectrum");
-        spFolder.add(this, "drawType", ["fill", "stroke"]);
-        spFolder.add(this, "lineWidth", 0, 10.0, 1)
-        spFolder.add(this, "startBin", 0, 100, 1)
-        spFolder.add(this, "keepBins", 10, 300, 1)
 
-        spFolder.add(this, "smoothingPasses", [1,2,3,4,5,6,7,8,9]);
-        spFolder.add(this, "smoothingPoints", [1,2,3,4,5,7,8,9]);
-        spFolder.add(this, "spectrumHeightScalar",0, 1.0);
-        spFolder.add(this, "smoothingTimeConstant", 0, 0.95);
+        this.addController(spFolder, this, "drawType", {values: ["fill", "stroke"]});
+        this.addController(spFolder, this, "lineWidth", {min: 0, max: 30, step: 1});
+        this.addController(spFolder, this, "startBin", {min: 0, max: 100, step: 1});
+        this.addController(spFolder, this, "startBin", {min: 1, max: 300, step: 1});
+        this.addController(spFolder, this, "smoothingPasses", {values:  [1,2,3,4,5,6,7,8,9]});
+        this.addController(spFolder, this, "smoothingPoints", {values:  [1,2,3,4,5,6,7,8,9]});
+        this.addController(spFolder, this, "spectrumHeightScalar", {min: 0, max: 1.0});
+        this.addController(spFolder, this, "smoothingTimeConstant", {min: 0, max: 0.95});
+
         const colFolder = spFolder.addFolder("colors");
         
         this.colors.forEach( ( color, i) => {
@@ -183,25 +179,42 @@ export default class JSNationSpectrum extends BaseItem {
             this["color" + String(i)] = color; 
             this["color" + String(i) + "Exponent"] = this.exponents[i];   
             
-            colFolder.add(this, "color" + String(i) + "Enabled");
-            colFolder.addColor(this, "color" + String(i));
-            colFolder.add(this, "color" + String(i) + "Exponent", 0.5, 1.8, 0.000001);
+            this.addController(colFolder, this, "color" + String(i) + "Enabled");
+            this.addController(colFolder, this, "color" + String(i), {color: true});
+            this.addController(colFolder, this, "color" + String(i) + "Exponent", {min: 0.5, max: 1.8, step: 0.00001});
         });
 
-        folder.add(this, "x", -2, 2);
-        folder.add(this, "y", -2, 2);
-        folder.add(this, "scale", 0.01, 6);
-
-        folder.add(this.ctx, "shadowBlur", 0, 100);
-        folder.add(this, "spectrumRotation", 0, Math.PI / 2, 0.00001);
-        folder.add(this, "invertSpectrum");
-
+        this.addController(folder, this, "x", -2, 2);
+        this.addController(folder, this, "y", -2, 2);
+        this.addController(folder, this, "scale", 0.01, 6);
+        this.addController(folder, this.ctx, "shadowBlur", 0, 100);
+        this.addController(folder, this, "spectrumRotation", 0, Math.PI / 2, 0.00001);
+        this.addController(folder, this, "invertSpectrum");
         return this.__addFolder(folder);
+    }
+
+    resetPoints = () => {
+        this.previousPoints = [];
+        const invert = this.invertSpectrum ? -1 : 1; 
+        for(var i = 0; i < 8; i++) {
+            const exponent = this["color" + String(i) + "Exponent"];
+            const points = [];
+            
+            for(var j = 0; j < 60; j ++) {
+                let t = Math.PI * (j / (60 - 1)) - Math.PI / 2;
+
+                points.push({x: this.scale * this.minRadius * Math.cos(t), y: this.scale * invert * this.minRadius * Math.sin(t)});
+            }
+            
+            this.previousPoints.push(points);
+        }
     }
 
     stop = () => {
         this.sumShakeX = 0;
         this.sumShakeY = 0;
+        this.spectrumCache = [];
+        this.resetPoints();
 
     }
     calcRadius = function(multiplier) {
@@ -211,17 +224,28 @@ export default class JSNationSpectrum extends BaseItem {
         return scalar / 2;
     }
 
+    makePoints  = (curSpectrum, curRad,  exponent) => {
+        const invert = this.invertSpectrum ? -1 : 1; 
+        let points = [];
+        let len = curSpectrum.length;
+        for (let i = 0; i < len; i++) {
+            let t = Math.PI * (i / (len - 1)) - Math.PI / 2 + this.spectrumRotation;
+            let dropoff  = 1 - Math.pow(i / len, this.exp);
+            let r = curRad + Math.pow(curSpectrum[i] * this.spectrumHeightScalar * 1, exponent) * dropoff * this.scale;
+            points.push({x: r * Math.cos(t), y: invert * r * Math.sin(t)});
+        }
+        return points;
+    }
+
     update = (time, audioData, shouldUpdate = true) => {
         const { width, height } = this.canvas;
         this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX,Math.floor(this.y * height / 2) + this.sumShakeY);
-
-        
-        if(shouldUpdate) {
-        
+        let newAudioData = audioData.frequencyData.length !== 0;
+        let curRad = this.minRadius * this.scale;
+        if(newAudioData && shouldUpdate) {
             if (this.spectrumCache.length >= this.maxBufferSize) {
                 this.spectrumCache.shift();
             }
-    
             const subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
             const dbfs = toWebAudioForm(subSpectrum, this.prevArr, this.smoothingTimeConstant, audioData.frequencyData.length);
     
@@ -231,40 +255,37 @@ export default class JSNationSpectrum extends BaseItem {
             const mult = Math.pow(this.multiplier(spectrum), this.emblemExponential) * this.emblemExaggeration;
     
             this.shake(mult / 32);
-            let curRad = this.calcRadius(mult) * this.scale;
+            curRad = this.calcRadius(mult) * this.scale;
             curRad = curRad > this.minRadius * this.scale ? curRad : this.minRadius * this.scale;
             this.spectrumCache.push(spectrum);
-    
-            
-            for (let s = this.maxBufferSize; s >= 0; s--) {
-                
-                
-                if(this["color" + String(s) + "Enabled"]) {
-                    const exponent = this["color" + String(s) + "Exponent"];
-                    let curSpectrum = this.smooth(this.spectrumCache[Math.max(this.spectrumCache.length - this.delays[s] - 1, 0)], this.smoothMargins[s]);
-                    let points = [];
-                    const col = this["color" + String(s)]
-                    this.ctx.fillStyle = col;
-                    this.ctx.strokeStyle = col;
-                    this.ctx.shadowColor = col;
-        
-                    let len = curSpectrum.length;
-        
-                    const invert = this.invertSpectrum ? -1 : 1; 
-                    for (let i = 0; i < len; i++) {
-                        let t = Math.PI * (i / (len - 1)) - Math.PI / 2 + this.spectrumRotation;
-                        let dropoff  = 1 - Math.pow(i / len, this.exp);
-                        let r = curRad + Math.pow(curSpectrum[i] * this.spectrumHeightScalar * 1, exponent) * dropoff;
-                        points.push({x: r * Math.cos(t), y: invert * r * Math.sin(t)});
-                    }
-                    
-                    this.drawPoints(points);
-                }
-               
-            }
-
-            this.emblem.draw(this.ctx, this.canvas, curRad);
         }
+
+        for (let s = this.maxBufferSize; s >= 0; s--) {            
+            if(this["color" + String(s) + "Enabled"]) {
+                const exponent = this["color" + String(s) + "Exponent"];
+                
+                let points = [];
+                const col = this["color" + String(s)]
+                this.ctx.fillStyle = col;
+                this.ctx.strokeStyle = col;
+                this.ctx.shadowColor = col;
+
+                let spec = [];
+                if(newAudioData && shouldUpdate) {
+                    spec = this.spectrumCache[Math.max(this.spectrumCache.length - this.delays[s] - 1, 0)]
+                    this.previousPoints[s] =  spec;
+                }else {
+                    spec = this.previousPoints[s]; 
+                }
+                const curSpectrum = this.smooth(spec,  this.smoothMargins[s]);
+                points = this.makePoints(curSpectrum, curRad, exponent);
+                this.drawPoints(points);
+            }
+               
+        }
+
+        this.emblem.draw(this.ctx, this.canvas, curRad);
+        this.prevRad = curRad;
     }
 
 
@@ -279,7 +300,7 @@ export default class JSNationSpectrum extends BaseItem {
 
     drawPoints = (points) => {
         
-        if (points.length === 0) {
+        if (!points || points.length === 0) {
             return;
         }
         

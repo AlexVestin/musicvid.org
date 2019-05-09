@@ -44,9 +44,7 @@ function CustomizedTable(props) {
                 <TableHead>
                     <TableRow>
                         <CustomTableCell>Active Automations</CustomTableCell>
-                        <CustomTableCell align="right">
-                            Basevalue
-                        </CustomTableCell>
+         
                         <CustomTableCell align="right">Type</CustomTableCell>
 
                         <CustomTableCell align="right" />
@@ -62,9 +60,7 @@ function CustomizedTable(props) {
                             <CustomTableCell component="th" scope="row">
                                 {row.name}
                             </CustomTableCell>
-                            <CustomTableCell align="right">
-                                {item.object[item.property]}
-                            </CustomTableCell>
+                 
                             <CustomTableCell align="right">
                                 <select defaultValue={row.item.type} onChange={(e) => row.item.type = e.target.value}>
                                   <option value="+">+</option>
