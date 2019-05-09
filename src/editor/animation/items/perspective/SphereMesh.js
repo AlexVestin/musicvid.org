@@ -16,5 +16,4 @@ export default class SphereMesh extends MeshItem {
     update = (time, audioData) => {
         this.material.updateMaterial(time, audioData);
     }
-
 }

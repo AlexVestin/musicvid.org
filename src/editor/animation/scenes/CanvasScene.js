@@ -28,21 +28,16 @@ export default class CanvasScene extends Scene{
         }  
     }
 
-    
     update = (time, audioData, shouldIncrement) => {
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
-
         this.items.forEach(item =>  {
-
             if(item.__startTime <= time && item.__endTime >= time ) {
                 this.ctx.save();
                 item.applyAutomations();
                 item.update(time, audioData, shouldIncrement);
                 this.ctx.restore();
             } 
-           
         });    
-        
         this.tex.needsUpdate = true;
     }
 }

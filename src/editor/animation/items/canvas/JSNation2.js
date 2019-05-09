@@ -1,5 +1,5 @@
 
-import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
+import { smooth, toWebAudioForm, getByteSpectrum, interpolateArray, transformToVisualBins } from 'editor/audio/analyse_functions'
 import { loadImage } from 'editor/util/ImageLoader'
 import Emblem from "./Emblem";
 import BaseItem from '../BaseItem'
@@ -11,7 +11,7 @@ import BaseItem from '../BaseItem'
  *  @license GPL-3.0
  */
 
-export default class JSNationSpectrum extends BaseItem {
+export default class JSNationSpectrum2 extends BaseItem {
     constructor(info)  {
         super(info);
 
@@ -42,7 +42,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.smoothingPoints = 3;
         this.exp = 4
         this.preAmplitude = 1.0;
-        this.emblemExaggeration = 1.82;
+        this.emblemExaggeration = 1.5;
 
         this.drawType = "fill";
         this.lineWidth = 2.0;
@@ -50,7 +50,8 @@ export default class JSNationSpectrum extends BaseItem {
         this.interpolationAmplitude = 4.5;
         this.targetScale = 2.5;
         
-
+        this.startBin = 8;
+        this.keepBins = 40;
         this.prevArr = [];
         this.minRadius = this.canvas.width / 8;
         this.invertSpectrum = false;
@@ -110,6 +111,7 @@ export default class JSNationSpectrum extends BaseItem {
 
     changeEmblemImage = () => {
         loadImage(this.folder.__root.modalRef, (img) => this.emblem.image = img);
+
     }
 
     shake = (multiplier) => {
@@ -141,9 +143,10 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
+                 
         const emFolder = folder.addFolder("Emblem");
+
         this.addController(emFolder, this.emblem, "visible", {path: "emblem"});
-        this.addController(emFolder, this, "changeEmblemImage", {path: "emblem"});
         this.addController(emFolder, this.emblem, "shouldClipImageToCircle", {path: "emblem"});
         this.addController(emFolder, this.emblem, "emblemSizeScale", {path: "emblem", min: 0.0, max: 4.0});
         this.addController(emFolder, this.emblem, "shouldFillCircle", {path: "emblem"});
@@ -163,13 +166,21 @@ export default class JSNationSpectrum extends BaseItem {
 
         this.addController(spFolder, this, "drawType", {values: ["fill", "stroke"]});
         this.addController(spFolder, this, "lineWidth", {min: 0, max: 30, step: 1});
-        this.analyser = new SpectrumAnalyser(spFolder);
-        this.analyser.spectrumSize = 40;
-        this.analyser.spectrumHeight = 770;
-        this.analyser.spectrumEnd = 400;
-        this.analyser.enableDropoffSmoothing = false;
-        this.analyser.smoothingTimeConstant = 0.03;
-        spFolder.updateDisplay();
+        this.addController(spFolder, this, "startBin", {min: 0, max: 100, step: 1});
+        this.addController(spFolder, this, "keepBins", {min: 1, max: 800, step: 1});
+        this.addController(spFolder, this, "shouldInterPolate");
+        this.addController(spFolder, this, "targetScale", {min: 0.01, max: 3.0});
+
+
+        this.addController(spFolder, this, "targetWidth", {min: 15, max: 300, step: 1});
+        this.addController(spFolder, this, "interpolationAmplitude", {min: 0.0001, max: 0.1, step: 0.0001});
+
+
+        this.addController(spFolder, this, "smoothingPasses", {values:  [1,2,3,4,5,6,7,8,9]});
+        this.addController(spFolder, this, "smoothingPoints", {values:  [1,2,3,4,5,6,7,8,9]});
+        this.addController(spFolder, this, "spectrumHeightScalar", {min: 0, max: 1.0});
+        this.addController(spFolder, this, "smoothingTimeConstant", {min: 0, max: 0.95});
+
         const colFolder = spFolder.addFolder("colors");
         
         this.colors.forEach( ( color, i) => {
@@ -188,7 +199,6 @@ export default class JSNationSpectrum extends BaseItem {
         this.addController(folder, this.ctx, "shadowBlur", 0, 100);
         this.addController(folder, this, "spectrumRotation", 0, Math.PI / 2, 0.00001);
         this.addController(folder, this, "invertSpectrum");
-
         return this.__addFolder(folder);
     }
 
@@ -220,7 +230,6 @@ export default class JSNationSpectrum extends BaseItem {
         let minSize = this.minRadius * this.scale;
         let maxSize = this.canvas.width / 4;
         let scalar = multiplier * (maxSize - minSize) + minSize;
-
         return scalar / 2;
     }
 
@@ -247,10 +256,34 @@ export default class JSNationSpectrum extends BaseItem {
                 this.spectrumCache.shift();
             }
 
+            const obj = {
+                spectrumSize: this.targetWidth, 
+                spectrumScale: this.targetScale, 
+                spectrumStart: this.startBin, 
+                spectrumEnd: this.startBin + this.keepBins,
+                mult: 3
+            }
+
+            let subSpectrum;
+            if(!this.shouldInterPolate) {
+                subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
+            }else {
+                subSpectrum = transformToVisualBins(audioData.frequencyData, obj); 
+            }            
+
+            const dbfs = toWebAudioForm(subSpectrum, this.prevArr, this.smoothingTimeConstant, audioData.frequencyData.length);
+            //const subAvg = this.shouldInterPolate ? interpolateArray(dbfs, this.targetWidth, this.interpolationAmplitude) : dbfs;
             
-            const spectrum = this.analyser.analyse(audioData.frequencyData);
+            
+    
+            
+            console.log(obj)
+            
+            this.prevArr = dbfs;
+            const byteSpectrumArray = getByteSpectrum(this.prevArr, -40, -30);
+            const spectrum  = smooth(byteSpectrumArray, this);
             const mult = Math.pow(this.multiplier(spectrum), this.emblemExponential) * this.emblemExaggeration;
-            console.log(mult);
+    
             this.shake(mult / 32);
             curRad = this.calcRadius(mult) * this.scale;
             curRad = curRad > this.minRadius * this.scale ? curRad : this.minRadius * this.scale;
@@ -338,7 +371,7 @@ export default class JSNationSpectrum extends BaseItem {
         for (let i = 0; i < len; i++) {
             sum += spectrum[i];
         }
-        let intermediate = sum / spectrum.length / 256;
+        let intermediate = sum / this.keepBins / 256;
         let transformer = 1.2;
         return (1 / (transformer - 1)) * (-Math.pow(intermediate, transformer) + transformer * intermediate);
     }

@@ -1234,6 +1234,7 @@ function add(gui, object, property, params) {
   }
 
   controller.parent = gui;
+  controller.__name = property;
 
   recallSavedValue(gui, controller);
 

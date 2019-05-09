@@ -84,30 +84,24 @@ export default class AudioWave extends BaseItem {
     };
 
     __setUpGUI = folder => {
-        this.impactAnalyser = new ImpactAnalyser(folder);
-        folder.add(this, "loadImages");
-        folder.add(this, "loadChungus");
-
-        folder.add(this.leftLight.position, "x").name("left x")
-        folder.add(this.leftLight.position, "y").name("left y")
-        folder.add(this.leftLight.position, "z").name("left z")
-        folder.add(this.leftLight, "intensity").name("left intensity");
-
-        folder.add(this.rightLight.position, "x").name("right x")
-        folder.add(this.rightLight.position, "y").name("right y")
-        folder.add(this.rightLight.position, "z").name("right z")
-        folder.add(this.rightLight, "intensity").name("right intensity");
-
-
+        this.impactAnalyser = new ImpactAnalyser(folder, this);
+        this.addController(folder,this, "loadImages");
+        this.addController(folder,this, "loadChungus");
+        this.addController(folder,this.leftLight.position, "x").name("left x")
+        this.addController(folder,this.leftLight.position, "y").name("left y")
+        this.addController(folder,this.leftLight.position, "z").name("left z")
+        this.addController(folder,this.leftLight, "intensity").name("left intensity");
+        this.addController(folder,this.rightLight.position, "x").name("right x")
+        this.addController(folder,this.rightLight.position, "y").name("right y")
+        this.addController(folder,this.rightLight.position, "z").name("right z")
+        this.addController(folder,this.rightLight, "intensity").name("right intensity");
         return this.__addFolder(folder);
     };
 
     update = (time, audioData) => {
-        const impact = this.impactAnalyser.analyse(audioData.frequencyData);
         const t = time + this.offset;
         const stepSize = 60 / this.bpm;
         const beatIndex = Math.floor(t / stepSize);
-        const restSum = t % stepSize;
 
         let div = 4;
         if(beatIndex > 128 + 16) {
@@ -135,6 +129,5 @@ export default class AudioWave extends BaseItem {
         }
         
         this.material.needsUpdate = true;
-        
     };
 }

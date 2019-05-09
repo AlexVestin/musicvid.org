@@ -116,20 +116,18 @@ export default class Polartone extends BaseItem {
     };
 
     __setUpGUI = (folder) => {
-         
-        folder.add(this, "songDuration");
+        this.addController(folder, this, "strokeStyle", {color: true});
+        this.addController(folder, this, "backgroundColor",  {color: true}).onChange(this.stop);
+        this.addController(folder,this, "songDuration");
         folder
             .add(this, "baseStrokeAlpha", 0, 1.0)
             .onChange(() => (this.context.globalAlpha = this.baseStrokeAlpha));
-        folder.add(this, "cameraX");
-        folder.add(this, "cameraY");
-        folder.add(this, "cameraZ");
-        folder.add(this, "extent");
-        folder.add(this, "capacity");
-        folder.add(this, "distance");
-        folder.addColor(this, "strokeStyle");
-
-        folder.addColor(this, "backgroundColor").onChange(this.stop);
+        this.addController(folder,this, "cameraX");
+        this.addController(folder,this, "cameraY");
+        this.addController(folder,this, "cameraZ");
+        this.addController(folder,this, "extent");
+        this.addController(folder,this, "capacity");
+        this.addController(folder,this, "distance");
         return this.__addFolder(folder);
     };
 

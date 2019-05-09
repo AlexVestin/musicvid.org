@@ -298,19 +298,15 @@ export default class Particles extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
-         
-        folder.add(this, "amplitude", 0, 200, 0.1);
-        folder.add(this, "baseSpeed", 0, 500);
-
-        folder.add(this.fleckSystem, "visible").name("Fleck system visible");
-        folder.addColor(this, "fleckColor").onChange(() => { this.fleckMaterial.color = new THREE.Color(this.fleckColor); });
-        folder.add(this.particleSystem, "visible").name("Particle system visible");
-        folder.addColor(this, "particleColor").onChange(() => { this.pMaterial.color = new THREE.Color(this.particleColor); });
-        folder.add(this.bokehSystem, "visible").name("Bokeh system visible");
-        folder.addColor(this, "bokehColor").onChange(() => { this.bokehMaterial.color = new THREE.Color(this.bokehColor); });
-
-
-        this.analyser = new ImpactAnalyser(folder);
+        this.addController(folder, this, "amplitude", 0, 200, 0.1);
+        this.addController(folder, this, "baseSpeed", 0, 500);
+        this.addController(folder,this.fleckSystem, "visible", {path: "fleckSystem"}).name("Fleck system visible");
+        this.addController(folder,this, "fleckColor", {color: true}).onChange(() => { this.fleckMaterial.color = new THREE.Color(this.fleckColor); });
+        this.addController(folder,this.particleSystem, "visible", {path: "particleSystem"}).name("Particle system visible");
+        this.addController(folder,this, "particleColor", {color: true}).onChange(() => { this.pMaterial.color = new THREE.Color(this.particleColor); });
+        this.addController(folder,this.bokehSystem, "visible", {path: "bokehSystem"}).name("Bokeh system visible");
+        this.addController(folder,this, "bokehColor", {color: true}).onChange(() => { this.bokehMaterial.color = new THREE.Color(this.bokehColor); });
+        this.analyser = new ImpactAnalyser(folder, this);
         this.analyser.deltaDecay = 2; 
         return this.__addFolder(folder);
     }

@@ -7,16 +7,13 @@ import TextLines from './perspective/TextLines'
 import SphereMesh from './perspective/SphereMesh' 
 import BasicMeshItem from './BasicMeshItem' 
 
-
 // ortho items
 import TimeRep from './ortho/TimeRep'
 import Background from './ortho/Background'
 import StarField from './ortho/StarField'
-import SideLobes from './ortho/SideLobes'
 import SpriteTextMask from './ortho/SpriteTextMask'
 import SpriteText from './ortho/SpriteText'
 import Meme from './ortho/Meme'
-
 
 // canvas items
 import Monstercat2D from './canvas/MonsterBars2D'
@@ -25,7 +22,7 @@ import Image2D from './canvas/Image'
 import Polartone2D from './canvas/Polartone2D'
 import BeatCounter from './canvas/BeatCounter'
 import JSNation2D from './canvas/JSNation'
-
+import JSNation2D2 from './canvas/JSNation2'
 
 
 const perspectiveItems = {
@@ -44,6 +41,7 @@ const canvasItems = {
     Polartone2D: {class: Polartone2D, img: "img/items/Polartone.png", url: "https://github.com/mattdesl/Polartone", authors: "Mattdesl"},
     BeatCounter: {class: BeatCounter},
     JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D},
+    JSNation2: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D2},
     BasicMeshItem: {class: BasicMeshItem}
 }
 
@@ -52,7 +50,6 @@ const orthoItems = {
     Background: { class: Background },
     StarField: {img: "img/items/StarNest.png", class: StarField },
     TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},
-    //SimplicityGalaxy: {img: "img/items/SimplicityGalaxy.png", url: "https://www.shadertoy.com/view/MslGWN", authors: "CBS", class: SimplicityGalaxy},
     SpriteTextMask: {class: SpriteTextMask, img: "img/items/StarField.png"},
     SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"},
     Meme: {class: Meme}
@@ -61,7 +58,6 @@ const orthoItems = {
 
 const licensed = true;
 if(licensed) {
-    //import SimplicityGalaxy from './ortho/SimplicityGalaxy'
     const licensedOrthoItems = [
         {path: './ortho/Noise.js', img: "img/items/Noise.png", authors: "nmz (@Stormoid)", url: "https://www.shadertoy.com/view/ldlXRS", name: "Noise"},
         {path: './ortho/HexaGone.js',img: "img/items/HexaGone.png", url: "https://www.shadertoy.com/view/wsl3WB", authors: "BigWIngs", name: "HexaGone"},

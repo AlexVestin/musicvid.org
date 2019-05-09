@@ -85,16 +85,13 @@ export default class SpriteText extends MeshItem {
     }
 
     __setUpGUI = (folder) => {
-         
-        folder.add(this, "text").onChange(this.updateText);
-        folder.add(this, "font", fonts).onChange(this.updateText);
-        folder.add(this, "fontSize", 0, 300).onChange(this.updateText);
-
-        folder.add(this, "shouldDrawShadow");
-        folder.addColor(this, "shadowColor");
-        folder.add(this, "lineWidth", 0, 30);
-
-        folder.addColor(this.ctx, "fillStyle");
+        this.addController(folder,this, "text").onChange(this.updateText);
+        this.addController(folder,this, "font", fonts).onChange(this.updateText);
+        this.addController(folder,this, "fontSize", 0, 300).onChange(this.updateText);
+        this.addController(folder,this, "shouldDrawShadow");
+        this.addController(folder,this, "shadowColor");
+        this.addController(folder,this, "lineWidth", 0, 30);
+        this.addController(folder,this.ctx, "fillStyle", {color: true});
         addOrthoMeshControls(this, this.mesh, folder);
         return this.__addFolder(folder);
     };

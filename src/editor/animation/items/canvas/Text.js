@@ -49,20 +49,17 @@ export default class Text extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
-         
-        folder.add(this, "text");
-        folder.add(this, "positionX", 0, 1, 0.0001);
-        folder.add(this, "positionY", 0, 1, 0.0001);
-        folder.add(this, "font", fonts)
-        folder.add(this, "fontSize", 0, 300)
-        folder.add(this, "shouldDrawShadow");
-        folder.addColor(this, "shadowColor");
-        folder.add(this, "shadowBlur", 0, 50);
-        folder.add(this, "shadowLineWidth", 0, 30);
-
-        folder.add(this, "globalAlpha", 0, 1);
-
-        folder.addColor(this, "fillStyle");
+        this.addController(folder,this, "text");
+        this.addController(folder,this, "positionX", 0, 1, 0.0001);
+        this.addController(folder,this, "positionY", 0, 1, 0.0001);
+        this.addController(folder,this, "font", fonts)
+        this.addController(folder,this, "fontSize", 0, 300)
+        this.addController(folder,this, "shouldDrawShadow");
+        this.addController(folder, this, "shadowColor",{color:true} );
+        this.addController(folder,this, "shadowBlur", 0, 50);
+        this.addController(folder,this, "shadowLineWidth", 0, 30);
+        this.addController(folder,this, "globalAlpha", 0, 1);
+        this.addController(folder, this, "fillStyle", {color:true});
         return this.__addFolder(folder);
     };
 

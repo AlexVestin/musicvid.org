@@ -38,13 +38,11 @@ export default class AudioWave extends BaseItem{
     }
 
     __setUpGUI = (folder) => {
-         
-        folder.add(this, "amplitude", 0, 10.0, 0.01);
-        folder.add(this, "extent", 0, 2.0, 0.01);
-        folder.add(this, "width", 0, 5.0, 0.01);
-        folder.addColor(this, "color").onChange(() => this.mesh.material.color = new THREE.Color(this.color));
-        folder.add(this.mesh.material, "linewidth", 0, 10, 1).onChange(()=>this.mesh.material.needsUpdate = true);
-
+        this.addController(folder,this, "amplitude", 0, 10.0, 0.01);
+        this.addController(folder,this, "extent", 0, 2.0, 0.01);
+        this.addController(folder,this, "width", 0, 5.0, 0.01);
+        this.addController(folder,this, "color").onChange(() => this.mesh.material.color = new THREE.Color(this.color));
+        this.addController(folder,this.mesh.material, "linewidth", 0, 10, 1).onChange(()=>this.mesh.material.needsUpdate = true);
         addOrthoMeshControls(this, this.mesh, folder);
         return this.__addFolder(folder);
     };
@@ -61,11 +59,8 @@ export default class AudioWave extends BaseItem{
             this.mesh.geometry = this.geometry;
             linePos = this.mesh.geometry.attributes.position.array;
         } 
-
         let index = 0;
-
         for(var i = 0; i < bufferLength; i++) {
-        
             const x = ((i / bufferLength)*2 *this.width) -1 * this.width;
             const amplitude = audioData[i]  * this.amplitude;
             const y = (amplitude * this.extent) / 2;

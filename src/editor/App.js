@@ -7,7 +7,7 @@ import Canvas from "./components/canvas/Canvas";
 import TrackContainer from "./components/track/TrackContainer";
 import ModalContainer from "./components/modal/ModalContainer";
 import Sound from "./audio/Sound";
-import Exporter from "./export/LocalExporter";
+import Exporter from "./export/Exporter";
 import license from "./util/License";
 import ExportScreen from "./components/Export";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -67,12 +67,15 @@ class App extends PureComponent {
         }
 
         document.body.addEventListener("keyup", e => {
-            if (e.keyCode === 32) {
-                this.play();
+            if(!this.state.encoding) {
+                if (e.keyCode === 32) {
+                    this.play();
+                }
+                if (e.keyCode === 90 && e.ctrlKey) {
+                    this.gui.undo();
+                }
             }
-            if (e.keyCode === 90 && e.ctrlKey) {
-                this.gui.undo();
-            }
+          
         });
 
         this.gui.modalRef = this.modalRef.current;
@@ -253,7 +256,6 @@ class App extends PureComponent {
         this.encoding = true;
         this.stop();
 
-        console.log("Encoder is ready but it doesnt exist?", this.exporter)
         this.exporter.encode();
         this.setState({ encoding: true });
     };

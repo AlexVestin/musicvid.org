@@ -17,7 +17,7 @@ export default class BeatCounter extends BaseItem {
         this.color3 = "#0000FF";
         this.color4 = "#FFFF00";
         this.color5 = "#00FFFF";
-        this.color6= "#FF0000";
+        this.color6 = "#FF0000";
         this.color7 = "#FF0000";
         this.setUpFolder();
     }
@@ -27,18 +27,18 @@ export default class BeatCounter extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
-        folder.add(this, "bpm", 0, 240);
-        folder.add(this, "duration", 0, 0.5);
-        folder.add(this, "timeSignatureDivider", [1,2,3,4,5,6,7]);
-        folder.add(this, "offset", 0, 1, 0.00001);
+        this.addController(folder,this, "bpm", 0, 240);
+        this.addController(folder,this, "duration", 0, 0.5);
+        this.addController(folder,this, "timeSignatureDivider", [1,2,3,4,5,6,7]);
+        this.addController(folder,this, "offset", 0, 1, 0.00001);
         this.colorsFolder = folder.addFolder("colors");
-        this.colorsFolder.addColor(this, "color1");
-        this.colorsFolder.addColor(this, "color2");
-        this.colorsFolder.addColor(this, "color3");
-        this.colorsFolder.addColor(this, "color4");
-        this.colorsFolder.addColor(this, "color5");
-        this.colorsFolder.addColor(this, "color6");
-        this.colorsFolder.addColor(this, "color7");
+        this.addController(this.colorFolder,this, "color1", {color: true});
+        this.addController(this.colorFolder,this, "color2", {color: true});
+        this.addController(this.colorFolder,this, "color3", {color: true});
+        this.addController(this.colorFolder,this, "color4", {color: true});
+        this.addController(this.colorFolder,this, "color5", {color: true});
+        this.addController(this.colorFolder,this, "color6", {color: true});
+        this.addController(this.colorFolder,this, "color7", {color: true});
         return this.__addFolder(folder);
     };
     update = (time, data) => { 

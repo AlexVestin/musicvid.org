@@ -89,19 +89,17 @@ export default class MonsterCat extends BaseItem {
 
 
     __setUpGUI = (folder) => {
-         
-
-        folder.addColor(this, "color");
-        folder.add(this, "animTime", 0, 10);
-        folder.add(this, "barWidth", 0, 20, 1);
-        folder.add(this, "positionX");
-        folder.add(this, "positionY");
-        folder.add(this, "spectrumSpacing", 0, 10, 1);
-        folder.add(this, "shadowBlur", 0, 100);
-        folder.add(this, "shadowAlpha", 0, 1, 0.001);
-        folder.add(this, "barHeightMultiplier", 0, 25.0, 0.01);
-        folder.add(this, "shadowOffsetX", -300, 300);
-        folder.add(this, "shadowOffsetY", -300, 300);
+        this.addController(folder, this, "color", {color: true});
+        this.addController(folder,this, "animTime", 0, 10);
+        this.addController(folder,this, "barWidth", 0, 20, 1);
+        this.addController(folder,this, "positionX");
+        this.addController(folder,this, "positionY");
+        this.addController(folder,this, "spectrumSpacing", 0, 10, 1);
+        this.addController(folder,this, "shadowBlur", 0, 100);
+        this.addController(folder,this, "shadowAlpha", 0, 1, 0.001);
+        this.addController(folder,this, "barHeightMultiplier", 0, 25.0, 0.01);
+        this.addController(folder,this, "shadowOffsetX", -300, 300);
+        this.addController(folder,this, "shadowOffsetY", -300, 300);
         return this.__addFolder(folder);
     };
 
@@ -133,11 +131,7 @@ export default class MonsterCat extends BaseItem {
         this.ctx.shadowOffsetX = this.shadowOffsetX;
         this.ctx.shadowOffsetY = this.shadowOffsetY;
         this.ctx.fillStyle = this.color;
-        
-
-
         this.spectrumWidth = this.spectrumSize * (this.barWidth + this.spectrumSpacing);
-
         let ratio;
         const x = positionX * this.canvas.width - this.spectrumWidth / 2;
         const y = (positionY-1) * this.canvas.height;

@@ -66,10 +66,10 @@ export default class Exporter {
                 this.encodeAudioFrame();
             }else{
                 const audioData = this.sound.getAudioData(this.time);
-                const automations = this.gui.getRoot().__automations;
+
+                const automations = Object.keys(this.gui.getRoot().__automations).map(key => this.gui.getRoot().__automations[key]);
                 automations.forEach(item => {
                     item.update(this.time, audioData);
-                    item.apply();
                 })
 
                 this.animationManager.update(this.time, audioData, true);

@@ -15,7 +15,7 @@ export default function SpectrumAnalyser(gui, object) {
 
     let addAttribute = (name, value, folder, configs = {}) => {
         this[name] = value;
-        folder.add(this, name, configs.min, configs.max);
+        folder.add(this, name, configs.min, configs.max, configs.step);
     };
 
     // ----
@@ -53,8 +53,8 @@ export default function SpectrumAnalyser(gui, object) {
 
     // ---
     const f4 = gui.addFolder("Smoothing");
-    addAttribute("smoothingPoints", 3, f4, { min: 0 });
-    addAttribute("smoothingPasses", 1, f4, { min: 0 });
+    addAttribute("smoothingPoints", 3, f4, { min: 1, max: 20, step: 1 });
+    addAttribute("smoothingPasses", 1, f4, { min: 1, max: 20, step: 1 });
     addAttribute("headMargin", 7, f4, { min: 0 });
     addAttribute("tailMargin", 0, f4, { min: 0 });
     addAttribute("minMarginWeight", 0.7, f4, { min: 0 });

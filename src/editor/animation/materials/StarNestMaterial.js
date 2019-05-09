@@ -45,26 +45,30 @@ export default class StarNestMaterial extends ShaderToyMaterial {
             //TODO change image
             imageUrl: "img/templates/StarField.png"
         };
+
+        this.path = "material";
+        this.__item = item;
     }
 
     __setUpGUI = folder => {
-        folder.add(this, "brightenToAudio");
-        folder.add(this, "brightness");
-        folder.add(this, "brightenMultipler");
+        const i = this.__item;
+        i.addController(folder, this, "brightenToAudio");
+        i.addController(folder, this, "brightness");
+        i.addController(folder, this, "brightenMultipler");
         
-        folder.add(this.uniforms.iterations, "value", 1, 50)
+        i.addController(folder, this.uniforms.iterations, "value", 1, 50)
             .name("Iterations");
-        folder.add(this.uniforms.formuparam, "value").name("formuparam");
-        folder.add(this.uniforms.volsteps, "value").name("volsteps");
-        folder.add(this.uniforms.stepsize, "value").name("stepsize");
-        folder.add(this.uniforms.zoom, "value").name("zoom");
-        folder.add(this.uniforms.tile, "value").name("tile");
-        folder.add(this.uniforms.speed, "value").name("speed");
-        folder.add(this.uniforms.brightness, "value").name("brightness");
-        folder.add(this.uniforms.darkmatter, "value").name("darkmatter");
-        folder.add(this.uniforms.distfading, "value").name("distfading");
-        folder.add(this.uniforms.saturation, "value").name("saturation");
-        this.impactAnalyser = new ImpactAnalyser(folder);
+        i.addController(folder, this.uniforms.formuparam, "value", {path: "formuparam"}).name("formuparam");
+        i.addController(folder, this.uniforms.volsteps, "value", {path: "volsteps"}).name("volsteps");
+        i.addController(folder, this.uniforms.stepsize, "value", {path: "stepsize"}).name("stepsize");
+        i.addController(folder, this.uniforms.zoom, "value", {path: "zoom"}).name("zoom");
+        i.addController(folder, this.uniforms.tile, "value", {path: "tile"}).name("tile");
+        i.addController(folder, this.uniforms.speed, "value", {path: "speed"}).name("speed");
+        i.addController(folder, this.uniforms.brightness, "value", {path: "brightness"}).name("brightness");
+        i.addController(folder, this.uniforms.darkmatter, "value", {path: "darkmatter"}).name("darkmatter");
+        i.addController(folder, this.uniforms.distfading, "value", {path: "distfading"}).name("distfading");
+        i.addController(folder, this.uniforms.saturation, "value", {path: "saturation"}).name("saturation");
+        this.impactAnalyser = new ImpactAnalyser(folder, i);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;
         this.folder = folder;
@@ -73,7 +77,6 @@ export default class StarNestMaterial extends ShaderToyMaterial {
 
     updateMaterial = (time, audioData, shouldIncrement) => {
         this.uniforms.iTime.value = time;
-        console.log(time);
         if (this.brightenToAudio && this.impactAnalyser) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData);
             this.uniforms.spe.value =

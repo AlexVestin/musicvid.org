@@ -19,7 +19,7 @@ export default class ImageMaterial extends THREE.VideoTexture{
     }
 
     changeImage() {
-        loadImageTexture(this, "setBackground");
+        //loadImageTexture(this, "setBackground");
     }
 
     setBackground = (texture) => {

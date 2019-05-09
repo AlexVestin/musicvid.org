@@ -81,14 +81,12 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
         i.addController(folder, this, "numLayers", {values: [1, 2, 4, 8], min: 0, path: this.path}).onChange(
             () => (this.uniforms.NUM_LAYERS.value = this.numLayers)
         );
-
         i.addController(folder, this, "amplitude", 0, 1, 0.001);
         i.addController(folder, this, "frequency", 0, 1, 0.01);
         i.addController(folder, this, "moveToAudioImpact");
         i.addController(folder, this, "baseSpeed",  -50, 50, 0.1);
         i.addController(folder, this, "movementExaggeration", -10, 10, 0.1);
         i.addController(folder, this, "amplitude", 0, 1, 0.001);
-
         this.impactAnalyser = new ImpactAnalyser(folder, i);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;

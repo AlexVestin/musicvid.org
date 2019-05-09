@@ -52,7 +52,8 @@ export function smooth(array, object) {
 }
 
 export function transformToVisualBins(array, object) {
-    const { spectrumSize, spectrumScale, spectrumStart, spectrumEnd } = object;
+    const { spectrumSize, spectrumScale, spectrumStart, spectrumEnd, mult } = object;
+    let m = mult || 1.0;
     var newArray = new Uint8Array(spectrumSize);
     for (var i = 0; i < spectrumSize; i++) {
         var bin =
@@ -62,6 +63,8 @@ export function transformToVisualBins(array, object) {
         newArray[i] =
             array[Math.floor(bin) + spectrumStart] * (bin % 1) +
             array[Math.floor(bin + 1) + spectrumStart] * (1 - (bin % 1));
+        
+        newArray[i] *= m;
     }
     return newArray;
 }
@@ -302,3 +305,23 @@ export function average(array, object) {
 
     return avg / (len - startBin);
 }
+
+export function interpolateArray(data, fitCount, mult) {
+
+    var linearInterpolate = function (before, after, atPoint) {
+        return before + (after - before) * atPoint;
+    };
+
+    var newData = [];
+    var springFactor = Number((data.length - 1) / (fitCount - 1));
+    newData[0] = data[0]; // for new allocation
+    for ( var i = 1; i < fitCount - 1; i++) {
+        var tmp = i * springFactor;
+        var before = Number(Math.floor(tmp)).toFixed();
+        var after = Number(Math.ceil(tmp)).toFixed();
+        var atPoint = tmp - before;
+        newData[i] = linearInterpolate(data[before], data[after], atPoint) * mult / 30;
+    }
+    newData[fitCount - 1] = data[data.length - 1]; // for new allocation
+    return newData;
+};

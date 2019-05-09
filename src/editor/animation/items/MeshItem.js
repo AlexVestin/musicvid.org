@@ -39,6 +39,7 @@ export default class MeshItem extends BaseItem {
         
         this.mesh.geometry = this.geometry;
 
+        console.log(this._geoFol);
         if(this.type === "ortho") { 
             addOrthoMeshControls(this, this.mesh, this._geoFol);
         } else {

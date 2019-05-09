@@ -47,15 +47,14 @@ export default class SImage extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
-         
-        folder.add(this, "loadNewImage");
-        folder.add(this, "positionX");
-        folder.add(this, "positionY");
-        folder.add(this, "width");
-        folder.add(this, "height");
-        folder.add(this, "shouldDrawShadow");
-        folder.addColor(this, "shadowColor");
-        folder.addColor(this.ctx, "fillStyle");
+        this.addController(folder, this, "loadNewImage");
+        this.addController(folder, this, "positionX");
+        this.addController(folder, this, "positionY");
+        this.addController(folder, this, "width");
+        this.addController(folder, this, "height");
+        this.addController(folder, this, "shouldDrawShadow");
+        this.addController(folder, this, "shadowColor", {color: true} );
+        this.addController(folder, this.ctx, "fillStyle", {color: true} );
         return this.__addFolder(folder);
     };
 

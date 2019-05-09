@@ -11,6 +11,9 @@ export default class HexaGoneMaterial extends MeshBasicMaterial {
         this.transparent = true;
         this._color = "#FF0000";
         this.color = new Color(this._color);
+        
+        this.path = "material";
+        this.__item = item;
     }
 
     changeImage() {
@@ -33,12 +36,11 @@ export default class HexaGoneMaterial extends MeshBasicMaterial {
     }
     
 
-    __setUpGUI = (f) => {
-        const folder = f;
-        folder.addColor(this, "_color").name("Color").onChange(() => this.color = new Color(this._color));
-        folder.add(this, "wireframe");
-        folder.add(this, "changeImage");
-
+    __setUpGUI = (folder) => {
+        const i = this.__item;
+        i.addController(folder, this, "_color", {color: true}).name("Color").onChange(() => this.color = new Color(this._color));;
+        i.addController(folder, this, "wireframe");
+        i.addController(folder, this, "changeImage");
         folder.updateDisplay();
         this.folder = folder;
         return folder;

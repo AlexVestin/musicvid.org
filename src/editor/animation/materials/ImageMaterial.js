@@ -104,8 +104,6 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
     __setUpGUI = (folder) => {
         const i = this.__item;
         i.addController(folder, this, "wireframe");
-
-        
         i.addController(folder, this, "changeImage");
         i.addController(folder, this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
         i.addController(folder,this, "brightenToAudio");
@@ -113,11 +111,9 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         i.addController(folder,this.uniforms.opacity, "value").name("opacity");
         i.addController(folder,this, "vignetteAmount").onChange(() => this.uniforms.value = this.vignetteAmount);
         i.addController(folder,this.uniforms.should_mirror, "value", {name: "Mirror image"});
-
         this.impactAnalyser = new ImpactAnalyser(folder, i);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;
-       
         this.folder = folder;
         return folder;
     }

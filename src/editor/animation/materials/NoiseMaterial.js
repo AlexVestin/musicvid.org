@@ -4,7 +4,7 @@ import ShaderToyMaterial from 'editor/util/ShaderToyMaterial'
 import fragShader from '../shaders/licensed/Noise'
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
 import { loadImageTextureFromChoice } from 'editor/util/ImageLoader';
-import addNoise from 'editor/util/AddNoise'
+import addNoise from './AddNoise'
 
 export default class NoiseMaterial extends ShaderToyMaterial {
     constructor(item) {
@@ -67,6 +67,9 @@ export default class NoiseMaterial extends ShaderToyMaterial {
             changeDisclaimer: true,
             imageUrl: "img/templates/Noise.png"
         }
+
+        this.path = "material";
+        this.__item = item;
     }
 
     __addUndoAction = (func, args) => {
@@ -92,17 +95,16 @@ export default class NoiseMaterial extends ShaderToyMaterial {
         this.prevFile = path;
     }
     __setUpGUI = (folder) => {
-        folder.add(this, "baseSpeed", -10, 10, 0.01);
-        folder.add(this, "amplitude", -1, 1, 0.001);
-
-        folder.add(this, "width").onChange(() => this.uniforms.iResolution.value = new THREE.Vector2(this.width, this.height))
-        folder.add(this, "height").onChange(() => this.uniforms.iResolution.value = new THREE.Vector2(this.width, this.height))
-        
-        folder.add(this.uniforms.textureZoom, "value", 0, 40).name("Texture zoom");
-        folder.add(this.uniforms.red, "value", 0, 1, 0.01).name("Red");
-        folder.add(this.uniforms.green, "value", 0, 1, 0.01).name("Green");
-        folder.add(this.uniforms.blue, "value", 0, 1, 0.01).name("Blue");
-        addNoise(folder, this.updateTexture, "noisy2.png");
+        const i = this.__item;
+        i.addController(folder, this, "baseSpeed", -10, 10, 0.01);
+        i.addController(folder, this, "amplitude", -1, 1, 0.001);
+        i.addController(folder, this, "width").onChange(() => this.uniforms.iResolution.value = new THREE.Vector2(this.width, this.height))
+        i.addController(folder, this, "height").onChange(() => this.uniforms.iResolution.value = new THREE.Vector2(this.width, this.height))
+        i.addController(folder, this.uniforms.textureZoom, "value", {min: 0, max: 40, path:"TextureZoom"}).name("Texture zoom");
+        i.addController(folder,this.uniforms.red, "value", {min: 0, max: 1, step: 0.01, path: "red"}).name("Red");
+        i.addController(folder,this.uniforms.green, "value", 0, 1, 0.01).name("Green");
+        i.addController(folder,this.uniforms.blue, "value", 0, 1, 0.01).name("Blue");
+        addNoise(folder, this.updateTexture, "noisy2.png", i);
         this.folder = folder;
         return folder;
     }

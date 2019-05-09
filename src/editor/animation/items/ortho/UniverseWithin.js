@@ -9,7 +9,6 @@ export default class HexaGone extends MeshItem {
         this.name = "The Universe Within";
         this.changeGeometry("Plane");
         this.changeMaterial("UniverseWithin");        
-
         this.setUpFolder();
     }
 }

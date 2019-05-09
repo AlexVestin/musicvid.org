@@ -28,9 +28,6 @@ const vertexShader = [
 
 ].join("\n");
 
-
-
-
 export default class Box extends BaseItem {
     constructor(info) {
         super(info);
@@ -63,12 +60,11 @@ export default class Box extends BaseItem {
         this.mesh =  new THREE.Mesh(new THREE.Geometry(), this.shaderMaterial);
         this.scene.add( this.mesh );
         this.setUpFolder();
-        this.impactAnalyser = new ImpactAnalyser(this.folder); 
     }
 
     __setUpGUI = (folder) => {
-         
-        folder.add(this, "text").onChange(this.init);
+        this.addContoller(folder, this, "text").onChange(this.init);
+        this.impactAnalyser = new ImpactAnalyser(this.folder, this); 
         addMeshControls(this, this.mesh, folder);
         return this.__addFolder(folder);
     }
@@ -78,9 +74,7 @@ export default class Box extends BaseItem {
         this.init()
     }
 
-
     init = () => {
-       
         var geometry = new THREE.TextBufferGeometry( this.text, {
             font: this.font,
             size: 50,
@@ -111,7 +105,6 @@ export default class Box extends BaseItem {
     update = (time, audioData) => {
             if(this.loaded) {
                 const impact = this.impactAnalyser.analyse(audioData.frequencyData);
-
                 this.mesh.rotation.y = 0.25 * time;
                 this.uniforms.amplitude.value =  impact / 4  //*Math.sin( 0.5 * time );
                 this.uniforms.color.value.offsetHSL( 0.0005, 0, 0 );

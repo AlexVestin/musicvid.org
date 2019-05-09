@@ -1,9 +1,8 @@
 
 import { ConeGeometry } from 'three';
-import serialize from '../Serialize'
 
 export default class Cone extends ConeGeometry {
-    constructor(update, info) {
+    constructor(parent, info) {
         const config = {
             radius: 20, 
             height: 20,
@@ -15,24 +14,22 @@ export default class Cone extends ConeGeometry {
             ...info
         };
 
-        const { radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength } = config
+        const { radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength } = config;
         super(radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength);
-        this.updateGeometry = update;
         this.configs = config;
+        this.parent = parent;
+        this.path = "geometry";
     }
 
-    uc = () => this.updateGeometry(this.configs);
+    uc = () => this.parent.updateGeometry(this.configs);
     
     __setUpGUI = (folder) => {
-        folder.add(this.configs, "radius").disableAutomations().onChange(this.uc);
-        folder.add(this.configs, "height", 0, 100, 1).disableAutomations().onChange(this.uc);
-        folder.add(this.configs, "radialSegments", 0, 100, 1).disableAutomations().onChange(this.uc);
-        folder.add(this.configs, "heightSegments", 0, 100, 1).disableAutomations().onChange(this.uc);
-        folder.add(this.configs, "thetaStart").disableAutomations().onChange(this.uc);
-        folder.add(this.configs, "thetaLength", 0, 100, 1).disableAutomations().onChange(this.uc);
-    }
-
-    __serialize = () => {
-        return serialize(this);
+        const i = this.parent; 
+        i.addController(folder, this.configs, "radius").disableAutomations().onChange(this.uc);
+        i.addController(folder, this.configs, "height", 0, 100, 1).disableAutomations().onChange(this.uc);
+        i.addController(folder, this.configs, "radialSegments", 0, 100, 1).disableAutomations().onChange(this.uc);
+        i.addController(folder, this.configs, "heightSegments", 0, 100, 1).disableAutomations().onChange(this.uc);
+        i.addController(folder, this.configs, "thetaStart").disableAutomations().onChange(this.uc);
+        i.addController(folder, this.configs, "thetaLength", 0, 100, 1).disableAutomations().onChange(this.uc);
     }
 }
