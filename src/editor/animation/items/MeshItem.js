@@ -14,21 +14,12 @@ export default class MeshItem extends BaseItem {
         this.mesh = new THREE.Mesh();
         info.scene.add(this.mesh);
         this.materialFolders = [];
-    
-        // Serialize mesh
-        this.mesh.__objectsToSerialize = [];
-        this.mesh.__objectsToSerialize.push("rotation");
-        this.mesh.__objectsToSerialize.push("position");
-        this.mesh.__objectsToSerialize.push("scale");
 
-        // Serialize material and geometry
-        this.__objectsToSerialize.push("mesh");
-        this.__objectsToSerialize.push("material");
     }
 
     updateGeometry = (configs) => {
         const  { GeomClass } = this;
-        this.geometry = new GeomClass(this.updateGeometry, configs);
+        this.geometry = new GeomClass(this, configs);
         this.mesh.geometry = this.geometry;
     }
 
@@ -41,7 +32,7 @@ export default class MeshItem extends BaseItem {
         }
     
         const GeometryClass = loadGeometryFromText(text);
-        this.geometry = new GeometryClass(this.updateGeometry, {});
+        this.geometry = new GeometryClass(this, {});
         this.GeomClass = GeometryClass;
         this._geoFol  = this.folder.addFolder("Geometry Settings", true, false, before);
         this.geometry.__setUpGUI(this._geoFol);

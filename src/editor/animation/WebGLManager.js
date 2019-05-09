@@ -75,19 +75,15 @@ export default class WebGLManager {
         };
         projFile.settings = serialize(this);
         projFile.automations = serializeObject(rootGui.__automations);
-        projFile.automationLinks = serializeObject(rootGui.__automationLinks);
-
-
         
         this.scenes.forEach( (scene, i) => {
             const sceneConfig = {
                 settings: serialize(scene)
             }
             if(scene.isScene) {
-                
                 sceneConfig.items = [];
                 scene.items.forEach(item => {
-                    sceneConfig.items.push(serializeObject(item))
+                    sceneConfig.items.push(item.serialize());
                 });
                 sceneConfig.camera = scene.camera.matrix.toArray()
                 sceneConfig.controlsEnabled = scene.controls.enabled;

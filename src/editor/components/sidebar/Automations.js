@@ -3,11 +3,11 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import AutomationsList from "../modal/Automations/AutomationsList";
-import ItemContainer from "../modal/Automations/itemcomponents/ItemContainer";
+import ItemContainer from "../automation/ItemContainer";
 
-import AudioAutomation from "../modal/Automations/items/AudioReactiveAutomation";
-import MathAutomation from "../modal/Automations/items/InputAutomation";
-import PointAutomation from "../modal/Automations/items/PointAutomation";
+import AudioAutomation from "editor/animation/automation/AudioReactiveAutomation";
+import MathAutomation from "editor/animation/automation/InputAutomation";
+import PointAutomation from "editor/animation/automation/PointAutomation";
 import classes from "./Automations.module.scss";
 
 export default class Automations extends PureComponent {

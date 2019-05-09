@@ -1,4 +1,4 @@
-import Pass from "../passtemplates/pass";
+import Pass from "./pass";
 import BokehShader from '../shaders/BokehShader';
 import * as THREE from "three";
 /**

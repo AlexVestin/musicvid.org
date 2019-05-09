@@ -1,4 +1,4 @@
-import Pass from "../passtemplates/pass";
+import Pass from "./pass";
 import DigitalGlitch from "../shaders/glitchshader";
 import FullScreenQuad from './fullscreenquad'
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'

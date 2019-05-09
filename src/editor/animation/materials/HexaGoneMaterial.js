@@ -42,6 +42,7 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
             imageUrl: "img/templates/HexaGone.png"
         }     
         
+        this.path = "material";
         this.__item = item;
     }
 
@@ -70,8 +71,8 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
 
     __setUpGUI = (f) => {
         const i = this.__item;
-        i.addController(f, this, "impact", {min: 0, path: "material"});
-
+        i.addController(f, this, "impact", {min: 0, path: this.path});
+        
         this.folder = f;
         return f;
     }

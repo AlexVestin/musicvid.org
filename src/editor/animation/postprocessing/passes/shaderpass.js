@@ -2,7 +2,7 @@
  * @author alteredq / http://alteredqualia.com/
  */
 
-import Pass from "../passtemplates/pass";
+import Pass from "./pass";
 import * as THREE from "three";
 import FullScreenQuad from "./fullscreenquad";
 export default class ShaderPass extends Pass {

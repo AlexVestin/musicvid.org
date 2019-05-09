@@ -7,10 +7,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
-import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
-
 import Paper from "@material-ui/core/Paper";
 
 const CustomTableCell = withStyles(theme => ({

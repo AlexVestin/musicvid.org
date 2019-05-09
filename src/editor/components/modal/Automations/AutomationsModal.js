@@ -8,19 +8,13 @@ import { withStyles } from "@material-ui/core/styles";
 import SelectAutomation from "./SelectAutomation";
 import ConfigureAutomations from "./ConfigureAutomations";
 import AddNewAutomation from "./AddNewAutomation";
-
-
 import uuid from 'uuid/v4';
 
 // audio automation
-import AudioAutomation from "./items/AudioReactiveAutomation";
-import ItemContainer from "./itemcomponents/ItemContainer";
-
-//Input automation
-import InputAutomation from "./items/InputAutomation";
-
-// Point automation
-import PointAutomation from "./items/PointAutomation";
+import ItemContainer from "../../automation/ItemContainer";
+import AudioAutomation from "editor/animation/automation/AudioReactiveAutomation";
+import InputAutomation from "editor/animation/automation/InputAutomation";
+import PointAutomation from "editor/animation/automation/PointAutomation";
 
 const styles = theme => ({
     form: {

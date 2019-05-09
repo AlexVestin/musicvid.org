@@ -1,7 +1,7 @@
 /**
  * @author alteredq / http://alteredqualia.com/
  */
-import Pass from "../passtemplates/pass";
+import Pass from "./pass";
 export default class RenderPass extends Pass {
     constructor(obj) {
         super();

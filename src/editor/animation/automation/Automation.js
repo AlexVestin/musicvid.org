@@ -1,5 +1,7 @@
 import uuid from "uuid/v4";
 
+
+
 export default class Automation {
     constructor(rootGui) {
         this.__id = uuid();

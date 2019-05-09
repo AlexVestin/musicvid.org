@@ -6,7 +6,7 @@ import * as THREE from 'three'
 import CopyShader from '../shaders/copyshader'
 import ConvolutionShader from '../shaders/convolutionshader'
 
-import Pass from '../passtemplates/pass'
+import Pass from './pass'
 
 
 export default class BloomPass extends Pass {

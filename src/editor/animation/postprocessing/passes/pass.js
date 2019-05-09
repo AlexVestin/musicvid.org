@@ -1,7 +1,7 @@
-
-
-export default class Pass  {
+import SerializableObject from '../../SerializableObject'
+export default class Pass  extends SerializableObject {
     constructor(config) {
+        super();
         this.TYPE = "effect";
         this.name = "pass";
         this.isScene =  false;

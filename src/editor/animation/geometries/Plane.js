@@ -1,10 +1,9 @@
 
 import { PlaneGeometry } from 'three';
-import serialize from '../Serialize'
 
 
 export default class Plane extends PlaneGeometry {
-    constructor(update, info) {
+    constructor(parent, info) {
         const config = {
             width: 2, 
             height: 2,
@@ -15,21 +14,18 @@ export default class Plane extends PlaneGeometry {
 
 
         super(config.width, config.height, config.widthSegments, config.heightSegments);
-        this.updateGeometry = update;
         this.configs = config;
+        this.parent = parent;
+        this.path = "geometry";
     }
 
-    uc = () => this.updateGeometry(this.configs)
+    uc = () => this.parent.updateGeometry(this.configs);
 
     __setUpGUI = (folder) => {
-        
-        folder.add(this.configs, "width").disableAutomations().min(0).onChange(this.uc);
-        folder.add(this.configs, "height").disableAutomations().min(0).onChange(this.uc);
-        folder.add(this.configs, "widthSegments").disableAutomations().min(0).step(1).onChange(this.uc);
-        folder.add(this.configs, "heightSegments").disableAutomations().min(0).step(1).onChange(this.uc);
-    }
-
-    __serialize = () => {
-        return serialize(this);
+        const i = this.parent; 
+        i.addController(folder, this.configs, "width", { path: this.path}).disableAutomations().min(0).onChange(this.uc);
+        i.addController(folder, this.configs, "height", { path: this.path}).disableAutomations().min(0).onChange(this.uc);
+        i.addController(folder, this.configs, "widthSegments", { path: this.path}).disableAutomations().min(0).step(1).onChange(this.uc);
+        i.addController(folder, this.configs, "heightSegments", { path: this.path}).disableAutomations().min(0).step(1).onChange(this.uc);
     }
 }

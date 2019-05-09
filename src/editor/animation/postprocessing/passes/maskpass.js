@@ -2,7 +2,7 @@
  * @author alteredq / http://alteredqualia.com/
  */
 
-import Pass from '../passtemplates/pass'
+import Pass from './pass'
 
 export default class MaskPass extends Pass {
     constructor( scene, camera ) {

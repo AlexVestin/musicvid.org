@@ -3,7 +3,7 @@
  */
 
 import * as THREE from "three";
-import Pass from "../passtemplates/pass";
+import Pass from "./pass";
 import FilmShader from "../shaders/FilmShader";
 import FullScreenQuad from "./fullscreenquad";
 

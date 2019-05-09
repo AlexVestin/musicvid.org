@@ -2,7 +2,7 @@
  * @author alteredq / http://alteredqualia.com/
  */
 
-import Pass from '../passtemplates/pass'
+import Pass from './pass'
 import PixelShader from '../shaders/pixelshader'
 import * as THREE from 'three' 
 export default class PixelPass extends Pass  {
