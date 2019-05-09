@@ -31,15 +31,18 @@ export default class Automations extends PureComponent {
                 console.log("unknown type")
             }
             
+            rootGui.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
             this.setState({ index: 1 });
         });
     };
 
     onRemove = (automation) => {
         const rootGui = this.props.gui.getRoot();
-        const index = rootGui.__automations.findIndex(e => e === automation);
-        rootGui.__automations.splice(index, 1);
+
+        console.log(rootGui.__automations);
+        delete rootGui.__automations[automation.__id];
         rootGui.__automationLinks = rootGui.__automationLinks.filter(link => link.automation !== automation);
+        console.log(rootGui.__automations);
         this.setState({index: 0})
     }
 
@@ -51,7 +54,8 @@ export default class Automations extends PureComponent {
     render() {
         const { index } = this.state;
         const rootGui = this.props.gui.getRoot();
-        const automations = rootGui.__automations;
+        const automations = Object.keys(rootGui.__automations).map(key => rootGui.__automations[key]);
+
         return (
             <div className={classes.container}>
                 <div className={classes.column}>

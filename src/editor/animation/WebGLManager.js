@@ -7,6 +7,13 @@ import PostProcessing from "./postprocessing/postprocessing";
 import * as FileSaver from "file-saver";
 import serialize, { serializeObject } from './Serialize'
 
+
+
+import PointAutomation from './automation/PointAutomation'
+import InputAutomation from './automation/InputAutomation'
+import ImpactAutomation from './automation/AudioReactiveAutomation'
+
+
 export default class WebGLManager {
     constructor(gui) {
         this.fftSize = 16384;
@@ -33,6 +40,28 @@ export default class WebGLManager {
         });
     }
 
+    addAutomation = (template) => {
+        let auto  = {};
+        switch(template.type) {
+            case "point":
+            auto =  new PointAutomation(this.gui);
+            break;
+            case "math":
+            auto =  new InputAutomation(this.gui);
+            break;
+            case "audio":
+            auto =  new ImpactAutomation(this.gui);
+            break;
+        default:
+            alert(":(");
+        }
+        auto.__id = template.__id;
+
+        auto.__setUpValues(template);
+        this.gui.getRoot().__automations[auto.__id] = auto;
+        console.log(template, auto);
+    }
+
     loadProject = (file) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -43,16 +72,24 @@ export default class WebGLManager {
 
             Object.assign(this, json.settings);
             this.setFFTSize(this.fftSize);
+
+            json.automations.forEach(auto => {
+                this.addAutomation(auto);
+            })
+
             json.scenes.forEach(scene => {                
-                if(scene.settings.isScene) {
-                    const s = this.addSceneFromText(scene.settings.TYPE);
+                if(scene.__settings.isScene) {
+                    const s = this.addSceneFromText(scene.__settings.TYPE);
                     s.undoCameraMovement(scene.camera);
                     s.controls.enabled = scene.controlsEnabled; 
                     s.addItems(scene.items);
                     s.updateSettings();
                 }else {
-                    const e = this.postProcessing.addEffectPass(scene.settings.TYPE);
-                    Object.assign(e, scene);
+                    const e = this.postProcessing.addEffectPass(scene.__settings.TYPE);
+                    e.__setControllerValues(scene.controllers);
+                    console.log("add?", scene.__settings.TYPE)
+
+                    
                 }
             })
         }
@@ -74,14 +111,19 @@ export default class WebGLManager {
             settings: {}
         };
         projFile.settings = serialize(this);
-        projFile.automations = serializeObject(rootGui.__automations);
+
+        const automations = Object.keys(rootGui.__automations).map(key => rootGui.__automations[key]);
+        console.log(automations);
+        projFile.automations = serializeObject(automations);
         
         this.scenes.forEach( (scene, i) => {
-            const sceneConfig = {
-                settings: serialize(scene)
-            }
+
             if(scene.isScene) {
-                sceneConfig.items = [];
+                let sceneConfig = {
+                    __settings: serialize(scene),
+                    items: []
+                }
+                
                 scene.items.forEach(item => {
                     sceneConfig.items.push(item.serialize());
                 });
@@ -90,7 +132,9 @@ export default class WebGLManager {
                 
                 projFile.scenes.push(sceneConfig);
             } else {
-                projFile.scenes.push(sceneConfig);
+                const t = scene.serialize();
+                t.__settings = {isScene: false, TYPE: scene.TYPE}
+                projFile.scenes.push(t);
             }
         })
 
@@ -112,7 +156,12 @@ export default class WebGLManager {
 
     removeScene = args => {
         const { scene, undoAction } = args;
-        scene.folder.parent.removeFolder(scene.folder);
+        try {
+            scene.folder.parent.removeFolder(scene.folder);
+        }catch(err) {
+            alert("?");
+        }
+        
         const index = this.scenes.findIndex(e => e === scene);
         this.scenes.splice(index, 1);
 

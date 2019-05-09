@@ -59,18 +59,22 @@ class ScrollDialog extends React.Component {
     addAudioAutomation = () => {
         const root = this.props.gui.getRoot();
         this.selectedAutomation = new AudioAutomation(root);
+        root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
         this.onSelect(this.selectedAutomation);
     };
 
     addPointAutomation = () => {
         const root = this.props.gui.getRoot();
         this.selectedAutomation = new PointAutomation(root);
+
+        root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
         this.onSelect(this.selectedAutomation);
     };
 
     addMathAutomation = () => {
         const root = this.props.gui.getRoot();
         this.selectedAutomation = new InputAutomation(root);
+        root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
         this.onSelect(this.selectedAutomation);
     };
 

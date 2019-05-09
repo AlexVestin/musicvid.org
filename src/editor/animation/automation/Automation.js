@@ -1,15 +1,15 @@
-import uuid from "uuid/v4";
-
-
-
-export default class Automation {
+import SerializableObject from '../SerializableObject'
+export default class Automation extends SerializableObject {
     constructor(rootGui) {
-        this.__id = uuid();
+        super();
         this.__items = [];
         this.name = "";
         this.value = 0;
-        rootGui.__automations.push(this);
         this.rootGui = rootGui;
+    }
+
+    __setUpValues = (template) => {
+        Object.assign(this, template);
     }
 
     update() {
@@ -47,9 +47,7 @@ export default class Automation {
             item.__onChange();
         }
         if (
-            item.__updateCounter++ %
-                this.rootGui.__automationConfigUpdateFrequency ===
-            0
+            item.__updateCounter++ % this.rootGui.__automationConfigUpdateFrequency === 0
         )
             item.updateDisplay();
     };

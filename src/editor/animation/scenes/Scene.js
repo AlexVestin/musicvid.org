@@ -18,30 +18,11 @@ export default class Scene {
         
     }
 
-    addItemRec = (item, setting) => {
-        Object.keys(setting).forEach(key => {
-            const val = setting[key];
-            if(key ===  "__uniforms") {
-                Object.keys(setting[key]).forEach(k => {
-                    console.log(setting[key])
-                    item.uniforms[k].value = setting[key][k];
-                })
-            }else {
-                if(val !== Object(val) ) {
-                    item[key] = val;
-                } else {
-                    this.addItemRec(item[key], setting[key]);
-                }
-            }
-           
-        })
-    }
 
     addItems = (items) => {
         items.forEach(item => {
             const i = this.addItemFromText(item.__itemName);
-            this.addItemRec(i, item);
-            i.__setUniforms();
+            i.__setControllerValues(item.controllers);
             i.setFolderName(i.name);
         })
 

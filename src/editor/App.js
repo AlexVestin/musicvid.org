@@ -189,15 +189,10 @@ class App extends PureComponent {
 
     applyAutomation = (time, audioData) => {
         const root = this.gui.getRoot();
-        const automations = root.__automations;
-        const links = root.__automationLinks;
+        const automations = Object.keys(root.__automations).map(key => root.__automations[key]);
         automations.forEach(item => {
             item.update(time, audioData);    
         });
-
-        links.forEach(link => {
-            link.automation.apply(link.controller, link.type);
-        })
     }
 
     update = () => {

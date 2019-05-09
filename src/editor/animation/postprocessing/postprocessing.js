@@ -65,6 +65,7 @@ export default class PostProcessing {
         fx.__moveItem = this.moveItem;
         fx.removeMe = () =>  this.removeItem({scene: fx, undoAction: false });
         this.passes.push(fx);
+        fx.setUpGUI(this.gui);
         this.effectComposer.addPass(fx);     
         this.addEffectToManager(fx); 
         return fx;

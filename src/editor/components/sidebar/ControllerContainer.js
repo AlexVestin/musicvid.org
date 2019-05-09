@@ -54,7 +54,7 @@ export default class ControllerContainer extends PureComponent {
         folder.add(this, "fileName");
         folder.add(this, "fps", [24, 25, 30, 48, 60]);
         folder.add(this, "preset", this.presetLookup)
-        folder.add(this, "MBitBitrate", 0, 20, 0.1);
+        folder.add(this, "MBitBitrate", 0, 20, 0.1).disableAutomations();
         folder.add(this, "startEncoding");
     }
 
@@ -91,7 +91,6 @@ export default class ControllerContainer extends PureComponent {
                         {index === 3 && loaded && <GUIMount gui={gui.__folders["Audio"].domElement}></GUIMount>}
                         {index === 4 && loaded && <GUIMount gui={gui.__folders["Settings"].domElement}></GUIMount>}
                         {index === 5 && loaded && <GUIMount gui={gui.__folders["Export"].domElement}></GUIMount>}
-
                     </SimpleBar>
                 </div>
             </div>

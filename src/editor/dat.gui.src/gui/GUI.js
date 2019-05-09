@@ -104,7 +104,7 @@ const GUI = function(pars) {
   this.__undoLogSize = 64;
   this.__redoLog = [];
   this.__disabled = false;
-  this.__automations = [];
+  this.__automations = {};
   this.__automationLinks = [];
 
   this.__time = 0;

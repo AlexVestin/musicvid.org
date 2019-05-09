@@ -42,10 +42,9 @@ export default class GlitchPass extends Pass {
 	}
 	
 	__setUpGUI = (folder) => {
-      
-		folder.add(this, "dt_size").min(2).onChange(() => { this.uniforms["tDisp"].value = this.generateHeightmap(this.dt_size) });
-		folder.add(this, "threshold").min(0);
-		folder.add(this, "randomTrigger");
+        this.addController(folder, this, "dt_size").min(2).onChange(() => { this.uniforms["tDisp"].value = this.generateHeightmap(this.dt_size) });
+        this.addController(folder, this, "threshold").min(0);
+        this.addController(folder, this, "randomTrigger")
 
 		this.impactAnalyser = new ImpactAnalyser(folder);
 		this.impactAnalyser.endBin = 60;
