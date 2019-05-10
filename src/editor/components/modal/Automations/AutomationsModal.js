@@ -23,7 +23,7 @@ const styles = theme => ({
         width: "fit-content"
     },
     formControl: {
-        marginTop: theme.spacing.unit * 2,
+        marginTop: theme.spacing.unit(2),
         minWidth: 120
     },
     formControlLabel: {

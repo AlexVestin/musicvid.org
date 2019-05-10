@@ -5,6 +5,9 @@ import FAQ from "./home/FAQ";
 import SignUp from "./home/SignUp";
 import SignIn from "./home/SignIn";
 import Missing from "./home/Missing";
+import Projects from "./home/Projects";
+import Profile from "./home/Profile";
+import SignOutComponent from './home/SignOutComponent'
 import Downloads from "./home/Downloads";
 import { app } from "backend/firebase";
 import { setIsAuthenticated } from "./fredux/actions/auth";
@@ -32,12 +35,17 @@ class Index extends PureComponent {
                     <Route path="/home" component={Home} />
                     <Route path="/downloads" component={Downloads} />
                     <Route path="/videos" component={Videos} />
-                    <Route path="/projects" component={Home} />
+                    <Route path="/projects" component={Projects} />
+                    <Route path="/profile" component={Profile} />
+                    
+
+                    
                     <Route path="/editor" component={AppContainer} />
                     <Route path="/faq" component={FAQ} />
                     <Route path="/about" component={FAQ} />
                     <Route path="/sign-in" component={SignIn} />
                     <Route path="/sign-up" component={SignUp} />
+                    <Route path="/sign-out" component={SignOutComponent} />
                     <Route component={Missing} />
                 </Switch>
             </Router>

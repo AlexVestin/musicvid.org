@@ -2,8 +2,6 @@
 import React from "react";
 import Typography from "./modules/components/Typography";
 import LayoutBody from "./modules/components/LayoutBody";
-import Link from "@material-ui/core/Link";
-
 import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
 import Button from './modules/components/Button';
@@ -34,9 +32,8 @@ function Terms() {
                         variant="contained"
                         size="large"
                         style={{textAlign: "center", marginTop: 10, width: 255}}
-                        component={linkProps => (
-                            <Link {...linkProps} href={windowsPath} variant="button" />
-                        )}                          
+                        href={windowsPath}
+                
                     >
                         Windows x64
                     </Button>
@@ -46,9 +43,8 @@ function Terms() {
                         variant="contained"
                         size="large"
                         style={{textAlign: "center", marginTop: 10, width: 255}}
-                        component={linkProps => (
-                            <Link {...linkProps} href={linuxPath} variant="button" />
-                        )}                      
+                        href={linuxPath}
+                              
                     >
                         Linux x64
                     </Button>
@@ -59,9 +55,7 @@ function Terms() {
                         variant="contained"
                         size="large"
                         style={{textAlign: "center", marginTop: 10, width: 255}}
-                        component={linkProps => (
-                            <Link {...linkProps} href={macPath} variant="button" />
-                        )}                   
+                        href={macPath}            
                     >
                         Mac x64
                     </Button>

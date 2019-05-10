@@ -17,6 +17,9 @@ import FormFeedback from "./modules/form/FormFeedback";
 import { app, facebookProvider, googleProvider } from "backend/firebase";
 import Snackbar from './Snackbar';
 import Button from "@material-ui/core/Button";
+import { setIsAuthenticated } from 'fredux/actions/auth'
+import Redirect from "react-router/Redirect";
+import { connect } from 'react-redux';
 
 const bootstrapButtonStyle = {
     marginLeft: 15,
@@ -48,7 +51,8 @@ class SignIn extends React.Component {
     state = {
         sent: false,
         errorSnackBarOpen: false,
-        errorMessage: "" 
+        errorMessage: "" ,
+        redirectTo: ""
     };
 
     constructor() {
@@ -71,6 +75,11 @@ class SignIn extends React.Component {
         return errors;
     };
 
+    successRedirect = () => {
+        setIsAuthenticated(true);
+        this.setState({redirectTo: "/"})
+    }
+
     submit = (values, props) => {
         this.setState({ emailError: "", errorSnackBarOpen: false });
         const email = values.email;
@@ -91,6 +100,15 @@ class SignIn extends React.Component {
                 } else {
                     app.auth()
                         .signInWithEmailAndPassword(email, password)
+                        .then((result, error) => {
+                            if (error) {
+                                this.setState({ errorSnackBarOpen: true,
+                                  errorMessage:
+                                      "Username/password doesn't match, or the user doesn't exist" });
+                            } else {
+                                this.successRedirect();
+                            }
+                        })
                         .catch(error => {
                             this.setState({
                                 errorSnackBarOpen: true,
@@ -111,7 +129,8 @@ class SignIn extends React.Component {
                       errorMessage:
                           "Username/password doesn't match, or the user doesn't exist" });
                 } else {
-                    alert("Authenticated with google");
+
+                    this.successRedirect();
                 }
             });
     };
@@ -127,13 +146,12 @@ class SignIn extends React.Component {
                           "Username/password doesn't match, or the user doesn't exist"
                     });
                 } else {
-                    alert("Authenticated with Facebook");
+                    this.successRedirect();
                 }
             });
     };
 
     toggleError = (event, reason) => {
-      console.log("??")
       if (reason === 'clickaway') {
         return;
       }
@@ -142,8 +160,12 @@ class SignIn extends React.Component {
     } 
 
     render() {
-        const { classes } = this.props;
-        const { sent, errorSnackBarOpen, errorMessage } = this.state;
+        const { classes, isAuthenticated } = this.props;
+        const { redirectTo, sent, errorSnackBarOpen, errorMessage } = this.state;
+        
+        if(redirectTo || isAuthenticated) 
+            return <Redirect to={redirectTo}></Redirect>
+
 
         return (
             <React.Fragment>
@@ -283,7 +305,15 @@ SignIn.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated
+    }
+}
+
+
 export default compose(
     withRoot,
-    withStyles(styles)
+    withStyles(styles),
+    connect(mapStateToProps)
 )(SignIn);

@@ -16,6 +16,8 @@ const styles = theme => ({
   root: {
     display: 'flex',
     backgroundColor: theme.palette.secondary.light,
+    bottom: 0,
+
   },
   layoutBody: {
     marginTop: theme.spacing(8),
