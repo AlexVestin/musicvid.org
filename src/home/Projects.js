@@ -14,6 +14,8 @@ function Projects() {
         <Typography variant="h3" gutterBottom marked="center" align="center">
             Projects
         </Typography>
+
+        This is still has to be implemented!
       </LayoutBody>
       <AppFooter />
     </React.Fragment>

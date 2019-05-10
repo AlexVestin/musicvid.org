@@ -7,6 +7,8 @@ import SignIn from "./home/SignIn";
 import Missing from "./home/Missing";
 import Projects from "./home/Projects";
 import Profile from "./home/Profile";
+import Forgot from "./home/ForgotPassword";
+
 import SignOutComponent from './home/SignOutComponent'
 import Downloads from "./home/Downloads";
 import { app } from "backend/firebase";
@@ -45,6 +47,8 @@ class Index extends PureComponent {
                     <Route path="/about" component={FAQ} />
                     <Route path="/sign-in" component={SignIn} />
                     <Route path="/sign-up" component={SignUp} />
+                    <Route path="/forgot-password" component={Forgot} />
+                    
                     <Route path="/sign-out" component={SignOutComponent} />
                     <Route component={Missing} />
                 </Switch>

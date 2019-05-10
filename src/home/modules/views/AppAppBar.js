@@ -115,7 +115,7 @@ class AppAppBar extends PureComponent {
                                    this.setState({ redirectTo: "/projects" })
                                }
                                profile={() =>
-                                   this.setState({ redirectTo: "/profile" })
+                                   this.setState({ redirectTo: "/sign-out" })
                                }
                                classes={classes}
                            />
@@ -150,7 +150,7 @@ const ProfileButtonGroup = function(props) {
               className={classNames(classes.rightLink, classes.linkSecondary)}
               onClick={props.profile}
           >
-              {"My Profile"}
+              {"Sign out"}
           </Link>
       </React.Fragment>
   )

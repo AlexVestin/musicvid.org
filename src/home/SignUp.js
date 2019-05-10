@@ -35,7 +35,7 @@ const bootstrapButtonStyle = {
 
 const styles = theme => ({
     form: {
-        marginTop: theme.spacing(6)
+        marginTop: theme.spacing(4)
     },
     button: {
         marginTop: theme.spacing(3),
@@ -53,7 +53,7 @@ class SignUp extends React.Component {
 
     validate = values => {
         const errors = required(
-            ["userName", "email", "password"],
+            ["email", "password"],
             values,
             this.props
         );
@@ -119,7 +119,7 @@ class SignUp extends React.Component {
                     this.setState({
                         errorSnackBarOpen: true,
                         errorMessage:
-                            "Username/password doesn't match, or the user doesn't exist"
+                            "Email/password doesn't match, or the user doesn't exist"
                     });
                 } else {
                     this.successRedirect();
@@ -205,7 +205,7 @@ class SignUp extends React.Component {
                         </Button>
                     </div>
 
-                    <div style={{ textAlign: "center" }}>Or</div>
+                    <div style={{ textAlign: "center" }}> <Typography variant="h6">Or</Typography></div>
 
                     <Form
                         onSubmit={this.handleSubmit}
@@ -218,15 +218,6 @@ class SignUp extends React.Component {
                                 className={classes.form}
                                 noValidate
                             >
-                                <Field
-                                    autoFocus
-                                    component={RFTextField}
-                                    autoComplete="uname"
-                                    fullWidth
-                                    label="User Name"
-                                    name="userName"
-                                    required
-                                />
 
                                 <Field
                                     autoComplete="email"

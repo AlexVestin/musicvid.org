@@ -12,7 +12,8 @@ import { email, required } from './modules/form/validation';
 import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
-import compose from 'docs/src/modules/utils/compose';
+import compose from 'recompose/compose';
+import { app } from "backend/firebase";
 
 const styles = theme => ({
   form: {
@@ -33,7 +34,7 @@ class ForgotPassword extends React.Component {
   };
 
   validate = values => {
-    const errors = required(['email', 'password'], values, this.props);
+    const errors = required(['email'], values, this.props);
 
     if (!errors.email) {
       const emailError = email(values.email, values, this.props);
@@ -45,7 +46,15 @@ class ForgotPassword extends React.Component {
     return errors;
   };
 
-  handleSubmit = () => {};
+  handleSubmit = (values) => {
+    console.log("?")
+    app.auth().sendPasswordResetEmail(values.email).then(function() {
+      alert("Email sent");
+    }).catch(function(error) {
+      alert(error.message)
+    });
+
+  };
 
   render() {
     const { classes } = this.props;
