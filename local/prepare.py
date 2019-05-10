@@ -1,5 +1,5 @@
 dest = "C:/Users/alex/Desktop/mvid_deps/"
-platforms = ["windows", "mac", "linux"]
+platforms = ["windows", "linux"]
 ext = {
     "windows": "zip",
     "linux": "gztar",
@@ -48,5 +48,3 @@ for platform in platforms:
     except OSError as e:
         print('Directory not copied. Error: %s' % e)
 
-
-import zipfile

@@ -7,24 +7,37 @@ export default class SerializableObject {
         this.__controllers = {};
     }
     __setControllerValues = (values) => {
+        const objectsToLoad = [];
         Object.keys(values).forEach(key => {
-            this.__controllers[key].setValue(values[key]);
-            this.__controllers[key].updateDisplay();
-        })
+            const obj = values[key];
+            const controller = this.__controllers[key];
+            if(obj.needLoad) {
+                objectsToLoad.push({controller, name: obj.value, fileInfo: obj.fileInfo });
+            }else {
+                controller.setValue(values[key].value);
+                controller.updateDisplay();
+            }
+        });
     }
     
     serialize = () => {
         const obj = {controllers: {}};
         Object.keys(this.__controllers).forEach(key => {
             const c = this.__controllers[key]
-            obj.controllers[key] = c.object[c.property];
+
+            if(c.object[c.property] !== Object(c.object[c.property])) {
+                obj.controllers[key] = {value: c.object[c.property], needLoad: false } 
+            }else if(c.__fileInfo){
+                obj.controllers[key] = {value: c.__name, needLoad: true, fileInfo: c.__fileInfo }; 
+            }else {
+                console.log(c.__name);
+            }
         });
         obj.__itemName = this.__itemName;
         obj.__automations  = this.__automations;
         obj.name = this.name;
         obj.__startTime = this.startTime;
         obj.__endTime = this.__endTime;
-
         return obj;
     }
 
@@ -45,10 +58,10 @@ export default class SerializableObject {
         }else {
             c = gui.add(object, name, options.min, options.max, options.step);
         } 
-
         const n = options.path ? options.path + ":" +  name : name;
         c.__path = n;
         c.__parentObject = this;
+        c.__loadInfo = options.loadInfo; 
         this.__controllers[n] = c;
         return c;
     }

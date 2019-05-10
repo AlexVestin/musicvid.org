@@ -9,10 +9,9 @@ import AppFooter from "./modules/views/AppFooter";
 import Button from './modules/components/Button';
 import FAQItem from './FAQitem'
 
-
-const linuxPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/linux.tar.gz";
-const windowsPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/windows.zip";
-const macPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/mac.zip";
+const linuxPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_linux.tar.gz";
+const windowsPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_windows.zip";
+const macPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_mac.zip";
 
 
 function Terms() {

@@ -31,10 +31,6 @@ class FunctionController extends Controller {
     this.__isFunctionController = true;
     this.__button = document.createElement('div');
     this.__button.innerHTML = text === undefined ? 'Fire' : text;
-
-    
-
-
     dom.bind(this.__button, 'click', function(e) {
       e.preventDefault();
       _this.fire();
@@ -44,6 +40,10 @@ class FunctionController extends Controller {
     dom.addClass(this.__button, 'button');
 
     this.domElement.appendChild(this.__button);
+  }
+
+  setFileInfo(info) {
+    this.__fileInfo = info;
   }
 
   fire() {

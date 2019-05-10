@@ -45,10 +45,7 @@ export default class NoiseMaterial extends ShaderToyMaterial {
         this.blue = 0.4;
 
         //GUi
-        this.textureZoom = 4;
-        this.impactAnalyser = new ImpactAnalyser(this.folder);
-        this.impactAnalyser.endBin = 60;
-        this.impactAnalyser.deltaDecay = 20;
+       
         
     
         item.__attribution = {
@@ -105,6 +102,11 @@ export default class NoiseMaterial extends ShaderToyMaterial {
         i.addController(folder,this.uniforms.green, "value", 0, 1, 0.01).name("Green");
         i.addController(folder,this.uniforms.blue, "value", 0, 1, 0.01).name("Blue");
         addNoise(folder, this.updateTexture, "noisy2.png", i);
+
+        this.textureZoom = 4;
+        this.impactAnalyser = new ImpactAnalyser(folder, i);
+        this.impactAnalyser.endBin = 60;
+        this.impactAnalyser.deltaDecay = 20;
         this.folder = folder;
         return folder;
     }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Link from '@material-ui/core/Link'
 import { withStyles } from '@material-ui/core/styles';
 import  { Redirect } from 'react-router-dom';
-
+import { connect } from 'react-redux'
 
 import AppBar from '../components/AppBar';
 import classNames from 'classnames';
@@ -38,7 +38,7 @@ const styles = theme => ({
   rightLink: {
     fontSize: 16,
     color: theme.palette.common.white,
-    marginLeft: theme.spacing(3),
+    marginLeft: theme.spacing * 3,
     cursor: "pointer",
   },
   linkSecondary: {
@@ -46,15 +46,14 @@ const styles = theme => ({
   },
 });
 
-
-
 class AppAppBar extends PureComponent {
   state = { redirectTo: "" };
 
   render()  {
     const { classes } = this.props;
-    if(this.state.redirectTo)
-      return <Redirect to={this.state.redirectTo}></Redirect>
+    const { redirectTo } = this.state; 
+    if(redirectTo && window.location.pathname !== redirectTo)
+      return <Redirect to={redirectTo}></Redirect>
 
     return (
       <div className={classes.container}>
@@ -124,4 +123,10 @@ AppAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AppAppBar);
+
+const mapStateToProps = state => {
+  return {
+  }
+}
+const styled = withStyles(styles)(AppAppBar)
+export default connect(mapStateToProps)(styled);

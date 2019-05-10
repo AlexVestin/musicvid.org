@@ -46,7 +46,6 @@ const fragmentShader = [
 
 
 export default class ImageMaterial extends THREE.ShaderMaterial{
-
     constructor(item) {
         super()
         
@@ -85,6 +84,7 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
     }
 
     setBackground = (texture) => {
+        this.imgController.setFileInfo({func: "setBackground", expectedType: "texture"});
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.generateMipMaps = false;
@@ -104,7 +104,7 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
     __setUpGUI = (folder) => {
         const i = this.__item;
         i.addController(folder, this, "wireframe");
-        i.addController(folder, this, "changeImage");
+        this.imgController = i.addController(folder, this, "changeImage");
         i.addController(folder, this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
         i.addController(folder,this, "brightenToAudio");
         i.addController(folder,this, "brightenMultipler");           

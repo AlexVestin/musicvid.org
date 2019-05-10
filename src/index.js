@@ -3,7 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import App from "./App";
-
+import store from "./fredux/store";
+import { Provider } from "react-redux";
 import "simplebar"; // or "import SimpleBar from 'simplebar';" if you want to use it manually.
 import "simplebar/dist/simplebar.css";
 
@@ -36,7 +37,9 @@ const myErrorHandler = ({ componentStack, error }) => (
 );
 const main = (
     <ErrorBoundary onError={myErrorHandler}>
-        <App />
+        <Provider store={store}>
+            <App />
+        </Provider>
     </ErrorBoundary>
 );
 

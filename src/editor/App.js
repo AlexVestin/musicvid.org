@@ -7,7 +7,7 @@ import Canvas from "./components/canvas/Canvas";
 import TrackContainer from "./components/track/TrackContainer";
 import ModalContainer from "./components/modal/ModalContainer";
 import Sound from "./audio/Sound";
-import Exporter from "./export/Exporter";
+import Exporter from "./export/CopiedExporter";
 import license from "./util/License";
 import ExportScreen from "./components/Export";
 import LinearProgress from "@material-ui/core/LinearProgress";
