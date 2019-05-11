@@ -11,6 +11,9 @@ import Exporter from "./export/CopiedExporter";
 import license from "./util/License";
 import ExportScreen from "./components/Export";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { app, base } from 'backend/firebase';
+import { connect } from "react-redux";
+import WaveCanvas from "./WaveCanvas";
 
 class App extends PureComponent {
     constructor() {
@@ -19,12 +22,10 @@ class App extends PureComponent {
         this.layersFolder = this.gui.addFolder("Layers", false);
         this.audioFolder = this.gui.addFolder("Audio", false);
         this.audioFolder.add(this, "loadNewAudioFile");
-
-        this.hideStats = true;
-        this.settingsFolder = this.gui.addFolder("Settings", false);
-      
+        this.settingsFolder = this.gui.addFolder("Settings", false);      
         this.exportFolder = this.gui.addFolder("Export", false);
         this.state = {
+            shouldLoadProject: false,
             videoLoaded: false,
             audioLoaded: false,
             audioDuration: 0,
@@ -34,12 +35,10 @@ class App extends PureComponent {
             progress: 0,
             encoding: false,
             doneEncoding: false,
-            file: null,
-            fileName: ""
         };
        
         this.firstLoad = true;
-        this.fastLoad = true;
+        this.fastLoad = false;
         this.timeOffset = 0;
         this.lastTime = 0;
         this.lastAudioData = {frequencyData: [], timeData: []};
@@ -48,15 +47,37 @@ class App extends PureComponent {
 
         this.canvasRef = React.createRef();
         this.modalRef = React.createRef();
-        this.audioWaveCanvas = React.createRef();
+        this.audioWaveCanvasRef = React.createRef();
     }
 
     loadNewAudioFile = () => {
-        this.modalRef.current.toggleModal(1, true).then(this.onSelect);
+        return this.modalRef.current.toggleModal(1, true).then(this.onSelect);
     };
 
 
-    componentDidMount = () => {
+    async loadProject(uid){
+        return await base.collection("users").doc(app.auth().currentUser.uid).collection("projects").doc(uid).get();
+    }
+
+    initFromProjectFile(projectFile) {
+        this.resolution = {width: projectFile.width, height: projectFile.height};
+        this.canvasRef.current.setSize(this.resolution);
+        this.animationManager.init(this.resolution);
+        this.animationManager.loadProject(JSON.parse(projectFile.str));
+        this.loadNewAudioFile();
+        this.setState({shouldLoadProject: false});
+    }
+
+    async componentWillReceiveProps(props) {
+        if(!props.authFetching && this.state.shouldLoadProject) {
+            const url = new URL(window.location.href);
+            const project = url.searchParams.get("project");
+            let projectFile = await this.loadProject(project);
+            this.initFromProjectFile(projectFile.data());
+        }
+    }
+
+    componentDidMount = async () => {
         if (!this.fastLoad) {
             window.onbeforeunload = function(event) {
                 // do stuff here
@@ -66,79 +87,31 @@ class App extends PureComponent {
             };
         }
 
-        document.body.addEventListener("keyup", e => {
-            if(!this.state.encoding) {
-                if (e.keyCode === 32) {
-                    this.play();
-                }
-                if (e.keyCode === 90 && e.ctrlKey) {
-                    this.gui.undo();
-                }
-            }
-          
-        });
-
         this.gui.modalRef = this.modalRef.current;
         this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
 
         const url = new URL(window.location.href);
         const template = url.searchParams.get("template") || "EmptyTemplate";
-        
+        const project = url.searchParams.get("project");
+        let projectFile;
+       
+                
         import("./animation/templates/" + template + ".js")
-            .then(AnimationManager => {
+            .then(async AnimationManager  =>  {
                 this.animationManager = new AnimationManager.default(this.gui);
                 this.update();
                 this.setState({ videoLoaded: true });
-            })
-            .then(() => {
-                if (this.fastLoad) {
-                    this.resolution = { width: 1280, height: 720 };
-                    this.canvasRef.current.setSize(this.resolution);
-                    this.animationManager.init(this.resolution);
-                    
-                    const rep = this.loadNewAudio(
-                        "https://s3.eu-west-3.amazonaws.com/fysiklabb/3buyfour.wav"
-                    );
-                    rep.then(this.audioReady);
-                } else {
+
+                if(project && !this.props.authFetching) {
+                    projectFile = await this.loadProject(project);
+                    this.initFromProjectFile(projectFile.data());
+                }else if(project && this.props.authFetching) {
+                    this.setState({shouldLoadProject: true});
+                }else {
                     this.modalRef.current.toggleModal(0).then(this.onSelect);
                 }
-            });
-
-        this.settingsFolder
-        .add(this, "hideStats")
-        .onChange(() => {
-            this.canvasRef.current.hideStats(this.hideStats) 
-        });
+            })
     };
-
-    generateAudioWave = (audioData) => {
-        const canvas =this.audioWaveCanvas.current; 
-        const ctx = canvas.getContext("2d");
-        const nrPointsToDraw = canvas.clientWidth;
-        const stepSize = Math.floor(audioData.length / nrPointsToDraw);
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-        ctx.strokeStyle ="#000";
-        ctx.beginPath();
-        const midPoint = canvas.height / 2;
-        ctx.moveTo(0, midPoint);
-        for(var i = 0; i < audioData.length; i+= stepSize) {
-            const x = Math.floor(i / stepSize);
-            let sum = 0;
-
-            const ij = 8;
-            for(var j = i; j < i + stepSize; j+=ij) { 
-                sum += Math.abs(audioData[j]);
-            }
-            const y = 1 + Math.floor((ij * sum / stepSize) * canvas.height);
-            ctx.moveTo(x, midPoint-y);
-            ctx.lineTo(x, midPoint+y);
-            ctx.moveTo(x+1, midPoint);
-        }
-
-        ctx.stroke();
-    }
 
     toggleMuted = () => {
         this.audio.toggleMuted();
@@ -155,7 +128,7 @@ class App extends PureComponent {
             this.modalRef.current.toggleModal(10)
         }
 
-        this.generateAudioWave(this.audio.combinedAudioData);
+        this.audioWaveCanvasRef.current.generateAudioWave(this.audio.combinedAudioData);
 
         this.animationManager.setAudio(this.audio);
         this.setState({ audioDuration: duration, audioLoaded: true });
@@ -243,8 +216,7 @@ class App extends PureComponent {
             this.exporter = null;
             this.update();
             this.audio.exportFrameIdx = 0;
-            
-            
+
             this.canvasRef.current.setSize(this.resolution);
             this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
             this.animationManager.refresh( this.gui.canvasMountRef)
@@ -413,7 +385,8 @@ class App extends PureComponent {
                                 canvas={this.audioWaveCanvas}
                                 toggleMuted={this.toggleMuted}
                             >
-                                <canvas ref={this.audioWaveCanvas} className={classes.audioWaveCanvas}></canvas>
+                            <WaveCanvas ref={this.audioWaveCanvasRef} classes={classes}></WaveCanvas>
+                                
                             </TrackContainer>
                         </div>
                     </React.Fragment>
@@ -423,4 +396,11 @@ class App extends PureComponent {
     }
 }
 
-export default withHeader(App);
+const mapStateToProps = state => {
+    return {
+        authFetching:  state.auth.fetching
+    }
+}
+
+
+export default connect(mapStateToProps)( withHeader(App));

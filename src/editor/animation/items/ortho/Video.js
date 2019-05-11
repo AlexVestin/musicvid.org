@@ -21,14 +21,6 @@ export default class Plane extends BaseItem {
         const folder = gui.addFolder(name);
         folder.add(this, "addVideo");
     }
-
-    addVideo = () => {
-        
-        const tex = new THREE.VideoTexture();
-    }
-
-
-    update = (time, audioData) => {
-        
-    };
+    addVideo = () => {}
+    update = (time, audioData) => {};
 }

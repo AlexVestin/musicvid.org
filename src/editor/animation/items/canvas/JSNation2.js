@@ -1,5 +1,5 @@
 
-import { smooth, toWebAudioForm, getByteSpectrum, interpolateArray, transformToVisualBins } from 'editor/audio/analyse_functions'
+import { smooth, toWebAudioForm, getByteSpectrum } from 'editor/audio/analyse_functions'
 import { loadImage } from 'editor/util/ImageLoader'
 import Emblem from "./Emblem";
 import BaseItem from '../BaseItem'
@@ -11,7 +11,7 @@ import BaseItem from '../BaseItem'
  *  @license GPL-3.0
  */
 
-export default class JSNationSpectrum2 extends BaseItem {
+export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {
         super(info);
 
@@ -46,10 +46,7 @@ export default class JSNationSpectrum2 extends BaseItem {
 
         this.drawType = "fill";
         this.lineWidth = 2.0;
-        this.shouldInterPolate = true;
-        this.interpolationAmplitude = 4.5;
-        this.targetScale = 2.5;
-        
+
         this.startBin = 8;
         this.keepBins = 40;
         this.prevArr = [];
@@ -57,7 +54,6 @@ export default class JSNationSpectrum2 extends BaseItem {
         this.invertSpectrum = false;
         this.spectrumRotation = 0;
         this.scale = 1;
-        this.targetWidth = 64;
         //SHAKE 
         this.emblemExponential = 0.8;
         this.sumShakeX = 0;
@@ -114,6 +110,7 @@ export default class JSNationSpectrum2 extends BaseItem {
 
     }
 
+
     shake = (multiplier) => {
         let step = this.maxShakeIntensity * multiplier;
         this.waveFrameX += step * this.waveSpeedX;
@@ -127,11 +124,13 @@ export default class JSNationSpectrum2 extends BaseItem {
         this.waveFrameY += step * this.waveSpeedY;
         if (Math.abs(this.waveFrameY) > this.wave_DURATION) {
             this.waveFrameY = 0;
+    
             this.waveAmplitudeY = this.random(this.minShakeScalar, this.maxShakeScalar) * this.direction(this.sumShakeY);;
             this.waveSpeedY = this.random(this.minShakeScalar, this.maxShakeScalar) * this.direction(this.sumShakeY);
             this.trigY = Math.round(Math.random());
         }
     
+        
         let trigFuncX = this.trigX === 0 ? Math.cos : Math.sin;
         let trigFuncY = this.trigY === 0 ? Math.cos : Math.sin;
     
@@ -167,15 +166,7 @@ export default class JSNationSpectrum2 extends BaseItem {
         this.addController(spFolder, this, "drawType", {values: ["fill", "stroke"]});
         this.addController(spFolder, this, "lineWidth", {min: 0, max: 30, step: 1});
         this.addController(spFolder, this, "startBin", {min: 0, max: 100, step: 1});
-        this.addController(spFolder, this, "keepBins", {min: 1, max: 800, step: 1});
-        this.addController(spFolder, this, "shouldInterPolate");
-        this.addController(spFolder, this, "targetScale", {min: 0.01, max: 3.0});
-
-
-        this.addController(spFolder, this, "targetWidth", {min: 15, max: 300, step: 1});
-        this.addController(spFolder, this, "interpolationAmplitude", {min: 0.0001, max: 0.1, step: 0.0001});
-
-
+        this.addController(spFolder, this, "startBin", {min: 1, max: 300, step: 1});
         this.addController(spFolder, this, "smoothingPasses", {values:  [1,2,3,4,5,6,7,8,9]});
         this.addController(spFolder, this, "smoothingPoints", {values:  [1,2,3,4,5,6,7,8,9]});
         this.addController(spFolder, this, "spectrumHeightScalar", {min: 0, max: 1.0});
@@ -206,7 +197,6 @@ export default class JSNationSpectrum2 extends BaseItem {
         this.previousPoints = [];
         const invert = this.invertSpectrum ? -1 : 1; 
         for(var i = 0; i < 8; i++) {
-            const exponent = this["color" + String(i) + "Exponent"];
             const points = [];
             
             for(var j = 0; j < 60; j ++) {
@@ -255,32 +245,11 @@ export default class JSNationSpectrum2 extends BaseItem {
             if (this.spectrumCache.length >= this.maxBufferSize) {
                 this.spectrumCache.shift();
             }
-
-            const obj = {
-                spectrumSize: this.targetWidth, 
-                spectrumScale: this.targetScale, 
-                spectrumStart: this.startBin, 
-                spectrumEnd: this.startBin + this.keepBins,
-                mult: 3
-            }
-
-            let subSpectrum;
-            if(!this.shouldInterPolate) {
-                subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
-            }else {
-                subSpectrum = transformToVisualBins(audioData.frequencyData, obj); 
-            }            
-
+            const subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
             const dbfs = toWebAudioForm(subSpectrum, this.prevArr, this.smoothingTimeConstant, audioData.frequencyData.length);
-            //const subAvg = this.shouldInterPolate ? interpolateArray(dbfs, this.targetWidth, this.interpolationAmplitude) : dbfs;
-            
-            
     
-            
-            console.log(obj)
-            
             this.prevArr = dbfs;
-            const byteSpectrumArray = getByteSpectrum(this.prevArr, -40, -30);
+            const byteSpectrumArray = getByteSpectrum(dbfs, -40, -30);
             const spectrum  = smooth(byteSpectrumArray, this);
             const mult = Math.pow(this.multiplier(spectrum), this.emblemExponential) * this.emblemExaggeration;
     

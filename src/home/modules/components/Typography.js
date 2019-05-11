@@ -34,7 +34,7 @@ const styles = theme => ({
     background: 'currentColor',
   },
 });
-
+/*
 const headlineMapping = {
   h1: 'h1',
   h2: 'h1',
@@ -45,11 +45,12 @@ const headlineMapping = {
   subtitle1: 'h3',
 };
 
+headlineMapping={headlineMapping}*/
 function Typography(props) {
   const { children, classes, marked, variant, ...other } = props;
 
   return (
-    <MuiTypography headlineMapping={headlineMapping} variant={variant} {...other}>
+    <MuiTypography  variant={variant} {...other}>
       {children}
       {marked ? (
         <span className={classes[`marked${capitalize(variant) + capitalize(marked)}`]} />

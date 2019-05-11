@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
   const top = 50 ;
   const left = 50 ;
@@ -37,8 +33,6 @@ class VideoModal extends React.Component {
   render() {
     const { classes, open, item } = this.props;
     const src = open ? item.src : "";
-
-    console.log('https://www.youtube.com/embed/' + src)
     return (
         <Modal
           open={this.props.open}

@@ -196,7 +196,6 @@ export default class JSNationSpectrum extends BaseItem {
         this.previousPoints = [];
         const invert = this.invertSpectrum ? -1 : 1; 
         for(var i = 0; i < 8; i++) {
-            const exponent = this["color" + String(i) + "Exponent"];
             const points = [];
             
             for(var j = 0; j < 60; j ++) {

@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react'
-
 import classes from './ControllerContainer.module.scss'
 import SimpleBar from 'simplebar-react';
 import Automations from './Automations';
@@ -27,7 +26,7 @@ export default class ControllerContainer extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {index: 0};
+        this.state = {index: 1};
     }
 
     componentDidMount() {

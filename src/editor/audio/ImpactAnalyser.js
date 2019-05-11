@@ -2,13 +2,19 @@ import {
     average
 } from "./analyse_functions";
 
-export default function ImpactAnalyser(gui, parent = null) {
+export default function ImpactAnalyser(gui, parent = null, disable = false) {
     let addAttribute = (name, value, folder, configs = {}) => {
         this[name] = value;
+
+        let c;
         if(folder && !parent) {
-            folder.add(this, name, configs.min, configs.max);
+            c = folder.add(this, name, configs.min, configs.max);
         }else {
-            parent.addController(folder, this, name, {min: configs.min, max: configs.max, path: "impact-analyser" });
+            c = parent.addController(folder, this, name, {min: configs.min, max: configs.max, path: "impact-analyser" });
+        }
+
+        if(disable) {
+            c.disableAutomations();
         }
     };
     // ----

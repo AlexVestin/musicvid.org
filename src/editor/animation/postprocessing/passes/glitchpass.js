@@ -84,7 +84,7 @@ export default class GlitchPass extends Pass {
             this.uniforms["distortion_y"].value = THREE.Math.randFloat(0, 1);
             this.uniforms["seed_x"].value = THREE.Math.randFloat(-0.3, 0.3);
             this.uniforms["seed_y"].value = THREE.Math.randFloat(-0.3, 0.3);
-        } else if (this.goWild == false) {
+        } else if (this.goWild === false) {
             this.uniforms["byp"].value = 1;
         }
 

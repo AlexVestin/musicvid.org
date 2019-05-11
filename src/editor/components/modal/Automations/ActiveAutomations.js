@@ -36,7 +36,7 @@ const styles = theme => ({
 });
 
 function CustomizedTable(props) {
-    const { classes, item, automations } = props;
+    const { classes, automations } = props;
 
     return (
         <Paper className={classes.root}>

@@ -13,8 +13,7 @@ function Index() {
   return (
     <React.Fragment>
       <AppAppBar />
-      <ProductHero />
-      
+      <ProductHero />      
       <ProductCategories />
       <ProductHowItWorks />
       <ProductCTA />

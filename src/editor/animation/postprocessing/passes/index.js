@@ -1,16 +1,17 @@
 import BloomPass from './bloompass'
-import SepiaShader from '../shaders/sepiashader'
-import ShaderPass from './shaderpass';
-import ColorShader from '../shaders/colorshader'
-import ColorPass from './colorpass'
 import CopyShader from '../shaders/copyshader'
-import SSAAPass from './ssaapass'
 import GlitchPass from './glitchpass'
-import HalftonePass from './halftonepass';
-import PixelPass from './pixelpass'
 import FilmPass from './FilmPass'
 
-
+/*
+import SSAAPass from './ssaapass'
+import PixelPass from './pixelpass'
+import HalftonePass from './halftonepass';
+import ColorPass from './colorpass'
+import ColorShader from '../shaders/colorshader'
+import ShaderPass from './shaderpass';
+import SepiaShader from '../shaders/sepiashader'
+*/
 
 
 const passes = {
@@ -20,7 +21,6 @@ const passes = {
 };
 
 export function loadPassFromText(text) {
-    console.log(text);
     if(text === "effect") {
         alert("Text should not be effect")
         return;

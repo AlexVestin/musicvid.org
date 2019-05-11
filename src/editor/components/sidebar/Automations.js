@@ -38,11 +38,8 @@ export default class Automations extends PureComponent {
 
     onRemove = (automation) => {
         const rootGui = this.props.gui.getRoot();
-
-        console.log(rootGui.__automations);
         delete rootGui.__automations[automation.__id];
         rootGui.__automationLinks = rootGui.__automationLinks.filter(link => link.automation !== automation);
-        console.log(rootGui.__automations);
         this.setState({index: 0})
     }
 
@@ -94,7 +91,6 @@ export default class Automations extends PureComponent {
                             gui={rootGui}
                             onRemove={this.onRemove}
                         >
-                            hello
                         </ItemContainer>
                         <Button style={{color:"#efefef"}} onClick={() => this.setState({index: 0})}>Back</Button>
                         </div>

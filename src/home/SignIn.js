@@ -18,7 +18,7 @@ import { app, facebookProvider, googleProvider } from "backend/firebase";
 import Snackbar from './Snackbar';
 import Button from "@material-ui/core/Button";
 import { setIsAuthenticated } from 'fredux/actions/auth'
-import Redirect from "react-router/Redirect";
+import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 
 const bootstrapButtonStyle = {
@@ -184,9 +184,11 @@ class SignIn extends React.Component {
                         <Typography variant="body2" align="center">
                             {"Not a member yet? "}
                             <Link
-                                href="/premium-themes/onepirate/sign-up"
+                                onClick={() => this.setState({redirectTo: "/sign-up"})}
+                                style={{cursor: "pointer"}}
                                 align="center"
                                 underline="always"
+                                
                             >
                                 Sign Up here
                             </Link>
@@ -311,9 +313,9 @@ const mapStateToProps = state => {
     }
 }
 
-
-export default compose(
+const Mat = compose(
     withRoot,
     withStyles(styles),
-    connect(mapStateToProps)
 )(SignIn);
+
+export default connect(mapStateToProps)(Mat);

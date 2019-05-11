@@ -6,9 +6,7 @@ import LayoutBody from "./modules/components/LayoutBody";
 import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
 import Button from "./modules/components/Button";
-import Redirect from "react-router-dom/Redirect";
-
-
+import { Redirect } from 'react-router-dom'
 
 class Profile extends React.PureComponent {
     state = {redirectTo: ""};

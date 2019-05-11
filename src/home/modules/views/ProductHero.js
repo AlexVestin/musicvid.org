@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Button from "../components/Button";
 import Typography from "../components/Typography";
 import ProductHeroLayout from "./ProductHeroLayout";
-import Redirect from "react-router-dom/Redirect";
+import { Redirect } from 'react-router-dom'
 
 const backgroundImage = "./img/Background.png";
 

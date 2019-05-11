@@ -2,8 +2,8 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import Link from "@material-ui/core/Link";
 import { withStyles } from "@material-ui/core/styles";
-import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import { Redirect } from 'react-router-dom'
 
 import AppBar from "../components/AppBar";
 import classNames from "classnames";

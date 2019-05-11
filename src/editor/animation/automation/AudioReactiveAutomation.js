@@ -7,8 +7,17 @@ export default class AudioReactiveAutomation extends Automation {
         super(gui);
         this.type = "audio";
         this.name = "Audio Reactive Thing";
-        this.folder = gui.addFolder("my folder");  
-        this.impactAnalyser = new ImpactAnalyser(this.folder);
+        this.folder = gui.addFolder("my folder", false); 
+        this.folder.open(); 
+        this.impactAnalyser = new ImpactAnalyser(this.folder, this, true);
+    }
+
+    __serialize = () => {
+        const obj = this.__serializeControllers();
+        obj.type = this.type;
+        obj.name = this.name;
+        obj.__id = this.__id;
+        return obj;
     }
 
     update = (time, audioData) => {

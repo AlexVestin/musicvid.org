@@ -1,4 +1,6 @@
 import SerializableObject from '../SerializableObject'
+import  { serializeObject } from '../Serialize'
+
 export default class Automation extends SerializableObject {
     constructor(rootGui) {
         super();
@@ -10,15 +12,21 @@ export default class Automation extends SerializableObject {
 
     __setUpValues = (template) => {
         Object.assign(this, template);
+        if(template.controllers) {
+            this.__setControllerValues(template.controllers);
+        }
+        
     }
 
     update() {
         alert("implement this");
     }
 
-    apply = (item, type) => {
+    __serialize = () => {
+        return serializeObject(this);
+    }   
 
-        console.log(item.preAutomationValue)
+    apply = (item, type) => {
         switch (type) {
             case "*":
                 item.object[item.property] =

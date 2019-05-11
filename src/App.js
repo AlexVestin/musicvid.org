@@ -1,21 +1,20 @@
 import React, { PureComponent } from "react";
-import AppContainer from "./editor/App";
 import Home from "./home/Home";
-import FAQ from "./home/FAQ";
-import SignUp from "./home/SignUp";
-import SignIn from "./home/SignIn";
-import Missing from "./home/Missing";
+import Downloads from "./home/Downloads";
+import Videos from "./home/Videos";
 import Projects from "./home/Projects";
 import Profile from "./home/Profile";
+import AppContainer from "./editor/App";
+import FAQ from "./home/FAQ";
+import SignIn from "./home/SignIn";
+import SignUp from "./home/SignUp";
+import Missing from "./home/Missing";
 import Forgot from "./home/ForgotPassword";
-
 import SignOutComponent from './home/SignOutComponent'
-import Downloads from "./home/Downloads";
 import { app } from "backend/firebase";
 import { setIsAuthenticated } from "./fredux/actions/auth";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import withRoot from "./home/modules/withRoot";
-import Videos from "./home/Videos";
 
 class Index extends PureComponent {
     componentDidMount() {
@@ -39,16 +38,12 @@ class Index extends PureComponent {
                     <Route path="/videos" component={Videos} />
                     <Route path="/projects" component={Projects} />
                     <Route path="/profile" component={Profile} />
-                    
-
-                    
                     <Route path="/editor" component={AppContainer} />
                     <Route path="/faq" component={FAQ} />
                     <Route path="/about" component={FAQ} />
                     <Route path="/sign-in" component={SignIn} />
                     <Route path="/sign-up" component={SignUp} />
                     <Route path="/forgot-password" component={Forgot} />
-                    
                     <Route path="/sign-out" component={SignOutComponent} />
                     <Route component={Missing} />
                 </Switch>

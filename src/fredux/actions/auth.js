@@ -9,6 +9,15 @@ export function setIsAuthenticated(item){
     );  
 }
 
+export function setUserInformation(item){
+    store.dispatch({
+        type: "SET_USER_INFORMATION",
+        payload: item
+        } 
+    );  
+}
+
+
 
 export function setIsFetching(item){
     store.dispatch({

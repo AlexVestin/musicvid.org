@@ -9,12 +9,10 @@ export default class MeshItem extends BaseItem {
 
     constructor(info) {
         super(info);
-
         this.type = info.type;
         this.mesh = new THREE.Mesh();
         info.scene.add(this.mesh);
         this.materialFolders = [];
-
     }
 
     updateGeometry = (configs) => {
@@ -39,7 +37,6 @@ export default class MeshItem extends BaseItem {
         
         this.mesh.geometry = this.geometry;
 
-        console.log(this._geoFol);
         if(this.type === "ortho") { 
             addOrthoMeshControls(this, this.mesh, this._geoFol);
         } else {

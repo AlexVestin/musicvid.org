@@ -8,6 +8,7 @@ export default class SerializableObject {
     }
     __setControllerValues = (values) => {
         const objectsToLoad = [];
+
         Object.keys(values).forEach(key => {
             const obj = values[key];
             const controller = this.__controllers[key];
@@ -19,20 +20,24 @@ export default class SerializableObject {
             }
         });
     }
-    
-    serialize = () => {
+
+    __serializeControllers = () => {
         const obj = {controllers: {}};
         Object.keys(this.__controllers).forEach(key => {
             const c = this.__controllers[key]
-
             if(c.object[c.property] !== Object(c.object[c.property])) {
                 obj.controllers[key] = {value: c.object[c.property], needLoad: false } 
             }else if(c.__fileInfo){
                 obj.controllers[key] = {value: c.__name, needLoad: true, fileInfo: c.__fileInfo }; 
             }else {
-                console.log(c.__name);
+                //console.log(c.__name);
             }
         });
+        return obj;
+    }
+    
+    serialize = () => {
+        const obj = this.__serializeControllers();
         obj.__itemName = this.__itemName;
         obj.__automations  = this.__automations;
         obj.name = this.name;

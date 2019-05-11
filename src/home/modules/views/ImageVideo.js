@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Redirect from 'react-router-dom/Redirect'
+import { Redirect } from "react-router-dom";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Typography from "../components/Typography";
 import Fade from "@material-ui/core/Fade";
@@ -37,6 +37,7 @@ const styles = theme => ({
         fontFamily: "'Roboto', sans-serif",
         backgroundColor: "rgba(255,255,255,0.1)",
         padding: 4,
+        fontSize: 13,
         cursor: "pointer",
         pointerEvents: "auto",
         border: "none",
@@ -123,7 +124,11 @@ class Image extends PureComponent {
         this.videoRef = React.createRef();
         this.videoMountRef = React.createRef();
 
-        this.state = { mouseOver: false, redirectTo: "" };
+        this.state = {
+            mouseOver: false,
+            redirectTo: "",
+            redirectOffsite: false
+        };
     }
     componentDidMount = () => {};
 
@@ -132,25 +137,29 @@ class Image extends PureComponent {
     };
 
     pause = event => {
-        
         const e = event.toElement || event.relatedTarget;
 
-        if ( !e || ( e.id !== "website-link" && e.id !== this.props.image.title)) {
+        if (
+            !e ||
+            (e.id !== "website-link" && e.id !== this.props.image.title)
+        ) {
             this.setState({ mouseOver: false });
         } else {
-
         }
     };
     render() {
         const { image, classes } = this.props;
-        const { mouseOver, redirectTo } = this.state;
+        const { mouseOver, redirectTo, redirectOffsite } = this.state;
 
-        if(redirectTo)
-            return <Redirect to={redirectTo}></Redirect>
+        if (redirectTo && !redirectOffsite) return <Redirect to={redirectTo} />;
 
         return (
             <ButtonBase
-                onClick={() => this.setState({redirectTo: "editor?template=" + image.templateName})}
+                onClick={() =>
+                    this.setState({
+                        redirectTo: "editor?template=" + image.templateName
+                    })
+                }
                 className={classes.imageWrapper}
                 style={{
                     width: image.width,
@@ -168,17 +177,17 @@ class Image extends PureComponent {
                     ref={this.videoMountRef}
                 >
                     <Fade in={mouseOver} timeout={1000}>
-                    <div>
-                        {mouseOver && 
-                            <video
-                                loop
-                                autoPlay
-                                className={classes.vidSrc}
-                                poster={image.url}
-                                src={image.src}
-                                style={{ display: mouseOver ? "" : "none" }}
-                            />
-                            }
+                        <div>
+                            {mouseOver && (
+                                <video
+                                    loop
+                                    autoPlay
+                                    className={classes.vidSrc}
+                                    poster={image.url}
+                                    src={image.src}
+                                    style={{ display: mouseOver ? "" : "none" }}
+                                />
+                            )}
                         </div>
                     </Fade>
                     <Fade in={!mouseOver} timeout={600}>
@@ -215,8 +224,9 @@ class Image extends PureComponent {
                             {image.attrib}
                         </Typography>
                         <Typography component="h6" variant="h6" color="inherit">
-                            <button
+                            <span
                                 onClick={e => {
+                                    this.setState({ redirectOffsite: true });
                                     window.location = image.attribUrl;
                                     e.preventDefault();
                                 }}
@@ -224,7 +234,7 @@ class Image extends PureComponent {
                                 id="website-link"
                             >
                                 Website
-                            </button>
+                            </span>
                             <div style={{ fontSize: 12, marginTop: 4 }}>
                                 {image.license}
                             </div>

@@ -5,14 +5,12 @@ import OrthographicScene from "./scenes/OrthographicScene";
 import PerspectiveScene from "./scenes/PerspectiveScene";
 import PostProcessing from "./postprocessing/postprocessing";
 import * as FileSaver from "file-saver";
-import serialize, { serializeObject } from './Serialize'
-
-
-
+import serialize from './Serialize'
+import { base, app } from 'backend/firebase'
 import PointAutomation from './automation/PointAutomation'
 import InputAutomation from './automation/InputAutomation'
 import ImpactAutomation from './automation/AudioReactiveAutomation'
-
+import uuid from 'uuid/v4'
 
 export default class WebGLManager {
     constructor(gui) {
@@ -28,6 +26,9 @@ export default class WebGLManager {
         this.clearColor = "#000000";
         this.clearAlpha = 1.0;
         this.postprocessingEnabled = false;
+        this.__id = uuid();
+        this.__projectName  = "ProjectName";
+        this.__lastEdited = new Date().toString();
 
         document.body.addEventListener("keyup", e => {
             if (e.keyCode === 70) {
@@ -66,43 +67,42 @@ export default class WebGLManager {
         this.gui.getRoot().__automations[auto.__id] = auto;
     }
 
-    loadProject = (file) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const json = JSON.parse(e.target.result);
-            while(this.scenes.length > 0) {
-                this.scenes[0].removeMe();
-            }
-
-            Object.assign(this, json.settings);
-            this.setFFTSize(this.fftSize);
-
-            json.automations.forEach(auto => {
-                this.addAutomation(auto);
-            })
-
-            json.scenes.forEach(scene => {                
-                if(scene.__settings.isScene) {
-                    const s = this.addSceneFromText(scene.__settings.TYPE);
-                    s.undoCameraMovement(scene.camera);
-                    s.controls.enabled = scene.controlsEnabled; 
-                    s.addItems(scene.items);
-                    s.updateSettings();
-                    Object.assign(s.pass, scene.__passSettings);
-                }else {
-                    const e = this.postProcessing.addEffectPass(scene.__settings.TYPE);
-                    e.__setControllerValues(scene.controllers);
-                }
-            })
+    loadProject = (json) => {
+        while(this.scenes.length > 0) {
+            this.scenes[0].removeMe();
         }
-        reader.readAsText(file);
 
+        Object.assign(this, json.settings);
+        this.settingsFolder.updateDisplay();
+        json.automations.forEach(auto => {
+            this.addAutomation(auto);
+        })
+
+        json.scenes.forEach(scene => {                
+            if(scene.__settings.isScene) {
+                const s = this.addSceneFromText(scene.__settings.TYPE);
+                s.undoCameraMovement(scene.camera);
+                s.controls.enabled = scene.controlsEnabled; 
+                s.addItems(scene.items);
+                s.updateSettings();
+                Object.assign(s.pass, scene.__passSettings);
+            }else {
+                const e = this.postProcessing.addEffectPass(scene.__settings.TYPE);
+                e.__setControllerValues(scene.controllers);
+            }
+        })
     }
 
     loadProjectFromFile = () => {
         this.gui.getRoot().modalRef.toggleModal(16).then(file => {
-            if(file)
-                this.loadProject(file);
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const json = JSON.parse(e.target.result);
+                    this.loadProject(json);    
+                }
+                reader.readAsText(file);
+            }
         })
     }
 
@@ -113,13 +113,9 @@ export default class WebGLManager {
             settings: {}
         };
         projFile.settings = serialize(this);
-
-        const automations = Object.keys(rootGui.__automations).map(key => rootGui.__automations[key]);
-        console.log(automations);
-        projFile.automations = serializeObject(automations);
+        projFile.automations = Object.keys(rootGui.__automations).map(key => rootGui.__automations[key].__serialize());
         
         this.scenes.forEach( (scene, i) => {
-
             if(scene.isScene) {
                 let sceneConfig = {
                     __settings: serialize(scene),
@@ -143,6 +139,15 @@ export default class WebGLManager {
 
         const blob = new Blob([JSON.stringify(projFile)], { type: 'application/json' });
         FileSaver.saveAs(blob,"project.json");
+        const ref = base.collection("users").doc(app.auth().currentUser.uid).collection("projects").doc(this.__id);
+        ref.set({
+            str: JSON.stringify(projFile), 
+            lastEdited: new Date().toString(),
+            name: this.__projectName,
+            width: this.width,
+            height: this.height,
+            id: this.__id
+        });
 
         console.log(projFile);
     }
@@ -162,7 +167,7 @@ export default class WebGLManager {
         try {
             scene.folder.parent.removeFolder(scene.folder);
         }catch(err) {
-            alert("?");
+            alert("folder not removed correctly");
         }
         
         const index = this.scenes.findIndex(e => e === scene);
@@ -223,7 +228,6 @@ export default class WebGLManager {
 
     addSceneFromText = sceneName => {
         let scene;
-        console.log(sceneName)
         if (sceneName === "canvas") {
             scene = new CanvasScene(
                 this.layersFolder,
@@ -381,27 +385,31 @@ export default class WebGLManager {
         
         const frequencies = [1,5,30,60];
         if (setUpFolders) {
-            this.gui.__folders["Settings"]
-                .addColor(this, "clearColor")
+            this.settingsFolder = this.gui.__folders["Settings"];
+            this.settingsFolder
+                .add(this.gui, "__automationConfigUpdateFrequency", frequencies)
+                .name("configUpdateFrequency");
+            const rs = this.settingsFolder.addFolder("Render settings");
+            
+            rs.addColor(this, "clearColor")
                 .onChange(this.setClear);
-            this.gui.__folders["Settings"]
-                .add(this, "clearAlpha", 0, 1, 0.001)
+            
+            rs.add(this, "clearAlpha", 0, 1, 0.001)
                 .onChange(this.setClear)
                 .disableAutomations();
-            this.gui.__folders["Settings"]
-                .add(this, "drawAttribution")
+            rs.add(this, "drawAttribution")
                 .onChange(this.updateAttribution);
             this.gui.__folders["Layers"].add(this, "postprocessingEnabled");
 
-            this.gui.__folders["Settings"].add(this, "enableAllControls");
-            this.gui.__folders["Settings"].add(this, "disableAllControls");
-            this.gui.__folders["Settings"].add(this, "resetAllCameras");
-            this.gui.__folders["Settings"].add(this, "manageAutomations");
-            this.gui.__folders["Settings"]
-                .add(this.gui, "__automationConfigUpdateFrequency", frequencies)
-                .name("configUpdateFrequency");
-            this.gui.__folders["Settings"].add(this, "loadProjectFromFile");
-            this.gui.__folders["Settings"].add(this, "saveProjectToFile");
+            const cs = this.settingsFolder.addFolder("Camera and control settings");
+            cs.add(this, "enableAllControls");
+            cs.add(this, "disableAllControls");
+            cs.add(this, "resetAllCameras");
+            cs.add(this, "manageAutomations");
+            const ps = this.settingsFolder.addFolder("Project settings");
+            ps.add(this, "__projectName").name("Project name");
+            ps.add(this, "loadProjectFromFile");
+            ps.add(this, "saveProjectToFile");
         }
     };
 

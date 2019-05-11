@@ -19,6 +19,7 @@ import { app, facebookProvider, googleProvider } from "backend/firebase";
 import Snackbar from "./Snackbar";
 import { connect } from "react-redux";
 import { setIsAuthenticated } from "fredux/actions/auth";
+import { Redirect } from 'react-router-dom'
 
 const bootstrapButtonStyle = {
     marginLeft: 15,
@@ -68,21 +69,21 @@ class SignUp extends React.Component {
         return errors;
     };
 
-    successRedirect = () => {
+    successRedirect = (res) => {
         setIsAuthenticated(true);
         this.setState({ redirectTo: "/" });
     };
 
     authWithGoogle = () => {
-        app.auth()
-            .signInWithPopup(googleProvider)
-            .then((result, error) => {
-                if (error) {
-                    this.setState({ error: "Unable to sign in with Google." });
-                } else {
-                    this.successRedirect();
-                }
-            });
+      app.auth()
+          .signInWithPopup(googleProvider)
+          .then((result, error) => {
+              if (error) {
+                  this.setState({ error: "Unable to sign in with Google." });
+              } else {
+                  this.successRedirect(result);
+              }
+          });
     };
 
     authWithFacebook = () => {
@@ -94,7 +95,7 @@ class SignUp extends React.Component {
                         error: "Unable to sign in with Facebook."
                     });
                 } else {
-                    this.successRedirect();
+                    this.successRedirect(result);
                 }
             });
     };
@@ -122,7 +123,7 @@ class SignUp extends React.Component {
                             "Email/password doesn't match, or the user doesn't exist"
                     });
                 } else {
-                    this.successRedirect();
+                    this.successRedirect(result);
                 }
             })
             .catch(error => {
@@ -146,6 +147,9 @@ class SignUp extends React.Component {
         const { classes } = this.props;
         const { sent, errorMessage, errorSnackBarOpen } = this.state;
 
+        if(this.state.redirectTo || this.props.isAuthenticated)
+          return <Redirect to={this.state.redirectTo || "/"}></Redirect>
+
         return (
             <React.Fragment>
                 <Snackbar
@@ -165,7 +169,8 @@ class SignUp extends React.Component {
                             Sign Up
                         </Typography>
                         <Typography variant="body2" align="center">
-                            <Link href="/sign-in" underline="always">
+                            <Link onClick={() => this.setState({redirectTo: "/sign-in"})}
+                                style={{cursor: "pointer"}} underline="always">
                                 Already have an account?
                             </Link>
                         </Typography>
@@ -281,9 +286,9 @@ const mapStateToProps = state => {
         isAuthenticated: state.auth.isAuthenticated
     };
 };
-
-export default compose(
-    withRoot,
-    withStyles(styles),
-    connect(mapStateToProps)
+const Mat = compose(
+  withRoot,
+  withStyles(styles),
 )(SignUp);
+
+export default connect(mapStateToProps)(Mat);
