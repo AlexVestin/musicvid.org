@@ -78,11 +78,13 @@ export default class WebGLManager {
             this.addAutomation(auto);
         })
 
-        json.scenes.forEach(scene => {                
+        json.scenes.forEach(scene => {     
+            console.log(scene);           
             if(scene.__settings.isScene) {
                 const s = this.addSceneFromText(scene.__settings.TYPE);
                 s.undoCameraMovement(scene.camera);
                 s.controls.enabled = scene.controlsEnabled; 
+                s.__automations = scene.__automations;
                 s.addItems(scene.items);
                 s.updateSettings();
                 Object.assign(s.pass, scene.__passSettings);
@@ -120,6 +122,7 @@ export default class WebGLManager {
                 let sceneConfig = {
                     __settings: serialize(scene),
                     __passSettings: serialize(scene.pass),
+                    __automations: scene.__automations,
                     items: []
                 }
                 

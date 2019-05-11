@@ -28,9 +28,8 @@ export default class ConfigureAutomations extends PureComponent {
     }   
 
     remove = (automation) => {
-        const {item, gui} = this.props;
-        const auto =  gui.__automations.find(e => e.__id === automation.id);
-        auto.__items = auto.__items.filter(e => e.item !== item);
+        const { item } = this.props;
+        item.__parentObject.__automations = item.__parentObject.__automations.filter(link => link.automationID !== automation.id);
         this.update();
     }
 

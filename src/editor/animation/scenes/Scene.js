@@ -1,9 +1,11 @@
 
 import getItemClassFromText from '../items'
 import OrbitControls from '../controls/OrbitControls';
+import SerializableObject from '../SerializableObject';
 
-export default class Scene {
+export default class Scene extends SerializableObject {
     constructor(gui, resolution, remove, moveScene) {
+        super();
         this.__moveScene = moveScene;
         this.remove = remove;   
         this.resolution = resolution;  
@@ -13,10 +15,10 @@ export default class Scene {
         if(gui) {
             this.modalRef = gui.modalRef;
             this.gui = gui;
+            this.__gui = gui;
             this.setUpGui();
         }
     }
-
 
     addItems = (items) => {
         items.forEach(item => {
@@ -24,7 +26,9 @@ export default class Scene {
             i.__setControllerValues(item.controllers);
             i.__automations = item.__automations;
             i.setFolderName(i.name);
-        })
+        });
+
+         
     }
 
     updateCamera = () => {
@@ -77,14 +81,16 @@ export default class Scene {
         this.controls.handleMouseUp = this.handleMouseUp;
         this.lastCameraArray = this.camera.matrix.toArray();
 
-        this.cameraXController = this.cameraFolder.add(this.camera.position, "x", -10, 10, 0.001).name("positionX").onChange(this.updateCameraMatrix);
-        this.cameraYController = this.cameraFolder.add(this.camera.position, "y", -10, 10, 0.001).name("positionY").onChange(this.updateCameraMatrix);
-        this.cameraZController = this.cameraFolder.add(this.camera.position, "z", -10, 10, 0.001).name("positionZ").onChange(this.updateCameraMatrix);
+        const camOpts = { min: -10, max: 10, step: 0.0001, path: "camera-position"};
+        this.cameraXController = this.addController(this.cameraFolder, this.camera.position, "x", camOpts).name("positionX").onChange(this.updateCameraMatrix);
+        this.cameraYController = this.addController(this.cameraFolder, this.camera.position, "y", camOpts).name("positionY").onChange(this.updateCameraMatrix);
+        this.cameraZController = this.addController(this.cameraFolder, this.camera.position, "z", camOpts).name("positionZ").onChange(this.updateCameraMatrix);
 
-        this.cameraFolder.add(this.camera.rotation, "x", -Math.PI, Math.PI, 0.0001).name("rotationX").onChange(this.updateCameraMatrix);
-        this.cameraFolder.add(this.camera.rotation, "y", -Math.PI, Math.PI, 0.0001).name("rotationY").onChange(this.updateCameraMatrix);
-        this.cameraFolder.add(this.camera.rotation, "z", -Math.PI, Math.PI, 0.0001).name("rotationZ").onChange(this.updateCameraMatrix);
-        this.cameraFolder.add(this.camera, "zoom", -10, 10, 0.001).onChange(this.updateCameraMatrix);
+        const rotOpts = { min: -Math.PI, max: Math.PI, step: 0.0001, path: "camera-rotation"};
+        this.addController(this.cameraFolder, this.camera.rotation, "x", rotOpts).name("rotationX").onChange(this.updateCameraMatrix);
+        this.addController(this.cameraFolder, this.camera.rotation, "y", rotOpts).name("rotationY").onChange(this.updateCameraMatrix);
+        this.addController(this.cameraFolder, this.camera.rotation, "z", rotOpts).name("rotationZ").onChange(this.updateCameraMatrix);
+        this.addController(this.cameraFolder, this.camera, "zoom", {min: -10,  max: 10, step: 0.001, path: "camera-zoom"}).onChange(this.updateCameraMatrix);
     }
 
     setUpPassConfigs = () => {
@@ -103,6 +109,7 @@ export default class Scene {
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
+        this.addController(this.cameraFolder, this, "resetCamera");
         this.cameraFolder.add(this, "resetCamera");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
         
@@ -203,6 +210,7 @@ export default class Scene {
     }
 
     update = (time, audioData, shouldIncrement) => {
+        this.applyAutomations();
         if(shouldIncrement) {
             this.items.forEach(item =>  {
                 item.mesh.visible = (item.__startTime <= time && item.__endTime >= time);

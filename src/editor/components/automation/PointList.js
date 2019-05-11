@@ -17,8 +17,8 @@ function FolderList(props) {
         <div className={classes.root}>
             {points.map( (point,i) => {
                 return (
-                    <div key={i}>
-                        <Point point={point}></Point>
+                    <div key={point.id}>
+                        <Point removePoint={props.removePoint} point={point}></Point>
                     </div>
                 );
             })}

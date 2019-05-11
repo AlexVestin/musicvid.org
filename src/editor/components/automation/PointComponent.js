@@ -8,6 +8,10 @@ export default class Point extends PureComponent {
         this.state = { value: props.point.value, time: props.point.time };
     }
 
+    remove = () => {
+        this.props.removePoint(this.props.point.id);
+    }
+
     changeValue = e => {
         const val = e.target.value;
         this.setState({ value: val });
@@ -24,11 +28,12 @@ export default class Point extends PureComponent {
             <div style={{height: 30, borderBottom: "1px solid gray"}}>
                 <Typography>
                     Time:{" "}
-                    <input style={{width: 80, marginRight: 10, marginLeft: 5}} value={this.state.time} onChange={this.changeTime}>
+                    <input style={{width: 50, marginRight: 10, marginLeft: 3}} value={this.state.time} onChange={this.changeTime}>
                     </input>
                     Val:{" "}
-                    <input style={{width: 80, marginRight: 5, marginLeft: 10}} value={this.state.value} onChange={this.changeValue}>
+                    <input style={{width: 50, marginRight: 5, marginLeft: 6}} value={this.state.value} onChange={this.changeValue}>
                     </input>
+                    <button onClick={this.remove}>remove</button>
                 </Typography>
             </div>
         );

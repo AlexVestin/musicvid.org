@@ -8,7 +8,7 @@ import { Typography } from "@material-ui/core";
 export default class SelectAutomation extends PureComponent {
     render() {
         const { gui, onSelect } = this.props;
-        const automations = gui.__automations;
+        const automations = Object.keys(gui.__automations).map(key => gui.__automations[key]);
         return (
             <div>
                 <DialogContentText>Select an automation :</DialogContentText>
