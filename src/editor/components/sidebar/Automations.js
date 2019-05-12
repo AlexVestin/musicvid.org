@@ -42,7 +42,6 @@ export default class Automations extends PureComponent {
     onRemove = (automation) => {
         const rootGui = this.props.gui.getRoot();
         delete rootGui.__automations[automation.__id];
-        rootGui.__automationLinks = rootGui.__automationLinks.filter(link => link.automation !== automation);
         this.setState({index: 0})
     }
 
@@ -87,7 +86,6 @@ export default class Automations extends PureComponent {
                         </React.Fragment>
                     )}
                     {index === 1 && (
-                        <div>
                         <ItemContainer
                             item={this.selectedAutomation}
                             back={() => this.setState({ index: 0 })}
@@ -95,8 +93,7 @@ export default class Automations extends PureComponent {
                             onRemove={this.onRemove}
                         >
                         </ItemContainer>
-                        <Button style={{color:"#efefef"}} onClick={() => this.setState({index: 0})}>Back</Button>
-                        </div>
+                        
                     )}
                 </div>
             </div>

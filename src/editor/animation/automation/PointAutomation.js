@@ -30,11 +30,11 @@ export default class PointAutomation extends Automation {
 
     getValue = (sortedPoints, time) => {
         if (sortedPoints.length === 0) {
-            return 0;
+            return 1.0;
         } 
 
         if (time < sortedPoints[0].time) {
-            return (time / sortedPoints[0].time) * sortedPoints[0].value;
+            return this.interpolate(time, 0, 0, sortedPoints[0].time, sortedPoints[0].value);
         } else if (time >= sortedPoints[sortedPoints.length - 1].time) {
             return sortedPoints[sortedPoints.length - 1].value;
         }

@@ -45,6 +45,13 @@ export default class JSNationSpectrum extends BaseItem {
         this.preAmplitude = 1.0;
         this.emblemExaggeration = 1.5;
 
+        
+        this.displacementThreshold = 4;
+        this.returnSpeed = 0.1;
+        this.clipOffset = 10;
+        this.shouldClipSpectrum = false;
+
+
         this.drawType = "fill";
         this.lineWidth = 2.0;
         this.alpha = 1.0;
@@ -115,7 +122,16 @@ export default class JSNationSpectrum extends BaseItem {
     shake = (multiplier) => {
         let step = this.maxShakeIntensity * multiplier;
         this.waveFrameX += step * this.waveSpeedX;
-    
+
+        if(multiplier === 0) {
+            if(Math.abs(this.sumShakeX) > this.displacementThreshold) {
+                const l = this.sumShakeX > 0 ? -1 : 1;
+                this.sumShakeX += this.returnSpeed * l;
+            }if (Math.abs(this.sumShakeY) > 0) {
+                const l = this.sumShakeY > 0 ? -1 : 1;
+                this.sumShakeY += this.returnSpeed * l;
+            }
+        } 
         if (Math.abs(this.waveFrameX) > this.wave_DURATION) {
             this.waveFrameX = 0;
             this.waveAmplitudeX = this.random(this.minShakeScalar, this.maxShakeScalar) * this.direction(this.sumShakeX);
@@ -129,7 +145,7 @@ export default class JSNationSpectrum extends BaseItem {
             this.waveSpeedY = this.random(this.minShakeScalar, this.maxShakeScalar) * this.direction(this.sumShakeY);
             this.trigY = Math.round(Math.random());
         }
-      
+        
         let trigFuncX = this.trigX === 0 ? Math.cos : Math.sin;
         let trigFuncY = this.trigY === 0 ? Math.cos : Math.sin;
     
@@ -138,6 +154,7 @@ export default class JSNationSpectrum extends BaseItem {
     
         this.sumShakeX += dx;
         this.sumShakeY += dy;
+        
     }
 
     __setUpGUI = (folder) => {
@@ -145,7 +162,7 @@ export default class JSNationSpectrum extends BaseItem {
         const emFolder = folder.addFolder("Emblem");
 
         this.addController(emFolder, this.emblem, "visible", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "alpha", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "alpha", {path: "emblem", min: 0, max: 1});
         this.addController(emFolder, this, "changeEmblemImage", {path: "emblem"});
         this.addController(emFolder, this.emblem, "shouldClipImageToCircle", {path: "emblem"});
         this.addController(emFolder, this.emblem, "emblemSizeScale", {path: "emblem", min: 0.0, max: 4.0});
@@ -157,6 +174,8 @@ export default class JSNationSpectrum extends BaseItem {
         this.addController(moveFolder, this, "emblemExponential", {min: 0.2, max: 1.6, step: 0.00001})
         this.addController(moveFolder, this, "emblemExaggeration", {min: 0.2, max: 5, step: 0.00001})
         this.addController(moveFolder, this, "minRadius", {min: 10, max: this.canvas.width / 4})
+        this.addController(moveFolder, this, "returnSpeed", {min: 0, max: 10});
+        this.addController(moveFolder, this, "displacementThreshold", {min: 0, max: 10});
         this.addController(moveFolder, this, "wave_DURATION", {min: 0, max: Math.PI * 16})
         this.addController(moveFolder, this, "movementAmount", {min: 0, max: 12})
         this.addController(moveFolder, this, "maxShakeIntensity", {min: 0, max: 30})
@@ -164,6 +183,8 @@ export default class JSNationSpectrum extends BaseItem {
 
         const spFolder = folder.addFolder("Spectrum");
         this.addController(spFolder, this, "alpha", {min: 0.0, max: 1.0});
+        this.addController(spFolder, this, "shouldClipSpectrum");
+        this.addController(spFolder, this, "clipOffset", {min: 0.0, max: 200, step: 1});
         this.addController(spFolder, this, "drawType", {values: ["fill", "stroke"]});
         this.addController(spFolder, this, "lineWidth", {min: 0, max: 30, step: 1});
         this.addController(spFolder, this, "startBin", {min: 0, max: 1000, step: 1});
@@ -197,7 +218,7 @@ export default class JSNationSpectrum extends BaseItem {
     resetPoints = () => {
         this.previousPoints = [];
         const invert = this.invertSpectrum ? -1 : 1; 
-        for(var i = 0; i < 8; i++) {
+        for(var i = 0; i < this.colors.length; i++) {
             const points = [];
             for(var j = 0; j < 60; j ++) {
                 let t = Math.PI * (j / (60 - 1)) - Math.PI / 2;
@@ -234,9 +255,25 @@ export default class JSNationSpectrum extends BaseItem {
         return points;
     }
 
+    clip = (radius) => {
+        const { canvas, ctx } = this;
+        ctx.save();
+        ctx.globalCompositeOperation="destination-out";
+        ctx.beginPath();
+        const x = canvas.width / 2;
+        const y = canvas.height / 2;
+        const offset = this.clipOffset;
+        ctx.arc(x, y, radius- offset, 0, Math.PI*2, false); 
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+    }
+
     update = (time, audioData, shouldUpdate = true) => {
+        
         const { width, height } = this.canvas;
-        this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX,Math.floor(this.y * height / 2) + this.sumShakeY);
+        this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX, Math.floor(this.y * height / 2) + this.sumShakeY);
         let newAudioData = audioData.frequencyData.length !== 0;
         let curRad = this.minRadius * this.scale;
         if(newAudioData && shouldUpdate) {
@@ -279,10 +316,13 @@ export default class JSNationSpectrum extends BaseItem {
                 }
                 const curSpectrum = this.smooth(spec,  this.smoothMargins[s]);
                 points = this.makePoints(curSpectrum, curRad, exponent);
-                this.drawPoints(points);
+                this.drawPoints(points, curRad);
             }       
         }
         this.ctx.globalAlpha = oldAlpha;
+        if(this.shouldClipSpectrum)
+            this.clip(curRad);
+        
         this.emblem.draw(this.ctx, this.canvas, curRad);
         this.prevRad = curRad;
     }
@@ -297,7 +337,7 @@ export default class JSNationSpectrum extends BaseItem {
 
    
 
-    drawPoints = (points) => {
+    drawPoints = (points, radius) => {
         if (!points || points.length === 0) {
             return;
         }
@@ -310,24 +350,42 @@ export default class JSNationSpectrum extends BaseItem {
             let xMult = neg ? -1 : 1;
 
             this.ctx.moveTo(halfWidth, points[0].y + halfHeight);
-
             let len = points.length;
             for (let i = 1; i < len - 2; i++) {
                 let c = xMult * (points[i].x + points[i + 1].x) / 2 + halfWidth;
                 let d = (points[i].y + points[i + 1].y) / 2 + halfHeight;
                 this.ctx.quadraticCurveTo(xMult * points[i].x + halfWidth, points[i].y + halfHeight, c, d);
+                /*this.ctx.fillStyle = "rgba(255,255,255,1)";
+                this.ctx.fillRect(xMult * points[i].x + halfWidth, points[i].y + halfHeight, 10, 10);
+                this.ctx.fillStyle = "rgba(0,255,0,1)";
+                this.ctx.fillRect(c, d, 10, 10);*/
             }
-            this.ctx.quadraticCurveTo(xMult * points[len - 2].x + halfWidth + neg * 2,
-                    points[len - 2].y + halfHeight, xMult * points[len - 1].x + halfWidth,
-                    points[len - 1].y + halfHeight);
-        }
 
+            const x = xMult * points[len - 2].x + halfWidth + neg * 2;
+            const y = points[len - 2].y + halfHeight;
+            const c = xMult * points[len - 1].x + halfWidth;
+            const d = points[len - 1].y + halfHeight;
+            
+            this.ctx.quadraticCurveTo(x,y,c,d);
+            //this.ctx.arcTo(x, y, halfWidth + xMult*radius, halfHeight, radius);
+            //this.ctx.arcTo(halfWidth + xMult*radius, halfHeight, halfWidth, points[0].y + halfHeight, radius);
+            if(this.drawType === "fill") 
+                this.ctx.arc(halfWidth, halfHeight, radius - this.clipOffset, Math.PI/2, 3*Math.PI/2, xMult > 0)
+      
+            
+           
+            
+        }
         if(this.drawType === "fill") {
+           
             this.ctx.fill();
         }else {
             this.ctx.lineWidth = this.lineWidth;
             this.ctx.stroke();
         }
+
+
+       
         
         
     }

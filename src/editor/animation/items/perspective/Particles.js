@@ -17,6 +17,7 @@ const vertShader =
     `attribute float size;
     attribute float alpha;
     uniform vec3 color; 
+    
     varying float vAlpha; 
     varying vec3 vColor; 
     void main() { 
@@ -31,9 +32,10 @@ const fragShader =
     `uniform sampler2D texture; 
     uniform bool flipY;
     varying float vAlpha; 
+    uniform float opacity;
     varying vec3 vColor; 
     void main() { 
-        gl_FragColor = vec4(vColor, vAlpha); 
+        gl_FragColor = vec4(vColor, vAlpha * opacity); 
         if(flipY)
             gl_FragColor = gl_FragColor * texture2D(texture, gl_PointCoord); 
         else 
@@ -103,8 +105,6 @@ export default class Particles extends BaseItem {
         this.texLoader = new THREE.TextureLoader();
         this.texLoader.crossOrigin = "";
         this.setUp();
-
-        
         this.setUpFolder();
 
         this.impactAnalyser = new ImpactAnalyser(this.folder); 
@@ -131,7 +131,6 @@ export default class Particles extends BaseItem {
             description: "",
             license: this.LICENSE.REQUIRE_ATTRIBUTION,
             changeDisclaimer: true,
-            //TODO change image
             imageUrl: "img/templates/JSNation.png"
         }
     }
@@ -139,15 +138,14 @@ export default class Particles extends BaseItem {
     __setUpGUI = (folder) => {         
         this.addController(folder, this, "changeParticleImage");
         this.addController(folder, this, "resetParticleImage");
-        this.addController(folder, this.pMaterial.uniforms.flipY, "value").name("Flip vertically")
-
+        this.addController(folder, this.pMaterial.uniforms.flipY, "value", { path: "material-flipY", min: 0, max: 1}).name("Flip vertically");
+        this.addController(folder, this.pMaterial.uniforms.opacity, "value", { path: "material-opacity", min: 0, max: 1}).name("Opacity");
         this.addController(folder, this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
         this.addController(folder, this, "color", {color: true}).onChange(this.changeColor);
         this.addController(folder, this, "particleMinSpeed", 0, 10);
-        this.addController(folder, this, "baseSpeed", 0, 10);
-        
+        this.addController(folder, this, "baseSpeed", 0, 10);        
         this.addController(folder, this, "movementAmplitude");
-        this.addController(folder, this, "sizeMult", 0, 5.0, 0.01).onChange(() => this.updateSizes());
+        this.addController(folder, this, "sizeMult", 0, 20.0, 0.01).onChange(() => this.updateSizes());
         return this.__addFolder(folder);
     }
 
@@ -180,7 +178,8 @@ export default class Particles extends BaseItem {
         let uniforms = {
             color: { type: "c", value: new THREE.Color(0xFFFFFF)},
             texture: { type: "t", value: new THREE.Texture() },
-            flipY: { value: false}
+            flipY: { value: false},
+            opacity: {value: 1.0}
         };
 
         this.pMaterial = new THREE.ShaderMaterial({

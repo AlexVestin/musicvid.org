@@ -25,22 +25,24 @@ export default class Automation extends SerializableObject {
         return serializeObject(this);
     }   
 
-    apply = (item, type) => {
+    apply = (item, type, first=true, last=false) => {
+        let val = item.preAutomationValue;
+        if(!first) {
+            val = item.object[item.property]; 
+        }
+
         switch (type) {
             case "*":
-                item.object[item.property] =
-                    item.preAutomationValue * this.value;
+                item.object[item.property] = val * this.value;
                 break;
             case "=":
                 item.object[item.property] = this.value;
                 break;
             case "+":
-                item.object[item.property] =
-                    item.preAutomationValue + this.value;
+                item.object[item.property] = val + this.value;
                 break;
             case "-":
-                item.object[item.property] =
-                    item.preAutomationValue - this.value;
+                item.object[item.property] = val - this.value;
                 break;
             default:
                 console.log("Wrong type in automation");
@@ -58,7 +60,11 @@ export default class Automation extends SerializableObject {
 
         if (
             item.__updateCounter++ % this.rootGui.__automationConfigUpdateFrequency === 0
-        )
+            && 
+            last
+        ){
             item.updateDisplay();
+        }
+
     };
 }

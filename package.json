@@ -40,7 +40,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "make-all": "python local/versioncopy.py && npm run build && npm run deploy-dev && npm run build-nw && npm run prepare-builds && npm run sync",
+    "make-build": "npm run build && npm run deploy-prod && npm run invalidate-cache && npm run build-nw && npm run prepare-builds && npm run sync",
     "build-nw": "python local/ehmcopy.py nw && react-scripts build",
     "build": "python local/ehmcopy.py web && react-scripts build",
     "test": "react-scripts test",

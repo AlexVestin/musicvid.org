@@ -443,10 +443,15 @@ export default class WebGLManager {
     };
 
     exitFullscreen(canvas) {
+        if(document.fullscreenElement || 
+            document.webkitFullscreenElement || 
+            document.mozFullScreenElement) {
         if (document.exitFullscreen) document.exitFullscreen();
         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
         else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
         else if (document.msExitFullscreen) document.msExitFullscreen();
+        }
+        
     }
     fullscreen(canvas) {
         if (canvas.RequestFullScreen) {

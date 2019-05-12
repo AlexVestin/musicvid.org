@@ -175,42 +175,6 @@ class SignUp extends React.Component {
                             </Link>
                         </Typography>
                     </React.Fragment>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-around",
-                            marginBottom: 10,
-                            marginTop: 10
-                        }}
-                    >
-                        <Button
-                            style={{
-                                ...bootstrapButtonStyle,
-                                textTransform: "none",
-                                backgroundColor: "#3B5998",
-                                borderColor: "#3B5998"
-                            }}
-                            className={classes.socbutton}
-                            onClick={this.authWithFacebook}
-                        >
-                            Sign up with facebook
-                        </Button>
-                        <Button
-                            style={{
-                                ...bootstrapButtonStyle,
-                                textTransform: "none",
-                                backgroundColor: "#F32E06",
-                                borderColor: "#F32E06"
-                            }}
-                            className={classes.socbutton}
-                            onClick={this.authWithGoogle}
-                        >
-                            Sign up with Google
-                        </Button>
-                    </div>
-
-                    <div style={{ textAlign: "center" }}> <Typography variant="h6">Or</Typography></div>
 
                     <Form
                         onSubmit={this.handleSubmit}

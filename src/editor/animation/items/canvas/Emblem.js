@@ -23,8 +23,7 @@ export default class Emblem {
             ctx.globalAlpha *= this.alpha;
             if(this.shouldFillCircle) {
                 ctx.shadowBlur = 0;
-                ctx.fillStyle =  this.circleFillColor;
-                
+                ctx.fillStyle =  this.circleFillColor;     
                 ctx.beginPath();
                 ctx.arc(canvas.width / 2, canvas.height / 2, currentRadius * this.circleSizeScale, 0, Math.PI*2, true); 
                 ctx.closePath();

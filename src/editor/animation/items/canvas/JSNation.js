@@ -115,6 +115,8 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     shake = (multiplier) => {
+
+        console.log(multiplier)
         let step = this.maxShakeIntensity * multiplier;
         this.waveFrameX += step * this.waveSpeedX;
     

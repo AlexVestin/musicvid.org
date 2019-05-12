@@ -15,6 +15,7 @@ import AudioAutomation from "editor/animation/automation/AudioReactiveAutomation
 import InputAutomation from "editor/animation/automation/InputAutomation";
 import PointAutomation from "editor/animation/automation/PointAutomation";
 
+import uuid from 'uuid/v4';
 const styles = theme => ({
     form: {
         display: "flex",
@@ -48,7 +49,7 @@ class ScrollDialog extends React.Component {
 
     onSelect = automation => {
         const { item } = this.props;
-        const link = { type: "=", controllerID: item.__path, automationID: automation.__id };
+        const link = { id: uuid(), type: "=", controllerID: item.__path, automationID: automation.__id };
         item.__parentObject.__automations.push(link);
         this.setState({ index: this.homeIndex });
     }

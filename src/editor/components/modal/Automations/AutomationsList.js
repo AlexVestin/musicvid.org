@@ -4,15 +4,15 @@ import { withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-
-import ImageIcon from "@material-ui/icons/Image";
-import WorkIcon from "@material-ui/icons/Work";
-import BeachAccessIcon from "@material-ui/icons/BeachAccess";
+import SurroundSound from "@material-ui/icons/SurroundSound";
+import Keyboard from "@material-ui/icons/Keyboard";
+import Watch from "@material-ui/icons/Watch";
+import { ListItemIcon } from "@material-ui/core";
 
 const styles = theme => ({
     root: {
         width: "100%",
+        maxWidth: 360,
         backgroundColor: theme.palette.background.paper
     }
 });
@@ -20,24 +20,25 @@ const styles = theme => ({
 function getIcon(type) {
     switch (type) {
         case "audio":
-            return <WorkIcon />;
+            return <SurroundSound style={{color: "#753742"}}/>;
         case "math":
-            return <ImageIcon />;
-        case "points":
-            return <BeachAccessIcon />;
+            return <Keyboard style={{color: "#D8D78F"}}/>;
+        case "point":
+            return <Watch style={{color: "#4F3130"}}/>;
         default:
-            return <WorkIcon />;
+            return <Keyboard />;
     }
 }
 
 function FolderList(props) {
     const { classes, automations } = props;
     return (
-        <List className={classes.root}>
+        <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
+        <List className={classes.root} dense>
             {automations.map(automation => {
                 return (
                     <ListItem key={automation.name} button onClick={() => props.onSelect(automation)}>
-                        <Avatar>{getIcon(automation.type)}</Avatar>
+                        <ListItemIcon>{getIcon(automation.type)}</ListItemIcon>
                         <ListItemText
                             primary={automation.name}
                             secondary={automation.description}
@@ -46,6 +47,7 @@ function FolderList(props) {
                 );
             })}
         </List>
+        </div>
     );
 }
 

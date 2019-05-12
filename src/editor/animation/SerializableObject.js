@@ -81,7 +81,7 @@ export default class SerializableObject {
                 toRemove.push(i);
             }else {
                 const controller = this.__controllers[link.controllerID];
-                automation.apply(controller, link.type);
+                automation.apply(controller, link.type, i === 0, i === this.__automations.length - 1);
             }
         }
 

@@ -108,7 +108,6 @@ export default class Scene extends SerializableObject {
         this.settingsFolder = this.folder.addFolder("Settings");
         this.addController(this.settingsFolder, this.folder, "name").name("Scene name")
         this.addController(this.cameraFolder, this, "resetCamera");
-        this.cameraFolder.add(this, "resetCamera");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
         
         //this.itemsFolder.title.style.backgroundColor = "#090909";
@@ -119,8 +118,6 @@ export default class Scene extends SerializableObject {
             item.__gui = this.itemsFolder;
             item.__setUpFolder();
         });
-
-        console.log(this.folder.name)
     }
 
     removeMe = () => {
