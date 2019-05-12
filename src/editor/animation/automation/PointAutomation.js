@@ -1,17 +1,31 @@
 import Automation from "./Automation";
+import EasingFunctions from './EasingFunctions';
+import  { serializeObject } from '../Serialize'
+
+
+function lerp(x, v0, v1){
+    return (1 - x) * v0 + x * v1;
+}
 
 export default class PointAutomation extends Automation {
     constructor(gui) {
         super(gui);
         this.type = "point";
         this.name = "Point Thing";
-        this.__objectsToSerialize = ["points"];
         this.points = [];
+        this.interpolation = "linear";
     }
 
-    lerp = (time, t0, v0, t1, v1) => {
-        const amt = (time - t0) / (t1 - t0);
-        return (1 - amt) * v0 + amt * v1;
+    __serialize = () => {
+        const obj = serializeObject(this); 
+        obj.points = this.points;
+        return obj;
+    } 
+
+    interpolate = (time, t0, v0, t1, v1) => {
+        const x = (time - t0) / (t1 - t0);
+        let amt = EasingFunctions[this.interpolation](x);
+        return lerp(amt, v0, v1);
     };
 
     getValue = (sortedPoints, time) => {
@@ -29,7 +43,7 @@ export default class PointAutomation extends Automation {
             let p = sortedPoints[i];
             if (p.time >= time) {
                 const lastPoint = sortedPoints[i - 1];
-                return this.lerp(
+                return this.interpolate(
                     time,
                     lastPoint.time,
                     lastPoint.value,

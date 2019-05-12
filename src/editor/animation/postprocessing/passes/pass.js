@@ -26,9 +26,10 @@ export default class Pass  extends SerializableObject {
     }
 
     addBasicControls = (folder) => {
-        folder.add(this, "enabled");
-        folder.add(this, "clear");
-        folder.add(this, "needsSwap");
+        this.addController(folder, folder, "name").name("Item name");
+        this.addController(folder, this, "enabled");
+        this.addController(folder, this, "clear");
+        this.addController(folder, this, "needsSwap");
     }
 
     setUpGUI = (gui) => {

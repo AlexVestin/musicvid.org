@@ -11,7 +11,7 @@ export default class Scene3DOrtho extends Scene {
         this.MODAL_REF_NR = 6;
         this.TYPE = "ortho";
         if(this.folder) {
-            this.folder.name = this.TYPE + " scene";
+            this.folder.name = "webgl 2d scene";
             this.setUpControls();
         }    
     }

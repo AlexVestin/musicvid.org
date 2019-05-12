@@ -72,10 +72,27 @@ export default class SerializableObject {
     }
 
     applyAutomations = () => {
-        this.__automations.forEach(link => {
+
+        const toRemove = [];
+        for(var i = 0; i < this.__automations.length; i++) {
+            const link = this.__automations[i];
             const automation = this.__gui.getRoot().__automations[link.automationID]; 
-            const controller = this.__controllers[link.controllerID];
-            automation.apply(controller, link.type);
-        })
+            if(!automation) {
+                toRemove.push(i);
+            }else {
+                const controller = this.__controllers[link.controllerID];
+                automation.apply(controller, link.type);
+            }
+        }
+
+        if(toRemove.length > 0) {
+            const oldAutos = [...this.__automations];
+            this.__automations = [];
+            oldAutos.forEach((link, i) => {
+                if(!toRemove.includes(i))
+                    this.__automations.push(link);
+            })
+        }
+       
     }
 }

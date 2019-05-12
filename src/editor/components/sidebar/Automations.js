@@ -16,23 +16,26 @@ export default class Automations extends PureComponent {
     onSelect = () => {
         const rootGui = this.props.gui.getRoot();
         rootGui.modalRef.toggleModal(13).then(selected => {
-            const root = this.props.gui.getRoot();
-            switch(selected.type) {
-                case "audio":
-                this.selectedAutomation = new AudioAutomation(root);
-                    break;
-                case "math":
-                    this.selectedAutomation = new MathAutomation(root);
-                    break;
-                case "point":
-                    this.selectedAutomation = new PointAutomation(root);
-                    break;
-                default:
-                console.log("unknown type")
+            if(selected){
+                const root = this.props.gui.getRoot();
+                switch(selected.type) {
+                    case "audio":
+                    this.selectedAutomation = new AudioAutomation(root);
+                        break;
+                    case "math":
+                        this.selectedAutomation = new MathAutomation(root);
+                        break;
+                    case "point":
+                        this.selectedAutomation = new PointAutomation(root);
+                        break;
+                    default:
+                    console.log("unknown type")
+                }
+                
+                rootGui.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
+                this.setState({ index: 1 });
             }
-            
-            rootGui.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
-            this.setState({ index: 1 });
+           
         });
     };
 

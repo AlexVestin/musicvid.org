@@ -58,14 +58,14 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
             vignette_amt: {value: 0.3}, 
             enablePostProcessing: {value: true}, 
             should_mirror: {value: true},
-            opacity: {value: 1.0}
+            opacity: {value: 0.999999}
         }
         this.transparent = true;
         this.vertexShader = vertexShader; 
         this.fragmentShader = fragmentShader;
-         
         const url = "./img/space.jpeg";
         this.prevFile = url;
+        this._opacity = 1.0;
         loadImageTextureFromChoice(url, this.setBackground);  
 
         this.path = "material";
@@ -107,10 +107,11 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.imgController = i.addController(folder, this, "changeImage");
         i.addController(folder, this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
         i.addController(folder,this, "brightenToAudio");
-        i.addController(folder,this, "brightenMultipler");           
-        i.addController(folder,this.uniforms.opacity, "value").name("opacity");
-        i.addController(folder,this, "vignetteAmount").onChange(() => this.uniforms.value = this.vignetteAmount);
-        i.addController(folder,this.uniforms.should_mirror, "value", {name: "Mirror image"});
+        i.addController(folder,this, "brightenMultipler");     
+        
+        i.addController(folder,this, "_opacity", {path: "material-opac", min: 0, max: 1.0}).name("Opacity").onChange(() => this.uniforms.opacity.value = this._opacity);
+        i.addController(folder,this, "vignetteAmount").onChange(() => this.uniforms.vignette_amt.value = this.vignetteAmount);
+        i.addController(folder,this.uniforms.should_mirror, "value", {path: "material-opac"}).name("Mirror image");
         this.impactAnalyser = new ImpactAnalyser(folder, i);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;

@@ -3,6 +3,7 @@ import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
 import { loadImage } from 'editor/util/ImageLoader'
 import Emblem from "./Emblem";
 import BaseItem from '../BaseItem'
+import { addCanvasControls } from './CanvasControls' 
 
 /**
  * My Extension of js.nation
@@ -36,6 +37,7 @@ export default class JSNationSpectrum extends BaseItem {
             this[`color${i}`] = color;   
         });
 
+        this.alpha = 1.0;
         this.spectrumHeightScalar = 0.31;
         this.smoothingTimeConstant = 0.1;
         this.smoothingPasses = 1;
@@ -141,9 +143,12 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
+        addCanvasControls(this, this.ctx, folder, {text: false });
+
         const emFolder = folder.addFolder("Emblem");
         this.addController(emFolder, this.emblem, "visible", {path: "emblem"});
         this.addController(emFolder, this, "changeEmblemImage", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "alpha", {path: "emblem"});
         this.addController(emFolder, this.emblem, "shouldClipImageToCircle", {path: "emblem"});
         this.addController(emFolder, this.emblem, "emblemSizeScale", {path: "emblem", min: 0.0, max: 4.0});
         this.addController(emFolder, this.emblem, "shouldFillCircle", {path: "emblem"});
@@ -160,7 +165,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.addController(moveFolder, this, "maxShakeDisplacement", {min: 0, max: 180})
 
         const spFolder = folder.addFolder("Spectrum");
-
+        this.addController(spFolder, this, "alpha", {min: 0.0, max: 1.0});
         this.addController(spFolder, this, "drawType", {values: ["fill", "stroke"]});
         this.addController(spFolder, this, "lineWidth", {min: 0, max: 30, step: 1});
         this.analyser = new SpectrumAnalyser(spFolder);
@@ -246,15 +251,17 @@ export default class JSNationSpectrum extends BaseItem {
                 this.spectrumCache.shift();
             }
 
-            
             const spectrum = this.analyser.analyse(audioData.frequencyData);
             const mult = Math.pow(this.multiplier(spectrum), this.emblemExponential) * this.emblemExaggeration;
-            console.log(mult);
             this.shake(mult / 32);
             curRad = this.calcRadius(mult) * this.scale;
             curRad = curRad > this.minRadius * this.scale ? curRad : this.minRadius * this.scale;
             this.spectrumCache.push(spectrum);
         }
+
+        let oldAlpha = this.ctx.globalAlpha;
+        this.ctx.globalAlpha *= this.alpha;
+
 
         for (let s = this.maxBufferSize; s >= 0; s--) {            
             if(this["color" + String(s) + "Enabled"]) {
@@ -279,7 +286,7 @@ export default class JSNationSpectrum extends BaseItem {
             }
                
         }
-
+        this.ctx.globalAlpha = oldAlpha;
         this.emblem.draw(this.ctx, this.canvas, curRad);
         this.prevRad = curRad;
     }

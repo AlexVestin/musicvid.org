@@ -7,8 +7,8 @@ export default class AddNewAutomationModal extends PureComponent {
   render() {
 
     return (
-        <Dialog open={this.props.open}>
-          <AddNewAutomation onSelect={this.props.onSelect}></AddNewAutomation>
+        <Dialog onClose={() => this.props.onSelect()} open={this.props.open}>
+          <AddNewAutomation  onSelect={this.props.onSelect}></AddNewAutomation>
         </Dialog>
     )
   }

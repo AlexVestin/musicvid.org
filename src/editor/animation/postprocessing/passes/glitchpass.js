@@ -45,11 +45,9 @@ export default class GlitchPass extends Pass {
         this.addController(folder, this, "dt_size").min(2).onChange(() => { this.uniforms["tDisp"].value = this.generateHeightmap(this.dt_size) });
         this.addController(folder, this, "threshold").min(0);
         this.addController(folder, this, "randomTrigger")
-
 		this.impactAnalyser = new ImpactAnalyser(folder);
 		this.impactAnalyser.endBin = 60;
 		folder.updateDisplay();
-
 	}
 
 	update = (time, audioData) => {

@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.0.0-alpha.0",
     "@material-ui/icons": "^4.0.0-alpha.0",
+    "bezier-easing": "^2.1.0",
     "classnames": "^2.2.6",
     "clsx": "^1.0.2",
     "comment-regex": "^1.0.1",
@@ -39,7 +40,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "make-all": "npm run build && npm run deploy-dev && npm run build-nw && npm run prepare-builds && npm run sync",
+    "make-all": "python local/versioncopy.py && npm run build && npm run deploy-dev && npm run build-nw && npm run prepare-builds && npm run sync",
     "build-nw": "python local/ehmcopy.py nw && react-scripts build",
     "build": "python local/ehmcopy.py web && react-scripts build",
     "test": "react-scripts test",
@@ -49,6 +50,7 @@
     "nw-linux": " ~/Downloads/nwjs-v0.37.4-linux-x64/nw build/",
     "nw-windows": "C:/Users/alex/Desktop/nwjs-v0.37.4-win-x64/nw build/",
     "prepare-builds": "python local/prepare.py",
+    "invalidate-cache": "aws cloudfront create-invalidation --distribution-id E3KDNOXC03JXHV --paths /*",
     "sync": "aws s3 sync C:/Users/alex/Desktop/mvid_deps/build s3://mvid-build/ --delete"
   },
   "eslintConfig": {

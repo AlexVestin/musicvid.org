@@ -1,14 +1,12 @@
 
 import BaseItem from '../BaseItem'
 import fonts from 'editor/util/Fonts'
-
 export default class Text extends BaseItem {
     constructor(info) {
         super(info);
         this.canvas = info.canvas;
         this.ctx = info.ctx;
         this.name = "Text";
-
         this.fontSize = 30;
         this.font = "Montserrat";
         this.aspect = info.width/info.height;
@@ -18,17 +16,11 @@ export default class Text extends BaseItem {
         this.positionY = 0.5;
         this.globalAlpha = 1.0;
         this.fillStyle = "#FFFFFF";
-
-        // SHADOWS
         this.shouldDrawShadow = false;
         this.shadowBlur = 5;
         this.shadowColor = "#000000";
-        
         this.shadowLineWidth = 5;
-
-        
         this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
-
         this.setUpFolder();
     }
 
@@ -41,14 +33,13 @@ export default class Text extends BaseItem {
         if(options.textAlign) this.textAlign = options.textAlign;
         if(options.shadowBlur) this.shadowBlur = options.shadowBlur; 
         if(options.lineWidth) this.lineWidth = options.lineWidth; 
-
-    
         this.text = text;
         this.positionX = x;
         this.positionY = y;
     }
 
     __setUpGUI = (folder) => {
+        //addCanvasControls(this, this.ctx, folder, {fill: false, line: false });
         this.addController(folder,this, "text");
         this.addController(folder,this, "positionX", 0, 1, 0.0001);
         this.addController(folder,this, "positionY", 0, 1, 0.0001);
@@ -78,7 +69,6 @@ export default class Text extends BaseItem {
         this.ctx.shadowBlur = 0;        
         this.ctx.fillStyle = this.fillStyle;
         this.ctx.globalAlpha = this.globalAlpha; 
-           
         this.ctx.fillText(this.text, x, y);
      };
 }

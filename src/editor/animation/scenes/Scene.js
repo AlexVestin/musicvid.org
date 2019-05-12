@@ -26,13 +26,10 @@ export default class Scene extends SerializableObject {
             i.__setControllerValues(item.controllers);
             i.__automations = item.__automations;
             i.setFolderName(i.name);
-        });
-
-         
+        });         
     }
 
     updateCamera = () => {
-        
         const enabled = this.controls.enabled;
         this.controls.dispose();
         this.controls = new OrbitControls(this.camera, this.gui.__root.canvasMountRef);
@@ -51,7 +48,6 @@ export default class Scene extends SerializableObject {
 
     undoCameraMovement = (matrix) => {
         const { camera } = this;
-       
         camera.matrix.fromArray(matrix);
         camera.matrix.decompose(camera.position, camera.quaternion, camera.scale); 
         this.lastCameraArray = this.camera.matrix.toArray();
@@ -91,6 +87,7 @@ export default class Scene extends SerializableObject {
         this.addController(this.cameraFolder, this.camera.rotation, "y", rotOpts).name("rotationY").onChange(this.updateCameraMatrix);
         this.addController(this.cameraFolder, this.camera.rotation, "z", rotOpts).name("rotationZ").onChange(this.updateCameraMatrix);
         this.addController(this.cameraFolder, this.camera, "zoom", {min: -10,  max: 10, step: 0.001, path: "camera-zoom"}).onChange(this.updateCameraMatrix);
+        this.folder.updateDisplay();
     }
 
     setUpPassConfigs = () => {
@@ -109,6 +106,7 @@ export default class Scene extends SerializableObject {
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
         this.settingsFolder = this.folder.addFolder("Settings");
+        this.addController(this.settingsFolder, this.folder, "name").name("Scene name")
         this.addController(this.cameraFolder, this, "resetCamera");
         this.cameraFolder.add(this, "resetCamera");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
@@ -120,7 +118,9 @@ export default class Scene extends SerializableObject {
         this.items.forEach(item =>  {
             item.__gui = this.itemsFolder;
             item.__setUpFolder();
-        })
+        });
+
+        console.log(this.folder.name)
     }
 
     removeMe = () => {

@@ -3,6 +3,7 @@ import AudioReactiveItem from "./AudioReactiveItem";
 import InputItem from "./MathInputItem";
 import PointItem from "./PointItem";
 import Button from '@material-ui/core/Button'
+import { Typography } from "@material-ui/core";
 
 
 export default class ItemContainer extends PureComponent {
@@ -31,7 +32,9 @@ export default class ItemContainer extends PureComponent {
         return (
             <div>
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", color: "#efefef", marginBottom: 5, marginTop: 10}}>
-                    <div>Name: </div>
+                <Typography style={{color: "#efefef"}} variant="h6">
+                        Name: 
+                    </Typography>
                     <input ref={this.inputRef} value={this.state.name} onChange={this.updateName} />
                 </div>
                 {item.type === "audio" && (

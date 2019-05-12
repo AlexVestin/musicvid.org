@@ -48,7 +48,7 @@ class ScrollDialog extends React.Component {
 
     onSelect = automation => {
         const { item } = this.props;
-        const link = { type: "*", controllerID: item.__path, automationID: automation.__id };
+        const link = { type: "=", controllerID: item.__path, automationID: automation.__id };
         item.__parentObject.__automations.push(link);
         this.setState({ index: this.homeIndex });
     }

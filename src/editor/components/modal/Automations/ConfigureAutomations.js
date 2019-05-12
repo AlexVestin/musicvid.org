@@ -18,10 +18,11 @@ export default class ConfigureAutomations extends PureComponent {
         const automations = gui.getRoot().__automations;
 
         const autos = [];
+
         item.__parentObject.__automations.forEach(link => {
-            const a = automations[link.automationID]
-            autos.push({name: a.name, id: a.__id, item: link});
-            
+            const a = automations[link.automationID];
+            if(link.controllerID === item.__path) 
+                autos.push({automation: a, item: link});
         })
 
         this.setState({autos: autos});

@@ -11,6 +11,7 @@ export default class Emblem {
         this.shouldFillCircle = true;
         this.shouldClipImageToCircle = true;
         this.visible = true;
+        this.alpha = 1.0;
     }
 
     draw = (ctx, canvas, currentRadius) => {
@@ -19,9 +20,11 @@ export default class Emblem {
             let xOffset = canvas.width / 2 - dimension / 2;
             let yOffset = canvas.height / 2 - dimension / 2;
             ctx.save();
+            ctx.globalAlpha *= this.alpha;
             if(this.shouldFillCircle) {
                 ctx.shadowBlur = 0;
                 ctx.fillStyle =  this.circleFillColor;
+                
                 ctx.beginPath();
                 ctx.arc(canvas.width / 2, canvas.height / 2, currentRadius * this.circleSizeScale, 0, Math.PI*2, true); 
                 ctx.closePath();

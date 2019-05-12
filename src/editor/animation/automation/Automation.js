@@ -15,7 +15,6 @@ export default class Automation extends SerializableObject {
         if(template.controllers) {
             this.__setControllerValues(template.controllers);
         }
-        
     }
 
     update() {
@@ -56,6 +55,7 @@ export default class Automation extends SerializableObject {
         if (item.__onChange) {
             item.__onChange();
         }
+
         if (
             item.__updateCounter++ % this.rootGui.__automationConfigUpdateFrequency === 0
         )

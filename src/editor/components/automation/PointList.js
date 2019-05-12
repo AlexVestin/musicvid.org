@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-
 import Point from './PointComponent'
 
 const styles = theme => ({
@@ -17,7 +16,7 @@ function FolderList(props) {
         <div className={classes.root}>
             {points.map( (point,i) => {
                 return (
-                    <div key={point.id}>
+                    <div key={point.id} style={{marginTop: 10}}>
                         <Point removePoint={props.removePoint} point={point}></Point>
                     </div>
                 );

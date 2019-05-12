@@ -23,9 +23,7 @@ export default class BaseItem extends SerializableObject {
         if (info) {
             this.width = info.width;
             this.height = info.height;
-
             // Serializing for project files
-            
             this.__controllers = {};
             this.__scale = 1;
             this.__gui = info.gui;
@@ -65,8 +63,8 @@ export default class BaseItem extends SerializableObject {
         this.__nameDisplay = folder
             .add(this, "name")
             .onChange(() => this.setFolderName(this.name));
-        folder.add(this, "__startTime", 0, 1000).name("Start time(sec)");
-        folder.add(this, "__endTime", 0, 1000).name("End time(sec)");
+        folder.add(this, "__startTime", 0, 1000).name("Start time(sec)").disableAutomations();
+        folder.add(this, "__endTime", 0, 1000).name("End time(sec)").disableAutomations();
     };
 
     postFolderSetup = folder => {
@@ -78,7 +76,6 @@ export default class BaseItem extends SerializableObject {
         this.setFolderName(this.name);
         this.__setUpGUI(this.folder);
         this.postFolderSetup(this.folder);
-
         return this.folder;
     };
 
