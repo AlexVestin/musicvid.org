@@ -14,6 +14,8 @@ import StarField from './ortho/StarField'
 import SpriteTextMask from './ortho/SpriteTextMask'
 import SpriteText from './ortho/SpriteText'
 import Meme from './ortho/Meme'
+import Video from './ortho/Video'
+
 
 // canvas items
 import Monstercat2D from './canvas/MonsterBars2D'
@@ -52,7 +54,9 @@ const orthoItems = {
     TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},
     SpriteTextMask: {class: SpriteTextMask, img: "img/items/StarField.png"},
     SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"},
-    Meme: {class: Meme}
+    Meme: {class: Meme},
+    Video: {class: Video},
+
 }
 
 

@@ -274,6 +274,7 @@ export default class JSNationSpectrum extends BaseItem {
         
         const { width, height } = this.canvas;
         this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX, Math.floor(this.y * height / 2) + this.sumShakeY);
+        this.ctx.applyFilters();
         let newAudioData = audioData.frequencyData.length !== 0;
         let curRad = this.minRadius * this.scale;
         if(newAudioData && shouldUpdate) {
@@ -293,6 +294,7 @@ export default class JSNationSpectrum extends BaseItem {
             curRad = curRad > this.minRadius * this.scale ? curRad : this.minRadius * this.scale;
             this.spectrumCache.push(spectrum);
         }
+        
         
         let oldAlpha = this.ctx.globalAlpha;
         this.ctx.globalAlpha *= this.alpha;
@@ -320,10 +322,8 @@ export default class JSNationSpectrum extends BaseItem {
             }       
         }
         this.ctx.globalAlpha = oldAlpha;
-        if(this.shouldClipSpectrum)
-            this.clip(curRad);
-        
         this.emblem.draw(this.ctx, this.canvas, curRad);
+
         this.prevRad = curRad;
     }
 
@@ -369,12 +369,9 @@ export default class JSNationSpectrum extends BaseItem {
             this.ctx.quadraticCurveTo(x,y,c,d);
             //this.ctx.arcTo(x, y, halfWidth + xMult*radius, halfHeight, radius);
             //this.ctx.arcTo(halfWidth + xMult*radius, halfHeight, halfWidth, points[0].y + halfHeight, radius);
-            if(this.drawType === "fill") 
+            if(this.drawType === "fill" && radius - this.clipOffset > 0) 
                 this.ctx.arc(halfWidth, halfHeight, radius - this.clipOffset, Math.PI/2, 3*Math.PI/2, xMult > 0)
       
-            
-           
-            
         }
         if(this.drawType === "fill") {
            
@@ -383,11 +380,6 @@ export default class JSNationSpectrum extends BaseItem {
             this.ctx.lineWidth = this.lineWidth;
             this.ctx.stroke();
         }
-
-
-       
-        
-        
     }
 
     multiplier = (spectrum) => {

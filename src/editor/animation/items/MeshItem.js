@@ -44,6 +44,20 @@ export default class MeshItem extends BaseItem {
         }
     }
 
+    play = (t) => {
+        if(this.material.play)
+            this.material.play(t)
+    }
+
+    stop = () => {
+        if(this.material.stop)
+            this.material.stop()
+    }
+
+    seekTime = (t) => {
+        if(this.material.seekTime)
+            this.material.seekTime(t)
+    }
 
     update = (time, audioData) => {
         if(this.material)

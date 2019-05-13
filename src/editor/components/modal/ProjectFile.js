@@ -64,7 +64,7 @@ class ProjectFile extends React.Component {
                     {...other}
                 >
                     <DialogTitle id="simple-dialog-title">
-                        Load image
+                        Load project file
                     </DialogTitle>
                     <div>
                         <List>

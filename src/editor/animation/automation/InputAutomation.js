@@ -7,7 +7,7 @@ export default class InputAutomation extends Automation {
         super(gui);
         this.type = "math";
         this.name = "Math Input Thing";
-        this.inputString = "sin(t)"
+        this.inputString = "sin(t)";
     }
 
     update = (time, audioData) => {

@@ -30,7 +30,7 @@ export default class PointAutomation extends Automation {
 
     getValue = (sortedPoints, time) => {
         if (sortedPoints.length === 0) {
-            return 1.0;
+            return "NO_VALUE";
         } 
 
         if (time < sortedPoints[0].time) {

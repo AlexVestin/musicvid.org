@@ -31,6 +31,9 @@ export default class Automation extends SerializableObject {
             val = item.object[item.property]; 
         }
 
+        if(this.value === "NO_VALUE")
+            return;
+
         switch (type) {
             case "*":
                 item.object[item.property] = val * this.value;
@@ -58,13 +61,7 @@ export default class Automation extends SerializableObject {
             item.__onChange();
         }
 
-        if (
-            item.__updateCounter++ % this.rootGui.__automationConfigUpdateFrequency === 0
-            && 
-            last
-        ){
-            item.updateDisplay();
-        }
+       
 
     };
 }

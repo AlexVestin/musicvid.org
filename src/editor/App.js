@@ -141,6 +141,7 @@ class App extends PureComponent {
             this.audio.play(t);
             this.gui.__time = t;
             this.startTime = performance.now();
+            if (this.animationManager) this.animationManager.play(t);
         } else {    
             this.timeOffset = this.state.time;
             this.setState({ playing: false });
@@ -264,6 +265,7 @@ class App extends PureComponent {
                 this.onProgress
             );
 
+            this.animationManager.prepareEncoding();
             this.exporter.init(this.encoderReady);
             this.encoding = true; 
         });
@@ -275,6 +277,8 @@ class App extends PureComponent {
         if (this.state.playing) {
             this.audio.play(time);
         }
+
+        this.animationManager.seekTime(time);
         
         this.gui.__time = time;
         this.setState({ time: time });

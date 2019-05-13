@@ -102,13 +102,14 @@ export default class WebGLManager {
                 reader.onload = (e) => {
                     const json = JSON.parse(e.target.result);
                     this.loadProject(json);    
+                    this.setFFTSize(this.fftSize);
                 }
                 reader.readAsText(file);
             }
         })
     }
 
-    saveProjectToFile = () => {
+    serializeProject = () => {
         const rootGui = this.gui.getRoot();
         const projFile = {
             scenes: [],
@@ -139,19 +140,31 @@ export default class WebGLManager {
                 projFile.scenes.push(t);
             }
         })
+        return projFile;
+    }
 
+    saveProjectToFile = () => {
+        const projFile = this.serializeProject();
         const blob = new Blob([JSON.stringify(projFile)], { type: 'application/json' });
         FileSaver.saveAs(blob,"project.json");
-        const ref = base.collection("users").doc(app.auth().currentUser.uid).collection("projects").doc(this.__id);
-        ref.set({
-            str: JSON.stringify(projFile), 
-            lastEdited: new Date().toString(),
-            name: this.__projectName,
-            width: this.width,
-            height: this.height,
-            id: this.__id
-        });
+    }
 
+    saveProjectToProfile = () => {
+        const projFile = this.serializeProject();
+        const cu = app.auth().currentUser; 
+        if(cu) {
+            const ref = base.collection("users").doc(app.auth().currentUser.uid).collection("projects").doc(this.__id);
+            ref.set({
+                str: JSON.stringify(projFile), 
+                lastEdited: new Date().toString(),
+                name: this.__projectName,
+                width: this.width,
+                height: this.height,
+                id: this.__id
+            });
+        }else {
+            alert("Log in to save to profile")
+        }
         console.log(projFile);
     }
 
@@ -326,9 +339,22 @@ export default class WebGLManager {
         return items;
     };
 
-    manageAutomations = () => {
-        this.gui.getRoot().modalRef.toggleModal(12);
-    };
+    play = (t) =>  {
+        this.scenes.forEach(scene => scene.play(t));
+    }
+
+    prepareEncoding = () => {
+        this.scenes.forEach(scene => {
+            scene.items.forEach(item => {
+                item.__isEncoding = true;
+            })
+        })
+    }
+
+    seekTime = (t) => {
+        this.scenes.forEach(scene => scene.seekTime(t));
+    }
+
 
     setClear = () => {
         this.renderer.setClearColor(this.clearColor);
@@ -408,11 +434,11 @@ export default class WebGLManager {
             cs.add(this, "enableAllControls");
             cs.add(this, "disableAllControls");
             cs.add(this, "resetAllCameras");
-            cs.add(this, "manageAutomations");
             const ps = this.settingsFolder.addFolder("Project settings");
             ps.add(this, "__projectName").name("Project name");
             ps.add(this, "loadProjectFromFile");
             ps.add(this, "saveProjectToFile");
+            ps.add(this, "saveProjectToProfile");
         }
     };
 

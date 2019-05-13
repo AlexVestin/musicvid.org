@@ -1,26 +1,13 @@
-import * as THREE from "three";
-import BaseItem from '../BaseItem'
 
-export default class Plane extends BaseItem {
+
+import MeshItem from '../MeshItem'
+
+export default class Video extends MeshItem {
     constructor(info) {
         super(info);
-        this.name = "Plane";
+        this.name = "Video";
+        this.changeGeometry("Plane");
+        this.changeMaterial("Video");        
         this.setUpFolder();
-        
-        this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.MeshBasicMaterial({color: "red"}));
-        this.color = 0xFF0000;
-        this.folder.addColor(this, "color").onChange(this.onColorChange);
-        info.scene.add(this.mesh);
     }
-
-    onColorChange = (value) => {
-        this.mesh.material.color = new THREE.Color(value);
-    }
-
-    setUpGUI(gui, name) {
-        const folder = gui.addFolder(name);
-        folder.add(this, "addVideo");
-    }
-    addVideo = () => {}
-    update = (time, audioData) => {};
 }

@@ -9,6 +9,7 @@ export function addCanvasControls(parent, object, folder, a = {}) {
         line: true,
         text: true,
         fill: true,
+        filter: true,
         ...a
     };
 
@@ -58,5 +59,60 @@ export function addCanvasControls(parent, object, folder, a = {}) {
         const fill = ctxFolder.addFolder("Fill and stroke styles");
         add(fill, "fillStyle", { color: true });
         add(fill, "strokeStyle", { color: true });
+    }
+
+    const lookUp = {
+        blur: "filterBlurAmountPx",
+        invert: "filterInvertAmount",
+        contrast: "filterContrastAmount",
+        brightness: "filterBrightnessAmount",
+        huerotate: "filterHueRotateAmount",
+        saturate: "filterSaturateAmount",
+        sepia: "filterSepiaAmount",
+        grayscale: "filterGrayscaleAmount",
+    }
+
+    object.filterBlurAmountPx = 0;
+    object.filterInvertAmount = 0;
+    object.filterContrastAmount = 0;
+    object.filterBrightnessAmount = 0;
+    object.filterHueRotateAmount = 0;
+    object.filterSaturateAmount = 0;
+    object.filterSepiaAmount = 0;
+    object.filterGrayscaleAmount = 0;
+    object.filterCommand = ""; 
+
+    if(c.filter) {
+        const filter = ctxFolder.addFolder("Filter effects");
+        add(filter, "filterCommand");
+        add(filter, "filterBlurAmountPx", {min: 0, max: 60});
+        add(filter, "filterInvertAmount", {min: 0, max: 100});
+        add(filter, "filterContrastAmount", {min: 0, max: 100});
+        add(filter, "filterBrightnessAmount", {min: 0, max: 100});
+        add(filter, "filterGrayscaleAmount", {min: 0, max: 100});
+        add(filter, "filterHueRotateAmount");
+        add(filter, "filterSaturateAmount", {min: 0, max: 100});
+        add(filter, "filterSepiaAmount", {min: 0, max: 100});
+    }
+
+    object.applyFilters = () => {
+        const filters = object.filterCommand.split(" ");
+        let fltStr = ""; 
+
+        filters.forEach(cmd => {
+            const filter = lookUp[cmd];
+            if(filter) {
+                if(cmd === "blur") {
+                    fltStr += `${cmd}(${Math.floor(object[filter])}px) `;
+                } else if(cmd === "huerotate")
+                    fltStr += `hue-rotate(${object[filter]}deg) `;
+                else {
+                    fltStr += `${cmd}(${object[filter]}%) `;
+                }
+            }
+        })
+
+        console.log(fltStr)
+        object.filter = fltStr;
     }
 }

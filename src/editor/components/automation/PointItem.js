@@ -38,7 +38,7 @@ export default class PointItem extends PureComponent {
             <div>
                 <div style={{ display: "flex", justifyContent: "space-between"}}>
                     <Typography style={{color: "#efefef"}} variant="h6">
-                        Interpolation: 
+                        Easing function: 
                     </Typography>
                     <select onChange={this.change} value={this.state.interpolation}>
                         {Object.keys(EasingFunctions).map(key => {

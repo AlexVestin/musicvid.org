@@ -65,7 +65,7 @@ export default class Point extends PureComponent {
                     style={{
                         color: "red",
                         position: "absolute",
-                        right: 10,
+                        right: 20,
                         cursor: "pointer"
                     }}
                 />

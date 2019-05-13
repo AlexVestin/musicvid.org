@@ -14,7 +14,7 @@ import GeometryModal from "./GeometryModal";
 import EffectModal from "./EffectModal";
 import ProjectFile from './ProjectFile'
 import MemeModal from "./MemeModal";
-
+import LoadVideo from './LoadVideo'
 
 
 export default class ModalContainer extends PureComponent {
@@ -172,6 +172,9 @@ export default class ModalContainer extends PureComponent {
 
                 {index === 17 && (
                     <MemeModal open={modalOpen} onSelect={this.onSelect} />
+                )}
+                 {index === 20 && (
+                    <LoadVideo open={modalOpen} onSelect={this.onSelect} />
                 )}
             </div>
         );

@@ -20,6 +20,14 @@ export default class Scene extends SerializableObject {
         }
     }
 
+    play = (t) => {
+        this.items.forEach(item => item.play(t));
+    }
+
+    seekTime = (t) => {
+        this.items.forEach(item => item.seekTime(t));
+    }
+
     addItems = (items) => {
         items.forEach(item => {
             const i = this.addItemFromText(item.__itemName);
@@ -207,11 +215,11 @@ export default class Scene extends SerializableObject {
     }
 
     update = (time, audioData, shouldIncrement) => {
-        this.applyAutomations();
+        this.applyAutomations(shouldIncrement);
         if(shouldIncrement) {
             this.items.forEach(item =>  {
                 item.mesh.visible = (item.__startTime <= time && item.__endTime >= time);
-                item.applyAutomations();
+                item.applyAutomations(shouldIncrement);
                 item.update(time, audioData)  
             });
         }

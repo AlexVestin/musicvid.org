@@ -1,49 +1,89 @@
 import * as THREE from 'three';
-import { loadVideoTexture } from 'editor/util/ImageLoader';
 
 
-export default class ImageMaterial extends THREE.VideoTexture{
+export default class ImageMaterial extends THREE.MeshBasicMaterial{
 
-    constructor(undoAction) {
-        super()
+    constructor(item) {
+        super();
         this.transparent = true;
+        this.video = document.createElement('video'); 
+        this.tex = new THREE.VideoTexture(this.video)
+        this.map = this.tex;
+        this.path = "material";
+        this.fps = 60;
+        this.parent = item;
+        this.frame = 0;
 
-        const url = "./img/space.jpeg";
-        this.prevFile = url;
-        const tex = new THREE.Texture();
-        this.setBackground(tex);
+        this.parent.__isEncoding =  true;
     }
 
-    update = (impact) => {
-        this.uniforms.vignette_amt.value = this.vignetteAmount + impact * -this.brightenMultipler;
+    setResolve = (resolve, reject) => {
+        this.seekResolve = resolve;
     }
 
-    changeImage() {
-        //loadImageTexture(this, "setBackground");
+    updateMaterial = async (time, audioData) => {
+       
+        
+        if(this.parent.__isEncoding) {
+            this.video.currentTime = this.frame++ / this.fps;
+            this.tex.needsUpdate = true;this.tex.needsUpdate = true;
+            await new Promise(this.setResolve);
+
+        }
     }
 
-    setBackground = (texture) => {
-        texture.minFilter = THREE.LinearFilter;
-        texture.magFilter = THREE.LinearFilter;
-        texture.generateMipMaps = false;
-        this.uniforms.texture1.value = texture;
-        this.needsUpdate = true;
+    play = (t) => {
+        this.video.currentTime = t;
+        if(!this.parent.__isEncoding) {
+            this.video.play();
+        }
     }
 
-    __addUndoAction = (func, args) => {
-        const item = {func: func, args: args, type: "action"};
-        this.folder.getRoot().addUndoItem(item); 
+    stop = () => {
+        this.video.pause();
+        this.video.currentTime = 0;
+    }
+
+    seekTime = (t) => {
+        this.video.currentTime = t;
+    }
+
+    loadVideoFile() {
+        this.folder.getRoot().modalRef.toggleModal(20).then(selected => {
+            if(selected) {
+                this.loadVideo(selected)
+            }
+        })
+    }
+
+    loadVideo = async (file) => {
+        this.video.src = URL.createObjectURL(file); 
+        this.tex.minFilter = THREE.LinearFilter;
+        this.tex.magFilter = THREE.LinearFilter;
+        this.tex.format = THREE.RGBFormat;
+        document.body.appendChild(this.video);
+        this.video.muted = true;
+
+
+        this.seekResolve  = () => console.log("seek resolve");
+        this.video.addEventListener('seeked', async () => {
+            this.seekResolve();
+        });
+
+        
+        while((this.video.duration === Infinity || isNaN(this.video.duration)) && this.video.readyState < 2) {
+            await new Promise(r => setTimeout(r, 1000));
+            this.video.currentTime = 10000000*Math.random();
+        }
     }
     
-    setUpGUI = (f) => {
+
+    
+    __setUpGUI = (f) => {
         const folder = f; 
-        folder.add(this, "changeImage");
-        folder.add(this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
-        folder.add(this, "brightenToAudio");
-        folder.add(this, "brightenMultipler");           
-        folder.add(this.uniforms.opacity, "value").name("opacity");
-        folder.add(this, "vignetteAmount").onChange(() => this.uniforms.value = this.vignetteAmount);
-        folder.add(this.uniforms.should_mirror, "value", {name: "Mirror image"});
+        const i = this.parent;
+        i.addController(folder, this, "loadVideoFile");
+        i.addController(folder, this, "fps", {min: 1, max: 100});
         this.folder = f;
     }
 }

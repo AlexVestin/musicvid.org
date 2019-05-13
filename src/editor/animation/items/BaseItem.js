@@ -19,6 +19,7 @@ export default class BaseItem extends SerializableObject {
         this.__startTime = 0;
         this.__endTime = 600;
         this.name = "";
+        this.__isEncoding = false;
 
         if (info) {
             this.width = info.width;
@@ -113,7 +114,8 @@ export default class BaseItem extends SerializableObject {
     update = () => {};
     setTime = () => {};
     stop = () => {};
-    play = () => {};
+    seekTime = (t) => {}; 
+    play = (t) => {};
     setUpGUI = () => {};
 
     updateDisplay = () => {
