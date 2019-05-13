@@ -34,6 +34,7 @@
     "simplebar-react": "^0.1.4",
     "stats.js": "^0.17.0",
     "three": "^0.103.0",
+    "three.meshline": "^1.2.0",
     "three.textsprite": "^18.10.24",
     "uuid": "^3.3.2",
     "validator": "^10.11.0"

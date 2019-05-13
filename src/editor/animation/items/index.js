@@ -6,6 +6,8 @@ import ParticlesSideways  from './perspective/ParticlesSideways'
 import TextLines from './perspective/TextLines' 
 import SphereMesh from './perspective/SphereMesh' 
 import BasicMeshItem from './BasicMeshItem' 
+import ParticleLines from './perspective/ParticleLines' 
+
 
 // ortho items
 import TimeRep from './ortho/TimeRep'
@@ -33,7 +35,8 @@ const perspectiveItems = {
     ParticlesSideways: {url:"https://github.com/caseif/vis.js", authors: "@Caseif & @Incept", class: ParticlesSideways, img: "img/items/ParticlesSideways.png"},
     TextLines: {class: TextLines, img: "img/items/TextLines.png"},
     SphereMesh: {class: SphereMesh},
-    BasicMeshItem: {class: BasicMeshItem}
+    BasicMeshItem: {class: BasicMeshItem},
+    ParticleLines: {class: ParticleLines}
 }
 
 const canvasItems = {

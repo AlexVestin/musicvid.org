@@ -111,8 +111,6 @@ export function addCanvasControls(parent, object, folder, a = {}) {
                 }
             }
         })
-
-        console.log(fltStr)
         object.filter = fltStr;
     }
 }

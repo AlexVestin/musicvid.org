@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { loadImageTexture, loadImageTextureFromChoice } from 'editor/util/ImageLoader';
 import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
-
+import getRandomImage from './GetRandomImage'
 
 import serialize from '../Serialize'
 
@@ -55,15 +55,15 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
 
         this.uniforms = { 
             texture1: {type: "t", value: null }, 
-            vignette_amt: {value: 0.3}, 
+            vignette_amt: {value: 0.42}, 
             enablePostProcessing: {value: true}, 
             should_mirror: {value: true},
-            opacity: {value: 0.999999}
+            opacity: {value: 0.8}
         }
         this.transparent = true;
         this.vertexShader = vertexShader; 
         this.fragmentShader = fragmentShader;
-        const url = "./img/space.jpeg";
+        const url = getRandomImage();
         this.prevFile = url;
         this._opacity = 1.0;
         loadImageTextureFromChoice(url, this.setBackground);  

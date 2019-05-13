@@ -61,6 +61,8 @@ class AlertDialog extends React.Component {
                         <br />
                         <br />
                         <div style={{ backgroundColor: "#efefef" }}>
+                        {this.props.usingSampleAudio && 
+                        <React.Fragment>
                             <Typography
                                 component="h6"
                                 variant="h6"
@@ -77,6 +79,8 @@ class AlertDialog extends React.Component {
                             >
                             Nomyn - Reverie
                             </Typography>
+                            </React.Fragment>
+                        }
                             <Typography
                                 component="h6"
                                 variant="h6"

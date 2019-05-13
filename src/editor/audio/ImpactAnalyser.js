@@ -29,6 +29,8 @@ export default function ImpactAnalyser(gui, parent = null, disable = false) {
     addAttribute("amplitude", 1, f1, { min: 0 });
     addAttribute("maxAmount", 280, f1, { min: 0 });
     addAttribute("minAmount", 0, f1, { min: 0 });
+    addAttribute("minThreshold", 0, f1, { min: 0 });
+
 
     addAttribute("useDeltaSmoothing", true, f1, { min: 0 });
     addAttribute("minDeltaNeededToTrigger", 0.01, f1, { min: 0 });
@@ -52,7 +54,9 @@ export default function ImpactAnalyser(gui, parent = null, disable = false) {
         
         if(amount < this.minAmount)
             amount = this.minAmount;
-
+        
+        if(amount < this.minThreshold)
+            amount = 0;
 
         this.lastAmount = amount;
 

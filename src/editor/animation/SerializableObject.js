@@ -18,8 +18,13 @@ export default class SerializableObject {
                     fileInfo: obj.fileInfo
                 });
             } else {
-                controller.setValue(values[key].value);
-                controller.updateDisplay();
+                if(!controller) {
+                    alert(`${this.name}:${key} setting has changed internal id or does no longer exist`)
+                }else {
+                    controller.setValue(values[key].value);
+                    controller.updateDisplay();
+                }
+               
             }
         });
     };

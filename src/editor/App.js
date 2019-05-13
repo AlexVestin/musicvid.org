@@ -300,7 +300,10 @@ class App extends PureComponent {
             
             return;
         }
+
+        
         this.usingSampleAudio = selected === "https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3";
+        console.log(this.usingSampleAudio)
         this.loadNewAudio(selected).then(this.audioReady);
         
     };
@@ -310,6 +313,7 @@ class App extends PureComponent {
             const items = this.animationManager.getAllItems();
             this.__items = items;
             let attribFound = false;
+            console.log(this.usingSampleAudio)
             items.forEach(item => {
                 if (item.license === license.REQUIRE_ATTRIBUTION) {
                     this.modalRef.current.openLicenseModal(

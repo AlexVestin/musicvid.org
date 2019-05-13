@@ -42,6 +42,5 @@ export default class PixelPass extends Pass  {
             if (this.clear) renderer.clear();
             this.fsQuad.render(renderer);
         }
-
 	}
 }

@@ -42,8 +42,9 @@ export default class Pass  extends SerializableObject {
     }
     __setUpGUI = () => {};
     update = () => {}
-
-    stop = ( ) => {}
+    play = (t) => {}
+    stop = () => {}
+    seekTime = () => {}
 
     setSize(width, height) { }
 
