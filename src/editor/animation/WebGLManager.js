@@ -78,19 +78,22 @@ export default class WebGLManager {
         this.settingsFolder.updateDisplay();
         json.automations.forEach(auto => {
             this.addAutomation(auto);
-        })
+        })  
 
+        
         json.scenes.forEach(scene => {     
             if(scene.__settings.isScene) {
-                const s = this.addSceneFromText(scene.__settings.TYPE);
+                const s = this.addSceneFromText(scene.__settings.type || scene.__settings.TYPE);
                 s.undoCameraMovement(scene.camera);
                 s.controls.enabled = scene.controlsEnabled; 
                 s.__automations = scene.__automations;
-                s.addItems(scene.items);
+                if(scene.__controllers)
+                    s.__setControllerValues(scene.__controllers.controllers);
+                s.addItems(scene.__items || scene.items);
                 s.updateSettings();
                 Object.assign(s.pass, scene.__passSettings);
             }else {
-                const e = this.postProcessing.addEffectPass(scene.__settings.TYPE);
+                const e = this.postProcessing.addEffectPass(scene.__settings.type || scene.__settings.TYPE);
                 e.__setControllerValues(scene.controllers);
             }
         })
@@ -115,35 +118,15 @@ export default class WebGLManager {
     }
 
     serializeProject = () => {
-        const rootGui = this.gui.getRoot();
         const projFile = {
             scenes: [],
             settings: {}
         };
         projFile.settings = serialize(this);
-        projFile.automations = Object.keys(rootGui.__automations).map(key => rootGui.__automations[key].__serialize());
+        projFile.automations = this.gui.getAutomations().map(auto => auto.__serialize());
         
         this.scenes.forEach( (scene, i) => {
-            if(scene.isScene) {
-                let sceneConfig = {
-                    __settings: serialize(scene),
-                    __passSettings: serialize(scene.pass),
-                    __automations: scene.__automations,
-                    items: []
-                }
-                
-                scene.items.forEach(item => {
-                    sceneConfig.items.push(item.serialize());
-                });
-                sceneConfig.camera = scene.camera.matrix.toArray()
-                sceneConfig.controlsEnabled = scene.controls.enabled;
-                
-                projFile.scenes.push(sceneConfig);
-            } else {
-                const t = scene.serialize();
-                t.__settings = {isScene: false, TYPE: scene.TYPE}
-                projFile.scenes.push(t);
-            }
+            projFile.scenes.push(scene.__serialize())
         })
         return projFile;
     }
@@ -151,7 +134,7 @@ export default class WebGLManager {
     saveProjectToFile = () => {
         const projFile = this.serializeProject();
         const blob = new Blob([JSON.stringify(projFile)], { type: 'application/json' });
-        FileSaver.saveAs(blob,"project.json");
+        FileSaver.saveAs(blob, this.__projectName + ".json");
     }
 
     saveProjectToProfile = () => {
@@ -350,9 +333,12 @@ export default class WebGLManager {
 
     prepareEncoding = () => {
         this.scenes.forEach(scene => {
-            scene.items.forEach(item => {
-                item.__isEncoding = true;
-            })
+            if(scene.isScene) {
+                scene.items.forEach(item => {
+                    item.__isEncoding = true;
+                })
+            } 
+            
         })
     }
 
@@ -530,7 +516,7 @@ export default class WebGLManager {
         if (!this.postprocessingEnabled) {
             this.renderer.clear();
             this.scenes.forEach(scene => {
-                if (scene.TYPE !== "" && scene.isScene) {
+                if (scene.type !== "" && scene.isScene) {
                     scene.update(time, audioData, shouldIncrement);
                     this.renderer.render(scene.scene, scene.camera);
                     this.renderer.clearDepth();

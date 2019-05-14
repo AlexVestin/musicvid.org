@@ -16,12 +16,13 @@
 .nav {
     width: 60%;
     margin-bottom: 10px;
+    
 }
 
 .nav button {
     font-family: 'Montserrat', sans-serif;
 
-    min-width: 33%;
+    width: 33%;
     text-align: center;
     border: none;
     text-align: center;
@@ -30,6 +31,7 @@
     padding: 6px;
     font-size: 16px;
     cursor: pointer;
+    overflow: hidden;
 }
 
 .wrapper {
@@ -41,6 +43,7 @@
     border: 1px solid rgba(155,155,155,0.3);
     border-radius: 0.5em;
     padding: 30px;
+   
 }
 
 .navWrapper {
@@ -48,6 +51,7 @@
     display: flex;
     align-content: center;
     justify-content: center;
+    
 }
 
 

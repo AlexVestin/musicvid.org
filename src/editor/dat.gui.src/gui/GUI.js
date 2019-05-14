@@ -100,13 +100,9 @@ const GUI = function(pars) {
 
   dom.addClass(this.domElement, CSS_NAMESPACE);
 
-  this.__undoLog = [];
-  this.__undoLogSize = 64;
-  this.__redoLog = [];
+
   this.__disabled = false;
   this.__automations = {};
-  this.__automationLinks = [];
-
   this.__time = 0;
   this.__automationConfigUpdateFrequency = 5;
 
@@ -546,24 +542,18 @@ common.extend(
       );
     },
 
+    getAutomations: function() {
+      const autos = this.getRoot().__automations;
+      console.log(this.getRoot(), this.getRoot().__automations);
+      return Object.keys(autos).map(key => autos[key]);
+    },
+
     addUndoItem: function(item) {
-      if(this.__undoLog.length > this.__undoLogSize) {
-        this.__undoLog.shift();
-      }
+     
     },
     undo: function() {
     if(!this.__disabled) {
 
-      if(this.__undoLog.length > 0) {
-        const item = this.__undoLog.pop();
-        if(item.type === "value") {
-          item.controller.undo(item.prevValue);
-          item.controller.previousValue = item.prevValue;
-        }else  if(item.type === "action") {
-          item.func(item.args);
-        }
-        
-      }
     }      
      
     },

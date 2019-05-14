@@ -7,7 +7,7 @@ export default class Exporter {
         this.onProgress         = onProgress;
         this.fps                = Number(config.video.fps);
         this.videoBitrate       = config.video.bitrate;
-        this.duration           = config.sound.duration;
+       
         this.encodedVideoFrames = 0;
         this.width              = config.video.width;
         this.height             = config.video.height;
@@ -20,14 +20,31 @@ export default class Exporter {
         
         this.presetIdx          = config.video.presetIdx;
         this.gui                = config.gui.getRoot();
+
+        let duration = config.sound.duration;;
+        let time = 0;
+
+        console.log(config);
+        if(config.useCustomTimeRange) {
+            time = config.startTime;
+            duration  = config.endTime;
+        }
+
+        this.duration = duration;
+        this.__startTime = time;
+    }
+
+    prepare = () => {
+        console.log("PREPARE", this.__startTime)
+        this.sound.setEncodeStartTime(this.__startTime);
+        this.animationManager.seekTime(this.__startTime);
+        this.time = this.__startTime;
     }
 
     init = (onready) => {
         this.onready = onready;
-        this.videoEncoder       = new VideoEncoder(this.initEncoder);
+        this.videoEncoder = new VideoEncoder(this.initEncoder);
     }
-
-
     initEncoder = () => {
         const videoConfig = {
             w: this.width,
@@ -58,9 +75,14 @@ export default class Exporter {
         this.videoEncoder.close();
     }
 
+    setTime = (startTime)  => { 
+        this.time  = startTime;
+        this.sound.setEncodeStartTime(startTime);
+    }
+
     encode = () => {
         if(!this.canceled ) {
-            const videoTs = (this.encodedVideoFrames / this.fps );
+            const videoTs = this.time;
             const audioTs = (this.sound.exportFrameIdx * this.sound.exportWindowSize) / this.sound.sampleRate; 
             if( videoTs >= audioTs ) {
                 this.encodeAudioFrame();
@@ -77,15 +99,12 @@ export default class Exporter {
             this.videoEncoder.sendFrame();
     
             if(this.encodedVideoFrames % 15 === 0) 
-                this.onProgress(this.encodedVideoFrames, Math.floor(this.duration * this.fps))
+                this.onProgress(this.encodedVideoFrames, Math.floor((this.duration - this.__startTime) * this.fps))
     
-            if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {
+            if(this.time > this.duration) {
                 this.videoEncoder.close(this.saveBlob);
             }
-
-            
         }
-       
     }
 
     encodeVideoFrame = () => {

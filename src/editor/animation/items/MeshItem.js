@@ -12,7 +12,6 @@ export default class MeshItem extends BaseItem {
         this.type = info.type;
         this.mesh = new THREE.Mesh();
         info.scene.add(this.mesh);
-        this.materialFolders = [];
     }
 
     updateGeometry = (configs) => {
@@ -43,6 +42,8 @@ export default class MeshItem extends BaseItem {
             addPersControls(this, this.mesh, this._geoFol);
         }
     }
+
+    onImageChange = () => {};
 
     play = (t) => {
         if(this.material.play)

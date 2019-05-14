@@ -21,7 +21,7 @@ export default class CanvasScene extends Scene{
         this.scene.add(this.mesh);
         
         this.MODAL_REF_NR = 5;
-        this.TYPE = "canvas";
+        this.type = "canvas";
         if(this.folder) {
             this.folder.name = "canvas scene";
             this.setUpControls();

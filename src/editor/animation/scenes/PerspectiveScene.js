@@ -10,7 +10,7 @@ export default class Scene3DPerspective extends Scene {
         this.camera.position.z = 200;
       
         this.MODAL_REF_NR = 7;
-        this.TYPE = "perspective";
+        this.type = "perspective";
         if(this.folder) {
             this.folder.name = "webgl 3d scene";
             this.setUpControls();

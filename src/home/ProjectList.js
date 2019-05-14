@@ -44,7 +44,7 @@ function FolderList(props) {
 
 class ProjectList extends React.PureComponent {
 
-  state = { loaded: false, projects: [], redirectTo: "", modalOpen: false };
+  state = { loaded: false, projects: [], redirectTo: "", modalOpen: false, message: "Loading Projects..." };
   async getProjects() {
       const snapshot = await base
           .collection("users")
@@ -57,6 +57,8 @@ class ProjectList extends React.PureComponent {
   componentDidMount() {
       if (!this.loaded && this.props.isAuthenticated) {
           this.getProjects();
+      }else if(!this.props.authFetching && !this.props.isAuthenticated) {
+        this.setState({message:  "Please sign in to view your projects"})
       }
   }
 
@@ -94,9 +96,9 @@ class ProjectList extends React.PureComponent {
           {this.state.projects.length === 0 ?
           <React.Fragment>
           {!this.state.loaded ?
-              <Typography variant="h6">Loading projects...</Typography>   
+              <Typography style={{color: "#efefef"}} variant="h6">{this.state.message}</Typography>   
               :
-              <Typography variant="h6">You don't currently have any projects! You can make a new one in the editor</Typography>   
+              <Typography style={{color: "#efefef"}} variant="h6">You don't currently have any projects! You can make a new one in the editor</Typography>   
               }
           </React.Fragment>
           :

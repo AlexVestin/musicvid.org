@@ -16,39 +16,48 @@ export default function ImpactAnalyser(gui, parent = null, disable = false) {
         if(disable) {
             c.disableAutomations();
         }
+
+        return c;
     };
     // ----
     let f1;
     if(gui)
      f1 = gui.addFolder("Audio Impact Analysis Settings");
     addAttribute("startBin", 0, f1, { min: 0 });
-    addAttribute("endBin", 1000, f1, { min: 0 });
+    addAttribute("endBin", 160, f1, { min: 0 });
 
     addAttribute("baseAmount", 1, f1, { min: 0 });
     addAttribute("enableImpactAnalysis", true, f1, { min: 0 });
-    addAttribute("amplitude", 1, f1, { min: 0 });
-    addAttribute("maxAmount", 280, f1, { min: 0 });
-    addAttribute("minAmount", 0, f1, { min: 0 });
-    addAttribute("minThreshold", 0, f1, { min: 0 });
+    addAttribute("amplitude", 64, f1, { min: 0 });
+
+    let f13 = f1.addFolder("Clamping");
+    addAttribute("maxAmount", 280, f13, { min: 0 });
+    addAttribute("minAmount", 0, f13, { min: 0 });
+    addAttribute("minThreshold", 0, f13, { min: 0 });
+
+    let f12 = f1.addFolder("Smoothing");
+    addAttribute("useDeltaSmoothing", false, f12, { min: 0 });
+    addAttribute("minDeltaNeededToTrigger", 3, f12, { min: 0 });
+    addAttribute("deltaDecay", 0.25, f12, {min: 0});
 
 
-    addAttribute("useDeltaSmoothing", true, f1, { min: 0 });
-    addAttribute("minDeltaNeededToTrigger", 0.01, f1, { min: 0 });
-    addAttribute("deltaDecay", 4, f1, {min: 0});
    
     this.lastAmount = 0;
     this.analyse = (array) => {
+        
         let newArr = array.slice();
         let amount = this.baseAmount;
         if(this.enableImpactAnalysis) amount = average(newArr, this);
+        const amp = this.amplitude / (64 * 16);
+        amount = amount * amp;
 
         if(this.useDeltaSmoothing) {
-            if(amount - this.lastAmount < this.minDeltaNeededToTrigger) {
-                amount = this.lastAmount - this.deltaDecay;
+            const delta = amount - this.lastAmount; 
+            if(delta < this.minDeltaNeededToTrigger * amp ) {
+                amount = this.lastAmount - (this.deltaDecay * amp);
             }
         }
-
-        amount = amount * this.amplitude / (64 * 16);
+        
         if(amount > this.maxAmount) 
             amount = this.maxAmount;
         
@@ -59,7 +68,6 @@ export default function ImpactAnalyser(gui, parent = null, disable = false) {
             amount = 0;
 
         this.lastAmount = amount;
-
         return amount;
     }
 }

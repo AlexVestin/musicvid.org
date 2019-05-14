@@ -2,7 +2,7 @@ import SerializableObject from '../../SerializableObject'
 export default class Pass  extends SerializableObject {
     constructor(config) {
         super();
-        this.TYPE = "CHANGE THIS IN PASS.JS";
+        this.type = "CHANGE THIS IN PASS.JS";
         this.name = "pass";
         this.isScene =  false;
         this.__automations = [];
@@ -39,6 +39,12 @@ export default class Pass  extends SerializableObject {
         this.addBasicControls(this.folder);
         this.__setUpGUI(this.folder);
         this.folder.add(this, "removeMe").name("Remove");
+    }
+
+    __serialize = () => {
+        const obj = this.serialize();
+        obj.__settings = {type: this.type, isScene: this.isScene};
+        return obj;
     }
     __setUpGUI = () => {};
     update = () => {}

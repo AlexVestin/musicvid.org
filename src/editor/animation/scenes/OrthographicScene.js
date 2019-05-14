@@ -9,7 +9,7 @@ export default class Scene3DOrtho extends Scene {
         this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0.1, 10 );
         this.camera.position.z = 1;
         this.MODAL_REF_NR = 6;
-        this.TYPE = "ortho";
+        this.type = "ortho";
         if(this.folder) {
             this.folder.name = "webgl 2d scene";
             this.setUpControls();

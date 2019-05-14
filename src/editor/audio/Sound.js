@@ -48,9 +48,15 @@ export default class Audio {
         
     };
 
+    setEncodeStartTime = (time) => {
+        this.exportFrameIdx = Math.floor(time * this.sampleRate / this.exportWindowSize);
+    }
+
     getEncodingFrame = () => {
         const sidx = this.exportFrameIdx * this.exportWindowSize;
         const eidx = (this.exportFrameIdx + 1) * this.exportWindowSize;
+
+        console.log(sidx)
 
         const left = this.bufferSource.buffer
             .getChannelData(0)

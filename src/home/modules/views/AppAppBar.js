@@ -135,15 +135,7 @@ const ProfileButtonGroup = function(props) {
   const { classes } = props;
   return (
       <React.Fragment>
-          <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={classes.rightLink}
-              onClick={props.projects}
-          >
-              {"My projects"}
-          </Link>
+
           <Link
               variant="h6"
               underline="none"

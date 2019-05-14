@@ -80,8 +80,8 @@ import {
         dashRatio, // The ratio between that is visible or not for each dash
         opacity,
         transparent: true,
+        depthWrite: false,
         color,
-        resolution: new Vector2(1920, 1080)
       });
   
       // * ******************************

@@ -12,7 +12,7 @@ export default class GlitchPass extends Pass {
         super();
 
         this.name = "Glitch pass";
-        this.TYPE = "GlitchPass";
+        this.type = "GlitchPass";
 
         if (DigitalGlitch === undefined)
             console.error("THREE.GlitchPass relies on THREE.DigitalGlitch");

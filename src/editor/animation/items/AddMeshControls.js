@@ -11,7 +11,7 @@ export default function addPersMeshControls(parent, mesh, folder) {
     parent.addController(folder, parent, "newGeometryModal").name("Change geometry");
     parent.addController(folder, mesh, "visible");
 
-    const posOpts = {min: -maxPos, max: maxPos, step: maxPos / 50, path :"mesh-psoition"};
+    const posOpts = {min: -maxPos, max: maxPos, path :"mesh-psoition"};
     parent.addController(folder, mesh.position, "x", posOpts);
     parent.addController(folder, mesh.position, "y", posOpts);
     parent.addController(folder, mesh.position, "z", posOpts);
@@ -19,7 +19,7 @@ export default function addPersMeshControls(parent, mesh, folder) {
     parent.addController(folder, mesh.rotation, "y", {path: "mesh-rotation"}).name("Rotation Y");
     parent.addController(folder, mesh.rotation, "z", {path: "mesh-rotation"}).name("Rotation Z");
 
-    const scaleOpts = {min:  -maxScale, max: maxScale, step: 0.1, path: "mesh-scale"};
+    const scaleOpts = {min:  -maxScale, max: maxScale, path: "mesh-scale"};
     mesh.__scale = new Vector3(mesh.scale.x, mesh.scale.y, mesh.scale.z);
     parent.addController(folder, mesh.scale, "x", scaleOpts).name("Scale x").onChange(() => mesh.__scale.copy(mesh.scale));
     parent.addController(folder, mesh.scale, "y", scaleOpts).name("Scale y").onChange(() => mesh.__scale.copy(mesh.scale));
@@ -34,7 +34,7 @@ export function addOrthoMeshControls(parent, mesh, folder) {
     parent.addController(folder, parent, "newGeometryModal").name("Change geometry");
     parent.addController(folder, mesh, "visible");
 
-    const posOpts = {min: -maxPos, max: maxPos, step: maxPos / 50, path :"mesh-psoition"};
+    const posOpts = {min: -maxPos, max: maxPos, path :"mesh-psoition"};
     parent.addController(folder, mesh.position, "x", posOpts);
     parent.addController(folder, mesh.position, "y", posOpts);
     parent.addController(folder, mesh.position, "z", posOpts);
@@ -42,7 +42,7 @@ export function addOrthoMeshControls(parent, mesh, folder) {
     parent.addController(folder, mesh.rotation, "y", {path: "mesh-rotation"}).name("Rotation Y");
     parent.addController(folder, mesh.rotation, "z", {path: "mesh-rotation"}).name("Rotation Z");
 
-    const scaleOpts = {min:  -maxScale, max: maxScale, step: 0.1, path: "mesh-scale"};
+    const scaleOpts = {min:  -maxScale, max: maxScale, path: "mesh-scale"};
     mesh.__scale = new Vector3(mesh.scale.x, mesh.scale.y, mesh.scale.z);
     parent.addController(folder, mesh.scale, "x", scaleOpts).name("Scale x").onChange(() => mesh.__scale.copy(mesh.scale));
     parent.addController(folder, mesh.scale, "y", scaleOpts).name("Scale y").onChange(() => mesh.__scale.copy(mesh.scale));

@@ -11,7 +11,7 @@ export default class FilmPass extends Pass {
     constructor(noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale) {
         super();
         this.name = "Film pass";
-        this.TYPE = "FilmPass";
+        this.type = "FilmPass";
 
         var shader = FilmShader;
 

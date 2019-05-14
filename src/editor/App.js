@@ -230,6 +230,7 @@ class App extends PureComponent {
         this.encoding = true;
         this.stop();
 
+        this.exporter.prepare();
         this.exporter.encode();
         this.setState({ encoding: true });
     };
@@ -244,7 +245,19 @@ class App extends PureComponent {
 
     startEncoding = selected => {
 
+        let duration = this.state.audioDuration;
+        if(selected.useCustomTimeRange) {
+            if(selected.startTime < 0 || selected.endTime > duration) {
+                alert("Error: Cant before 0 sec or after audio duration length");
+                return;
+            }else if(selected.startTime >= selected.endTime) {
+                alert("Error: selected start time is bigger or uqual to the end time");
+                return;
+            }
+        }
+
         this.checkLicense().then(() => {
+            
             const config = {
                 video: {
                     width: this.resolution.width,
@@ -255,9 +268,12 @@ class App extends PureComponent {
                 },
                 fileName: selected.fileName,
                 animationManager: this.animationManager,
-                duration: this.state.audioDuration,
+                duration: duration,
                 sound: this.audio,
-                gui: this.gui
+                gui: this.gui,
+                startTime: selected.startTime,
+                endTime: selected.endTime,
+                useCustomTimeRange: selected.useCustomTimeRange
             };
     
             this.exporter = new Exporter(

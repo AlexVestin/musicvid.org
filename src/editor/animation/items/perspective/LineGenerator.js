@@ -71,7 +71,6 @@ class LineGenerator extends Object3D {
     }
 
     removeLine(line) {
-        console.log(this.lines.length)
         line.material.dispose();
         line.geometry.dispose();
 

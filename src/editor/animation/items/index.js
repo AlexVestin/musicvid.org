@@ -8,20 +8,19 @@ import SphereMesh from './perspective/SphereMesh'
 import BasicMeshItem from './BasicMeshItem' 
 import ParticleLines from './perspective/ParticleLines' 
 
-
 // ortho items
 import TimeRep from './ortho/TimeRep'
 import Background from './ortho/Background'
 import StarField from './ortho/StarField'
-import SpriteTextMask from './ortho/SpriteTextMask'
 import SpriteText from './ortho/SpriteText'
 import Meme from './ortho/Meme'
 import Video from './ortho/Video'
 
-
 // canvas items
 import Monstercat2D from './canvas/MonsterBars2D'
-import Text2D from './canvas/Text'
+import Text2D from './canvas/TextString'
+import TimeText from './canvas/TimeText'
+
 import Image2D from './canvas/Image'
 import Polartone2D from './canvas/Polartone2D'
 import BeatCounter from './canvas/BeatCounter'
@@ -41,7 +40,9 @@ const perspectiveItems = {
 
 const canvasItems = {
     Monstercat2D: { url:"https://github.com/caseif/vis.js", authors: "@Caseif & @Incept", class: Monstercat2D,  img: "img/items/MonsterBars.png" },
-    Text2D: {class: Text2D, img: "img/items/Text2D.png"} ,
+    Text2D: {class: Text2D, img: "img/items/Text2D.png"},
+    TimeText: {class: TimeText, img: "img/items/Text2D.png"},
+
     Image2D: {class: Image2D, img: "img/items/Image.png"},
     Polartone2D: {class: Polartone2D, img: "img/items/Polartone.png", url: "https://github.com/mattdesl/Polartone", authors: "Mattdesl"},
     BeatCounter: {class: BeatCounter},
@@ -55,11 +56,9 @@ const orthoItems = {
     Background: { class: Background },
     StarField: {img: "img/items/StarNest.png", class: StarField },
     TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},
-    SpriteTextMask: {class: SpriteTextMask, img: "img/items/StarField.png"},
     SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"},
     Meme: {class: Meme},
     Video: {class: Video},
-
 }
 
 
@@ -91,6 +90,6 @@ export default function getItemClassFromText(type, name) {
     }else if(type === "perspective") {
         return perspectiveItems[name].class;
     }else {
-        console.log("WRONG TYPE")
+        console.log("WRONG type")
     }
 }

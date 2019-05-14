@@ -2,6 +2,7 @@
 import getItemClassFromText from '../items'
 import OrbitControls from '../controls/OrbitControls';
 import SerializableObject from '../SerializableObject';
+import serialize from '../Serialize'
 
 export default class Scene extends SerializableObject {
     constructor(gui, resolution, remove, moveScene) {
@@ -106,7 +107,7 @@ export default class Scene extends SerializableObject {
 
     setUpGui = (before =  null) => {
         const gui = this.gui;
-        this.folder = gui.addFolder(this.TYPE  + " scene", true, true, before);
+        this.folder = gui.addFolder(this.type  + " scene", true, true, before);
         this.folder.upFunction = () => this.__moveScene({up: true, scene: this});
         this.folder.downFunction = () => this.__moveScene({up: false, scene: this});
         this.itemsFolder = this.folder.addFolder("Items");
@@ -128,12 +129,30 @@ export default class Scene extends SerializableObject {
         });
     }
 
+    __serialize = () => {
+        let sceneConfig = {
+            __settings: serialize(this),
+            __passSettings: serialize(this.pass),
+            __automations: this.__automations,
+            __items: [],
+            __controllers: this.__serializeControllers()
+        }
+        
+        this.items.forEach(item => {
+            sceneConfig.__items.push(item.serialize());
+        });
+        sceneConfig.camera = this.camera.matrix.toArray()
+        sceneConfig.controlsEnabled = this.controls.enabled;
+
+        return sceneConfig;
+    }
+
     removeMe = () => {
         // TODO fix better handling of removing scenes regarding undo/redo
         /*
         while(this.items.length > 0) {
             this.items[0].dispose();
-            if(this.TYPE !== "canvas")
+            if(this.type !== "canvas")
                 this.scene.remove(this.items[0].mesh);
             this.items.pop();
         }*/
@@ -145,7 +164,7 @@ export default class Scene extends SerializableObject {
         const {item, undoAction} = args;
 
         const index = this.items.findIndex(e => e === item);
-        if(this.TYPE !== "canvas")
+        if(this.type !== "canvas")
             this.scene.remove(this.items[index].mesh);
 
         item.folder.parent.removeFolder(item.folder);
@@ -162,7 +181,7 @@ export default class Scene extends SerializableObject {
         this.items.push(item);
 
         item.setUpFolder();
-        if(this.TYPE !== "canvas")
+        if(this.type !== "canvas")
             this.scene.add(item.mesh);
     }
 
@@ -173,7 +192,7 @@ export default class Scene extends SerializableObject {
     }
 
     getInfoObject = () => {
-        if(this.TYPE === "canvas") {
+        if(this.type === "canvas") {
             
         }
     }
@@ -182,7 +201,7 @@ export default class Scene extends SerializableObject {
         if(name) {
             let info = {
                 gui: this.itemsFolder,
-                type: this.TYPE,
+                type: this.type,
                 width: this.resolution.width,
                 height: this.resolution.height,
                 scene: this.scene,
@@ -190,11 +209,11 @@ export default class Scene extends SerializableObject {
                 remove: this.removeItem
             };
 
-            if(this.TYPE  === "canvas") {
+            if(this.type  === "canvas") {
                 info = {...info, ctx: this.ctx, canvas: this.canvas};
             }
             
-            const itemClass = getItemClassFromText(this.TYPE, name);
+            const itemClass = getItemClassFromText(this.type, name);
             const item = new itemClass(info);
             item.__itemName = name;
             this.items.push(item);

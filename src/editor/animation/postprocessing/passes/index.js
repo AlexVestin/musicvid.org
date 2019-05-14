@@ -2,7 +2,7 @@ import BloomPass from './bloompass'
 import CopyShader from '../shaders/copyshader'
 import GlitchPass from './glitchpass'
 import FilmPass from './FilmPass'
-import PixelPass from './PixelPass'
+import PixelPass from './pixelpass'
 
 /*
 import SSAAPass from './ssaapass'
