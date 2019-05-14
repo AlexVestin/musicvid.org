@@ -61,6 +61,8 @@ export default class ParticleLines extends BaseItem {
         this.addController(spawn, this.mesh, "getRandomColor", {min: 0});
         this.addController(spawn, this.mesh, "color", {color: true});
         this.addController(spawn, this.mesh, "_scale", {min: 1, max: 100}).name("Scale");
+        this.addController(spawn, this.mesh, "nrPrecisionPoints", {min: 1, max: 1000, step: 1}).name("Sample rate");
+
 
         const direction = spawn.addFolder("Direction");
         this.addController(direction, this.mesh, "directionXLower");

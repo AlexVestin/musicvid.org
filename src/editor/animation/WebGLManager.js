@@ -72,6 +72,8 @@ export default class WebGLManager {
             this.scenes[0].removeMe();
         }
 
+        this.gui.getRoot().__automations = [];
+
         Object.assign(this, json.settings);
         this.settingsFolder.updateDisplay();
         json.automations.forEach(auto => {
@@ -79,7 +81,6 @@ export default class WebGLManager {
         })
 
         json.scenes.forEach(scene => {     
-            console.log(scene);           
             if(scene.__settings.isScene) {
                 const s = this.addSceneFromText(scene.__settings.TYPE);
                 s.undoCameraMovement(scene.camera);
@@ -93,6 +94,10 @@ export default class WebGLManager {
                 e.__setControllerValues(scene.controllers);
             }
         })
+
+        if(this.audio){
+            this.setFFTSize(this.fftSize);
+        }
     }
 
     loadProjectFromFile = () => {
@@ -306,7 +311,7 @@ export default class WebGLManager {
 
         if (setUpFolders) {
             this.layersFolder = this.gui.__folders["Layers"];
-            this.layersFolder.add(this, "addScene");
+            this.layersFolder.add(this, "addScene").name("Add layer");
         }
         // Set up internal canvas to keep canvas size on screen consistent
 

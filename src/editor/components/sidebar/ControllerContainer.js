@@ -3,6 +3,7 @@ import classes from './ControllerContainer.module.scss'
 import SimpleBar from 'simplebar-react';
 import Automations from './Automations';
 import 'simplebar/dist/simplebar.min.css';
+import Projects from './Projects';
 
 class GUIMount extends PureComponent {
     constructor() {
@@ -26,7 +27,7 @@ export default class ControllerContainer extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {index: 1};
+        this.state = {index: 1, nav: 0};
     }
 
     componentDidMount() {
@@ -66,31 +67,54 @@ export default class ControllerContainer extends PureComponent {
         }
     }
 
+    convertAndLoad = (projectFile) => {
+        const proj = JSON.parse(projectFile.str);
+        this.props.loadProject(proj);
+    }
+
     render() {
-        const { index } = this.state;
+        const { index, nav } = this.state;
         const { gui, loaded } = this.props;
 
         const selectedColor = "#444";
+        const bg =  nav === 0 ? selectedColor : "";
+        const c =  nav === 0 ? "#FFF" : "";
+
         return (
             <div className={classes.container} >
                 <div className={classes.wrapper}>
-                    <div className={classes.headerButtons}>
-                        <div onClick={()=>this.setState({index: 1})} style={{backgroundColor: index === 1 ? selectedColor : ""}}>layers</div>
-                        <div onClick={()=>this.setState({index: 2})} style={{backgroundColor: index === 2 ? selectedColor : ""}}>automations</div>
-                        <div onClick={()=>this.setState({index: 3})} style={{backgroundColor: index === 3 ? selectedColor : ""}}>audio</div>
-                        <div onClick={()=>this.setState({index: 4})} style={{backgroundColor: index === 4 ? selectedColor : ""}}>settings</div>
-                        <div onClick={()=>this.setState({index: 5})} style={{backgroundColor: index === 5 ? selectedColor : ""}}>export</div>
-
-                    </div>
-                    <div style={{width: "100%", height: 5, backgroundColor: "gray"}}></div>
-                    <SimpleBar data-simplebar-force-visible style={{ width: "100%", height: "95%", borderBottom: "2px solid gray", borderLeft: "2px solid gray", borderRight: "2px solid gray" }}>
-                        {index === 1 && loaded && <GUIMount gui={gui.__folders["Layers"].domElement}></GUIMount>}
-                        {index === 2 && loaded && <Automations gui={gui}></Automations>}
-                        {index === 3 && loaded && <GUIMount gui={gui.__folders["Audio"].domElement}></GUIMount>}
-                        {index === 4 && loaded && <GUIMount gui={gui.__folders["Settings"].domElement}></GUIMount>}
-                        {index === 5 && loaded && <GUIMount gui={gui.__folders["Export"].domElement}></GUIMount>}
-                    </SimpleBar>
+                <div className={classes.navWrapper}>
+                    <div className={classes.nav}>
+                        <button onClick={() => this.setState({nav: 0})}  style={{backgroundColor: bg, color: c}}>Editor</button>
+                        <button onClick={() => this.setState({nav: 1})}  style={{backgroundColor: nav === 1 ? selectedColor : "", color: nav === 1 ? "#FFF" : ""}}>My Projects</button>
+                        <button disabled>Community</button>
+                    </div> 
                 </div>
+
+                {this.state.nav === 0 &&
+                    <React.Fragment>
+                        <div className={classes.headerButtons}>
+                            <div onClick={()=>this.setState({index: 1})} style={{backgroundColor: index === 1 ? selectedColor : ""}}>layers</div>
+                            <div onClick={()=>this.setState({index: 2})} style={{backgroundColor: index === 2 ? selectedColor : ""}}>automations</div>
+                            <div onClick={()=>this.setState({index: 3})} style={{backgroundColor: index === 3 ? selectedColor : ""}}>audio</div>
+                            <div onClick={()=>this.setState({index: 4})} style={{backgroundColor: index === 4 ? selectedColor : ""}}>settings</div>
+                            <div onClick={()=>this.setState({index: 5})} style={{backgroundColor: index === 5 ? selectedColor : ""}}>export</div>
+                        </div>
+                        <SimpleBar data-simplebar-force-visible className={classes.scrollbar} style={{width: "100%", height: "90%"}}>
+                            {index === 1 && loaded && <GUIMount gui={gui.__folders["Layers"].domElement}></GUIMount>}
+                            {index === 2 && loaded && <Automations gui={gui}></Automations>}
+                            {index === 3 && loaded && <GUIMount gui={gui.__folders["Audio"].domElement}></GUIMount>}
+                            {index === 4 && loaded && <GUIMount gui={gui.__folders["Settings"].domElement}></GUIMount>}
+                            {index === 5 && loaded && <GUIMount gui={gui.__folders["Export"].domElement}></GUIMount>}
+                        </SimpleBar>
+                        </React.Fragment>}
+                {this.state.nav === 1 &&  
+                <SimpleBar data-simplebar-force-visible className={classes.scrollbar} style={{width: "100%", height: "90%"}}>
+                    <Projects loadProject={this.convertAndLoad}></Projects>
+                </SimpleBar>
+            }
+                </div>
+               
             </div>
         )
     }

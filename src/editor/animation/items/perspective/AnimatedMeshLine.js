@@ -1,5 +1,5 @@
 import {
-    Mesh, Vector3, SplineCurve, Geometry, Color, CatmullRomCurve3
+    Mesh, Vector3, Vector2, SplineCurve, Geometry, Color, CatmullRomCurve3
   } from 'three';
   import { MeshLine, MeshLineMaterial } from 'three.meshline';
     
@@ -22,6 +22,7 @@ import {
       orientation = new Vector3(1, 0, 0),
       turbulence = new Vector3(0, 0, 0),
       transformLineMethod = false,
+      nrPrecisionPoints = 50,
     } = {}) {
       // * ******************************
       // * Create the main line
@@ -48,7 +49,7 @@ import {
         // TODO 3D spline curve https://math.stackexchange.com/questions/577641/how-to-calculate-interpolating-splines-in-3d-space
         // TODO https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_nurbs.html
         const curve = new CatmullRomCurve3(linePoints);
-        linePoints = new Geometry().setFromPoints(curve.getPoints(50));
+        linePoints = new Geometry().setFromPoints(curve.getPoints(nrPrecisionPoints));
       } else {
         linePoints = points;
       }
@@ -79,8 +80,8 @@ import {
         dashRatio, // The ratio between that is visible or not for each dash
         opacity,
         transparent: true,
-        depthWrite: false,
         color,
+        resolution: new Vector2(1920, 1080)
       });
   
       // * ******************************

@@ -1,5 +1,6 @@
 @import '../colors';
 @import '../vars';
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 
 .container {
     height: $canvas-container-height;
@@ -12,6 +13,24 @@
     align-content: center;
 }
 
+.nav {
+    width: 60%;
+    margin-bottom: 10px;
+}
+
+.nav button {
+    font-family: 'Montserrat', sans-serif;
+
+    min-width: 33%;
+    text-align: center;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
 
 .wrapper {
     margin-top: auto;
@@ -22,7 +41,22 @@
     border: 1px solid rgba(155,155,155,0.3);
     border-radius: 0.5em;
     padding: 30px;
-    
+}
+
+.navWrapper {
+    width: 100%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+
+
+.scrollbar  {
+
+    border-bottom: 1px solid rgba(10,10,10,0.5);
+    border-left: 1px solid rgba(10,10,10,0.5);
+    border-right: 1px solid rgba(10,10,10,0.5);
 }
 
 .headerButtons {
@@ -34,6 +68,7 @@
 }
 
 .headerButtons div{
+    font-family: 'Montserrat', sans-serif;
     width: 20%;
     cursor: pointer;
     overflow: hidden;

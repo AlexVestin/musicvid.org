@@ -49,9 +49,9 @@ class LineGenerator extends Object3D {
         this.isStarted = false;
         // TODO callback when all lines are hidden
 
-        while(this.lines.length > 0) {
-            this.removeLine(this.lines[0])
-           this.lines.shift();
+        while (this.lines.length > 0) {
+            this.removeLine(this.lines[0]);
+            this.lines.shift();
         }
     }
 
@@ -71,6 +71,10 @@ class LineGenerator extends Object3D {
     }
 
     removeLine(line) {
+        console.log(this.lines.length)
+        line.material.dispose();
+        line.geometry.dispose();
+
         this.remove(line);
         this.nbrOfLines--;
     }
@@ -89,7 +93,6 @@ class LineGenerator extends Object3D {
             const line = this.lines[this.i];
             line.update(mult);
             line.material.opacity = opacity;
-
         }
 
         // Filter and remove died lines
@@ -105,9 +108,7 @@ class LineGenerator extends Object3D {
     }
 }
 
-const STATIC_PROPS = {
-
-};
+const STATIC_PROPS = {};
 
 export default class CustomLineGenerator extends LineGenerator {
     // start() {
@@ -120,7 +121,7 @@ export default class CustomLineGenerator extends LineGenerator {
     // }
 
     constructor() {
-        super({frequency: 0.1}, STATIC_PROPS);
+        super({ frequency: 0.1 }, STATIC_PROPS);
         this.opacity = 1.0;
         this.lengthLower = 8;
         this.lengthUpper = 15;
@@ -132,37 +133,51 @@ export default class CustomLineGenerator extends LineGenerator {
         this.directionZLower = 0;
         this.directionZUpper = 0.8;
         this.visibleLengthLower = 0.05;
-        this.visibleLengthUpper = 0.2; 
+        this.visibleLengthUpper = 0.2;
         this.visibleLengthMult = 0.15;
         this.speedLower = 0.004;
-        this.speedUpper =  0.008;
-        this.speedMult  = 1;
+        this.speedUpper = 0.008;
+        this.speedMult = 1;
         this.originX = 0;
         this.originY = 0;
-        this.originZ = 0; 
+        this.originZ = 0;
         this.nbrOfPoints = 5;
         this.turbulenceAmt = 2.3;
         this.width = 0.55;
         this.getRandomColor = false;
         this.color = "#FFFFFF";
         this.randomColor = true;
-        this._scale = 15; 
+        this._scale = 15;
         this.taper = "none";
+        this.nrPrecisionPoints = 300;
     }
 
-
     addLine() {
-        const { lengthUpper, lengthLower, nbrOfPoints, visibleLengthLower, visibleLengthUpper, turbulenceAmt, originX, originY, originZ, opacity } = this;
-        
+        const {
+            lengthUpper,
+            lengthLower,
+            nbrOfPoints,
+            visibleLengthLower,
+            visibleLengthUpper,
+            turbulenceAmt,
+            originX,
+            originY,
+            originZ,
+            opacity,
+            nrPrecisionPoints
+        } = this;
+
         let length = 0;
-        if(lengthUpper > lengthLower) {
+        if (lengthUpper > lengthLower) {
             length = getRandomFloat(lengthLower, lengthUpper) * this.lengthMult;
         }
         let visibleLength = 0;
-        if(visibleLengthUpper > visibleLengthLower) {
-            visibleLength = getRandomFloat(visibleLengthLower, visibleLengthUpper) * this.visibleLengthMult;
+        if (visibleLengthUpper > visibleLengthLower) {
+            visibleLength =
+                getRandomFloat(visibleLengthLower, visibleLengthUpper) *
+                this.visibleLengthMult;
         }
-        
+
         const position = new Vector3(originX, originY, originZ);
         const turbulence = new Vector3(
             getRandomFloat(-turbulenceAmt, turbulenceAmt),
@@ -175,22 +190,32 @@ export default class CustomLineGenerator extends LineGenerator {
             getRandomFloat(this.directionZLower, this.directionZUpper)
         );
         let speed = 0;
-        if(this.speedUpper > this.speedLower) {
-            speed = getRandomFloat(this.speedLower, this.speedUpper) * this.speedMult;
+        if (this.speedUpper > this.speedLower) {
+            speed =
+                getRandomFloat(this.speedLower, this.speedUpper) *
+                this.speedMult;
         }
 
         let taper = null;
-        switch(this.taper) {
-            case 'linear': taper = function( p ) { return 1 - p; } ; break;
-            case 'wavy': taper = function( p ) { return 2 + Math.sin( 50 * p ) }; break;
+        switch (this.taper) {
+            case "linear":
+                taper = function(p) {
+                    return 1 - p;
+                };
+                break;
+            case "wavy":
+                taper = function(p) {
+                    return 2 + Math.sin(50 * p);
+                };
+                break;
             default:
         }
-        
+
         let color = getRandomItem(COLORS);
-        if(!this.getRandomColor) {
+        if (!this.getRandomColor) {
             color = this.color;
         }
-        
+
         const line = super.addLine({
             length,
             visibleLength,
@@ -201,13 +226,12 @@ export default class CustomLineGenerator extends LineGenerator {
             color,
             opacity,
             nbrOfPoints,
-            width:  this.width,
-            transformLineMethod: taper
+            width: this.width,
+            transformLineMethod: taper,
+            nrPrecisionPoints
         });
 
         line.scale.set(this._scale, this._scale, this._scale);
-
-        
 
         const newPoints = line.__points.clone();
         for (var i = 0; i < newPoints.vertices.length; i++) {
@@ -225,8 +249,9 @@ export default class CustomLineGenerator extends LineGenerator {
             points: newPoints,
             opacity,
             nbrOfPoints,
-            width:  this.width,
-            transformLineMethod: taper
+            width: this.width,
+            transformLineMethod: taper,
+            nrPrecisionPoints
         });
 
         l2.scale.set(this._scale, this._scale, this._scale);

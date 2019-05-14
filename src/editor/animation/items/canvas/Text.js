@@ -51,6 +51,8 @@ export default class Text extends BaseItem {
         this.addController(folder,this, "shadowLineWidth", 0, 30);
         this.addController(folder,this, "globalAlpha", 0, 1);
         this.addController(folder, this, "fillStyle", {color:true});
+        this.addController(folder, this, "textAlign", {values: ["center", "left", "right"]});
+
         return this.__addFolder(folder);
     };
 

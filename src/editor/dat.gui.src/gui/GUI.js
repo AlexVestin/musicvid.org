@@ -547,7 +547,6 @@ common.extend(
     },
 
     addUndoItem: function(item) {
-      this.__undoLog.push(item);
       if(this.__undoLog.length > this.__undoLogSize) {
         this.__undoLog.shift();
       }

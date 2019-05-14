@@ -59,7 +59,8 @@ class App extends PureComponent {
         return await base.collection("users").doc(app.auth().currentUser.uid).collection("projects").doc(uid).get();
     }
 
-    initFromProjectFile(projectFile) {
+
+    initFromProjectFile = (projectFile) => {
         this.resolution = {width: projectFile.width, height: projectFile.height};
         this.canvasRef.current.setSize(this.resolution);
         this.animationManager.init(this.resolution);
@@ -333,6 +334,8 @@ class App extends PureComponent {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
         const { progress, fileName } = this.state;
 
+        const loadProject = this.animationManager ? this.animationManager.loadProject : null;
+
         return (
             <div className={classes.container}>
                 {
@@ -377,6 +380,7 @@ class App extends PureComponent {
                                 disabled={disabled}
                                 loaded={this.state.videoLoaded}
                                 firstLoad={this.firstLoad}
+                                loadProject={loadProject}
                             />
                             <Canvas ref={this.canvasRef} />
                         </div>

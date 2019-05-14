@@ -6,33 +6,13 @@ import LayoutBody from "./modules/components/LayoutBody";
 import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
 import { connect } from "react-redux";
-import { app, base } from "backend/firebase";
-import ProjectList from "./ProjectList";
 import { setProjectFile } from 'fredux/actions/project'
 import { Redirect } from 'react-router-dom'
+import ProjectList from "./ProjectList";
+
 
 class Projects extends React.PureComponent {
-    state = { loaded: false, projects: [], redirectTo: "" };
-    async getProjects() {
-        const snapshot = await base
-            .collection("users")
-            .doc(app.auth().currentUser.uid)
-            .collection("projects")
-            .get();
-        this.setState({ projects: snapshot.docs.map(doc => doc.data()), loaded: true});
-    }
-
-    componentDidMount() {
-        if (!this.loaded && this.props.isAuthenticated) {
-            this.getProjects();
-        }
-    }
-
-    componentWillReceiveProps(props) {
-        if (props.isAuthenticated && !this.state.loaded) {
-            this.getProjects();
-        }
-    }
+    state = {redirectTo: ""}
 
     loadProject = (project) => {
         setProjectFile(project);
@@ -55,23 +35,7 @@ class Projects extends React.PureComponent {
                     >
                         Projects
                     </Typography>
-                    <div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                    {this.state.projects.length === 0 ?
-                         <React.Fragment>
-                         {!this.state.loaded ?
-                            <Typography variant="h6">Loading projects...</Typography>   
-                            :
-                            <Typography variant="h6">You don't currently have any projects! You can make a new one in the editor</Typography>   
-                            }
-                        </React.Fragment>
-                        :
-                        <ProjectList
-                        projects={this.state.projects}
-                        onSelect={this.loadProject}
-                    />
-                    }
-                   
-                    </div>
+                    <ProjectList loadProject={this.loadProject}></ProjectList>
                 </LayoutBody>
                 <AppFooter />
             </React.Fragment>
