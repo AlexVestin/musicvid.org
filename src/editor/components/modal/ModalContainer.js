@@ -15,6 +15,7 @@ import EffectModal from "./EffectModal";
 import ProjectFile from './ProjectFile'
 import MemeModal from "./MemeModal";
 import LoadVideo from './LoadVideo'
+import TakeScreenshotModal from "./TakeScreenshotModal";
 
 
 export default class ModalContainer extends PureComponent {
@@ -172,6 +173,11 @@ export default class ModalContainer extends PureComponent {
 
                 {index === 17 && (
                     <MemeModal open={modalOpen} onSelect={this.onSelect} />
+                )}
+
+                
+                {index === 19 && (
+                    <TakeScreenshotModal open={modalOpen} onSelect={this.onSelect} manager={this.args} />
                 )}
                  {index === 20 && (
                     <LoadVideo open={modalOpen} onSelect={this.onSelect} />

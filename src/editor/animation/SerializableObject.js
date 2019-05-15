@@ -109,7 +109,7 @@ export default class SerializableObject {
                     ca[link.controllerID] = ca[link.controllerID] + 1 || 0;
                     automation.apply(
                         controller,
-                        link.type,
+                        link,
                         0 === ca[link.controllerID]
                     );
                 }

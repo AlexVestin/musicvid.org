@@ -17,7 +17,7 @@ export default class TextString extends Text {
         this.positionY = y;
     }
 
-    setUpSubGUI = (folder) => {
+    setUpSubGUI (folder) {
         this.text = "Example text";
         this.addController(folder,this, "text");
     };

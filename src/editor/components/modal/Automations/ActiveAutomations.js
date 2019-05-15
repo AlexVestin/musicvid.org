@@ -49,11 +49,15 @@ class NameInput extends React.PureComponent {
         this.setState({name: val})
     }
 
+    
+
     componentDidMount() {
         this.ref.current.onkeyup = (event) => {
             event.stopPropagation();
             event.preventDefault(); 
         }
+
+       
     }
     render() {
         return(
@@ -63,29 +67,52 @@ class NameInput extends React.PureComponent {
 }
 
 class CustomizedTable extends React.PureComponent {
+    state = {values: []};
+    updateLinks = () => {
+        const automations = this.props.automations;
+        this.setState({values: automations.map(e => e.controller.object[e.controller.property])});
+
+        console.log(this.state.values);
+    }
+
+    componentDidMount() {
+        this.updateRef = window.setInterval(this.updateLinks, 75);
+    }
+    componentWillUnmount() {
+        window.clearInterval(this.updateRef);
+    }
+    
 
     render() {
-        const { classes, automations } = this.props;
+        const { classes, automations, controller, item } = this.props;
 
         return (
             <Paper className={classes.root}>
+                <div>Base value: {item.preAutomationValue}</div>
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
                             <CustomTableCell>
                                 Active Automations
                             </CustomTableCell>
-
-                            <CustomTableCell align="right">
-                                Type
+                            
+                            <CustomTableCell align="center">
+                                Timerange
                             </CustomTableCell>
 
-                            <CustomTableCell align="right" />
+                            <CustomTableCell align="center">
+                                Transform
+                            </CustomTableCell>
+                            
+                            <CustomTableCell align="center">
+                                value
+                            </CustomTableCell>
+
                             <CustomTableCell align="right" />
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {automations.map(row => (
+                        {automations.map( (row,i) => (
                             <TableRow
                                 className={classes.row}
                                 key={row.automation.id}
@@ -100,19 +127,34 @@ class CustomizedTable extends React.PureComponent {
                          
                                 </CustomTableCell>
 
-                                <CustomTableCell align="right">
-                                    <select
-                                        defaultValue={row.item.type}
-                                        onChange={e =>
-                                            (row.item.type = e.target.value)
-                                        }
-                                    >
-                                        <option value="+">+</option>
-                                        <option value="-">-</option>
-                                        <option value="=">=</option>
-                                        <option value="*">*</option>
-                                    </select>
+                                <CustomTableCell align="center">
+                                    <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                                        Start: 
+                                        <input style={{width: 40}} defaultValue={row.item.startTime} onChange={e =>
+                                            (row.item.startTime = e.target.value)
+                                        }></input>
+                                    </div>
+                                    
+                                    <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 4}}>
+                                        End: 
+                                        <input style={{width: 40}} defaultValue={row.item.endTime} onChange={e =>
+                                            (row.item.endTime = e.target.value)
+                                        }></input>
+                                    </div>
+                                    
                                 </CustomTableCell>
+
+
+                                <CustomTableCell align="center">
+                                    <input defaultValue={row.item.type} onChange={e =>
+                                            (row.item.type = e.target.value)
+                                        }></input>
+                                </CustomTableCell>
+
+                                <CustomTableCell align="center">
+                                   <div style={{width: 40}}>{String(this.state.values[i]).substr(0, 6)}</div>
+                                </CustomTableCell>
+
 
                                 <CustomTableCell align="right">
                                     <Button

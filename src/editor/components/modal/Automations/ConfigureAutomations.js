@@ -22,7 +22,7 @@ export default class ConfigureAutomations extends PureComponent {
         item.__parentObject.__automations.forEach(link => {
             const a = automations[link.automationID];
             if(link.controllerID === item.__path) 
-                autos.push({automation: a, item: link});
+                autos.push({automation: a, item: link, controller: item});
         })
 
         this.setState({autos: autos});
@@ -36,7 +36,6 @@ export default class ConfigureAutomations extends PureComponent {
 
     render() {
         const { item } = this.props;
-
         return (
             <div>
                 <DialogContentText>

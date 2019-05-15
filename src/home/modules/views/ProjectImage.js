@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Typography from "../components/Typography";
 import styles from './GridStyles'
-
+import { base, storage } from 'backend/firebase'
 
 
 class Image extends PureComponent {
@@ -13,52 +13,52 @@ class Image extends PureComponent {
         this.videoRef = React.createRef();
         this.videoMountRef = React.createRef();
 
-        this.state = { mouseOver: false };
+        this.state = { mouseOver: false, title: "", userName: "user", img: "" };
     }
-    componentDidMount = () => {};
+
+    componentDidMount = async () => {
+        const { id } = this.props.project;
+        const project = await this.loadProject(id);
+        const img = await storage.ref().child(id).getDownloadURL();
+        this.setState({title: project.data().name, img: img});
+    };
+
+    async loadProject(uid){
+        return await base.collection("projects").doc(uid).get();
+    }
 
 
     render() {
-        const { image, classes } = this.props;
-
+        const { project, classes } = this.props;
 
         return (
             <ButtonBase
-                onClick={() => {
-                   this.props.showVideoFor(image);
-                }}
                 className={classes.imageWrapper}
+                onClick={this.props.loadProject}
                 style={{
-                    width: image.width,
-                    overflow: "hidden"
+                    width: "33%",
+                    minWidth: "33%",
+                    height: "100%",
+                    backgroundColor: "#333"
                 }}
-                id={this.props.title}
+                id={this.state.title}
             >
-                <div
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: "#000"
-                    }}
-                    className={this.props.className}
-                    ref={this.videoMountRef}
-                >
-                    <div 
-                     className={classes.imageSrc}
-                     style={{
-                         backgroundImage: `url(//img.youtube.com/vi/${image.src}/0.jpg)`
-                    }}
-                    >
-                    </div>
-                </div>
+                  <img 
+                        src={this.state.img}
+                        alt="project"
+                        style={{width: "100%", height: "auto"}}
+                />
+             
 
                 <div className={classes.imageBackdrop} />
+                
                 <div
                     onMouseOver={this.play}
                     onMouseOut={this.pause}
                     className={classes.imageButton}
-                    id={this.props.image.title}
+                    id={project.id}
                 >
+              
                     <Typography
                         component="h3"
                         variant="h6"
@@ -66,13 +66,13 @@ class Image extends PureComponent {
                         className={classes.imageTitle}
                         style={{ pointerEvents: "none" }}
                     >
-                        {image.title}
+                        {this.state.title}
                         <div className={classes.imageMarked} />
                     </Typography>
 
                     <div className={classes.attrib}>
                         <Typography component="h6" variant="h6" color="inherit">
-                            {image.attrib}
+                            {this.state.title}
                         </Typography>
                         
                     </div>

@@ -275,7 +275,7 @@ export default class JSNationSpectrum extends BaseItem {
         const { width, height } = this.canvas;
         this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX, Math.floor(this.y * height / 2) + this.sumShakeY);
         this.ctx.applyFilters();
-        let newAudioData = audioData.frequencyData.length !== 0;
+        let newAudioData = audioData && audioData.frequencyData.length !== 0;
         let curRad = this.minRadius * this.scale;
         if(newAudioData && shouldUpdate) {
             if (this.spectrumCache.length >= this.maxBufferSize) {

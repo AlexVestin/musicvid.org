@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -10,30 +9,26 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import { connect } from "react-redux";
 import { app, base } from "backend/firebase";
 import classes from './ProjectList.module.css'
-
-
 import RemoveDialog from './RemoveDialog'
 
-
-
 function FolderList(props) {
-
-
   return (
     <List className={classes.root}>
 
     {props.projects.map(project => {
       const time = project.lastEdited.split("(")[0];
         return(
-         <ListItem key={project.id} style={{borderBottom: "1px solid rgba(255,255,255,0.67)"}} button dense className={classes.listItem} onClick={() => props.onSelect(project)}>
-            <ListItemText style={{color:"white"}} primary={project.name} secondary={time} />
+         <ListItem key={project.id} style={{borderBottom: "1px solid rgba(255,255,255,0.67)"}} button dense className={props.listItemClass} onClick={() => props.onSelect(project)}>
+            <ListItemText style={{color:props.c1}} primary={project.name} secondary={time} />
+            
+            {!props.hideRemoveAction && 
             <ListItemSecondaryAction>
               <Delete
                 onClick={() => props.onRemove(project)}
                 fill="red"
                 style={{color:"red", cursor: "pointer"}}
               />
-          </ListItemSecondaryAction>
+          </ListItemSecondaryAction>}
        </ListItem>
         )
     })}
@@ -89,6 +84,9 @@ class ProjectList extends React.PureComponent {
   }
 
   render() {
+    const c1 = this.props.color === "dark" ? "#333" : "#efefef";
+    const c2 = this.props.color === "dark" ? "#333" : "#efefef";
+
     return( 
       <React.Fragment>
         <RemoveDialog project={this.state.projectToRemove} open={this.state.modalOpen} handleYes={this.handleRemove} handleNo={this.handleCancel}></RemoveDialog>
@@ -96,13 +94,17 @@ class ProjectList extends React.PureComponent {
           {this.state.projects.length === 0 ?
           <React.Fragment>
           {!this.state.loaded ?
-              <Typography style={{color: "#efefef"}} variant="h6">{this.state.message}</Typography>   
+              <Typography style={{color: c1}} variant="h6">{this.state.message}</Typography>   
               :
-              <Typography style={{color: "#efefef"}} variant="h6">You don't currently have any projects! You can make a new one in the editor</Typography>   
+              <Typography style={{color: c1}} variant="h6">You don't currently have any projects! You can make a new one in the editor</Typography>   
               }
           </React.Fragment>
           :
           <FolderList
+            c1={c1}
+            c2={c2}
+            listItemClass={this.props.color === "dark" ? classes.listItemDark : classes.listItemLight}
+            hideRemoveAction={this.props.hideRemoveAction}
             projects={this.state.projects}
             onSelect={this.props.loadProject}
             onRemove={this.removeProject}

@@ -4,6 +4,8 @@ import SimpleBar from "simplebar-react";
 import Automations from "./Automations";
 import "simplebar/dist/simplebar.min.css";
 import Projects from "./Projects";
+import { app, base } from "backend/firebase";
+
 
 class GUIMount extends PureComponent {
     constructor() {
@@ -84,10 +86,24 @@ export default class ControllerContainer extends PureComponent {
     };
 
     convertAndLoad = projectFile => {
-        const proj = JSON.parse(projectFile.str);
-        window.history.pushState({}, null, "/editor?project=" + projectFile.id);
+        if(projectFile.str) {
+            base.collection("projects").doc(projectFile.id).set({
+                projectSrc: projectFile.str,
+                name: projectFile.name,
+                width: projectFile.name,
+                height: projectFile.name,
 
-        this.props.loadProject(proj);
+            }).then(() => {
+                const proj = JSON.parse(projectFile.str);
+                window.history.pushState({}, null, "/editor?project=" + projectFile.id);
+                this.props.loadProject(proj);
+            })
+        }else {
+            base.collection("projects").doc(projectFile.id).get().then((snapshot) => {
+                window.history.pushState({}, null, "/editor?project=" + projectFile.id);
+                this.props.loadProject(JSON.parse(snapshot.data().projectSrc));
+            })                  
+        }
     };
 
     render() {

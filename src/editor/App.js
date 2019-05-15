@@ -40,9 +40,6 @@ class App extends PureComponent {
         this.firstLoad = true;
         this.fastLoad = false;
         this.timeOffset = 0;
-        this.lastTime = 0;
-        this.lastAudioData = {frequencyData: [], timeData: []};
-
         this.gui.onChange = (d) => console.log(d);
 
         this.canvasRef = React.createRef();
@@ -56,7 +53,7 @@ class App extends PureComponent {
 
 
     async loadProject(uid){
-        return await base.collection("users").doc(app.auth().currentUser.uid).collection("projects").doc(uid).get();
+        return await base.collection("projects").doc(uid).get();
     }
 
 
@@ -64,7 +61,7 @@ class App extends PureComponent {
         this.resolution = {width: projectFile.width, height: projectFile.height};
         this.canvasRef.current.setSize(this.resolution);
         this.animationManager.init(this.resolution);
-        this.animationManager.loadProject(JSON.parse(projectFile.str));
+        this.animationManager.loadProject(JSON.parse(projectFile.projectSrc));
         this.loadNewAudioFile();
         this.setState({shouldLoadProject: false});
     }
@@ -99,7 +96,7 @@ class App extends PureComponent {
                 
         import("./animation/templates/" + template + ".js")
             .then(async AnimationManager  =>  {
-                this.animationManager = new AnimationManager.default(this.gui);
+                this.animationManager = new AnimationManager.default(this);
                 this.update();
                 this.setState({ videoLoaded: true });
 
@@ -159,9 +156,9 @@ class App extends PureComponent {
         if (this.animationManager) this.animationManager.stop();
         this.setState({ playing: false, time: 0 });
         this.timeOffset = 0;
-        this.lastTime = 0;
+        
         this.gui.__time = 0;
-        this.lastAudioData = {frequencyData: [], timeData: []};
+        
     };
 
 
@@ -187,10 +184,8 @@ class App extends PureComponent {
 
                 this.applyAutomation(time, audioData);
                 this.animationManager.update(time, audioData, true);
-                this.lastTime = time;
-                this.lastAudioData = audioData;
             }else {
-                this.animationManager.update(this.lastTime, this.lastAudioData, false);
+                this.animationManager.redoUpdate();
 
                 if(this.state.time >= this.audio.duration && this.state.playing) {
                     this.play();

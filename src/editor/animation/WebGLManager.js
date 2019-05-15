@@ -13,11 +13,12 @@ import ImpactAutomation from './automation/AudioReactiveAutomation'
 import uuid from 'uuid/v4'
 
 export default class WebGLManager {
-    constructor(gui) {
+    constructor(parent) {
         this.fftSize = 16384;
-        this.canvasMountRef = gui.canvasMountRef;
-        this.modalRef = gui.modalRef;
-        this.gui = gui;
+        this.gui = parent.gui;
+        this.canvasMountRef = parent.gui.canvasMountRef;
+        this.modalRef = parent.gui.modalRef;
+        this.parent = parent;
 
         this.scenes = [];
         this.audio = null;
@@ -29,6 +30,10 @@ export default class WebGLManager {
         this.__id = uuid();
         this.__projectName  = "ProjectName";
         this.__lastEdited = new Date().toString();
+        this.availablePublic = false;
+        this.lastTime = 0;
+        this.lastAudioData = {frequencyData: [], timeData: []};
+        
 
         document.body.addEventListener("keyup", e => {
             if (e.keyCode === 70) {
@@ -80,7 +85,6 @@ export default class WebGLManager {
             this.addAutomation(auto);
         })  
 
-        
         json.scenes.forEach(scene => {     
             if(scene.__settings.isScene) {
                 const s = this.addSceneFromText(scene.__settings.type || scene.__settings.TYPE);
@@ -141,15 +145,28 @@ export default class WebGLManager {
         const projFile = this.serializeProject();
         const cu = app.auth().currentUser; 
         if(cu) {
-            const ref = base.collection("users").doc(app.auth().currentUser.uid).collection("projects").doc(this.__id);
-            ref.set({
-                str: JSON.stringify(projFile), 
+            const myId = app.auth().currentUser.uid;
+            const ref = base.collection("users").doc(myId).collection("projects").doc(this.__id);
+            const p1 = ref.set({
                 lastEdited: new Date().toString(),
                 name: this.__projectName,
-                width: this.width,
-                height: this.height,
                 id: this.__id
             });
+
+            const allRef = base.collection("projects").doc(this.__id);
+            const p2 = allRef.set({
+                projectSrc: JSON.stringify(projFile),
+                width: this.width,
+                height: this.height,
+                name: this.__projectName,
+                public: this.availablePublic,
+                owner: myId
+            })
+
+            Promise.all([p1, p2]).then(() => {
+                alert("Saved to profile");
+            })
+
         }else {
             alert("Log in to save to profile")
         }
@@ -382,6 +399,7 @@ export default class WebGLManager {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true,
+            
             canvas: this.canvas
         });
         this.renderer.autoClear = false;
@@ -427,11 +445,17 @@ export default class WebGLManager {
             cs.add(this, "resetAllCameras");
             const ps = this.settingsFolder.addFolder("Project settings");
             ps.add(this, "__projectName").name("Project name");
+            ps.add(this, "availablePublic").name("Project available to public");
             ps.add(this, "loadProjectFromFile");
+            ps.add(this, "createThumbnail");
             ps.add(this, "saveProjectToFile");
             ps.add(this, "saveProjectToProfile");
         }
     };
+
+    createThumbnail = () => {
+        this.gui.getRoot().modalRef.toggleModal(19, true, this);
+    }
 
     resetAllCameras = () => {
         this.scenes.forEach(scene => {
@@ -501,6 +525,8 @@ export default class WebGLManager {
     };
 
     stop = () => {
+        this.lastTime = 0;
+        this.lastAudioData = {frequencyData: [], timeData: []};
         //this.externalCtx.clearRect( 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
         this.scenes.forEach(scene => {
             scene.stop();
@@ -510,6 +536,10 @@ export default class WebGLManager {
 
     setUpScene() {
         console.log("Implement this");
+    }
+
+    redoUpdate = () => {
+        this.update(this.__lastTime, this.__lastAudioData, false);
     }
 
     update = (time, audioData, shouldIncrement) => {
@@ -530,6 +560,9 @@ export default class WebGLManager {
         if (this.drawAttribution) {
             this.renderer.render(this.attribScene, this.attribCamera);
         }
+
+        this.__lastTime = time;
+        this.__lastAudioData = audioData;
 
         //this.externalCtx.drawImage(this.internalCanvas, 0, 0, Math.floor(this.canvasMountRef.width), Math.floor(this.canvasMountRef.height));
     };

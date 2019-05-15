@@ -77,6 +77,14 @@ class AppAppBar extends PureComponent {
                             ALPHA
                         </Typography>
                         <div className={classes.right}>
+                        <Link
+                                    variant="h6"
+                                    underline="none"
+                                    className={classNames(classes.rightLink)}
+                                    onClick={ () => this.setState({ redirectTo: "/projects" })}
+                                >
+                                    {"Community projects"}
+                                </Link>
                             <Link
                                 color="inherit"
                                 variant="h6"
@@ -108,12 +116,13 @@ class AppAppBar extends PureComponent {
                                signUp={() =>
                                    this.setState({ redirectTo: "/sign-up" })
                                }
+                               projects={() =>
+                                this.setState({ redirectTo: "/projects" })
+                            }
                                classes={classes}
                            />:
                            <ProfileButtonGroup
-                               projects={() =>
-                                   this.setState({ redirectTo: "/projects" })
-                               }
+                               
                                profile={() =>
                                    this.setState({ redirectTo: "/sign-out" })
                                }
@@ -136,6 +145,8 @@ const ProfileButtonGroup = function(props) {
   return (
       <React.Fragment>
 
+           
+
           <Link
               variant="h6"
               underline="none"
@@ -152,6 +163,7 @@ const AuthenticationButtonGroup = function(props) {
     const { classes } = props;
     return (
         <React.Fragment>
+
             <Link
                 color="inherit"
                 variant="h6"

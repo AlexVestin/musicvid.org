@@ -6,15 +6,29 @@
     color: white;
 } 
 
-.listItem {
+.listItemLight {
     border-bottom: 1px solid rgba(255,255,255,0.72);
     color: white;
 }
 
-.listItem:hover {
+.listItemLight:hover {
     background-color: #efefef;
 }
 
-.listItem p {
+.listItemLight p {
     color:rgba(255,255,255,0.62);
+}
+
+
+.listItemDark {
+    border-bottom: 1px solid rgba(0,0,0,0.72);
+    color: white;
+}
+
+.listItemDark:hover {
+    background-color: #efefef;
+}
+
+.listItemDark p {
+    color:rgba(0,0,0,0.62);
 }
