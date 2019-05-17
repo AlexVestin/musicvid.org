@@ -9,7 +9,6 @@ export default function() {
         "ocean2.jpeg",
         "offroad.jpg",
         "purple.jpeg",
-        "road.jpeg",
         "rocks.jpeg",
         "tree.jpeg",
         "clouds.jpeg",

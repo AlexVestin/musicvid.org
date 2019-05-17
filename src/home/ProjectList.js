@@ -64,15 +64,24 @@ class ProjectList extends React.PureComponent {
   }
 
   handleRemove = (project) => {
-    base.collection("users")
+    const p1 = base.collection("users")
       .doc(app.auth().currentUser.uid)
       .collection("projects")
       .doc(project.id)
       .delete()
-      .then(() => {
+    
+      const p2 = base.collection("projects").doc(project.id).delete();
+      
+      const p3 = base.collection("featured").doc("all").collection("projects").doc(project.id).delete();
+      
+      
+      console.log(project)
+
+      Promise.all([p1,p2, p3]).then(() => {
         const projects = [...this.state.projects].filter(p => p.id !== project.id);
         this.setState({projects, loaded: true, project: null, modalOpen: false})
-      }) 
+      })
+
   }
 
   handleCancel = () => {

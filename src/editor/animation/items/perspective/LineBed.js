@@ -12,7 +12,7 @@ export default class PointBed extends BaseItem {
         this.amplitude = 2.5;
 
         this.particles = [];
-        this.group = new THREE.Group();
+        this.mesh = new THREE.Group();
         this.spacing = 20;
         this.lineLength =  9;
 
@@ -40,11 +40,11 @@ export default class PointBed extends BaseItem {
             const material = new THREE.MeshBasicMaterial({color: color});
             const mesh = new THREE.Line(geometry, material)
             this.particles.push(mesh);
-            this.group.add(mesh)
+            this.mesh.add(mesh)
         }
 
 
-        info.scene.add(this.group);
+        info.scene.add(this.mesh);
         this.setUpFolder();
     }
 
@@ -57,7 +57,7 @@ export default class PointBed extends BaseItem {
     update = (time, data) => {
 
         if(this.updateCount++ % 2 === 0) {
-            let waf = toWebAudioForm(data.frequencyData.slice(0, data.frequencyData.length /2), this.prevArr, 0.1);
+            let waf = toWebAudioForm(data.frequencyData.slice(0, data.frequencyData.length /8), this.prevArr, 0.1);
             this.prevArr = waf;
             let freq = getByteSpectrum(waf);
             freq = smooth(freq,  { smoothingPasses: 3, smoothingPoints: 9 })    

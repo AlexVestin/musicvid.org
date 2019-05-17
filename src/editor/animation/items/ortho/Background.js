@@ -16,12 +16,12 @@ export default class Background extends MeshItem {
     onImageChange = (image) => {
         const ca = this.width/this.height;
         const ia = image.width / image.height;
-
         const s = ca / ia;
+
         if(s > 1) {
-            this.mesh.scale.set(s, 1, 1);    
+            //this.mesh.scale.set(1, s, 1);    
         }else {
-            this.mesh.scale.set(1, ia/ca, 1);    
+            //this.mesh.scale.set(1/s, 1, 1);    
         }        
     }
 }

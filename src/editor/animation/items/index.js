@@ -15,6 +15,8 @@ import StarField from './ortho/StarField'
 import SpriteText from './ortho/SpriteText'
 import Meme from './ortho/Meme'
 import Video from './ortho/Video'
+import OldVideo from './ortho/OldVideo'
+
 
 // canvas items
 import Monstercat2D from './canvas/MonsterBars2D'
@@ -59,6 +61,8 @@ const orthoItems = {
     SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"},
     Meme: {class: Meme},
     Video: {class: Video},
+    OldVideo: {class: OldVideo},
+
 }
 
 

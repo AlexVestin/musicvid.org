@@ -16,12 +16,16 @@ export default class TimeText extends Text {
         if (s.length === 1) s = "0" + s;
     
         let formatted = m + ":" + s;
-        if (dec) {
-            formatted += "." + dec.substring(0, this.nrDecimals);
+
+        if(this.nrDecimals > 0) {
+            if (dec) {
+                formatted += "." + dec.substring(0, this.nrDecimals);
+            }
+
+            // "XX:XX."
+            while(formatted.length < 6 + this.nrDecimals)formatted+="0";
         }
-    
-        if(formatted.length === 5)
-            formatted += ".00"
+       
     
         return formatted;
     }

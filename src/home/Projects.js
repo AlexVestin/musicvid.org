@@ -9,6 +9,9 @@ import { connect } from "react-redux";
 import { setProjectFile } from 'fredux/actions/project'
 import { Redirect } from 'react-router-dom'
 import ProjectList from "./ProjectList";
+import { Switch, Route } from 'react-router-dom'
+
+
 
 
 class Projects extends React.PureComponent {
@@ -50,4 +53,18 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(withRoot(Projects));
+const withStuff = connect(mapStateToProps)(withRoot(Projects));
+
+class ProjectRouter extends React.PureComponent {
+
+    render() {
+        return(
+            <Switch>
+                <Route exact path="/projects" component={withStuff}></Route>
+            </Switch>
+        )
+    }
+}
+
+
+export default ProjectRouter;

@@ -61,7 +61,7 @@ export default class MeshItem extends BaseItem {
     }
 
     update = (time, audioData) => {
-        if(this.material)
+        if(this.material && this.material.updateMaterial)
             this.material.updateMaterial(time, audioData);
     }
 

@@ -158,7 +158,7 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
-        addCanvasControls(this, this.ctx, folder, {text: false });     
+        this.canvasSettings = addCanvasControls(this, this.ctx, folder, {text: false });     
         const emFolder = folder.addFolder("Emblem");
 
         this.addController(emFolder, this.emblem, "visible", {path: "emblem"});
@@ -274,7 +274,7 @@ export default class JSNationSpectrum extends BaseItem {
         
         const { width, height } = this.canvas;
         this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX, Math.floor(this.y * height / 2) + this.sumShakeY);
-        this.ctx.applyFilters();
+        this.canvasSettings.apply(this.ctx);
         let newAudioData = audioData && audioData.frequencyData.length !== 0;
         let curRad = this.minRadius * this.scale;
         if(newAudioData && shouldUpdate) {

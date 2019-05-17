@@ -1,10 +1,11 @@
 import React, { PureComponent } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import ButtonBase from "@material-ui/core/ButtonBase";
-import Typography from "../components/Typography";
-import styles from './GridStyles'
-import { base, storage } from 'backend/firebase'
 
+import Typography from "../components/Typography";
+import styles from "./GridStyles";
+import { base, storage } from "backend/firebase";
+import { Redirect } from "react-router-dom";
 
 class Image extends PureComponent {
     constructor() {
@@ -13,52 +14,94 @@ class Image extends PureComponent {
         this.videoRef = React.createRef();
         this.videoMountRef = React.createRef();
 
-        this.state = { mouseOver: false, title: "", userName: "user", img: "" };
+        this.state = {
+            mouseOver: false,
+            title: "",
+            userName: "user",
+            img: "",
+            loaded: false,
+            fetched: false
+        };
     }
 
     componentDidMount = async () => {
         const { id } = this.props.project;
         const project = await this.loadProject(id);
-        const img = await storage.ref().child(id).getDownloadURL();
-        this.setState({title: project.data().name, img: img});
+        let url = "img/256placeholder.png";
+        let img = await storage
+            .ref()
+            .child(id)
+            .getDownloadURL()
+            .catch(err => {
+                this.setState({
+                    title: project.data().name,
+                    img: url,
+                    fetched: true,
+                    project: project.data()
+                });
+            });
+        this.setState({ project: project.data(), title: project.data().name, img: img, fetched: true });
     };
 
-    async loadProject(uid){
-        return await base.collection("projects").doc(uid).get();
-    }
+    loadMoreInfo = event => {
+        event.preventDefault();
+        event.stopPropagation();
 
+        this.props.editProject(this.state.project, this.state.img);
+    };
+
+    async loadProject(uid) {
+        return await base
+            .collection("projects")
+            .doc(uid)
+            .get();
+    }
 
     render() {
         const { project, classes } = this.props;
 
+
         return (
             <ButtonBase
                 className={classes.imageWrapper}
-                onClick={this.props.loadProject}
                 style={{
                     width: "33%",
                     minWidth: "33%",
                     height: "100%",
-                    backgroundColor: "#333"
+                    backgroundColor: "#000"
                 }}
                 id={this.state.title}
             >
-                  <img 
-                        src={this.state.img}
-                        alt="project"
-                        style={{width: "100%", height: "auto"}}
-                />
-             
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}
+                >
+                    {(!this.state.loaded || !this.state.fetched) && (
+                        <Typography variant="h1">{"Loading..."}</Typography>
+                    )}
+                    {this.state.img && (
+                        <img
+                            onLoad={() => this.setState({ loaded: true })}
+                            src={this.state.img}
+                            alt="sfg"
+                            style={{ width: "100%", height: "auto" }}
+                        />
+                    )}
+                </div>
 
                 <div className={classes.imageBackdrop} />
-                
+
                 <div
                     onMouseOver={this.play}
                     onMouseOut={this.pause}
                     className={classes.imageButton}
                     id={project.id}
+                    onClick={this.props.loadProject}
                 >
-              
                     <Typography
                         component="h3"
                         variant="h6"
@@ -70,11 +113,26 @@ class Image extends PureComponent {
                         <div className={classes.imageMarked} />
                     </Typography>
 
-                    <div className={classes.attrib}>
-                        <Typography component="h6" variant="h6" color="inherit">
-                            {this.state.title}
-                        </Typography>
-                        
+                    <div
+                        className={classes.attrib}
+                        style={{ pointerEvents: "inherit" }}
+                    >
+                        <div
+                            style={{
+                                backgroundColor: "rgba(255,255,255,0.17)",
+                                padding: 4,
+                                zIndex: 10000
+                            }}
+                            onClick={this.loadMoreInfo}
+                        >
+                            <Typography
+                                component="h6"
+                                variant="h6"
+                                color="inherit"
+                            >
+                                More info
+                            </Typography>
+                        </div>
                     </div>
                 </div>
             </ButtonBase>

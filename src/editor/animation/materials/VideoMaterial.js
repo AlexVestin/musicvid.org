@@ -13,7 +13,6 @@ export default class ImageMaterial extends THREE.MeshBasicMaterial{
         this.fps = 60;
         this.parent = item;
         this.frame = 0;
-
         this.parent.__isEncoding =  true;
     }
 
@@ -76,8 +75,6 @@ export default class ImageMaterial extends THREE.MeshBasicMaterial{
             this.video.currentTime = 10000000*Math.random();
         }
     }
-    
-
     
     __setUpGUI = (f) => {
         const folder = f; 

@@ -145,6 +145,12 @@ export default class WebGLManager {
         const projFile = this.serializeProject();
         const cu = app.auth().currentUser; 
         if(cu) {
+
+            if(cu.uid !== this.__ownerId) {
+                this.__id = uuid();
+                this.__ownerId = this.__id;
+            }
+
             const myId = app.auth().currentUser.uid;
             const ref = base.collection("users").doc(myId).collection("projects").doc(this.__id);
             const p1 = ref.set({
@@ -160,11 +166,13 @@ export default class WebGLManager {
                 height: this.height,
                 name: this.__projectName,
                 public: this.availablePublic,
-                owner: myId
+                owner: myId,
+                id: this.__id
             })
 
             Promise.all([p1, p2]).then(() => {
                 alert("Saved to profile");
+                window.history.pushState({}, null, "/editor?project=" + this.__id);
             })
 
         }else {

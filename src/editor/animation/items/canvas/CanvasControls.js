@@ -1,8 +1,9 @@
 import fonts from "editor/util/Fonts";
 
-export function addCanvasControls(parent, object, folder, a = {}) {
+export function addCanvasControls(parent, ctx, folder,  a = {}) {
     const ctxFolder = folder.addFolder("Context");
 
+    const object = {};
     const c = {
         alpha: true,
         glow: true,
@@ -13,7 +14,10 @@ export function addCanvasControls(parent, object, folder, a = {}) {
         ...a
     };
 
-    function add(f, attr, options) {
+
+    const add = (f, attr, options) => {
+        if(object[attr] === undefined)
+            object[attr] = ctx[attr] || 1;
         parent.addController(f, object, attr, { path: "ctx", ...options });
     }
 
@@ -24,7 +28,7 @@ export function addCanvasControls(parent, object, folder, a = {}) {
     if (c.glow) {
         const glow = ctxFolder.addFolder("Glow");
         add(glow, "shadowBlur", { min: 0 });
-        add(glow, "shadowColor", { min: 0 });
+        add(glow, "shadowColor", { color: true });
         add(glow, "shadowOffsetX");
         add(glow, "shadowOffsetY");
     }
@@ -39,7 +43,12 @@ export function addCanvasControls(parent, object, folder, a = {}) {
 
     if (c.text) {
         const text = ctxFolder.addFolder("Text");
-        add(text, "font", { values: fonts });
+        object.font = ctx.fontFamily || "Montserrat";
+        add(text, "fontFamily", { values: fonts });
+        
+
+        object.fontSize = ctx.fontSize || 30;
+        add(text, 'fontSize', {min: 0, step: 1});
         add(text, "textAlign", {
             values: ["start", "end", "left", "right", "center"]
         });
@@ -95,10 +104,9 @@ export function addCanvasControls(parent, object, folder, a = {}) {
         add(filter, "filterSepiaAmount", {min: 0, max: 100});
     }
 
-    object.applyFilters = () => {
+    object.apply = (ctx) => {
         const filters = object.filterCommand.split(" ");
         let fltStr = ""; 
-
         filters.forEach(cmd => {
             const filter = lookUp[cmd];
             if(filter) {
@@ -111,6 +119,11 @@ export function addCanvasControls(parent, object, folder, a = {}) {
                 }
             }
         })
-        object.filter = fltStr;
-    }
+
+        ctx.font = `normal ${object.fontSize}px ${object.fontFamily}`;
+        ctx.filter = fltStr;
+        Object.assign(ctx, object);
+    };
+
+    return object;
 }

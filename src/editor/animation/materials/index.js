@@ -8,6 +8,8 @@ import MeshBasicMaterial from './MeshBasicMaterial'
 import NoiseMaterial from './NoiseMaterial'
 import StarNestMaterial from './StarNestMaterial'
 import VideoMaterial from './VideoMaterial'
+import OldVideoMaterial from './OldVideoMaterial'
+
 
 
 
@@ -19,7 +21,8 @@ const materials = {
     MeshBasicMaterial: {img: "img/items/UniverseWithin.png", class: MeshBasicMaterial },
     Noise: {img: "img/items/Noise.png", class: NoiseMaterial },
     StarNest: {img: 'img/items/StarNest.js', class: StarNestMaterial},
-    Video: {class: VideoMaterial}
+    Video: {class: VideoMaterial},
+    OldVideo: {class: OldVideoMaterial}
 };
 
 export function loadMaterialFromText(text) {

@@ -6,7 +6,7 @@ import LayoutBody from "./modules/components/LayoutBody";
 import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
 import { connect } from "react-redux";
-import { base } from 'backend/firebase'
+import { base, app } from 'backend/firebase'
 import { Redirect } from 'react-router-dom'
 import ProjectList from "./ProjectList";
 
@@ -15,26 +15,25 @@ class AddProject extends React.PureComponent {
     state = {redirectTo: ""}
 
     loadProject = async (project)  => {
+        await base.collection('projects').doc(project.id).update({
+            public: true,
+            featured: true,
+        });
+
         base.collection("featured")
             .doc("all")
             .collection("projects")
             .doc(project.id)
             .set({id: project.id})
-            .then((resolve, reject) =>{
-                console.log(":(", resolve, reject)
-                if(resolve) {
-                    this.setState({redirectTo: "projects"})
-                }else {
-                    console.log("?")
-                }
+            .then((resolve, reject) => {
+
+                this.setState({redirectTo: "projects"})
             });
 
-            
-        
     }
 
     render() {
-        if( (this.state.redirectTo || !this.props.isAuthenticated) && !this.props.authFetching)
+        if( this.state.redirectTo)
             return <Redirect to={this.state.redirectTo}></Redirect>
 
         return (

@@ -103,6 +103,7 @@ class CommunityProjects extends React.PureComponent {
                             <ProjectImage
                                 project={project}
                                 loadProject={() => this.loadProject(project.id)}
+                                editProject={this.props.editProject}
                                 key={project.id}
                             />
                         ))}

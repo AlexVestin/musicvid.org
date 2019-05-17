@@ -1,7 +1,7 @@
 
 import BaseItem from '../BaseItem'
 import fonts from 'editor/util/Fonts'
-
+import  { addCanvasControls } from './CanvasControls'
 
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -19,20 +19,20 @@ export default class Text extends BaseItem {
         this.canvas = info.canvas;
         this.ctx = info.ctx;
         this.name = "Text";
-        this.fontSize = 30;
-        this.font = "Montserrat";
-        
-        this.textAlign ="center";
         this.positionX = 0.5;
         this.positionY = 0.5;
-        this.globalAlpha = 1.0;
-        this.fillStyle = "#FFFFFF";
-        this.shouldDrawShadow = false;
-        this.shadowAlpha = 1.0;
-        this.shadowBlur = 5;
-        this.shadowColor = "#000000";
-        this.shadowLineWidth = 5;
-        this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
+
+        this.ctx.fontFamily = "Montserrat";
+        this.ctx.fontSize = 30;
+        this.ctx.textAlign ="center";
+        this.ctx.globalAlpha = 1.0;
+        this.ctx.fillStyle = "#FFFFFF";
+        this.shouldDrawOutline = false;
+        this.outlineShadowAlpha = 1.0;
+        this.outlineShadowBlur = 5;
+        this.outlineShadowColor = "#000000";
+        this.outlineShadowLineWidth = 5;
+        this.drawType  = "fillText";
         this.setUpFolder();
     }
 
@@ -51,47 +51,43 @@ export default class Text extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
-        this.setUpSubGUI(folder);
+        this.contextSettings = addCanvasControls(this, this.ctx, folder);     
         //addCanvasControls(this, this.ctx, folder, {fill: false, line: false });
-        this.addController(folder,this, "positionX", -2, 2, 0.0001);
-        this.addController(folder,this, "positionY", -2, 2, 0.0001);
-        this.addController(folder,this, "font", {values: fonts })
-        this.addController(folder,this, "fontSize", 0, 300)
-        this.addController(folder,this, "shouldDrawShadow");
-        this.addController(folder, this, "shadowColor",{color:true} );
-        this.addController(folder,this, "shadowBlur", 0.0001, 50);
-        this.addController(folder,this, "shadowLineWidth", 0.000001, 30);
-        this.addController(folder,this, "globalAlpha", 0, 1);
-        this.addController(folder, this, "fillStyle", {color:true});
-        this.addController(folder, this, "textAlign", {values: ["center", "left", "right"]});
+        const ol = folder.addFolder("Outline")
+        this.addController(folder, this, "drawType", {values: ["strokeText", "fillText"]});
+        this.addController(folder, this, "positionX", -2, 2, 0.0001);
+        this.addController(folder, this, "positionY", -2, 2, 0.0001);
+        this.setUpSubGUI(folder);
+        this.addController(ol, this, "shouldDrawOutline");
+        this.addController(ol, this, "outlineShadowColor",{color:true} );
+        this.addController(ol, this, "outlineShadowBlur", 0.0001, 50);
+        this.addController(ol, this, "outlineShadowLineWidth", 0.000001, 30);
+
         return this.__addFolder(folder);
     };
     
     getText = () => {}
 
     update = (time, data) => { 
-
+        
+        this.contextSettings.apply(this.ctx);
         const text = this.getText(time, data);
-
-        this.ctx.globalAlpha = this.globalAlpha; 
-        const {width,height} = this.canvas;
+        const { width,height } = this.canvas;
         const x = this.positionX * width;
         const y = this.positionY * height;
-        this.ctx.font = `normal ${this.fontSize}px ${this.font}`;
-
-        this.ctx.textAlign = this.textAlign; 
-        if(this.shouldDrawShadow) {
-            const col = hexToRgb(this.shadowColor)
+       
+        if(this.shouldDrawOutline) {
+            this.ctx.save();
+            const col = hexToRgb(this.outlineShadowColor)
             this.ctx.shadowColor= `rgba(${col.r}, ${col.g}, ${col.b}, ${this.shadowAlpha})`;
-        
-            this.ctx.shadowBlur= this.shadowBlur;
-            this.ctx.lineWidth= this.shadowLineWidth;
+            this.ctx.shadowBlur= this.outlineShadowBlur;
+            this.ctx.lineWidth= this.outlineShadowLineWidth;
+            this.ctx.strokeStyle = `rgba(${col.r}, ${col.g}, ${col.b}, ${this.shadowAlpha})`;
             this.ctx.strokeText(text, x, y);
+            this.ctx.restore();
         }
-        this.ctx.shadowBlur = 0;        
-        this.ctx.fillStyle = this.fillStyle;
-        
-        this.ctx.fillText(text, x, y);
+
+        this.ctx[this.drawType](text, x, y);
      };
 }
 

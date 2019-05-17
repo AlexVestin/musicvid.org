@@ -15,7 +15,13 @@ const vertexShader = [
 const fragmentShader = [
     "uniform sampler2D texture1;",
     "uniform bool enablePostProcessing;",
-    "uniform bool should_mirror;",
+    "uniform bool should_mirror_left_half;",
+    "uniform bool should_mirror_right_half;",
+    "uniform bool should_mirror_whole;",
+    "uniform float matScale;",
+    "uniform float matScaleX;",
+    "uniform float matScaleY;",
+
     "uniform float vignette_amt;",
     "uniform float opacity;",
     "uniform float img_aspect;",
@@ -27,19 +33,42 @@ const fragmentShader = [
 
     "void main() {",
         "vec2 pos  = vUv;",
-        "if(should_mirror) {",
+        "if(should_mirror_whole) {",
             "if(pos.x < 0.5) {",
                 "pos.x = pos.x * 2.;",
             "}else {",
                 "pos.x =  1. - (pos.x -0.5) * 2.;",
             "}",
+        "}else if(should_mirror_left_half) {",
+            "if(pos.x > 0.5){",
+                "pos.x = 1.0 - pos.x;",
+            "}",
+        "}",
+        "else if(should_mirror_right_half) {",
+            "if(pos.x < 0.5){",
+                "pos.x = 1.0 - pos.x;",
+            "}",
         "}",
         "float b = (1. / img_aspect) * canvas_aspect;",
-        "float offset = (b - 1.0) / 2.0;",
+        "float offset = 0.;",
         "if(should_resize) {",
+            "float s = canvas_aspect / img_aspect;",
+            "if(s > 1.0) { ",
+                "offset = (s - 1.0) / 2.0;",
+                "pos.y = (pos.y + offset) / s;",
+            "}else {",
+                "s=1./s;",
+                "offset = (s - 1.0) / 2.0;",
+                "pos.x = (pos.x + offset) / s;",
+            "}",
 
-            "pos.y = pos.y*b - offset;",
+
+            //"pos.y = pos.y*b - offset;",
         "}",
+
+        "pos*=matScale;",
+        "pos.x*=matScaleX;",
+        "pos.y*=matScaleY;",
 
         "float vig_amt = 0.0;",
         "if(enablePostProcessing)",
@@ -71,14 +100,21 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
 
         this.wrapS = "clamp";
         this.wrapT = "clamp";
+        this.mirror = "left half";
 
         this.uniforms = { 
             texture1: {type: "t", value: null }, 
             vignette_amt: {value: 0.42}, 
             enablePostProcessing: {value: true}, 
-            should_mirror: {value: true},
+            should_mirror_left_half: {value: true},
+            should_mirror_right_half: {value: true},
+
+            should_mirror_whole: {value: false},
+            matScale: {value: 1.0},
+            matScaleX: {value: 1.0},
+            matScaleY: {value: 1.0},
             opacity: {value: 0.8},
-            should_resize: {value: false},
+            should_resize: {value: true},
             canvas_aspect: {value: item.width / item.height},
             img_aspect: {value: item.width / item.height},
             should_blackbox: {value: false}
@@ -125,6 +161,7 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.needsUpdate = true;
         this.width = texture.image.width;
         this.height = texture.image.height;
+        console.log(this.width, this.height);
         this.uniforms.img_aspect.value = this.width / this.height;
         this.__item.onImageChange(texture.image);
         this.setClamping();
@@ -133,6 +170,13 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
     __addUndoAction = (func, args) => {
         const item = {func: func, args: args, type: "action"};
         this.folder.getRoot().addUndoItem(item); 
+    }
+
+    setMirror = ()=> {
+        this.uniforms.should_mirror_left_half.value = this.mirror === "left half";
+        this.uniforms.should_mirror_right_half.value = this.mirror === "right half";
+
+        this.uniforms.should_mirror_whole.value = this.mirror === "whole";
     }
 
     __serialize = () => {
@@ -146,13 +190,16 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         i.addController(folder, this, "wrapS", {values: ["repeat", "mirror", "clamp"]}).onChange(this.setClamping);
         i.addController(folder, this, "wrapT", {values: ["repeat", "mirror", "clamp"]}).onChange(this.setClamping);
         i.addController(folder, this.uniforms.enablePostProcessing, "value").name("Enable Postprocessing");
-        i.addController(folder,this.uniforms.should_resize, "value", {path: "material-scale"}).name("Autoscale image");
+        i.addController(folder,this.uniforms.should_resize, "value", {path: "material-resize"}).name("Autoscale image");
         i.addController(folder,this.uniforms.should_blackbox, "value", {path: "material-bbox"}).name("Black box edges");
+        i.addController(folder,this.uniforms.matScale, "value", {path: "material-scale", min: 0}).name("Scale");
+        i.addController(folder,this.uniforms.matScaleX, "value", {path: "material-scaleX", min: 0}).name("Scale X");
+        i.addController(folder,this.uniforms.matScaleY, "value", {path: "material-scaleY", min: 0}).name("Scale Y");
         i.addController(folder,this, "brightenToAudio");
         i.addController(folder,this, "brightenMultipler");     
         i.addController(folder,this, "_opacity", {path: "material-opac", min: 0, max: 1.0}).name("Opacity").onChange(() => this.uniforms.opacity.value = this._opacity);
         i.addController(folder,this, "vignetteAmount").onChange(() => this.uniforms.vignette_amt.value = this.vignetteAmount);
-        i.addController(folder,this.uniforms.should_mirror, "value", {path: "material-opac"}).name("Mirror image");
+        i.addController(folder,this, "mirror", {path: "material-mirror", values: ["whole", "left half", "right half", "none"]}).name("Mirror").onChange(this.setMirror);
         this.impactAnalyser = new ImpactAnalyser(folder, i);
         this.impactAnalyser.endBin = 60;
         this.impactAnalyser.deltaDecay = 20;

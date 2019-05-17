@@ -7,6 +7,7 @@ export default class SerializableObject {
     }
     __setControllerValues = values => {
         const objectsToLoad = [];
+        let keysChanged = [];
 
         Object.keys(values).forEach(key => {
             const obj = values[key];
@@ -19,7 +20,7 @@ export default class SerializableObject {
                 });
             } else {
                 if(!controller) {
-                    alert(`${this.name}:${key} setting has changed internal id or does no longer exist`)
+                    keysChanged.push(key);
                 }else {
                     controller.setValue(values[key].value);
                     controller.updateDisplay();
@@ -27,6 +28,10 @@ export default class SerializableObject {
                
             }
         });
+
+        if(keysChanged.length > 0)
+            alert(`${this.name}:${keysChanged.join(" ")} settings has changed internal id or does no longer exist`)
+
     };
 
     __serializeControllers = () => {

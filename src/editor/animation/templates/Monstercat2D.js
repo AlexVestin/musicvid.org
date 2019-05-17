@@ -27,24 +27,27 @@ export default class Monstercat extends WebGLManager {
         const baseHeight = this.height === 480 ? 0.59 : 0.62;
         const x = 0.26;
 
-        artistText.text  ="ARTIST ONE x ARTIST TWO";
+        const ac = artistText.contextSettings; 
+        ac.text  ="ARTIST ONE x ARTIST TWO";
         artistText.updateFont();
         artistText.positionX = x;
         artistText.positionY = baseHeight;
-        artistText.fontSize = baseFontSize;
-        artistText.textAlign = "left";
-        
-        songText.text  ="TRACKNAME";
+        ac.fontSize = baseFontSize;
+        ac.textAlign = "left";
+
+        const sc = songText.contextSettings; 
+        sc.text  ="TRACKNAME";
         songText.positionX = x;
         songText.positionY = baseHeight + margin;
-        songText.fontSize = baseFontSize / 2;
-        songText.textAlign = "left";
+        sc.fontSize = baseFontSize / 2;
+        sc.textAlign = "left";
 
+        const rc = remixText.contextSettings; 
         remixText.text  ="EDIMASTER EDIT";
         remixText.positionX = x;
         remixText.positionY = baseHeight + margin *2;
-        remixText.fontSize = baseFontSize / 2;
-        remixText.textAlign = "left";
+        rc.fontSize = baseFontSize / 2;
+        rc.textAlign = "left";
 
 
         artistText.setFolderName("Artist Text");
