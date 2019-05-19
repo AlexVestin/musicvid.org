@@ -153,6 +153,11 @@ export default class Particles extends BaseItem {
         this.pMaterial.uniforms.color.value = new THREE.Color(this.color)
     }
 
+    dispose = () => {
+        this.particlesGeom.dispose();
+        this.pMaterial.dispose();
+    }
+
     get mesh() {
         return this.particleSystem;
     }

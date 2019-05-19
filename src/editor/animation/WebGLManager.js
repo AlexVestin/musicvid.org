@@ -78,6 +78,11 @@ export default class WebGLManager {
         while(this.scenes.length > 0) {
             this.scenes[0].removeMe();
         }
+        
+        if(this.renderer) {
+            console.log("this.renderer sdsdf")
+            this.renderer.dispose();
+        }
 
         this.gui.getRoot().__automations = [];
 

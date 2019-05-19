@@ -50,6 +50,16 @@ export default class MeshItem extends BaseItem {
             this.material.play(t)
     }
 
+    dispose = () => {
+        console.log(this.material, this.geometry);
+        this.geometry.dispose();
+        this.material.dispose();
+        if(this.material.map) {
+            console.log("dispose texture?")
+            this.material.map.dispose();
+        }
+    }
+
     stop = () => {
         if(this.material.stop)
             this.material.stop()

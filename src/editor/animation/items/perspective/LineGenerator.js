@@ -45,6 +45,10 @@ class LineGenerator extends Object3D {
         this.isStarted = true;
     }
 
+    dispose = () => {
+        this.stop();
+    }
+
     stop(callback) {
         this.isStarted = false;
         // TODO callback when all lines are hidden

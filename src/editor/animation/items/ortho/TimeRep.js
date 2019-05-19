@@ -47,6 +47,11 @@ export default class AudioWave extends BaseItem{
         return this.__addFolder(folder);
     };
 
+    dispose = () => {
+        this.mesh.material.dispose();
+        this.geometry.dispose();
+    }
+
     update = (time, data) => {
         const audioData = data.timeData;
         const bufferLength = audioData.length;

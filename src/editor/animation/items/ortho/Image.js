@@ -12,8 +12,4 @@ export default class Background extends MeshItem {
 
         this.material.onNewImage = this.onNewImage;
     }
-
-    onNewImage = () => {
-        
-    }
 }

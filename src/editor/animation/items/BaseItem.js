@@ -52,6 +52,9 @@ export default class BaseItem extends SerializableObject {
         c.__path = p;
     }
 
+    dispose = () => {
+        
+    }
 
 
     setFolderName = name => {

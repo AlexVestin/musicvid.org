@@ -157,6 +157,14 @@ export default class Scene extends SerializableObject {
             this.items.pop();
         }*/
 
+        this.items.forEach((item) => {
+            item.dispose();
+            if(this.type !== "canvas")
+                this.scene.remove(item);
+        });
+        this.items = [];
+        this.scene.dispose();
+
         this.remove({scene: this});
     }
 

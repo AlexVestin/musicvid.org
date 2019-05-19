@@ -38,13 +38,11 @@ export default class PointBed extends BaseItem {
                 new THREE.BufferAttribute(positions, 3)
             );
 
-
             const material = new THREE.MeshBasicMaterial({color: color});
             const mesh = new THREE.Line(geometry, material)
             this.particles.push(mesh);
             this.mesh.add(mesh)
         }
-
 
         info.scene.add(this.mesh);
         this.setUpFolder();
@@ -61,8 +59,6 @@ export default class PointBed extends BaseItem {
         this.analyser.smoothingTimeConstant = 0.03;
         this.analyser.smoothingPasses = 3;
         this.analyser.smoothingPoints = 9;
-
-
         return this.__addFolder(folder);
     };
 
@@ -103,6 +99,7 @@ export default class PointBed extends BaseItem {
             this.particles[0].material.needsUpdate = true;
             this.particles[0].geometry.attributes.position.needsUpdate = true;
         }
-       
     };
+
+    
 }

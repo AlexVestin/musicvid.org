@@ -42,6 +42,10 @@ export default class ParticleLines extends BaseItem {
         this.setUpFolder();
     }
 
+    dispose = () => {
+        this.mesh.dispose();
+    }
+
     stop = () => {
         this.mesh.stop();
     }

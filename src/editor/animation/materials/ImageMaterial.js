@@ -138,6 +138,11 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         }
     }
 
+    dispose = () => {
+        super.dispose();
+        this.uniforms.texture1.value.dispose();
+    }
+
     changeImage() {
         loadImageTexture(this, "setBackground");
     }
@@ -161,7 +166,6 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.needsUpdate = true;
         this.width = texture.image.width;
         this.height = texture.image.height;
-        console.log(this.width, this.height);
         this.uniforms.img_aspect.value = this.width / this.height;
         this.__item.onImageChange(texture.image);
         this.setClamping();

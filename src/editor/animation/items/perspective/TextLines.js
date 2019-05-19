@@ -101,6 +101,11 @@ export default class Box extends BaseItem {
         this.loaded = true;
     }
 
+    dispose = () => {
+        this.mesh.geometry.dispose();
+        this.mesh.material.dispose();
+    }
+
 
     update = (time, audioData) => {
             if(this.loaded) {

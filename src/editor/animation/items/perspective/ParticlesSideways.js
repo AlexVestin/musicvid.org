@@ -297,6 +297,20 @@ export default class Particles extends BaseItem {
         }
     }
 
+    dispose = () => {
+        this.fleckMaterial.dispose();
+        this.bokehMaterial.dispose();
+        this.pMaterial.dispose();
+
+        this.fleckMaterial.map.dispose();
+        this.bokehMaterial.map.dispose();
+        this.pMaterial.map.dispose();
+
+        this.flecks.dispose();
+        this.particles.dispose();
+        this.bokeh.dispose();
+    }
+
     __setUpGUI = (folder) => {
         this.addController(folder, this, "amplitude", 0, 200, 0.1);
         this.addController(folder, this, "baseSpeed", 0, 500);
