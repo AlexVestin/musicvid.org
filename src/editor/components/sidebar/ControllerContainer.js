@@ -92,16 +92,16 @@ export default class ControllerContainer extends PureComponent {
                 name: projectFile.name,
                 width: projectFile.name,
                 height: projectFile.name,
-
+                owner: app.auth().currentUser.uid
             }).then(() => {
-                const proj = JSON.parse(projectFile.str);
+                let p = {...projectFile, projectSrc: projectFile.src}
                 window.history.pushState({}, null, "/editor?project=" + projectFile.id);
-                this.props.loadProject(proj);
+                this.props.loadProject(p);
             })
         }else {
             base.collection("projects").doc(projectFile.id).get().then((snapshot) => {
                 window.history.pushState({}, null, "/editor?project=" + projectFile.id);
-                this.props.loadProject(JSON.parse(snapshot.data().projectSrc));
+                this.props.loadProject(snapshot.data());
             })                  
         }
     };

@@ -24,8 +24,8 @@ export default function SpectrumAnalyser(gui, object) {
     addAttribute("shouldCapHeight", false, f1, { min: 0 });
 
     addAttribute("spectrumHeight", 280, f1, { min: 0 });
-    addAttribute("spectrumStart", 4, f1, { min: 0 });
-    addAttribute("spectrumEnd", 1200, f1, { min: 0 });
+    addAttribute("spectrumStart", 4, f1, { min: 0, step: 1 });
+    addAttribute("spectrumEnd", 1200, f1, { min: 0, step: 1 });
     addAttribute("spectrumScale", 2.5, f1, { min: 0 });
 
     const f2 = gui.addFolder("Transformations");

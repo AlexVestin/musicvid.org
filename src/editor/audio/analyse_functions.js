@@ -53,16 +53,22 @@ export function smooth(array, object) {
 
 export function transformToVisualBins(array, object) {
     const { spectrumSize, spectrumScale, spectrumStart, spectrumEnd, mult } = object;
+    if(spectrumStart >= spectrumEnd || spectrumStart < 0)     {
+        return array;
+    }
+        
+    const end = Math.min(array.length, spectrumEnd);    
+    const start = Math.max(0, spectrumStart);
+
     let m = mult || 1.0;
     var newArray = new Uint8Array(spectrumSize);
     for (var i = 0; i < spectrumSize; i++) {
         var bin =
             Math.pow(i / spectrumSize, spectrumScale) *
-                (spectrumEnd - spectrumStart) +
-            spectrumStart;
+                (end - start) + start;
         newArray[i] =
-            array[Math.floor(bin) + spectrumStart] * (bin % 1) +
-            array[Math.floor(bin + 1) + spectrumStart] * (1 - (bin % 1));
+            array[Math.floor(bin) + start] * (bin % 1) +
+            array[Math.floor(bin + 1) + start] * (1 - (bin % 1));
         
         newArray[i] *= m;
     }

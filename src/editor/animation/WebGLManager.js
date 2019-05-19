@@ -28,6 +28,8 @@ export default class WebGLManager {
         this.clearAlpha = 1.0;
         this.postprocessingEnabled = false;
         this.__id = uuid();
+        this.__owner = this.__id;
+
         this.__projectName  = "ProjectName";
         this.__lastEdited = new Date().toString();
         this.availablePublic = false;
@@ -79,13 +81,16 @@ export default class WebGLManager {
 
         this.gui.getRoot().__automations = [];
 
-        Object.assign(this, json.settings);
+        const proj = JSON.parse(json.projectSrc);
+
+        this.__ownerId = json.owner;
+        Object.assign(this, proj.settings);
         this.settingsFolder.updateDisplay();
-        json.automations.forEach(auto => {
+        proj.automations.forEach(auto => {
             this.addAutomation(auto);
         })  
 
-        json.scenes.forEach(scene => {     
+        proj.scenes.forEach(scene => {     
             if(scene.__settings.isScene) {
                 const s = this.addSceneFromText(scene.__settings.type || scene.__settings.TYPE);
                 s.undoCameraMovement(scene.camera);
@@ -114,7 +119,6 @@ export default class WebGLManager {
                 reader.onload = (e) => {
                     const json = JSON.parse(e.target.result);
                     this.loadProject(json);    
-                    this.setFFTSize(this.fftSize);
                 }
                 reader.readAsText(file);
             }
@@ -146,9 +150,9 @@ export default class WebGLManager {
         const cu = app.auth().currentUser; 
         if(cu) {
 
-            if(cu.uid !== this.__ownerId) {
+            if(cu.uid !== this.__owner) {
                 this.__id = uuid();
-                this.__ownerId = this.__id;
+                this.__owner = cu.uid;
             }
 
             const myId = app.auth().currentUser.uid;

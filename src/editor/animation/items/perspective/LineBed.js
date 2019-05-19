@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { smooth, toWebAudioForm, getByteSpectrum } from 'editor/audio/analyse_functions'
 import BaseItem from '../BaseItem'
+import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
 
 
 export default class PointBed extends BaseItem {
@@ -15,6 +16,7 @@ export default class PointBed extends BaseItem {
         this.mesh = new THREE.Group();
         this.spacing = 20;
         this.lineLength =  9;
+        this.useAnalyser = true;
 
         this.updateCount = 0;
         this.size = 256*4;
@@ -50,18 +52,33 @@ export default class PointBed extends BaseItem {
 
     __setUpGUI = (folder) => {
          
-        folder.add(this, "amplitude");
+        this.addController(folder, this, "useAnalyser");
+        this.analyser = new SpectrumAnalyser(folder, this);
+        this.analyser.spectrumSize = this.size;
+        this.analyser.spectrumHeight = 770;
+        this.analyser.spectrumEnd = 400;
+        this.analyser.enableDropoffSmoothing = false;
+        this.analyser.smoothingTimeConstant = 0.03;
+        this.analyser.smoothingPasses = 3;
+        this.analyser.smoothingPoints = 9;
+
+
         return this.__addFolder(folder);
     };
 
     update = (time, data) => {
 
         if(this.updateCount++ % 2 === 0) {
-            let waf = toWebAudioForm(data.frequencyData.slice(0, data.frequencyData.length /8), this.prevArr, 0.1);
-            this.prevArr = waf;
-            let freq = getByteSpectrum(waf);
-            freq = smooth(freq,  { smoothingPasses: 3, smoothingPoints: 9 })    
-    
+            let freq = []
+            if(!this.useAnalyser) {
+                let waf = toWebAudioForm(data.frequencyData.slice(0, data.frequencyData.length/2), this.prevArr, 0.1);
+                this.prevArr = waf;
+                freq = getByteSpectrum(waf);
+                freq = smooth(freq,  { smoothingPasses: 3, smoothingPoints: 9 })    
+            }else {
+                freq  = this.analyser.analyse(data.frequencyData);
+            }
+
             let i = this.particles.length - 2;
             while (i > 0) {
                 const line = this.particles[i];

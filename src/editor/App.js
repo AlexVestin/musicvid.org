@@ -61,7 +61,7 @@ class App extends PureComponent {
         this.resolution = {width: projectFile.width, height: projectFile.height};
         this.canvasRef.current.setSize(this.resolution);
         this.animationManager.init(this.resolution);
-        this.animationManager.loadProject(JSON.parse(projectFile.projectSrc));
+        this.animationManager.loadProject(projectFile);
         this.loadNewAudioFile();
         this.setState({shouldLoadProject: false});
     }
@@ -315,7 +315,6 @@ class App extends PureComponent {
 
         
         this.usingSampleAudio = selected === "https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3";
-        console.log(this.usingSampleAudio)
         this.loadNewAudio(selected).then(this.audioReady);
         
     };

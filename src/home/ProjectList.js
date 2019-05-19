@@ -7,7 +7,7 @@ import { ReactComponent as Delete } from "editor/components/automation/baseline-
 import Typography from "./modules/components/Typography";
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import { connect } from "react-redux";
-import { app, base } from "backend/firebase";
+import { app, base, storage } from "backend/firebase";
 import classes from './ProjectList.module.css'
 import RemoveDialog from './RemoveDialog'
 
@@ -63,24 +63,30 @@ class ProjectList extends React.PureComponent {
       }
   }
 
-  handleRemove = (project) => {
+  handleRemove = async (project) => {
+
+    let p4;
+    try {
+      await storage.ref().child(project.id).getDownloadURL();
+      p4 = storage.ref().child(project.id).delete();
+    }catch (err) {
+      p4 = null;
+    }
+
+    
     const p1 = base.collection("users")
       .doc(app.auth().currentUser.uid)
       .collection("projects")
       .doc(project.id)
       .delete()
     
-      const p2 = base.collection("projects").doc(project.id).delete();
-      
-      const p3 = base.collection("featured").doc("all").collection("projects").doc(project.id).delete();
-      
-      
-      console.log(project)
-
-      Promise.all([p1,p2, p3]).then(() => {
-        const projects = [...this.state.projects].filter(p => p.id !== project.id);
-        this.setState({projects, loaded: true, project: null, modalOpen: false})
-      })
+    const p2 = base.collection("projects").doc(project.id).delete();
+    const p3 = base.collection("featured").doc("all").collection("projects").doc(project.id).delete();
+  
+    Promise.all([p1, p2, p3, p4]).then(() => {
+      const projects = [...this.state.projects].filter(p => p.id !== project.id);
+      this.setState({projects, loaded: true, project: null, modalOpen: false})
+    })
 
   }
 
