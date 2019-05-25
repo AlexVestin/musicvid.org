@@ -64,6 +64,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "copyfiles": "^2.1.0"
+    "copyfiles": "^2.1.0",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.13.1",
+    "jest-canvas-mock": "^2.1.0"
   }
+
 }

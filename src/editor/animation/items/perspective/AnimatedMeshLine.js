@@ -80,7 +80,8 @@ import {
         dashRatio, // The ratio between that is visible or not for each dash
         opacity,
         transparent: true,
-        depthWrite: false,
+        depthTest: false,
+        sizeAttenuation: true,
         color,
       });
   

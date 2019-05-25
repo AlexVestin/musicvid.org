@@ -66,7 +66,7 @@ class Image extends PureComponent {
                 className={classes.imageWrapper}
                 style={{
                     width: "33%",
-                    minWidth: "33%",
+                    minWidth: 370,
                     height: "100%",
                     backgroundColor: "#000"
                 }}
@@ -80,7 +80,7 @@ class Image extends PureComponent {
                         justifyContent: "center"
                     }}
                 >
-                    {(!this.state.loaded || !this.state.fetched) && (
+                    {(!this.state.fetched) && (
                         <Typography variant="h1">{"Loading..."}</Typography>
                     )}
                     {this.state.img && (

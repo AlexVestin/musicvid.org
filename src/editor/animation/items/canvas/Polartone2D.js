@@ -133,7 +133,9 @@ export default class Polartone extends BaseItem {
 
     update = (time, data) => {
         const dur = time / this.songDuration;
-
+        if(!data) {
+            return;
+        }
         const audioData = data.timeData;
         const bufferLength = audioData.length;
 

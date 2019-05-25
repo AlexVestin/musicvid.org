@@ -3,7 +3,7 @@ import * as THREE from "three";
 import BaseItem from '../BaseItem'
 import { addOrthoMeshControls } from '../AddMeshControls'
 
-export default class AudioWave extends BaseItem{
+export default class AudioWave extends BaseItem {
     constructor(info) {
         super(info);
         this.name = "Audio Wave";

@@ -4,7 +4,6 @@ import Demuxer from './OldDemuxer.js'
 export default class Video extends THREE.MeshBasicMaterial {
     constructor(item) {
         super() 
-        this.ac = new AudioContext()
         this.decoder = new Demuxer(this.onDecoderReady)
         this.playAudio = false
         this.transparent = true;

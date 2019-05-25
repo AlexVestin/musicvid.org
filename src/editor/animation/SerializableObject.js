@@ -66,14 +66,7 @@ export default class SerializableObject {
         return obj;
     };
 
-    addController = (
-        gui,
-        object,
-        name,
-        arg1 = null,
-        arg2 = null,
-        arg3 = null
-    ) => {
+    addController = (gui, object, name, arg1 = null, arg2 = null, arg3 = null) => {
         let options = {};
         if (arg2) {
             options.min = arg1;

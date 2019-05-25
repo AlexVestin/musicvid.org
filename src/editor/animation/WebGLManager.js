@@ -6,37 +6,49 @@ import PerspectiveScene from "./scenes/PerspectiveScene";
 import PostProcessing from "./postprocessing/postprocessing";
 import * as FileSaver from "file-saver";
 import serialize from './Serialize'
-import { base, app } from 'backend/firebase'
+import { base, app, storage } from 'backend/firebase'
 import PointAutomation from './automation/PointAutomation'
 import InputAutomation from './automation/InputAutomation'
 import ImpactAutomation from './automation/AudioReactiveAutomation'
 import uuid from 'uuid/v4'
+import { takeScreenShot } from 'editor/util/FlipImage'
 
 export default class WebGLManager {
     constructor(parent) {
-        this.fftSize = 16384;
-        this.gui = parent.gui;
-        this.canvasMountRef = parent.gui.canvasMountRef;
-        this.modalRef = parent.gui.modalRef;
-        this.parent = parent;
-
-        this.scenes = [];
-        this.audio = null;
+        
+        // Set up for headless testing;
+        if(parent) {
+            this.gui = parent.gui;
+            this.canvasMountRef = parent.gui.canvasMountRef;
+            this.modalRef = parent.gui.modalRef;
+            this.parent = parent;
+            this.setUpControls();
+        }
+        
+        // Project settings
         this.inFullScreen = false;
-
         this.clearColor = "#000000";
         this.clearAlpha = 1.0;
         this.postprocessingEnabled = false;
+        this.fftSize = 16384;
+
+        // Project file settings
         this.__id = uuid();
         this.__owner = this.__id;
-
         this.__projectName  = "ProjectName";
         this.__lastEdited = new Date().toString();
         this.availablePublic = false;
-        this.lastTime = 0;
-        this.lastAudioData = {frequencyData: [], timeData: []};
-        
 
+        // Redraw animations settings
+        this.__lastTime = 0;
+        this.__lastAudioData = {frequencyData: new Float32Array(this.fftSize/2), timeData: new Float32Array(this.fftSize)};
+
+        // Scenes
+        this.scenes = [];
+        this.audio = null;
+    }
+
+    setUpControls() {
         document.body.addEventListener("keyup", e => {
             if (e.keyCode === 70) {
                 if (!this.inFullScreen) {
@@ -53,7 +65,6 @@ export default class WebGLManager {
             }
         });
     }
-
     addAutomation = (template) => {
         let auto  = {};
         switch(template.type) {
@@ -67,7 +78,7 @@ export default class WebGLManager {
             auto =  new ImpactAutomation(this.gui);
             break;
         default:
-            alert(":(");
+            alert("Automation type not found");
         }
         auto.__id = template.__id;
         auto.__setUpValues(template);
@@ -80,7 +91,6 @@ export default class WebGLManager {
         }
         
         if(this.renderer) {
-            console.log("this.renderer sdsdf")
             this.renderer.dispose();
         }
 
@@ -89,6 +99,7 @@ export default class WebGLManager {
         const proj = JSON.parse(json.projectSrc);
 
         this.__ownerId = json.owner;
+        this.__online = json.online;
         Object.assign(this, proj.settings);
         this.settingsFolder.updateDisplay();
         proj.automations.forEach(auto => {
@@ -169,6 +180,8 @@ export default class WebGLManager {
             });
 
             const allRef = base.collection("projects").doc(this.__id);
+
+
             const p2 = allRef.set({
                 projectSrc: JSON.stringify(projFile),
                 width: this.width,
@@ -177,11 +190,20 @@ export default class WebGLManager {
                 public: this.availablePublic,
                 owner: myId,
                 id: this.__id
-            })
+            });
+            let p3;
+            if(!this.__online) {
+                this.redoUpdate();
+                const blob = takeScreenShot(this.canvas);
+                p3 = storage.ref().child(this.__id).put(blob)
+            }
+            
 
-            Promise.all([p1, p2]).then(() => {
+            Promise.all([p1, p2, p3]).then(() => {
                 alert("Saved to profile");
                 window.history.pushState({}, null, "/editor?project=" + this.__id);
+                this.__online = true;
+                allRef.update({online: true});
             })
 
         }else {
@@ -201,46 +223,24 @@ export default class WebGLManager {
     }
 
     removeScene = args => {
-        const { scene, undoAction } = args;
+        const { scene } = args;
         try {
-            scene.folder.parent.removeFolder(scene.folder);
+            this.layersFolder.removeFolder(scene.folder);
+            this.layersFolder.__folders[scene.__id] =  undefined;
+            delete this.layersFolder.__folders[scene.__id];
         }catch(err) {
-            alert("folder not removed correctly");
+            console.log("Scene folder not removed correctly")
         }
-        
+
         const index = this.scenes.findIndex(e => e === scene);
         this.scenes.splice(index, 1);
-
-        if (!undoAction) {
-            const it = {
-                func: this.undoRemoveScene,
-                args: { scene, index },
-                type: "action"
-            };
-            this.gui.getRoot().addUndoItem(it);
-        }
-
         this.postProcessing.remove(scene, index);
     };
 
-    undoRemoveScene = ele => {
-        const scenes = this.scenes;
-        const fold =
-            ele.index === scenes.length ? null : scenes[ele.index].folder;
-        ele.scene.setUpGui(fold);
-        this.scenes.splice(ele.index, 0, ele.scene);
-    };
+
 
     moveScene = args => {
         let { up, scene } = args;
-        if (!args.undoAction) {
-            const it = {
-                func: this.moveScene,
-                args: { up: !up, scene: scene, undoAction: true },
-                type: "action"
-            };
-            this.gui.getRoot().addUndoItem(it);
-        }
 
         const folder = scene.folder.domElement.parentElement;
         const list = folder.parentElement;
@@ -265,36 +265,28 @@ export default class WebGLManager {
     };
 
     addSceneFromText = sceneName => {
+        const sceneTypes = {
+            canvas: CanvasScene,
+            ortho: OrthographicScene,
+            perspective: PerspectiveScene,
+        }
         let scene;
-        if (sceneName === "canvas") {
-            scene = new CanvasScene(
-                this.layersFolder,
-                this.resolution,
-                this.removeScene,
-                this.moveScene
-            );
-        } else if (sceneName === "ortho") {
-            scene = new OrthographicScene(
-                this.layersFolder,
-                this.resolution,
-                this.removeScene,
-                this.moveScene
-            );
-        } else if (sceneName === "perspective") {
-            scene = new PerspectiveScene(
-                this.layersFolder,
-                this.resolution,
-                this.removeScene,
-                this.moveScene
-            );
-        }else {
+        if(!(sceneName in sceneTypes)) {
             this.postProcessing.addEffect(sceneName);
             return
+        } else {
+            scene = new sceneTypes[sceneName](
+                this.layersFolder,
+                this.resolution,
+                this.removeScene,
+                this.moveScene
+            )
         }
-
+        
         this.postProcessing.addRenderPass(scene);
         this.scenes.push(scene);
         scene.setUpPassConfigs();
+
         return scene;
     };
 
@@ -307,14 +299,7 @@ export default class WebGLManager {
     addScene = () => {
         this.modalRef.toggleModal(8).then(sceneName => {
             if (sceneName) {
-                const scene = this.addSceneFromText(sceneName);
-                this.gui
-                    .getRoot()
-                    .addUndoItem({
-                        type: "action",
-                        args: { scene, undoAction: true },
-                        func: this.removeScene
-                    });
+                this.addSceneFromText(sceneName);
             }
         });
     };
@@ -330,17 +315,14 @@ export default class WebGLManager {
             this.layersFolder = this.gui.__folders["Layers"];
             this.layersFolder.add(this, "addScene").name("Add layer");
         }
-        // Set up internal canvas to keep canvas size on screen consistent
-
         this.canvas = this.canvasMountRef;
-        //this.externalCtx = this.canvasMountRef.getContext("2d");
-        //this.internalCanvas = document.createElement("canvas");
-        //this.internalCanvas.width = this.width;
-        //this.internalCanvas.height = this.height;
-
         this.setUpRenderers(setUpFolders);
         this.setUpScene();
     };
+
+    setUpScene() {
+        
+    }
 
     refresh = ref => {
         this.canvasMountRef = ref;
@@ -413,15 +395,35 @@ export default class WebGLManager {
     };
 
     setUpRenderer() {
-        this.renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true,
-            
-            canvas: this.canvas
-        });
-        this.renderer.autoClear = false;
-        this.renderer.setSize(this.width, this.height);
-        this.setClear();
+        const supportsWebGL = ( function () {
+            try {
+                return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' );
+            } catch( e ) {
+                return false;
+            }
+        } )();
+
+        if(supportsWebGL) {
+            this.renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true,
+                canvas: this.canvas
+            });
+            this.renderer.autoClear = false;
+            this.renderer.mock = false;
+            this.renderer.setSize(this.width, this.height);
+            this.setClear();
+        }else {
+            // TODO Error message
+            this.renderer = {};
+            this.renderer.getDrawingBufferSize = () => { return  {width: 1080, height: 720} }
+            this.renderer.mock = true;
+            this.renderer.clear = () => {};
+            this.renderer.clearDepth = () => {};
+            this.renderer.render = () => {};
+            this.postProcessing = {};
+        }
+
         this.postProcessing = new PostProcessing(this.width, this.height, {
             renderer: this.renderer,
             gui: this.layersFolder,
@@ -437,9 +439,9 @@ export default class WebGLManager {
 
     setUpRenderers = (setUpFolders = true) => {
         this.setUpRenderer();
-        
-        const frequencies = [1,5,30,60];
+          
         if (setUpFolders) {
+            const frequencies = [1,5,30,60];
             this.settingsFolder = this.gui.__folders["Settings"];
             this.settingsFolder
                 .add(this.gui, "__automationConfigUpdateFrequency", frequencies)
@@ -542,18 +544,13 @@ export default class WebGLManager {
     };
 
     stop = () => {
-        this.lastTime = 0;
-        this.lastAudioData = {frequencyData: [], timeData: []};
-        //this.externalCtx.clearRect( 0, 0, this.canvasMountRef.width, this.canvasMountRef.height);
+        this.__lastTime = 0;
+        this.__lastAudioData = {frequencyData: [], timeData: []};
         this.scenes.forEach(scene => {
             scene.stop();
         });
         this.renderer.clear();
     };
-
-    setUpScene() {
-        console.log("Implement this");
-    }
 
     redoUpdate = () => {
         this.update(this.__lastTime, this.__lastAudioData, false);
@@ -563,7 +560,7 @@ export default class WebGLManager {
         if (!this.postprocessingEnabled) {
             this.renderer.clear();
             this.scenes.forEach(scene => {
-                if (scene.type !== "" && scene.isScene) {
+                if (scene.isScene) {
                     scene.update(time, audioData, shouldIncrement);
                     this.renderer.render(scene.scene, scene.camera);
                     this.renderer.clearDepth();
@@ -580,7 +577,5 @@ export default class WebGLManager {
 
         this.__lastTime = time;
         this.__lastAudioData = audioData;
-
-        //this.externalCtx.drawImage(this.internalCanvas, 0, 0, Math.floor(this.canvasMountRef.width), Math.floor(this.canvasMountRef.height));
     };
 }

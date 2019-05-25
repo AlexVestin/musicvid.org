@@ -96,9 +96,8 @@ export default class WebGLManager {
     setTime = (time) => {
 
     }
-
     setUpScene() {
-        console.log("Implement this");
+        
     }
 
     setUpRenderers = () => {

@@ -6,6 +6,7 @@ export default class Emblem {
         this.image.onload = () => this.loaded = true;
         this.image.src = filePath;
         this.emblemSizeScale = 0.9;
+        this.emblemShadowBlur = 20;
         this.circleSizeScale = 1.0;
         this.circleFillColor = "#FFF"
         this.shouldFillCircle = true;
@@ -22,7 +23,7 @@ export default class Emblem {
             ctx.save();
             ctx.globalAlpha *= this.alpha;
             if(this.shouldFillCircle) {
-                ctx.shadowBlur = 0;
+                ctx.shadowBlur = this.emblemShadowBlur;
                 ctx.fillStyle =  this.circleFillColor;     
                 ctx.beginPath();
                 ctx.arc(canvas.width / 2, canvas.height / 2, currentRadius * this.circleSizeScale, 0, Math.PI*2, true); 

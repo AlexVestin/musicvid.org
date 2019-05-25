@@ -1,9 +1,7 @@
 import BaseItem from "./BaseItem";
 import { loadMaterialFromText } from "../materials/index";
 import { loadGeometryFromText } from "../geometries/index";
-
 import addPersControls, { addOrthoMeshControls } from './AddMeshControls'
-
 import * as THREE from 'three';
 export default class MeshItem extends BaseItem {
 
@@ -11,6 +9,7 @@ export default class MeshItem extends BaseItem {
         super(info);
         this.type = info.type;
         this.mesh = new THREE.Mesh();
+        this.isMeshItem = true;
         info.scene.add(this.mesh);
     }
 

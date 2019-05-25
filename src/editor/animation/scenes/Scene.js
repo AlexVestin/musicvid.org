@@ -100,14 +100,17 @@ export default class Scene extends SerializableObject {
     }
 
     setUpPassConfigs = () => {
-        this.settingsFolder.add(this.pass, "clear");
-        this.settingsFolder.add(this.pass, "clearDepth");
-        this.settingsFolder.add(this.pass, "needsSwap");
+        if(this.settingsFolder) {
+            this.settingsFolder.add(this.pass, "clear");
+            this.settingsFolder.add(this.pass, "clearDepth");
+            this.settingsFolder.add(this.pass, "needsSwap");
+        }
+       
     }
 
     setUpGui = (before =  null) => {
         const gui = this.gui;
-        this.folder = gui.addFolder(this.type  + " scene", true, true, before);
+        this.folder = gui.addFolder(this.__id, true, true, before);
         this.folder.upFunction = () => this.__moveScene({up: true, scene: this});
         this.folder.downFunction = () => this.__moveScene({up: false, scene: this});
         this.itemsFolder = this.folder.addFolder("Items");
@@ -119,10 +122,6 @@ export default class Scene extends SerializableObject {
         this.addController(this.cameraFolder, this, "resetCamera");
         this.settingsFolder.add(this, "removeMe").name("Remove this scene");
         
-        //this.itemsFolder.title.style.backgroundColor = "#090909";
-        //this.cameraFolder.title.style.backgroundColor = "#090909";
-        //this.settingsFolder.title.style.backgroundColor = "#090909";
-
         this.items.forEach(item =>  {
             item.__gui = this.itemsFolder;
             item.__setUpFolder();
@@ -148,15 +147,6 @@ export default class Scene extends SerializableObject {
     }
 
     removeMe = () => {
-        // TODO fix better handling of removing scenes regarding undo/redo
-        /*
-        while(this.items.length > 0) {
-            this.items[0].dispose();
-            if(this.type !== "canvas")
-                this.scene.remove(this.items[0].mesh);
-            this.items.pop();
-        }*/
-
         this.items.forEach((item) => {
             item.dispose();
             if(this.type !== "canvas")
@@ -169,28 +159,15 @@ export default class Scene extends SerializableObject {
     }
 
     removeItem = (args) => {
-        const {item, undoAction} = args;
-
+        const { item } = args;
         const index = this.items.findIndex(e => e === item);
-        if(this.type !== "canvas")
-            this.scene.remove(this.items[index].mesh);
-
-        item.folder.parent.removeFolder(item.folder);
-        this.items.splice(index, 1);
-        if(!undoAction) {
-            const it = {func: this.undoRemoveItem, args: { item, undoAction: true}, type: "action"}
-            this.folder.getRoot().addUndoItem(it);
+        if(this.type !== "canvas"){
+            this.scene.remove(item.mesh);
         }
-
-    }
-
-    undoRemoveItem = (args) => {
-        const {item} = args;
-        this.items.push(item);
-
-        item.setUpFolder();
-        if(this.type !== "canvas")
-            this.scene.add(item.mesh);
+        
+        item.folder.parent.removeFolder(item.folder);
+        delete item.folder.parent.__folders[item.__id];
+        this.items.splice(index, 1);
     }
 
     stop = () => {

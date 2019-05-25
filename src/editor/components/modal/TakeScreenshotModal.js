@@ -38,11 +38,8 @@ class ScrollDialog extends React.Component {
         super(props);
 
         this.state = { width: 1, height: 1 };
-
         this.canvasRef = React.createRef();
         this.loaded = false;
-        this.scaleCanvas = document.createElement("canvas");
-        this.ctx = this.scaleCanvas.getContext("2d");
     }
 
     upload = () => {
@@ -57,28 +54,6 @@ class ScrollDialog extends React.Component {
 
     onLoad = () => {};
 
-    flipArray = (pixels, width, height) => {
-        var halfHeight = (height / 2) | 0; // the | 0 keeps the result an int
-        var bytesPerRow = width * 4;
-
-        // make a temp buffer to hold one row
-        var temp = new Uint8Array(width * 4);
-        for (var y = 0; y < halfHeight; ++y) {
-            var topOffset = y * bytesPerRow;
-            var bottomOffset = (height - y - 1) * bytesPerRow;
-
-            // make copy of a row on the top half
-            temp.set(pixels.subarray(topOffset, topOffset + bytesPerRow));
-            pixels.copyWithin(
-                topOffset,
-                bottomOffset,
-                bottomOffset + bytesPerRow
-            );
-            pixels.set(temp, bottomOffset);
-        }
-        return pixels;
-    };
-
     drawToCanvas = () => {
         const { manager } = this.props;
         const c = manager.canvas;
@@ -88,28 +63,11 @@ class ScrollDialog extends React.Component {
             this.canvasRef.current.height = 280;
 
             const ctx = this.canvasRef.current.getContext("2d");
-
-            const img = ctx.createImageData(c.width, c.height);
-
             manager.redoUpdate();
-            const pixels = this.flipArray(
-                manager.readPixels(),
-                c.width,
-                c.height
-            );
-            img.data.set(pixels);
-
-            this.scaleCanvas.width = c.width;
-            this.scaleCanvas.height = c.height;
-
-            this.ctx.putImageData(img, 0, 0);
-
             const { width, height } = this.canvasRef.current;
-            ctx.drawImage(this.scaleCanvas, 0, 0, width, height);
+            ctx.drawImage(c, 0, 0, width, height);
             this.setState({ width, height });
-        } else {
-            console.log("???");
-        }
+        } 
     };
 
     componentDidMount() {

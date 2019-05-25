@@ -107,7 +107,7 @@ export default class Particles extends BaseItem {
         this.setUp();
         this.setUpFolder();
 
-        this.impactAnalyser = new ImpactAnalyser(this.folder); 
+        this.impactAnalyser = new ImpactAnalyser(this.folder, this); 
         this.impactAnalyser.amplitude = 2.5;
         this.impactAnalyser.endBin = 80;
         this.impactAnalyser.deltaDecay = 0.3;
@@ -158,10 +158,6 @@ export default class Particles extends BaseItem {
         this.pMaterial.dispose();
     }
 
-    get mesh() {
-        return this.particleSystem;
-    }
-
     changeParticleImage() {
         loadImageTexture(this, "setParticleImage");
     }
@@ -199,19 +195,19 @@ export default class Particles extends BaseItem {
         this.resetParticleImage();
         this.initializeParticles();
         
-        this.scene.add(this.particleSystem);
+        this.scene.add(this.mesh);
     }
 
     update = function(time, audioData) {
 
-        if(this.particleSystem) {
+        if(this.mesh) {
             const multiplier = this.impactAnalyser.analyse(audioData.frequencyData) * this.movementAmplitude;
             for (let i = 0; i < this.maxParticleCount / 2; i++) {
 
                 this.updatePosition(i, multiplier);
              }
      
-             this.particleSystem.geometry.attributes.position.needsUpdate = true;
+             this.mesh.geometry.attributes.position.needsUpdate = true;
         }
        
     }
@@ -259,23 +255,24 @@ export default class Particles extends BaseItem {
     }
 
     initializeParticles = ()  => {
+        this.scene.remove(this.mesh);
         this.particleData = [];
         this.baseSizes = [];
         this.baseSizes = [];
 
         this.maxParticleCount = Math.floor(this.maxParticleCount) + Math.floor(this.maxParticleCount) % 2;
 
-        this.particleSystem = new THREE.Points(this.particlesGeom, this.pMaterial);
-        this.particleSystem.sortParticles = true;
-        this.particleSystem.geometry.dynamic = true;
+        this.mesh = new THREE.Points(this.particlesGeom, this.pMaterial);
+        this.mesh.sortParticles = true;
+        this.mesh.geometry.dynamic = true;
 
 
         let posArr = new Float32Array(this.maxParticleCount * this.VERTEX_SIZE);
         let sizeArr = new Float32Array(this.maxParticleCount);
         let alphaArr = new Float32Array(this.maxParticleCount);
 
-        this.particleSystem.geometry.addAttribute("position", new THREE.BufferAttribute(posArr, 3));
-        this.particleSystem.geometry.addAttribute("size", new THREE.BufferAttribute(sizeArr, 1));
+        this.mesh.geometry.addAttribute("position", new THREE.BufferAttribute(posArr, 3));
+        this.mesh.geometry.addAttribute("size", new THREE.BufferAttribute(sizeArr, 1));
 
         for (let i = 0; i < this.maxParticleCount / 2; i++) {
             this.applyPosition(i, 0, 0, 0);
@@ -287,11 +284,12 @@ export default class Particles extends BaseItem {
 
         this.updateSizes();
 
-        this.particleSystem.geometry.addAttribute("alpha", new THREE.BufferAttribute(alphaArr, 1));
+        this.mesh.geometry.addAttribute("alpha", new THREE.BufferAttribute(alphaArr, 1));
 
         for (let i = 0; i < this.maxParticleCount / 2; i++) {
             this.updatePosition(i, Math.random() * this.cameraZPlane, true);
         }
+        this.scene.add(this.mesh);
     }
 
     spawnParticle = (i) => {

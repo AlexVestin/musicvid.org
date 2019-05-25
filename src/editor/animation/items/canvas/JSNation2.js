@@ -86,7 +86,6 @@ export default class JSNationSpectrum extends BaseItem {
         this.prevRad = this.minRadius;
     
         this.setUpFolder();
-        this.ctx.shadowBlur = 12;
 
         this.__attribution = {
             showAttribution: true,
@@ -159,6 +158,7 @@ export default class JSNationSpectrum extends BaseItem {
 
     __setUpGUI = (folder) => {
         this.canvasSettings = addCanvasControls(this, this.ctx, folder, {text: false });     
+        this.canvasSettings.shadowBlur = 18;
         const emFolder = folder.addFolder("Emblem");
 
         this.addController(emFolder, this.emblem, "visible", {path: "emblem"});
@@ -209,7 +209,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.addController(folder, this, "x", -2, 2);
         this.addController(folder, this, "y", -2, 2);
         this.addController(folder, this, "scale", 0.01, 6);
-        this.addController(folder, this.ctx, "shadowBlur", 0, 100);
+        this.addController(folder, this.canvasSettings, "shadowBlur", 0, 100);
         this.addController(folder, this, "spectrumRotation", 0, Math.PI / 2, 0.00001);
         this.addController(folder, this, "invertSpectrum");
         return this.__addFolder(folder);
@@ -277,6 +277,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.canvasSettings.apply(this.ctx);
         let newAudioData = audioData && audioData.frequencyData.length !== 0;
         let curRad = this.minRadius * this.scale;
+
         if(newAudioData && shouldUpdate) {
             if (this.spectrumCache.length >= this.maxBufferSize) {
                 this.spectrumCache.shift();
@@ -323,7 +324,6 @@ export default class JSNationSpectrum extends BaseItem {
         }
         this.ctx.globalAlpha = oldAlpha;
         this.emblem.draw(this.ctx, this.canvas, curRad);
-
         this.prevRad = curRad;
     }
 

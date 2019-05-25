@@ -42,6 +42,7 @@ class App extends PureComponent {
         this.timeOffset = 0;
         this.gui.onChange = (d) => console.log(d);
 
+        this.trackRef = React.createRef();
         this.canvasRef = React.createRef();
         this.modalRef = React.createRef();
         this.audioWaveCanvasRef = React.createRef();
@@ -93,7 +94,7 @@ class App extends PureComponent {
         const project = url.searchParams.get("project");
         let projectFile;
        
-                
+        console.log(template, "????")
         import("./animation/templates/" + template + ".js")
             .then(async AnimationManager  =>  {
                 this.animationManager = new AnimationManager.default(this);
@@ -172,21 +173,23 @@ class App extends PureComponent {
 
     update = () => {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
-        if (!disabled && this.canvasRef.current) {
+
+        if (!disabled && (this.canvasRef.current !== null)) {
             this.canvasRef.current.begin();
             
             let time, audioData;
             if (this.state.playing && this.state.time < this.audio.duration) {
                 time = (performance.now() - this.startTime) / 1000 + this.timeOffset;
                 audioData = this.audio.getAudioData(time);
-                this.setState({ time });
+
+                this.trackRef.current.setTime(time);
+                //this.setState({ time });
                 this.gui.__time = time;
 
                 this.applyAutomation(time, audioData);
                 this.animationManager.update(time, audioData, true);
             }else {
                 this.animationManager.redoUpdate();
-
                 if(this.state.time >= this.audio.duration && this.state.playing) {
                     this.play();
                 }
@@ -324,7 +327,6 @@ class App extends PureComponent {
             const items = this.animationManager.getAllItems();
             this.__items = items;
             let attribFound = false;
-            console.log(this.usingSampleAudio)
             items.forEach(item => {
                 if (item.license === license.REQUIRE_ATTRIBUTION) {
                     this.modalRef.current.openLicenseModal(
@@ -406,6 +408,7 @@ class App extends PureComponent {
                                 audio={this.audio}
                                 canvas={this.audioWaveCanvas}
                                 toggleMuted={this.toggleMuted}
+                                ref={this.trackRef}
                             >
                             <WaveCanvas ref={this.audioWaveCanvasRef} classes={classes}></WaveCanvas>
                                 

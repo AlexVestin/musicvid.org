@@ -1,6 +1,6 @@
 
 import * as THREE from "three";
-import MeshItem from '../BaseItem'
+import MeshItem from '../MeshItem'
 import { addOrthoMeshControls }  from '../AddMeshControls'
 import fonts from 'editor/util/Fonts'
 
@@ -44,8 +44,8 @@ export default class SpriteText extends MeshItem {
         this.mat = new THREE.MeshBasicMaterial({transparent: true, map: this.tex})
 
         //this.mat = new THREE.MeshBasicMaterial({map:tex, transparent: true});
-        this.geo = new THREE.PlaneGeometry(2, this.aspect);
-        this.mesh = new THREE.Mesh(this.geo, this.mat);
+        this.geometry = new THREE.PlaneGeometry(2, this.aspect);
+        this.mesh = new THREE.Mesh(this.geometry, this.mat);
         this.mesh.scale.set(this.textureScale, this.textureScale, this.textureScale)
 
         this.updateText();

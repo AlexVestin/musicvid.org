@@ -8,9 +8,10 @@ function scaleMesh(mesh, s) {
 export default function addPersMeshControls(parent, mesh, folder) {
     const maxPos = 100;
     const maxScale  = 30;
-    parent.addController(folder, parent, "newGeometryModal").name("Change geometry");
-    parent.addController(folder, mesh, "visible");
-
+    if(parent.isMeshItem) {
+        parent.addController(folder, parent, "newGeometryModal").name("Change geometry");
+        parent.addController(folder, mesh, "visible");
+    }
     const posOpts = {min: -maxPos, max: maxPos, path :"mesh-psoition"};
     parent.addController(folder, mesh.position, "x", posOpts);
     parent.addController(folder, mesh.position, "y", posOpts);
@@ -31,9 +32,10 @@ export default function addPersMeshControls(parent, mesh, folder) {
 export function addOrthoMeshControls(parent, mesh, folder) {
     const maxPos = 2;
     const maxScale  = 30;
-    parent.addController(folder, parent, "newGeometryModal").name("Change geometry");
-    parent.addController(folder, mesh, "visible");
-
+    if(parent.isMeshItem) {
+        parent.addController(folder, parent, "newGeometryModal").name("Change geometry");
+        parent.addController(folder, mesh, "visible");
+    }
     const posOpts = {min: -maxPos, max: maxPos, path :"mesh-psoition"};
     parent.addController(folder, mesh.position, "x", posOpts);
     parent.addController(folder, mesh.position, "y", posOpts);
