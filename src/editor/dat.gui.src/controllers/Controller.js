@@ -27,6 +27,9 @@ class Controller {
     this.previousValue = object[property];
     this.__uuid = uuid();
     this.__updateCounter = 0;
+    this.__subControllers = [];
+    this.__linkedTo = [];
+    this.isSubController = false;
     
     /**
      * Those who extend this class will put their DOM elements in here.
@@ -84,6 +87,16 @@ class Controller {
     return this;
   }
 
+  disableOverview() {
+    this.overviewButton.style.display = "none";
+  }
+
+  disableAll() {
+    this.disableAutomations();
+    this.disableOverview();
+    return this;
+  }
+
  
 
   /**
@@ -125,8 +138,6 @@ class Controller {
     return this;
   }
   __onFinishUndo(controller) {
-    const root = controller.parent.getRoot();
-    root.addUndoItem({controller: controller, prevValue: this.previousValue, type: "value"});
     this.previousValue = this.object[this.property];
   }
   
@@ -144,7 +155,13 @@ class Controller {
       this.object.updateDisplay();
     }
     
-      this.updateDisplay();
+    if(update) {
+      this.__subControllers.forEach(c => c.setValue(newValue, false));
+    } else {
+      this.__subControllers.forEach(c => c.updateDisplay());
+    }
+
+    this.updateDisplay();
     return this;
   }
 

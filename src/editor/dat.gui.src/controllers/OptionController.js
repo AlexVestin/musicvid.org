@@ -31,7 +31,7 @@ class OptionController extends Controller {
     super(object, property);
 
     let options = opts;
-
+    this.__options = opts; 
     const _this = this;
 
     /**

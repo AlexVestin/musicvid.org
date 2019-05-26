@@ -62,12 +62,6 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
         return serialize(this);
     }
 
-    __addUndoAction = (func, args) => {
-        const item = {func: func, args: args, type: "action"};
-        this.folder.getRoot().addUndoItem(item); 
-    }
-    
-
     __setUpGUI = (f) => {
         const i = this.__item;
         i.addController(f, this, "baseSpeed", {path: this.path});

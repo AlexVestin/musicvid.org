@@ -1,8 +1,10 @@
 import WebGLManager from './WebGLManager'
 import { items } from './items';
+import { passes } from './postprocessing/passes';
+
 import * as dat from "../dat.gui.src";
 
-const resolution = { width: 1080, height: 720 };
+const resolution = { width: 1280, height: 720 };
 
 describe('Animation Manager Basics', () => {
     let manager = {};
@@ -82,6 +84,13 @@ describe('Animation Manager Basics', () => {
                 sceneLoopUp[i].addItemFromText(itemKey);
                 manager.redoUpdate();
             })
+        })
+    })
+
+    it('Loads all passes without crashing', () => {
+        Object.keys(passes).forEach(key => {
+            //manager.postProcessing.addEffectPass(key);
+            manager.redoUpdate();
         })
     })
 });

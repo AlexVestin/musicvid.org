@@ -41,7 +41,6 @@ export default class SImage extends BaseItem {
     loadNewImage() {
         const ref = this.gui.__root.modalRef; 
         loadImage(ref, this.setImage).then(file => {
-            this.__addUndoAction(this.undoLoadImage, file);
             this.prevImage = file;
         });
     }

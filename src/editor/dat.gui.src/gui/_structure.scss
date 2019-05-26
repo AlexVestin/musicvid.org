@@ -3,6 +3,22 @@ $row-height: 28px;
 $folder-font-size: 12px;
 $button-height: 20px;
 
+.controller-button {
+
+  height: 100%;
+
+  background-color: transparent;
+  border: none;
+  color: #efefef;
+  border-radius: 0.25rem;
+  font-weight: 400;
+  cursor: pointer;  
+}
+ 
+.controller-button:hover {
+  background-color: rgba(255,255,255,0.18);
+}
+
 .dg {
 
   /** Clear list styles */
@@ -177,6 +193,7 @@ $button-height: 20px;
   .c {
     display: flex;
     float: left;
+    height: $row-height;
     width: 60%;
     position: relative;
   }
@@ -204,6 +221,7 @@ $button-height: 20px;
     margin-right: 10px;
     height: 19px;
     margin-top: 4px;
+    max-width: 100px;
 
   }
 

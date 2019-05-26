@@ -148,9 +148,7 @@ export default class Scene extends SerializableObject {
 
     removeMe = () => {
         this.items.forEach((item) => {
-            item.dispose();
-            if(this.type !== "canvas")
-                this.scene.remove(item);
+            this.removeItem({item});
         });
         this.items = [];
         this.scene.dispose();
@@ -164,6 +162,20 @@ export default class Scene extends SerializableObject {
         if(this.type !== "canvas"){
             this.scene.remove(item.mesh);
         }
+
+        item.dispose();
+        Object.keys(item.__controllers).forEach((key) => {
+            console.log(key, item.__controllers)
+            item.__controllers[key].__subControllers.forEach((folder) => {
+                try {
+                    folder.parent.remove(folder);
+                }catch(err) {
+                    console.log("Could not remove controller from overview")
+                }
+
+            });
+            item.__controllers[key].__subControllers = [];
+        })
         
         item.folder.parent.removeFolder(item.folder);
         delete item.folder.parent.__folders[item.__id];

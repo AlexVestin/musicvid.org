@@ -52,19 +52,19 @@ export default class ControllerContainer extends PureComponent {
             "veryslow"
         ];
         this.fileName = "myvid.mp4";
-        folder.add(this, "useCustomTimeRange").name("Use custom time range");
+        folder.add(this, "useCustomTimeRange").name("Use custom time range").disableAll();
         folder
             .add(this, "startTime")
-            .name("Start time (if custom time range is enabled)").disableAutomations();
+            .name("Start time (if custom time range is enabled)").disableAll();
         folder
             .add(this, "endTime")
-            .name("End time (if custom time range is enabled)").disableAutomations();
+            .name("End time (if custom time range is enabled)").disableAll();
 
-        folder.add(this, "fileName");
-        folder.add(this, "fps", [24, 25, 30, 48, 60]);
-        folder.add(this, "preset", this.presetLookup);
-        folder.add(this, "MBitBitrate", 0, 20, 0.1).disableAutomations();
-        folder.add(this, "startEncoding");
+        folder.add(this, "fileName").disableAll();
+        folder.add(this, "fps", [24, 25, 30, 48, 60]).disableAll();
+        folder.add(this, "preset", this.presetLookup).disableAll();
+        folder.add(this, "MBitBitrate", 0, 20, 0.1).disableAll();
+        folder.add(this, "startEncoding").disableAll();
     };
 
     startEncoding = () => {
@@ -143,6 +143,15 @@ export default class ControllerContainer extends PureComponent {
                         <React.Fragment>
                             <div className={classes.headerButtons}>
                                 <div
+                                    onClick={() => this.setState({ index: 0 })}
+                                    style={{
+                                        backgroundColor:
+                                            index === 0 ? selectedColor : ""
+                                    }}
+                                >
+                                    Overview
+                                </div>
+                                <div
                                     onClick={() => this.setState({ index: 1 })}
                                     style={{
                                         backgroundColor:
@@ -193,6 +202,12 @@ export default class ControllerContainer extends PureComponent {
                                 className={classes.scrollbar}
                                 style={{ width: "100%", height: "90%" }}
                             >
+                                {index === 0 && loaded && (
+                                    <GUIMount
+                                        gui={gui.__folders["Overview"].domElement}
+                                    />
+                                )}
+
                                 {index === 1 && loaded && (
                                     <GUIMount
                                         gui={gui.__folders["Layers"].domElement}

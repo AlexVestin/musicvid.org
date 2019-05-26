@@ -25,6 +25,7 @@ import CenteredDiv from '../dom/CenteredDiv';
 import dom from '../dom/dom';
 import common from '../utils/common';
 import styleSheet from './style.scss'; // CSS to embed in build
+import OptionController from '../controllers/OptionController';
 
 css.inject(styleSheet);
 
@@ -105,6 +106,7 @@ const GUI = function(pars) {
   this.__automations = {};
   this.__time = 0;
   this.__automationConfigUpdateFrequency = 5;
+  this.__overviewFolders = [];
 
   /**
    * Nested GUI's by name
@@ -262,7 +264,6 @@ const GUI = function(pars) {
           setWidth(_this, v);
         }
       },
-
       /**
        * The name of <code>GUI</code>. Used for folders. i.e
        * a folder's name
@@ -1195,6 +1196,35 @@ function recallSavedValue(gui, controller) {
   }
 }
 
+export function copyController(options) {
+
+  console.log(options);
+  const item = options.item;
+  const folders = item.parent.getRoot().__folders["Overview"]; 
+  let g;
+  let target = folders;
+  if(options.location !== "root") {
+    target = folders.__folders[options.location]
+  }
+
+  if(item instanceof OptionController) {
+    g = target.add(item.object, item.property, item.__options);
+  }else if(item instanceof ColorController) {
+    g = target.addColor(item.object, item.property);
+  }else if(item instanceof BooleanController || item instanceof Function) {
+    g = target.add(item.object, item.property);
+  } else {
+    g = target.add(item.object, item.property, item.min, item.max, item.step);
+  }
+  g.__onChange = item.__onChange; 
+  g.__location = options.location;
+  g.isSubController = true;
+  g.master = item;
+  g.disableAll();
+  g.name(options.name);
+  item.__subControllers.push(g);
+}
+
 function add(gui, object, property, params) {
   if (object[property] === undefined) {
     throw new Error(`Object "${object}" has no property "${property}"`);
@@ -1238,6 +1268,8 @@ function add(gui, object, property, params) {
   container.appendChild(name);
   container.appendChild(controller.domElement);
 
+  controller.getName = () => name.innerHTML;
+
   
   const li = addRow(gui, container, params.before);
   
@@ -1249,24 +1281,42 @@ function add(gui, object, property, params) {
   }
 
   augmentController(gui, li, controller);
-  
+
+  const editGroup = document.createElement('div');
   if(controller instanceof NumberControllerSlider || controller instanceof NumberControllerBox){
     const sd = document.createElement("button");
     sd.innerHTML = "A";
-    sd.style.marginTop = "2px";
-    sd.style.backgroundColor = "transparent";
-    sd.style.color = "#efefef";
-    sd.style.fontWeight = 400;
-    sd.style.cursor = "pointer";
+    sd.classList.add('controller-button');
   
 
     sd.onclick = () => {
       gui.getRoot().modalRef.toggleModal(11, true, controller);
     }
-    
     controller.automationButton = sd;
-    controller.domElement.appendChild(sd);
+    editGroup.appendChild(sd);
   }
+
+  const addControllerToOverview = document.createElement("button");
+  addControllerToOverview.innerHTML = "O";
+  addControllerToOverview.style.marginLeft = "auto";
+  addControllerToOverview.classList.add('controller-button');
+
+  
+  addControllerToOverview.onclick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    gui.getRoot().modalRef.toggleModal(21, true, controller).then(copyController);
+  }
+  
+  controller.overviewButton = addControllerToOverview;
+  editGroup.appendChild(addControllerToOverview);
+  controller.domElement.appendChild(editGroup);
+  editGroup.style.display = "flex";
+  editGroup.style.flexDirection = "row";
+  editGroup.style.marginLeft = "auto";
+  editGroup.style.minWidth = "52px";
+
+
   gui.__controllers.push(controller);
 
   return controller;

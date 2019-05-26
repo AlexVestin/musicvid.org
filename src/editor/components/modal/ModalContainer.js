@@ -16,6 +16,7 @@ import ProjectFile from './ProjectFile'
 import MemeModal from "./MemeModal";
 import LoadVideo from './LoadVideo'
 import TakeScreenshotModal from "./TakeScreenshotModal";
+import AddControllerToOverview from './AddControllerToOverview'
 
 
 export default class ModalContainer extends PureComponent {
@@ -181,6 +182,16 @@ export default class ModalContainer extends PureComponent {
                 )}
                  {index === 20 && (
                     <LoadVideo open={modalOpen} onSelect={this.onSelect} />
+                )}
+
+                {index === 21 &&  (
+                    <AddControllerToOverview
+                        open={modalOpen}
+                        onSelect={this.onSelect}
+                        gui={this.props.gui}
+                        item={this.args}
+                        index={index - 5}
+                    />
                 )}
             </div>
         );

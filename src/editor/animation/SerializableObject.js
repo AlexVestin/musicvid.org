@@ -1,4 +1,6 @@
 import uuid from "uuid/v4";
+import { copyController } from '../dat.gui.src/gui/GUI'
+
 export default class SerializableObject {
     constructor() {
         this.__id = uuid();
@@ -6,26 +8,21 @@ export default class SerializableObject {
         this.__controllers = {};
     }
     __setControllerValues = values => {
-        const objectsToLoad = [];
         let keysChanged = [];
-
         Object.keys(values).forEach(key => {
             const obj = values[key];
             const controller = this.__controllers[key];
-            if (obj.needLoad) {
-                objectsToLoad.push({
-                    controller,
-                    name: obj.value,
-                    fileInfo: obj.fileInfo
-                });
-            } else {
-                if(!controller) {
-                    keysChanged.push(key);
-                }else {
-                    controller.setValue(values[key].value);
-                    controller.updateDisplay();
-                }
-               
+            if(!controller) {
+                keysChanged.push(key);
+            }else {
+                controller.setValue(values[key].value);
+                controller.updateDisplay();
+            }
+
+            if(obj.subcontrollers && obj.subcontrollers.length > 0) {
+                obj.subcontrollers.forEach(c => {
+                    copyController({item: controller, location: c.location, name: c.name});
+                })
             }
         });
 
@@ -38,20 +35,17 @@ export default class SerializableObject {
         const obj = { controllers: {} };
         Object.keys(this.__controllers).forEach(key => {
             const c = this.__controllers[key];
+            const subcontrollers  = c.__subControllers.map(e => {return { name: e.getName(), location: e.__location}});
             if (c.object[c.property] !== Object(c.object[c.property])) {
                 obj.controllers[key] = {
                     value: c.object[c.property],
-                    needLoad: false
+
                 };
-            } else if (c.__fileInfo) {
-                obj.controllers[key] = {
-                    value: c.__name,
-                    needLoad: true,
-                    fileInfo: c.__fileInfo
-                };
-            } else {
-                //console.log(c.__name);
-            }
+
+                if(subcontrollers.length > 0) {
+                    obj.controllers[key].subcontrollers = subcontrollers;
+                }
+            } 
         });
         return obj;
     };

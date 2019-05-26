@@ -12,7 +12,8 @@ import InputAutomation from './automation/InputAutomation'
 import ImpactAutomation from './automation/AudioReactiveAutomation'
 import uuid from 'uuid/v4'
 import { takeScreenShot } from 'editor/util/FlipImage'
-
+//import MockWebGLManager from './MockWebGLManager'
+import { setUpFullscreenControls } from './FullscreenUtils'
 export default class WebGLManager {
     constructor(parent) {
         
@@ -22,7 +23,7 @@ export default class WebGLManager {
             this.canvasMountRef = parent.gui.canvasMountRef;
             this.modalRef = parent.gui.modalRef;
             this.parent = parent;
-            this.setUpControls();
+            setUpFullscreenControls(this.canvasMountRef);
         }
         
         // Project settings
@@ -48,23 +49,7 @@ export default class WebGLManager {
         this.audio = null;
     }
 
-    setUpControls() {
-        document.body.addEventListener("keyup", e => {
-            if (e.keyCode === 70) {
-                if (!this.inFullScreen) {
-                    this.fullscreen(this.canvasMountRef);
-                }else {
-                    try {
-                        this.exitFullscreen()
-                    }catch(err) {
-                        console.log("Error exiting fullscreen");
-                    }
-                }
-
-                this.inFullScreen = !this.inFullScreen;
-            }
-        });
-    }
+    
     addAutomation = (template) => {
         let auto  = {};
         switch(template.type) {
@@ -94,7 +79,12 @@ export default class WebGLManager {
             this.renderer.dispose();
         }
 
-        this.gui.getRoot().__automations = [];
+        const root = this.gui.getRoot();
+        try {
+            Object.values(root.__folders["Overview"].__folders).forEach(f => f.parent.removeFolder(f));
+        } catch(err) {}
+        
+        root.__automations = [];
 
         const proj = JSON.parse(json.projectSrc);
 
@@ -105,6 +95,13 @@ export default class WebGLManager {
         proj.automations.forEach(auto => {
             this.addAutomation(auto);
         })  
+
+        if(proj.overviewFolders) {
+            proj.overviewFolders.forEach(fold => {
+                const f = this.gui.getRoot().__folders["Overview"].addFolder(fold.name);
+                f.__id = fold.__id;
+            })
+        } 
 
         proj.scenes.forEach(scene => {     
             if(scene.__settings.isScene) {
@@ -148,10 +145,16 @@ export default class WebGLManager {
         };
         projFile.settings = serialize(this);
         projFile.automations = this.gui.getAutomations().map(auto => auto.__serialize());
+
+        const ov = this.gui.getRoot().__folders["Overview"].__folders;
+        projFile.overviewFolders = Object.values(ov).map(f => { return {name: f.name, id: f.__id}});
+        
         
         this.scenes.forEach( (scene, i) => {
             projFile.scenes.push(scene.__serialize())
         })
+
+        console.log(projFile)
         return projFile;
     }
 
@@ -313,7 +316,7 @@ export default class WebGLManager {
 
         if (setUpFolders) {
             this.layersFolder = this.gui.__folders["Layers"];
-            this.layersFolder.add(this, "addScene").name("Add layer");
+            this.layersFolder.add(this, "addScene").name("Add layer").disableAll();
         }
         this.canvas = this.canvasMountRef;
         this.setUpRenderers(setUpFolders);
@@ -453,7 +456,7 @@ export default class WebGLManager {
             
             rs.add(this, "clearAlpha", 0, 1, 0.001)
                 .onChange(this.setClear)
-                .disableAutomations();
+                .disableAll();
             rs.add(this, "drawAttribution")
                 .onChange(this.updateAttribution);
             this.gui.__folders["Layers"].add(this, "postprocessingEnabled");
@@ -463,12 +466,12 @@ export default class WebGLManager {
             cs.add(this, "disableAllControls");
             cs.add(this, "resetAllCameras");
             const ps = this.settingsFolder.addFolder("Project settings");
-            ps.add(this, "__projectName").name("Project name");
-            ps.add(this, "availablePublic").name("Project available to public");
-            ps.add(this, "loadProjectFromFile");
-            ps.add(this, "createThumbnail");
-            ps.add(this, "saveProjectToFile");
-            ps.add(this, "saveProjectToProfile");
+            ps.add(this, "__projectName").name("Project name").disableAll();
+            ps.add(this, "availablePublic").name("Project available to public").disableAll();
+            ps.add(this, "loadProjectFromFile").disableAll();
+            ps.add(this, "createThumbnail").disableAll();
+            ps.add(this, "saveProjectToFile").disableAll();
+            ps.add(this, "saveProjectToProfile").disableAll();
         }
     };
 
@@ -502,31 +505,7 @@ export default class WebGLManager {
         });
     };
 
-    exitFullscreen(canvas) {
-        if(document.fullscreenElement || 
-            document.webkitFullscreenElement || 
-            document.mozFullScreenElement) {
-        if (document.exitFullscreen) document.exitFullscreen();
-        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-        else if (document.msExitFullscreen) document.msExitFullscreen();
-        }
-        
-    }
-    fullscreen(canvas) {
-        if (canvas.RequestFullScreen) {
-            canvas.RequestFullScreen();
-        } else if (canvas.webkitRequestFullScreen) {
-            canvas.webkitRequestFullScreen();
-        } else if (canvas.mozRequestFullScreen) {
-            canvas.mozRequestFullScreen();
-        } else if (canvas.msRequestFullscreen) {
-            canvas.msRequestFullscreen();
-        } else {
-            alert("This browser doesn't supporter fullscreen");
-        }
-    }
-
+    
     readPixels = () => {
         const { width, height } = this;
         const glContext = this.renderer.getContext();

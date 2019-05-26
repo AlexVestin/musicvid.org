@@ -1,8 +1,12 @@
-import BloomPass from './bloompass'
 import CopyShader from '../shaders/copyshader'
 import GlitchPass from './glitchpass'
 import FilmPass from './FilmPass'
 import PixelPass from './pixelpass'
+import BloomPass from './bloompass'
+import UnrealBloomPass from './unrealbloompass'
+import ShaderPass from './shaderpass'
+import FXAAShader from '../shaders/fxaa' 
+
 
 /*
 import SSAAPass from './ssaapass'
@@ -19,7 +23,8 @@ const passes = {
     GlitchPass: {img: "img/items/HexaGone.png", class: GlitchPass},
     FilmPass: {class: FilmPass},
     PixelPass: {class: PixelPass},
-
+    UnrealBloomPass: {class: UnrealBloomPass},
+    FXAAPass: {isShaderPass: true, shader: FXAAShader},
 };
 
 export function loadPassFromText(text) {
@@ -27,8 +32,15 @@ export function loadPassFromText(text) {
         alert("Text should not be effect")
         return;
     }
+
+
         
-    let C = passes[text].class;
+    let pass = passes[text];
+    if (pass.isShaderPass) {
+        return new ShaderPass(pass.shader);
+    }
+
+    let C = pass.class;
     switch(text) {
         case "CopyPass":
             return new C(CopyShader);

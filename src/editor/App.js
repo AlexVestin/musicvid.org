@@ -11,14 +11,18 @@ import Exporter from "./export/CopiedExporter";
 import license from "./util/License";
 import ExportScreen from "./components/Export";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { app, base } from 'backend/firebase';
+import { base } from 'backend/firebase';
 import { connect } from "react-redux";
 import WaveCanvas from "./WaveCanvas";
+import OverviewgGroup from "./OverviewGroup";
 
 class App extends PureComponent {
     constructor() {
         super();
         this.gui = new dat.GUI({ autoPlace: false, width: "100%" });
+        this.overviewFolder = this.gui.addFolder("Overview", false);
+        this.overviewFolder.add(this, "addFolderToOverview").name("Add group").disableAll();
+        
         this.layersFolder = this.gui.addFolder("Layers", false);
         this.audioFolder = this.gui.addFolder("Audio", false);
         this.audioFolder.add(this, "loadNewAudioFile");
@@ -46,6 +50,10 @@ class App extends PureComponent {
         this.canvasRef = React.createRef();
         this.modalRef = React.createRef();
         this.audioWaveCanvasRef = React.createRef();
+    }
+
+    addFolderToOverview = () => {
+        new OverviewgGroup(this.overviewFolder);
     }
 
     loadNewAudioFile = () => {

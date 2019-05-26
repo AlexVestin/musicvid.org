@@ -2,7 +2,7 @@
 // Project license apply
 
 import { Object3D, Vector3, Color } from "three";
-import AnimatedMeshLine from "./AnimatedMeshLine";
+import AnimatedMeshLine from "./AnimatedMeshTube";
 
 const getRandomFloat = (min, max) => Math.random() * (max - min) + min;
 const getRandomInt = (min, max) =>
@@ -235,7 +235,8 @@ export default class CustomLineGenerator extends LineGenerator {
         });
 
         line.scale.set(this._scale, this._scale, this._scale);
-
+        console.log(line);
+        /*
         const newPoints = line.__points.clone();
         for (var i = 0; i < newPoints.vertices.length; i++) {
             newPoints.vertices[i].x = -line.__points.vertices[i].x;
@@ -258,5 +259,6 @@ export default class CustomLineGenerator extends LineGenerator {
         });
 
         l2.scale.set(this._scale, this._scale, this._scale);
+        */
     }
 }

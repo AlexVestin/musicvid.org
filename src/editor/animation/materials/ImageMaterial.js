@@ -171,11 +171,6 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.setClamping();
     }
 
-    __addUndoAction = (func, args) => {
-        const item = {func: func, args: args, type: "action"};
-        this.folder.getRoot().addUndoItem(item); 
-    }
-
     setMirror = ()=> {
         this.uniforms.should_mirror_left_half.value = this.mirror === "left half";
         this.uniforms.should_mirror_right_half.value = this.mirror === "right half";

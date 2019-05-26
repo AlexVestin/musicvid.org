@@ -6,8 +6,7 @@
  * http://o3d.googlecode.com/svn/trunk/samples/convolution.html
  */
 import { Vector2 } from 'three'
-
-export default {
+export default  {
 
 	defines: {
 

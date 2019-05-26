@@ -12,7 +12,5 @@ export default class Manager extends WebGLManager {
         part.addItemFromText("Particles");
         jsna.addItemFromText("JSNation");
         
-        
-        this.postProcessing.addEffectPass("FilmPass");
     }
 }

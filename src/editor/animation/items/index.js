@@ -10,6 +10,8 @@ import ParticleLines from './perspective/ParticleLines'
 
 // ortho items
 import TimeRep from './ortho/TimeRep'
+import AudioWave from './ortho/AudioWave'
+
 import Background from './ortho/Background'
 import StarField from './ortho/StarField'
 import SpriteText from './ortho/SpriteText'
@@ -62,7 +64,7 @@ const orthoItems = {
     Meme: {class: Meme},
     Video: {class: Video},
     OldVideo: {class: OldVideo},
-
+    AudioWave: {class: AudioWave}
 }
 
 

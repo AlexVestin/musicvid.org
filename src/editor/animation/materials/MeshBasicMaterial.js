@@ -30,12 +30,6 @@ export default class HexaGoneMaterial extends MeshBasicMaterial {
 
     updateMaterial = (time, audioData) => { };
 
-    __addUndoAction = (func, args) => {
-        const item = {func: func, args: args, type: "action"};
-        this.folder.getRoot().addUndoItem(item); 
-    }
-    
-
     __setUpGUI = (folder) => {
         const i = this.__item;
         i.addController(folder, this, "_color", {color: true}).name("Color").onChange(() => this.color = new Color(this._color));;

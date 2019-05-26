@@ -30,32 +30,8 @@ export default class BaseItem extends SerializableObject {
             this.__gui = info.gui;
             this.parentRemove = info.remove;
             this.folder = this.__gui.addFolder(this.__id);
-            this.preFolderSetup(this.folder);
         }
     }
-
-    __setUniforms = () => {
-        console.log("sey iy up");
-    };
-
-    _add = (f, n, options) => {
-        const c = f.add(this, n, options.min, options.max, options.step);
-        let p = options.path;
-        if(!p) {
-            p = n;
-        }
-
-        if(this.__controllers[p])
-            alert("bad controller path")
-
-        this.__controllers[p] = c;
-        c.__path = p;
-    }
-
-    dispose = () => {
-        
-    }
-
 
     setFolderName = name => {
         this.folder.name = name;
@@ -64,11 +40,11 @@ export default class BaseItem extends SerializableObject {
     };
 
     preFolderSetup = folder => {
-        this.__nameDisplay = folder
-            .add(this, "name")
-            .onChange(() => this.setFolderName(this.name));
-        folder.add(this, "__startTime", 0, 1000).name("Start time(sec)").disableAutomations();
-        folder.add(this, "__endTime", 0, 1000).name("End time(sec)").disableAutomations();
+        this.__nameDisplay = this.addController(folder, this, "name")
+            .onChange(() => this.setFolderName(this.name))
+            .disableAll();
+        this.addController(folder, this, "__startTime", 0, 1000).name("Start time(sec)").disableAutomations();
+        this.addController(folder, this, "__endTime", 0, 1000).name("End time(sec)").disableAutomations();
     };
 
     postFolderSetup = folder => {
@@ -77,21 +53,11 @@ export default class BaseItem extends SerializableObject {
     };
 
     setUpFolder = () => {
+        this.preFolderSetup(this.folder);
         this.setFolderName(this.name);
         this.__setUpGUI(this.folder);
         this.postFolderSetup(this.folder);
         return this.folder;
-    };
-
-    __setUpGUI = () => {};
-
-    __addUndoAction = (func, args) => {
-        const item = { func: func, args: args, type: "action" };
-        this.folder.getRoot().addUndoItem(item);
-    };
-
-    __reAdd = () => {
-        this.setUpFolder();
     };
 
     __addFolder = folder => {
@@ -114,16 +80,12 @@ export default class BaseItem extends SerializableObject {
     };
 
     // handles all updates in the render-loop
+    __setUpGUI = () => {};
+    dispose = () => {};
     update = () => {};
     setTime = () => {};
     stop = () => {};
     seekTime = (t) => {}; 
     play = (t) => {};
     setUpGUI = () => {};
-
-    updateDisplay = () => {
-        this.folders.forEach(folder => {
-            folder.updateDisplay();
-        });
-    };
 }

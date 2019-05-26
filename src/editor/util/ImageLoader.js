@@ -61,12 +61,6 @@ export async function loadImageTexture(obj, func) {
         ref.toggleModal(3).then(selected => {
             loadImageTextureFromChoice(selected, obj[func]);
             resolve(selected);
-            
-
-            obj.__addUndoAction((file) => {
-                obj.prevFile = file;
-                loadImageTextureFromChoice(file, obj[func]);
-            }, obj.prevFile);
             obj.prevFile = selected;
         });
     });

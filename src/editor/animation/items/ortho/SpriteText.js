@@ -43,11 +43,13 @@ export default class SpriteText extends MeshItem {
         this.material.map = this.tex;
         this.mat = new THREE.MeshBasicMaterial({transparent: true, map: this.tex})
 
+        info.scene.remove(this.mesh);
         //this.mat = new THREE.MeshBasicMaterial({map:tex, transparent: true});
         this.geometry = new THREE.PlaneGeometry(2, this.aspect);
         this.mesh = new THREE.Mesh(this.geometry, this.mat);
         this.mesh.scale.set(this.textureScale, this.textureScale, this.textureScale)
 
+        
         this.updateText();
         info.scene.add(this.mesh);
 

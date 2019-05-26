@@ -9,7 +9,7 @@ export default class Manager extends WebGLManager {
         const s = this.addSceneFromText("ortho");
         
         s.addItemFromText("Background");
-        s.addItemFromText("TimeRep");
+        s.addItemFromText("AudioWave");
         const it2 = s.addItemFromText("SpriteText");
         const it3 = s.addItemFromText("SpriteText");
         it2.mesh.position.y = 0.70;
@@ -23,8 +23,8 @@ export default class Manager extends WebGLManager {
         
         it2.updateText();
         it3.updateText();
-        it2.updateDisplay();
-        it3.updateDisplay();        
+        it2.folder.updateDisplay();
+        it3.folder.updateDisplay();        
     }
 
 }

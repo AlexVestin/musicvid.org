@@ -68,13 +68,6 @@ export default class NoiseMaterial extends ShaderToyMaterial {
         this.path = "material";
         this.__item = item;
     }
-
-    __addUndoAction = (func, args) => {
-        const item = {func: func, args: args, type: "action"};
-        this.folder.getRoot().addUndoItem(item); 
-    }
-    
-
     setTexture = (tex) => {
         tex.wrapS = tex.wrapT = THREE.MirroredRepeatWrapping;
         tex.repeat.set(50, 1);
@@ -88,7 +81,6 @@ export default class NoiseMaterial extends ShaderToyMaterial {
 
     updateTexture = (path, undoAction = false) => {
         loadImageTextureFromChoice("./img/noise/" + path, this.setTexture)
-        this.__addUndoAction(this.undoUpdateTexture, this.prevFile);
         this.prevFile = path;
     }
     __setUpGUI = (folder) => {
