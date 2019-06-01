@@ -11,6 +11,7 @@ export function addCanvasControls(parent, ctx, folder,  a = {}) {
         text: true,
         fill: true,
         filter: true,
+        transform: true,
         ...a
     };
 
@@ -70,6 +71,16 @@ export function addCanvasControls(parent, ctx, folder,  a = {}) {
         add(fill, "strokeStyle", { color: true });
     }
 
+    
+    if (c.transform) {
+        const translate = ctxFolder.addFolder("Translate");
+        object.translateX = ctx.translateX || 0;
+        object.translateY = ctx.translateY || 0;
+
+        add(translate, "translateX");
+        add(translate, "translateY");
+    }
+
     const lookUp = {
         blur: "filterBlurAmountPx",
         invert: "filterInvertAmount",
@@ -120,8 +131,11 @@ export function addCanvasControls(parent, ctx, folder,  a = {}) {
             }
         })
 
+        console.log(object.translateX, object.translateY);
         ctx.font = `normal ${object.fontSize}px ${object.fontFamily}`;
         ctx.filter = fltStr;
+        ctx.translate(object.translateX, object.translateY);
+
         Object.assign(ctx, object);
     };
 

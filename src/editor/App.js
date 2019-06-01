@@ -44,7 +44,6 @@ class App extends PureComponent {
         this.firstLoad = true;
         this.fastLoad = false;
         this.timeOffset = 0;
-        this.gui.onChange = (d) => console.log(d);
 
         this.trackRef = React.createRef();
         this.canvasRef = React.createRef();
@@ -102,7 +101,6 @@ class App extends PureComponent {
         const project = url.searchParams.get("project");
         let projectFile;
        
-        console.log(template, "????")
         import("./animation/templates/" + template + ".js")
             .then(async AnimationManager  =>  {
                 this.animationManager = new AnimationManager.default(this);
@@ -144,13 +142,13 @@ class App extends PureComponent {
     play = () => {
         if (!this.state.playing) {
             this.setState({ playing: true });
-            const t = this.state.time;
+            const t = this.time;
             this.audio.play(t);
             this.gui.__time = t;
             this.startTime = performance.now();
             if (this.animationManager) this.animationManager.play(t);
         } else {    
-            this.timeOffset = this.state.time;
+            this.timeOffset = this.time;
             this.setState({ playing: false });
             this.audio.stop();
         }
@@ -163,9 +161,14 @@ class App extends PureComponent {
     stop = () => {
         if (this.audio) this.audio.stop();
         if (this.animationManager) this.animationManager.stop();
-        this.setState({ playing: false, time: 0 });
-        this.timeOffset = 0;
+        this.time = 0;
+        this.setState({ playing: false });
+        if (this.trackRef.current) {
+            this.trackRef.current.setTime(this.time);
+        }
         
+        
+        this.timeOffset = 0;
         this.gui.__time = 0;
         
     };
@@ -186,19 +189,20 @@ class App extends PureComponent {
             this.canvasRef.current.begin();
             
             let time, audioData;
-            if (this.state.playing && this.state.time < this.audio.duration) {
+            if (this.state.playing && this.time < this.audio.duration) {
                 time = (performance.now() - this.startTime) / 1000 + this.timeOffset;
                 audioData = this.audio.getAudioData(time);
 
                 this.trackRef.current.setTime(time);
                 //this.setState({ time });
                 this.gui.__time = time;
+                this.time = time;
 
                 this.applyAutomation(time, audioData);
                 this.animationManager.update(time, audioData, true);
             }else {
                 this.animationManager.redoUpdate();
-                if(this.state.time >= this.audio.duration && this.state.playing) {
+                if(this.time >= this.audio.duration && this.state.playing) {
                     this.play();
                 }
             }     
@@ -218,12 +222,14 @@ class App extends PureComponent {
 
     cancelEncoder = () => {
         this.exporter.cancel();
+        this.animationManager.cancelEncoding();
         this.setState({ encoding: false, doneEncoding: false }, () => {
             this.encoding = false;
             this.stop();
             this.exporter = null;
             this.update();
             this.audio.exportFrameIdx = 0;
+            
 
             this.canvasRef.current.setSize(this.resolution);
             this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
@@ -302,6 +308,7 @@ class App extends PureComponent {
         }
 
         this.animationManager.seekTime(time);
+        this.trackRef.current.setTime(time);
         
         this.gui.__time = time;
         this.setState({ time: time });
@@ -407,7 +414,6 @@ class App extends PureComponent {
                         <div className={classes.rightContainer}>
                             <TrackContainer
                                 disabled={disabled}
-                                time={this.state.time}
                                 audioDuration={this.state.audioDuration}
                                 play={this.play}
                                 stop={this.stop}

@@ -44,17 +44,27 @@ export default class MeshItem extends BaseItem {
 
     onImageChange = () => {};
 
+    prepareEncoding = () => {
+        if (this.material.prepareEncoding) {
+            this.material.prepareEncoding();
+        }
+    }
+
+    cancelEncoding = () => {
+        if (this.material.cancelEncoding) {
+            this.material.cancelEncoding();
+        }
+    }
+
     play = (t) => {
         if(this.material.play)
             this.material.play(t)
     }
 
     dispose = () => {
-        console.log(this.material, this.geometry);
         this.geometry.dispose();
         this.material.dispose();
         if(this.material.map) {
-            console.log("dispose texture?")
             this.material.map.dispose();
         }
     }

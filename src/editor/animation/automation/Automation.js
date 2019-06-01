@@ -9,6 +9,7 @@ export default class Automation extends SerializableObject {
         this.name = "";
         this.value = 0;
         this.rootGui = rootGui;
+        this.values = ["value"];
     }
 
     __setUpValues = (template) => {
@@ -26,8 +27,12 @@ export default class Automation extends SerializableObject {
         return serializeObject(this);
     }   
 
+    stop = () => {}
+
     apply = (item, link, first=true, last=false) => {
         let val = item.preAutomationValue;
+        const aVal = this[link.valueToUse] || this.value;
+
         if(!first) {
             val = item.object[item.property]; 
         }
@@ -42,37 +47,39 @@ export default class Automation extends SerializableObject {
         if(link.endTime && link.endTime < time)
             return
 
+        let v1 = 1;
         let t = link.type.trim();
         switch (t) {
             case "*":
-                item.object[item.property] = val * this.value;
+                v1 = val * aVal;
                 break;
             case "=":
-                item.object[item.property] = this.value;
+                v1 = aVal;
                 break;
             case "+":
-                item.object[item.property] = val + this.value;
+                v1 = val + aVal;
                 break;
             case "-":
-                item.object[item.property] = val - this.value;
+                v1 = val - aVal;
                 break;
             default:
             try {
-                const v = mathjs.eval(t, {t: time, v: val, b: item.preAutomationValue, a: this.value});
+                const v = mathjs.eval(t, {t: time, v: val, b: item.preAutomationValue, a: aVal});
                 if(!isNaN(v)) {
-                    item.object[item.property] = v;
+                    v1 = v;
                 }
             }catch(err) {
 
             }
         }
 
-        if (item.object[item.property] > item.__max)
-            item.object[item.property] = item.__max;
+        if (v1 > item.__max)
+           v1 = item.__max;
 
-        if (item.object[item.property] < item.__min)
-            item.object[item.property] = item.__min;
+        if (v1 < item.__min)
+            v1 = item.__min;
 
+        item.object[item.property] = v1;
         if (item.__onChange) {
             item.__onChange();
         }

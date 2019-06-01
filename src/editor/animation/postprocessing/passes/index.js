@@ -6,6 +6,8 @@ import BloomPass from './bloompass'
 import UnrealBloomPass from './unrealbloompass'
 import ShaderPass from './shaderpass'
 import FXAAShader from '../shaders/fxaa' 
+import HorizontalBlurPass from './HorizontalBlurPass';
+import VerticalBlurPass from './VerticalBlurPass';
 
 
 /*
@@ -25,6 +27,8 @@ const passes = {
     PixelPass: {class: PixelPass},
     UnrealBloomPass: {class: UnrealBloomPass},
     FXAAPass: {isShaderPass: true, shader: FXAAShader},
+    HorizontalBlurPass: {class: HorizontalBlurPass},
+    VerticalBlurPass: {class: VerticalBlurPass}
 };
 
 export function loadPassFromText(text) {

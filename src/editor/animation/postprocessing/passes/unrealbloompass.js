@@ -14,6 +14,8 @@ import FullScreenQuad from './fullscreenquad'
 export default class UnrealBloomPass extends Pass {
     constructor(resolution, strength, radius, threshold) {
         super();
+        this.type = "UnrealBloomPass";
+        this.name = "Unreal Bloom Pass";
         this.BlurDirectionX = new THREE.Vector2(1.0, 0.0);
         this.BlurDirectionY = new THREE.Vector2(0.0, 1.0);
         this.exposure = 1;
@@ -92,7 +94,8 @@ export default class UnrealBloomPass extends Pass {
             uniforms: this.highPassUniforms,
             vertexShader: highPassShader.vertexShader,
             fragmentShader: highPassShader.fragmentShader,
-            defines: {}
+            defines: {},
+            transparent: true,
         });
 
         // Gaussian Blur Materials
@@ -173,9 +176,14 @@ export default class UnrealBloomPass extends Pass {
         this.needsSwap = false;
 
         this.oldClearColor = new THREE.Color();
-        this.oldClearAlpha = 1;
+        this.oldClearAlpha = 0;
 
         this.basic = new THREE.MeshBasicMaterial();
+        this.basic.transparent = true;
+        this.materialCopy.transparent = true;
+        this.bloomTintColors.transparent = true;
+
+
 
         this.fsQuad = new FullScreenQuad(null);
     }
@@ -185,10 +193,6 @@ export default class UnrealBloomPass extends Pass {
         this.addController(folder,this, "threshold", {path: "bloom", min: 0, max: 5})
         this.addController(folder,this, "exposure", {path: "bloom", min: 0, max: 5})
         this.addController(folder,this, "radius", {path: "bloom", min: 0, max: 5})
-
-
-        
-        
     }
 
     dispose = () => {
@@ -354,18 +358,20 @@ export default class UnrealBloomPass extends Pass {
                 vec2 invSize = 1.0 / texSize;\
                 float fSigma = float(SIGMA);\
                 float weightSum = gaussianPdf(0.0, fSigma);\
+                float alphaSum = 0.0;\
                 vec3 diffuseSum = texture2D( colorTexture, vUv).rgb * weightSum;\
                 for( int i = 1; i < KERNEL_RADIUS; i ++ ) {\
-                    float x = float(i);\
-                    float w = gaussianPdf(x, fSigma);\
-                    vec2 uvOffset = direction * invSize * x;\
-                    vec3 sample1 = texture2D( colorTexture, vUv + uvOffset).rgb;\
-                    vec3 sample2 = texture2D( colorTexture, vUv - uvOffset).rgb;\
-                    diffuseSum += (sample1 + sample2) * w;\
-                    weightSum += 2.0 * w;\
+                  float x = float(i);\
+                  float w = gaussianPdf(x, fSigma);\
+                  vec2 uvOffset = direction * invSize * x;\
+                  vec4 sample1 = texture2D( colorTexture, vUv + uvOffset);\
+                  vec4 sample2 = texture2D( colorTexture, vUv - uvOffset);\
+                  diffuseSum += (sample1.rgb + sample2.rgb) * w;\
+                  alphaSum += (sample1.a + sample2.a) * w;\
+                  weightSum += 2.0 * w;\
                 }\
-                gl_FragColor = vec4(diffuseSum/weightSum, 1.0);\n\
-            }"
+                gl_FragColor = vec4(diffuseSum/weightSum, alphaSum/weightSum);\n\
+              }"
         });
     }
 

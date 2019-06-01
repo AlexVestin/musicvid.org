@@ -40,7 +40,10 @@ export default class PostProcessing {
     }
 
     update = (time, audioData, shouldIncrement) => {
-        this.passes.forEach( e => e.update(time, audioData, shouldIncrement) )
+        this.passes.forEach( e =>  {
+            e.applyAutomations(shouldIncrement)
+            e.update(time, audioData, shouldIncrement)
+        });
     }
 
     move = (from, to, pass) => {
@@ -56,6 +59,7 @@ export default class PostProcessing {
     }
 
     render = () => {
+
         this.effectComposer.render()
     }
 
@@ -65,6 +69,7 @@ export default class PostProcessing {
         fx.__moveItem = this.moveItem;
         fx.removeMe = () =>  this.removeItem({scene: fx, undoAction: false });
         this.passes.push(fx);
+        fx.__gui = this.gui;
         fx.setUpGUI(this.gui);
         this.effectComposer.addPass(fx);     
         this.addEffectToManager(fx); 

@@ -51,8 +51,9 @@ export default class TrackContainer extends PureComponent {
 
     setTime = time => {
         const ele = this.seekRef.current;
-        const seekerWidth = (time / this.props.audioDuration) * ele.clientWidth || 0;
-        this.timeRef.current.innerHTML = formatTime(time);
+        let t = time ? time : 0;
+        const seekerWidth = (t / this.props.audioDuration) * ele.clientWidth || 0;
+        this.timeRef.current.innerHTML = formatTime(t);
         this.seekOverlayRef.current.style.width = String(Math.floor(seekerWidth)) + "px" ;
     };
 
@@ -62,14 +63,6 @@ export default class TrackContainer extends PureComponent {
     };
 
     render() {
-        const ele = this.seekRef.current;
-        let seekerWidth = 0;
-        if (ele) {
-            seekerWidth =
-                (this.props.time / this.props.audioDuration) *
-                    ele.clientWidth || 0;
-            if (seekerWidth > ele.clientWidth) seekerWidth = ele.clientWidth;
-        }
 
         return (
             <div className={classes.container} ref={this.mountRef}>
@@ -89,7 +82,7 @@ export default class TrackContainer extends PureComponent {
                         </div>
 
                         <div className={classes.timeDisplay} ref={this.timeRef}>
-                            {formatTime(this.props.time)}
+                            {formatTime(0)}
                         </div>
                     </div>
                     <div

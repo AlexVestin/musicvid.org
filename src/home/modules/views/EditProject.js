@@ -39,7 +39,6 @@ export default class EditProject extends PureComponent {
     isOwner = () => {};
     render() {
         const { project, imgSrc } = this.props;
-        console.log(project);
         return (
             <div>
                 <LayoutBody

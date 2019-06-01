@@ -21,7 +21,8 @@ export default class ShaderPass extends Pass {
                 defines: Object.assign({}, shader.defines),
                 uniforms: this.uniforms,
                 vertexShader: shader.vertexShader,
-                fragmentShader: shader.fragmentShader
+                fragmentShader: shader.fragmentShader,
+                transparent: true
             });
         }
 

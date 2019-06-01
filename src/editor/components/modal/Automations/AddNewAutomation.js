@@ -7,6 +7,8 @@ const customAutomations = [
   {name: "Point Automation", description: "Keyframe like automations", type: "point"},
   {name: "Audio Reactive Automation", description: "Uses the impact analyser to automate a value", type: "audio"},
   {name: "Math Input Automation", description: "Use a formula/script to make a custom automation", type: "math"},
+  {name: "Shake Automation", description: "Triggers random values, useful for shake animations", type: "shake"},
+
 ]
 
 export default class AddNewAutomation extends PureComponent {
@@ -27,6 +29,9 @@ export default class AddNewAutomation extends PureComponent {
         break;
       case "math":
         this.props.addMathAutomation();
+        break;
+      case "shake":
+        this.props.addShakeAutomation();
         break;
 
       default:

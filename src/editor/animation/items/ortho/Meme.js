@@ -74,7 +74,6 @@ export default class AudioWave extends BaseItem {
             .getRoot()
             .modalRef.toggleModal(17)
             .then(files => {
-                console.log(files);
                 if (files) {
                     [...files].forEach(file => {
                         loadImageTextureFromChoice(file, this.addTexture);

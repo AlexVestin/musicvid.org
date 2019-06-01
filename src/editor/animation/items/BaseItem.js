@@ -64,6 +64,8 @@ export default class BaseItem extends SerializableObject {
         return folder;
     };
 
+    
+
     remove = () => {
         if (!this.parentRemove) {
             console.log("CALL SUPER WITH ARGUMENTS");
@@ -88,4 +90,7 @@ export default class BaseItem extends SerializableObject {
     seekTime = (t) => {}; 
     play = (t) => {};
     setUpGUI = () => {};
+    prepareEncoding = () => {};
+    cancelEncoding = () => {};
+
 }

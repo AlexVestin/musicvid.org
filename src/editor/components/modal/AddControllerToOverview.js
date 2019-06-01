@@ -72,7 +72,7 @@ class AlertDialog extends React.Component {
     render() {
 
         return (
-            <Dialog onEnter={this.init} open={this.props.open}>
+            <Dialog onClose={() => this.props.onSelect()} onEnter={this.init} open={this.props.open}>
                 <DialogTitle id="scroll-dialog-title">Automations</DialogTitle>
 
                 <DialogContent style={{display: "flex", flexDirection:"column"}}>
@@ -81,12 +81,7 @@ class AlertDialog extends React.Component {
                         style={{ lineHeight: 0.95 }}
                         component={"span"}
                     >
-
-                        Link to existing controller 
-                        {this.state.folders.map(obj => <OverviewFolder key={obj.key}></OverviewFolder>)}
-                        <br></br>
-                        Or
-                        <br></br>
+                       
                         Add new controller to overview
                     </DialogContentText>
                     Name of controller: <input ref={this.inputRef} onChange={this.setName} value={this.state.controllerName}></input>
@@ -106,3 +101,10 @@ class AlertDialog extends React.Component {
 }
 
 export default AlertDialog;
+
+/*
+ Link to existing controller 
+                        {this.state.folders.map(obj => <OverviewFolder key={obj.key}></OverviewFolder>)}
+                        <br></br>
+                        Or
+                        <br></br>*/

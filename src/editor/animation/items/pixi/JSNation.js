@@ -1,9 +1,11 @@
 
 import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
 import { loadImage } from 'editor/util/ImageLoader'
-import Emblem from "./Emblem";
+//import Emblem from "./Emblem";
 import BaseItem from '../BaseItem'
-import { addCanvasControls } from './CanvasControls' 
+import *  as PIXI from 'pixi.js';
+import { GlowFilter } from 'pixi-filters'
+import { smooth, toWebAudioForm, getByteSpectrum } from 'editor/audio/analyse_functions'
 
 /**
  * My Extension of js.nation
@@ -15,7 +17,6 @@ import { addCanvasControls } from './CanvasControls'
 export default class JSNationSpectrum extends BaseItem {
     constructor(info)  {
         super(info);
-
         this.name = "JSnation";
         this.canvas =info.canvas;
         this.ctx = info.ctx;
@@ -37,28 +38,31 @@ export default class JSNationSpectrum extends BaseItem {
             this[`color${i}`] = color;   
         });
 
-        this.alpha = 1.0;
         this.spectrumHeightScalar = 0.31;
         this.smoothingTimeConstant = 0.1;
         this.smoothingPasses = 1;
         this.smoothingPoints = 3;
         this.exp = 4
         this.preAmplitude = 1.0;
-        this.emblemExaggeration = 1.82;
+        this.emblemExaggeration = 1.5;
+
+        
+        this.displacementThreshold = 4;
+        this.returnSpeed = 0.1;
+        this.clipOffset = 10;
+        this.shouldClipSpectrum = false;
+
 
         this.drawType = "fill";
         this.lineWidth = 2.0;
-        this.shouldInterPolate = true;
-        this.interpolationAmplitude = 4.5;
-        this.targetScale = 2.5;
-        
-
+        this.alpha = 1.0;
+        this.startBin = 8;
+        this.keepBins = 40;
         this.prevArr = [];
         this.minRadius = this.canvas.width / 8;
         this.invertSpectrum = false;
         this.spectrumRotation = 0;
         this.scale = 1;
-        this.targetWidth = 64;
         //SHAKE 
         this.emblemExponential = 0.8;
         this.sumShakeX = 0;
@@ -78,12 +82,12 @@ export default class JSNationSpectrum extends BaseItem {
         this.minShakeScalar = 0.9;
         this.maxShakeScalar = 1.6;
         this.scale = 1.1;
-        this.emblem = new Emblem("./img/mvlogo.png");   
         this.previousPoints = [];
         this.prevRad = this.minRadius;
     
+       
         this.setUpFolder();
-        this.ctx.shadowBlur = 12;
+        // this.ctx.shadowBlur = 12;
 
         this.__attribution = {
             showAttribution: true,
@@ -107,18 +111,18 @@ export default class JSNationSpectrum extends BaseItem {
             imageUrl: "img/templates/JSNation.png"
         }
 
+        this.graphics = info.graphics;
+        this.container = info.container;
         this.resetPoints();
+        this.analyser = new SpectrumAnalyser(this.folder);
+        this.container.addChild(this.graphics)
+        const filter = new GlowFilter(40, 4, 0, 0xFF0000, 0.5);
+        filter.padding = 50;
+        this.container.filters = [filter]
     }
 
     changeEmblemImage = () => {
         loadImage(this.folder.__root.modalRef, (img) => this.emblem.image = img);
-    }
-
-    direction = (cur) => {
-        let d =  cur > 0 ? 1 : -1;
-        const pull = d * Math.pow(Math.abs(cur), 0.08);
-        const dir = pull + Math.random();        
-        return dir > 1.0 ? -1 : 1; 
     }
 
     shake = (multiplier) => {
@@ -151,57 +155,7 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     __setUpGUI = (folder) => {
-        addCanvasControls(this, this.ctx, folder, {text: false });
-
-        const emFolder = folder.addFolder("Emblem");
-        this.addController(emFolder, this.emblem, "visible", {path: "emblem"});
-        this.addController(emFolder, this, "changeEmblemImage", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "alpha", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "shouldClipImageToCircle", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "emblemSizeScale", {path: "emblem", min: 0.0, max: 4.0});
-        this.addController(emFolder, this.emblem, "shouldFillCircle", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "circleFillColor", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "circleSizeScale", {path: "emblem", min: 0, max: 2.0});
-
-        const moveFolder = folder.addFolder("Movement");
-        this.addController(moveFolder, this, "emblemExponential", {min: 0.2, max: 1.6, step: 0.00001})
-        this.addController(moveFolder, this, "emblemExaggeration", {min: 0.2, max: 5, step: 0.00001})
-        this.addController(moveFolder, this, "minRadius", {min: 10, max: this.canvas.width / 4})
-        this.addController(moveFolder, this, "wave_DURATION", {min: 0, max: Math.PI * 16})
-        this.addController(moveFolder, this, "movementAmount", {min: 0, max: 12})
-        this.addController(moveFolder, this, "maxShakeIntensity", {min: 0, max: 30})
-        this.addController(moveFolder, this, "maxShakeDisplacement", {min: 0, max: 180})
-
-        const spFolder = folder.addFolder("Spectrum");
-        this.addController(spFolder, this, "alpha", {min: 0.0, max: 1.0});
-        this.addController(spFolder, this, "drawType", {values: ["fill", "stroke"]});
-        this.addController(spFolder, this, "lineWidth", {min: 0, max: 30, step: 1});
-        this.analyser = new SpectrumAnalyser(spFolder);
-        this.analyser.spectrumSize = 40;
-        this.analyser.spectrumHeight = 770;
-        this.analyser.spectrumEnd = 400;
-        this.analyser.enableDropoffSmoothing = false;
-        this.analyser.smoothingTimeConstant = 0.03;
-        spFolder.updateDisplay();
-        const colFolder = spFolder.addFolder("colors");
-        
-        this.colors.forEach( ( color, i) => {
-            this["color" + String(i) + "Enabled"] = true;   
-            this["color" + String(i)] = color; 
-            this["color" + String(i) + "Exponent"] = this.exponents[i];   
-            
-            this.addController(colFolder, this, "color" + String(i) + "Enabled");
-            this.addController(colFolder, this, "color" + String(i), {color: true});
-            this.addController(colFolder, this, "color" + String(i) + "Exponent", {min: 0.5, max: 1.8, step: 0.00001});
-        });
-
-        this.addController(folder, this, "x", -2, 2);
-        this.addController(folder, this, "y", -2, 2);
-        this.addController(folder, this, "scale", 0.01, 6);
-        this.addController(folder, this.ctx, "shadowBlur", 0, 100);
-        this.addController(folder, this, "spectrumRotation", 0, Math.PI / 2, 0.00001);
-        this.addController(folder, this, "invertSpectrum");
-
+     
         return this.__addFolder(folder);
     }
 
@@ -250,15 +204,23 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     update = (time, audioData, shouldUpdate = true) => {
+        this.graphics.clear();
         const { width, height } = this.canvas;
-        this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX,Math.floor(this.y * height / 2) + this.sumShakeY);
+        // this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX,Math.floor(this.y * height / 2) + this.sumShakeY);
         let newAudioData = audioData.frequencyData.length !== 0;
         let curRad = this.minRadius * this.scale;
         if(newAudioData && shouldUpdate) {
             if (this.spectrumCache.length >= this.maxBufferSize) {
                 this.spectrumCache.shift();
             }
-            const spectrum = this.analyser.analyse(audioData.frequencyData);
+
+            const subSpectrum = audioData.frequencyData.slice(this.startBin, this.startBin + this.keepBins);
+            const dbfs = toWebAudioForm(subSpectrum, this.prevArr, this.smoothingTimeConstant, audioData.frequencyData.length);
+    
+            this.prevArr = dbfs;
+            const byteSpectrumArray = getByteSpectrum(dbfs, -40, -30);
+            const spectrum  = smooth(byteSpectrumArray, this);
+    
             const mult = Math.pow(this.multiplier(spectrum), this.emblemExponential) * this.emblemExaggeration;
             this.shake(mult / 32);
             curRad = this.calcRadius(mult) * this.scale;
@@ -266,8 +228,8 @@ export default class JSNationSpectrum extends BaseItem {
             this.spectrumCache.push(spectrum);
         }
 
-        let oldAlpha = this.ctx.globalAlpha;
-        this.ctx.globalAlpha *= this.alpha;
+        // let oldAlpha = this.ctx.globalAlpha;
+        // this.ctx.globalAlpha *= this.alpha;
 
 
         for (let s = this.maxBufferSize; s >= 0; s--) {            
@@ -275,10 +237,12 @@ export default class JSNationSpectrum extends BaseItem {
                 const exponent = this["color" + String(s) + "Exponent"];
                 
                 let points = [];
-                const col = this["color" + String(s)]
-                this.ctx.fillStyle = col;
+                const col = this["color" + String(s)];
+                this.graphics.beginFill(0xff0000);
+                //this.graphics.lineStyle(2, 0xfff, 1);
+                /*this.ctx.fillStyle = col;
                 this.ctx.strokeStyle = col;
-                this.ctx.shadowColor = col;
+                this.ctx.shadowColor = col;*/
 
                 let spec = [];
                 if(newAudioData && shouldUpdate) {
@@ -289,52 +253,62 @@ export default class JSNationSpectrum extends BaseItem {
                 }
                 const curSpectrum = this.smooth(spec,  this.smoothMargins[s]);
                 points = this.makePoints(curSpectrum, curRad, exponent);
-                this.drawPoints(points);
+                this.drawPoints(points, curRad);
             }
                
         }
-        this.ctx.globalAlpha = oldAlpha;
-        this.emblem.draw(this.ctx, this.canvas, curRad);
+        //this.ctx.globalAlpha = oldAlpha;
+        //this.emblem.draw(this.ctx, this.canvas, curRad);
         this.prevRad = curRad;
     }
 
 
-  
+    direction = (cur) => {
+        let d =  cur > 0 ? 1 : -1;
+        const pull = d * Math.pow(Math.abs(cur), 0.08);
+        const dir = pull + Math.random();        
+        return dir > 1.0 ? -1 : 1; 
+    }
 
    
 
-    drawPoints = (points) => {
+    drawPoints = (points, radius) => {
         
         if (!points || points.length === 0) {
             return;
         }
         
 
-        this.ctx.beginPath();
+        //this.ctx.beginPath();
         let halfWidth = this.canvas.width / 2;
         let halfHeight = this.canvas.height / 2;
 
         for (let neg = 0; neg <= 1; neg++) {
             let xMult = neg ? -1 : 1;
 
-            this.ctx.moveTo(halfWidth, points[0].y + halfHeight);
+            this.graphics.moveTo(halfWidth, points[0].y + halfHeight);
 
             let len = points.length;
             for (let i = 1; i < len - 2; i++) {
                 let c = xMult * (points[i].x + points[i + 1].x) / 2 + halfWidth;
                 let d = (points[i].y + points[i + 1].y) / 2 + halfHeight;
-                this.ctx.quadraticCurveTo(xMult * points[i].x + halfWidth, points[i].y + halfHeight, c, d);
+                this.graphics.quadraticCurveTo(xMult * points[i].x + halfWidth, points[i].y + halfHeight, c, d);
             }
-            this.ctx.quadraticCurveTo(xMult * points[len - 2].x + halfWidth + neg * 2,
+            this.graphics.quadraticCurveTo(xMult * points[len - 2].x + halfWidth + neg * 2,
                     points[len - 2].y + halfHeight, xMult * points[len - 1].x + halfWidth,
                     points[len - 1].y + halfHeight);
+
+            if(this.drawType === "fill" && radius - 5 > 0)  {
+                this.graphics.arc(halfWidth, halfHeight, radius - 5, Math.PI/2, 3*Math.PI/2, xMult > 0)
+            }
+                
         }
 
         if(this.drawType === "fill") {
-            this.ctx.fill();
+            this.graphics.endFill();
         }else {
-            this.ctx.lineWidth = this.lineWidth;
-            this.ctx.stroke();
+            // this.ctx.lineWidth = this.lineWidth;
+            // this.ctx.stroke();
         }
         
         

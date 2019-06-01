@@ -19,6 +19,8 @@
     "mathjs": "^5.9.0",
     "node-sass": "^4.11.0",
     "perspective-camera": "^2.0.1",
+    "pixi-filters": "^3.0.2",
+    "pixi.js": "^5.0.3",
     "prop-types": "^15.7.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -69,5 +71,4 @@
     "enzyme-adapter-react-16": "^1.13.1",
     "jest-canvas-mock": "^2.1.0"
   }
-
 }

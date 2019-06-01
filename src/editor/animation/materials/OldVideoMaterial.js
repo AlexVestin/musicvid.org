@@ -4,13 +4,32 @@ import Demuxer from './OldDemuxer.js'
 export default class Video extends THREE.MeshBasicMaterial {
     constructor(item) {
         super() 
-        this.decoder = new Demuxer(this.onDecoderReady)
-        this.playAudio = false
-        this.transparent = true;
-        this.map =  new THREE.Texture();
-    
+
+        this.video = document.createElement('video'); 
+        this.video.loop = true;
+        this.decoder = new Demuxer(this.onDecoderReady);
+        this.transparent = true;    
         this.path = "material";
         this.__parent = item;
+        this.encoding = false; 
+    }
+
+    prepareEncoding = () => {
+        this.encoding = true;
+        this.initWasmDecoder();
+    }
+
+    cancelEncoding = () => {
+        this.encoding = true;
+        this.initHTMLDecoder();
+    }
+
+    initHTMLDecoder = (file) => {
+        this.map = new THREE.VideoTexture(this.video);
+        this.map.minFilter = THREE.LinearFilter;
+        this.map.magFilter = THREE.LinearFilter;
+        this.map.format = THREE.RGBFormat;
+        this.video.muted = true;
     }
 
     loadVideo = (file) => {
@@ -20,11 +39,13 @@ export default class Video extends THREE.MeshBasicMaterial {
             this.__bytes = new Uint8Array(fr.result);
             this.bytesLoaded = true;
             this.decoder.init(this.__bytes, this.__bytes.length, false, this.decoderInitialized, this.onframe);
-            this.__bytes = null
+            this.__bytes = null;
         }
 
-        fr.readAsArrayBuffer(file) 
-
+        fr.readAsArrayBuffer(file);
+        
+        this.video.src = URL.createObjectURL(file); 
+        this.initHTMLDecoder(file);
     }
 
     loadVideoFile() {
@@ -38,59 +59,76 @@ export default class Video extends THREE.MeshBasicMaterial {
     __setUpGUI = (f) => {
         const folder = f; 
         const i = this.__parent;
+        i.addController(folder, this.video, "playbackRate", {min: 0.5, max:4});
         i.addController(folder, this, "loadVideoFile");
         this.folder = f;
     }
  
 
-    convertTimeToFrame = (time) => Math.floor((time*this.__info.fps) - (this.__parent.__startTime * this.__info.fps))
+    convertTimeToFrame = (time) => Math.floor((time*this.__info.fps) - (this.__parent.__startTime * this.__info.fps));
 
     seekTime = (time, playing) => {
         if(this.decoderReady) {
-            const frameId = this.convertTimeToFrame(time)
-            this.decoder.setFrame(frameId)
-            this.time = time    
+            const frameId = this.convertTimeToFrame(time);
+            this.decoder.setFrame(frameId);
+            this.time = time;
         }   
     }
 
-    decoderInitialized = (info) => {
-        this.__info = info.videoInfo;        
-        this.texData = new Uint8Array(info.videoInfo.width*info.videoInfo.height*3)
+    initWasmDecoder = (info) => {
+        this.texData = new Uint8Array(this.__info.width * this.__info.height * 3);
         this.map = new THREE.DataTexture(this.texData, this.__info.width, this.__info.height, THREE.RGBFormat, THREE.UnsignedByteType);
         this.map.flipY = true;
         this.map.needsUpdate = true;
         this.decoderReady = true;
+    }   
+
+    decoderInitialized = (info) => {
+        this.__info = info.videoInfo;        
     }
 
 
     onframe = (frame, shouldUpdate = true) => {
-        console.log("on frame", shouldUpdate)
-        if(shouldUpdate) {
+        if( (shouldUpdate && this.playing) || this.encoding) {
+            console.log("Updating frame")
             this.texData.set(frame);
             this.map.needsUpdate = true;
         }
     }
 
     updateMaterial = (time) => {
-        this.time = time
-        if(this.decoderReady) {
+        this.time = time;
+        
+        if(this.decoderReady && this.encoding) {
             const frameId = this.convertTimeToFrame(time)
             if(frameId >= 0 && frameId < this.__info.fps * this.__info.duration){
-                console.log(time, frameId)
-                this.decoder.getFrame(this.onframe, frameId)
+                this.decoder.getFrame(this.onframe, frameId);
             }
-                
         }
+
+        if (this.map) {
+            this.needsUpdate = true;
+            this.map.needsUpdate = true;
+        }
+        
     }
 
     stop = () => {
+        this.video.pause();
+        this.video.currentTime = 0;
+        this.playing = false;
         this.__time = 0
-        if(this.decoderReady)
-            this.decoder.setFrame(0)
     }
 
+    seekTime = (t) => {
+        this.video.currentTime = t;
+    }
+
+
     play = (time) => {
-        this.__time = time
+        this.video.play();
+        this.__time = time;
+        this.playing = true;
     }
 }
 

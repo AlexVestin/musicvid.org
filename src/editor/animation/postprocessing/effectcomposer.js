@@ -97,6 +97,14 @@ export default class EffectComposer {
             pass = this.passes[i];
 
             if (pass.enabled === false) continue;
+            
+            
+            if (pass.renderToScreenInternal) {
+                this.renderer.setRenderTarget(null);
+                this.renderer.render(pass.scene, pass.camera);
+                this.renderer.clearDepth();
+                continue;
+            }
 
             pass.renderToScreen = this.renderToScreen && this.isLastEnabledPass(i);
             pass.render(

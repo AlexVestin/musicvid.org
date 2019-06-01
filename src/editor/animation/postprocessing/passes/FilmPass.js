@@ -20,7 +20,8 @@ export default class FilmPass extends Pass {
         this.material = new THREE.ShaderMaterial({
             uniforms: this.uniforms,
             vertexShader: shader.vertexShader,
-            fragmentShader: shader.fragmentShader
+            fragmentShader: shader.fragmentShader,
+            transparent: true
         });
 
         if (grayscale !== undefined) this.uniforms.grayscale.value = grayscale;

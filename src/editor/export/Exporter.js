@@ -24,7 +24,6 @@ export default class Exporter {
         let duration = config.sound.duration;;
         let time = 0;
 
-        console.log(config);
         if(config.useCustomTimeRange) {
             time = config.startTime;
             duration  = config.endTime;
@@ -35,7 +34,6 @@ export default class Exporter {
     }
 
     prepare = () => {
-        console.log("PREPARE", this.__startTime)
         this.sound.setEncodeStartTime(this.__startTime);
         this.animationManager.seekTime(this.__startTime);
         this.time = this.__startTime;

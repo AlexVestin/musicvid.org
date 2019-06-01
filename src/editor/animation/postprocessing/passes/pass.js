@@ -15,6 +15,8 @@ export default class Pass  extends SerializableObject {
         // if set to true, the pass clears its buffer before rendering
         this.clear = false;
 
+        this.renderToScreenInternal = false;
+
         // if set to true, the result of the pass is rendered to screen. This is set automatically by EffectComposer.
         this.renderToScreen = false;
 
@@ -29,6 +31,8 @@ export default class Pass  extends SerializableObject {
         this.addController(folder, folder, "name").name("Item name");
         this.addController(folder, this, "enabled");
         this.addController(folder, this, "clear");
+       
+
         this.addController(folder, this, "needsSwap");
     }
 

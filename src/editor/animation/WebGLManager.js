@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import AttribItem from "./items/ortho/Attribution";
 import CanvasScene from "./scenes/CanvasScene";
+import PixiScene from "./scenes/PixiScene";
+
 import OrthographicScene from "./scenes/OrthographicScene";
 import PerspectiveScene from "./scenes/PerspectiveScene";
 import PostProcessing from "./postprocessing/postprocessing";
@@ -83,10 +85,18 @@ export default class WebGLManager {
         try {
             Object.values(root.__folders["Overview"].__folders).forEach(f => f.parent.removeFolder(f));
         } catch(err) {}
-        
+      
         root.__automations = [];
 
         const proj = JSON.parse(json.projectSrc);
+        if(proj.overviewFolders) {
+            proj.overviewFolders.forEach(fold => {
+                const f = this.gui.getRoot().__folders["Overview"].addFolder(fold.id);
+                f.name = fold.name;
+                f.__id = fold.id;
+            })
+        } 
+        
 
         this.__ownerId = json.owner;
         this.__online = json.online;
@@ -96,12 +106,7 @@ export default class WebGLManager {
             this.addAutomation(auto);
         })  
 
-        if(proj.overviewFolders) {
-            proj.overviewFolders.forEach(fold => {
-                const f = this.gui.getRoot().__folders["Overview"].addFolder(fold.name);
-                f.__id = fold.__id;
-            })
-        } 
+        
 
         proj.scenes.forEach(scene => {     
             if(scene.__settings.isScene) {
@@ -154,7 +159,6 @@ export default class WebGLManager {
             projFile.scenes.push(scene.__serialize())
         })
 
-        console.log(projFile)
         return projFile;
     }
 
@@ -212,7 +216,6 @@ export default class WebGLManager {
         }else {
             alert("Log in to save to profile")
         }
-        console.log(projFile);
     }
 
     setUpAttrib() {
@@ -272,6 +275,7 @@ export default class WebGLManager {
             canvas: CanvasScene,
             ortho: OrthographicScene,
             perspective: PerspectiveScene,
+            pixi: PixiScene
         }
         let scene;
         if(!(sceneName in sceneTypes)) {
@@ -282,7 +286,9 @@ export default class WebGLManager {
                 this.layersFolder,
                 this.resolution,
                 this.removeScene,
-                this.moveScene
+                this.moveScene,
+                this.renderer,
+                this.canvas
             )
         }
         
@@ -354,7 +360,18 @@ export default class WebGLManager {
         this.scenes.forEach(scene => {
             if(scene.isScene) {
                 scene.items.forEach(item => {
-                    item.__isEncoding = true;
+                    item.prepareEncoding();
+                })
+            } 
+            
+        })
+    }
+
+    cancelEncoding = () => {
+        this.scenes.forEach(scene => {
+            if(scene.isScene) {
+                scene.items.forEach(item => {
+                    item.cancelEncoding();
                 })
             } 
             
@@ -541,7 +558,7 @@ export default class WebGLManager {
             this.scenes.forEach(scene => {
                 if (scene.isScene) {
                     scene.update(time, audioData, shouldIncrement);
-                    this.renderer.render(scene.scene, scene.camera);
+                    scene.render(this.renderer);
                     this.renderer.clearDepth();
                 }
             });

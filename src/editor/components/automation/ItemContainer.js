@@ -49,9 +49,8 @@ export default class ItemContainer extends PureComponent {
                     <input ref={this.inputRef} value={this.state.name} onChange={this.updateName} />
                 </div>
 
-                {item.type === "audio" && (
-                    <AudioReactiveItem onSelect={onSelect} item={item} />
-                )}
+                {item.type === "audio" && (<AudioReactiveItem onSelect={onSelect} item={item} /> )}
+                {item.type === "shake" && ( <AudioReactiveItem onSelect={onSelect} item={item} />)}
                 {item.type === "math" && <InputItem onSelect={onSelect} item={item} />}
                 {item.type === "point" && <PointItem gui={gui} onSelect={onSelect} item={item} />}
                 </div>

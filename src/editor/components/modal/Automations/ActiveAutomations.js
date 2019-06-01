@@ -71,8 +71,6 @@ class CustomizedTable extends React.PureComponent {
     updateLinks = () => {
         const automations = this.props.automations;
         this.setState({values: automations.map(e => e.controller.object[e.controller.property])});
-
-        console.log(this.state.values);
     }
 
     componentDidMount() {
@@ -81,11 +79,16 @@ class CustomizedTable extends React.PureComponent {
     componentWillUnmount() {
         window.clearInterval(this.updateRef);
     }
+
+    changeValueToUse = (event, item) => {
+        this.setState({valueToUse: event.target.value});
+        item.valueToUse = event.target.value;
+    }
     
 
     render() {
         const { classes, automations, controller, item } = this.props;
-
+        console.log(automations);
         return (
             <Paper className={classes.root}>
                 <div>Base value: {item.preAutomationValue}</div>
@@ -95,7 +98,11 @@ class CustomizedTable extends React.PureComponent {
                             <CustomTableCell>
                                 Active Automations
                             </CustomTableCell>
-                            
+
+                            <CustomTableCell align="center">
+                                Value to use
+                            </CustomTableCell>
+
                             <CustomTableCell align="center">
                                 Timerange
                             </CustomTableCell>
@@ -122,9 +129,19 @@ class CustomizedTable extends React.PureComponent {
                                         onChange={(val) => row.automation.name = val}
                                         initalValue={row.automation.name}
                                     >
-
                                     </NameInput>
                          
+                                </CustomTableCell>
+
+                                <CustomTableCell component="th" scope="row">
+                                <select defaultValue={row.item.valueToUse || "value"} onChange={(e) => this.changeValueToUse(e, row.item)}>
+                                    {row.automation.values.map(val => {  
+                                        return( 
+                                            <option value={val}>{val}</option>
+                                        )
+                                    })}
+                                    </select>
+                                    
                                 </CustomTableCell>
 
                                 <CustomTableCell align="center">

@@ -1197,32 +1197,59 @@ function recallSavedValue(gui, controller) {
 }
 
 export function copyController(options) {
+  if(options) {
+    
 
-  console.log(options);
-  const item = options.item;
-  const folders = item.parent.getRoot().__folders["Overview"]; 
-  let g;
-  let target = folders;
-  if(options.location !== "root") {
-    target = folders.__folders[options.location]
+    const item = options.item;
+    const folders = item.parent.getRoot().__folders["Overview"]; 
+    let g;
+    let target = folders;
+    if(options.location !== "root") {
+      target = folders.__folders[options.location]
+    }
+  
+    if(item instanceof OptionController) {
+      g = target.add(item.object, item.property, item.__options);
+    }else if(item instanceof ColorController) {
+      g = target.addColor(item.object, item.property);
+    }else if(item instanceof BooleanController || item instanceof Function) {
+      g = target.add(item.object, item.property);
+    } else {
+      g = target.add(item.object, item.property, item.__min, item.__max, item.__step);
+    }
+    g.__onChange = item.__onChange; 
+    g.__location = options.location;
+    g.isSubController = true;
+    g.master = item;
+    g.disableAll();
+    
+    // Remove old buttons and add new
+    var myNode = g.editGroup;
+    while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+    }
+
+    const removeButton = document.createElement("button");
+    removeButton.innerHTML = "R";
+    removeButton.style.backgroundColor = "red";
+    removeButton.style.color = "white";
+    removeButton.style.marginLeft = "auto";
+    removeButton.classList.add('controller-button');
+    myNode.appendChild(removeButton);
+    g.remove = () => {
+      g.master.__subControllers = g.master.__subControllers.filter(e => e !== g);
+      g.parent.remove(g);
+    }
+    removeButton.onclick = (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      g.remove();
+    }
+
+    g.name(options.name);
+    item.__subControllers.push(g);
   }
 
-  if(item instanceof OptionController) {
-    g = target.add(item.object, item.property, item.__options);
-  }else if(item instanceof ColorController) {
-    g = target.addColor(item.object, item.property);
-  }else if(item instanceof BooleanController || item instanceof Function) {
-    g = target.add(item.object, item.property);
-  } else {
-    g = target.add(item.object, item.property, item.min, item.max, item.step);
-  }
-  g.__onChange = item.__onChange; 
-  g.__location = options.location;
-  g.isSubController = true;
-  g.master = item;
-  g.disableAll();
-  g.name(options.name);
-  item.__subControllers.push(g);
 }
 
 function add(gui, object, property, params) {
@@ -1315,6 +1342,7 @@ function add(gui, object, property, params) {
   editGroup.style.flexDirection = "row";
   editGroup.style.marginLeft = "auto";
   editGroup.style.minWidth = "52px";
+  controller.editGroup = editGroup;
 
 
   gui.__controllers.push(controller);

@@ -56,8 +56,6 @@ export default class Audio {
         const sidx = this.exportFrameIdx * this.exportWindowSize;
         const eidx = (this.exportFrameIdx + 1) * this.exportWindowSize;
 
-        console.log(sidx)
-
         const left = this.bufferSource.buffer
             .getChannelData(0)
             .slice(sidx, eidx);

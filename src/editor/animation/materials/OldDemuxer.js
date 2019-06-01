@@ -7,24 +7,17 @@ export default class Demuxer {
         this.worker = new Worker("workers/demuxworker.js")
         this.worker.onmessage = this.onmessage;
         this.onload = onload;
-
         this.awaitingFrame = false;
-        this.extractAudio = 0
-        
-        this.frames = []
-        this.currentFrameId = 0
-        this.lastRequestedFrameId = 0
-
-        this.cacheSize = 5
+        this.extractAudio = 0;
+        this.currentFrameId = 0;
     }
 
     init = (buffer, bufferLength, keepAudio, oninit, onframe) => {
-        this.worker.postMessage({action: "init", keepAudio: keepAudio})
-        this.worker.postMessage(buffer, [buffer.buffer])
-        this.oninit = oninit
-        this.keepAudio = keepAudio
+        this.worker.postMessage({action: "init", keepAudio: keepAudio});
+        this.worker.postMessage(buffer, [buffer.buffer]);
+        this.oninit = oninit;
+        this.keepAudio = keepAudio;
         this.onframe = onframe;
-
     }
 
     setFrame = (frameId) => {
@@ -32,51 +25,17 @@ export default class Demuxer {
             frameId = 0;
         }
 
-        this.cacheDone = false;
-        this.frames = []
-
-        this.lastRequestedFrameId = this.currentFrameId = frameId
-        this.worker.postMessage({action: "set_frame", value: frameId})
-        this.fillCache()
+        this.worker.postMessage({action: "set_frame", value: frameId});
     }
 
-    fillCache = () => {
-        if(this.currentFrameId < this.lastRequestedFrameId + this.cacheSize) {
-            this.worker.postMessage({action: "get_frame", frameId: this.currentFrameId++})
-            return
-        }
-
-        this.cacheDone = true      
-    }
 
     getFrame = (onframe, frameId) => {
-        /*const frame = this.frames.find(e => e.frameId === frameId);
-        console.log(frameId, this.frames, this.cacheDone);
-
-
-        this.frames = this.frames.filter(e => e.frameId >= frameId);
-        if(!frame) {
-            if(this.frames.length < this.cacheSize && this.cacheDone){
-                this.currentFrameId = frameId + 1 
-                this.worker.postMessage({action: "get_frame", frameId: this.currentFrameId})
-            }
-            return
-        }
-
-        console.log(frameId, this.frames.length, this.cacheSize, this.cacheDone);
-        
-        onframe(frame.data, true)
-        this.frames = this.frames.filter(e => e.frameId <= frameId)
-
-        if(this.frames.length < this.cacheSize && this.cacheDone){
-           
-        }*/
-        this.worker.postMessage({action: "get_frame", frameId: this.currentFrameId++})
+        this.worker.postMessage({action: "get_frame", frameId: this.currentFrameId++});
         this.onframe = onframe;
     }
 
     close = (onsuccess) => { 
-        this.worker.postMessage({action: "close"})
+        this.worker.postMessage({action: "close"});
     }   
     
     onmessage = (e) => {
@@ -84,28 +43,25 @@ export default class Demuxer {
 
         if(data.action === undefined) {
             if(this.keepAudio && this.extractAudio === 2) {
-                this.audioLeft = data
+                this.audioLeft = data;
                 this.extractAudio--;
             }else if (this.keepAudio && this.extractAudio === 1) {
-                this.setFrame(0)
-                this.oninit({videoInfo: this.videoInfo, audio: {bitrate: this.bitrate, left: this.audioLeft, right: data}})
+                this.setFrame(0);
+                this.oninit({ videoInfo: this.videoInfo });
                 this.extractAudio--;
             }else {
                 this.onframe(data);
-                this.frames.push({frameId:  this.awaitedFrameId, data: data })
-                if(!this.cacheDone) {
-                    this.fillCache()
-                }
+   
             }
         }
 
         switch(data.action){
             case "loaded":
                 if(this.onload)
-                    this.onload()
+                    this.onload();
                 break;
             case "init":
-                const { info } = data
+                const { info } = data;
                 this.videoInfo = {
                     fps: info[0] / info[1],
                     width: info[2],
@@ -113,24 +69,24 @@ export default class Demuxer {
                     format: info[4],
                     bitrate: info[5],
                     duration: info[6] / 1000000 // ffmpeg AV_TIMESCALE_SOMETHING
-                }
+                };
                 
                 if(this.keepAudio) {
                     this.worker.postMessage( {action: "extract_audio"})
                 }else  {
-                    this.setFrame(0)
-                    this.oninit({videoInfo: this.videoInfo})
+                    this.setFrame(0);
+                    this.oninit({videoInfo: this.videoInfo});
                 }
                 break;
             case "frame_decoded":
                 this.awaitedFrameId = data.frameId
                 break;
             case "audio_extracted":
-                this.bitrate = data.info
+                this.bitrate = data.info;
                 this.extractAudio = 2; 
                 break;
             case "return":
-                this.onsuccess(data.data)
+                this.onsuccess(data.data);
                 break;
             case "error":
                 break;

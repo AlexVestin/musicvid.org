@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import BaseItem from '../BaseItem'
 import { addOrthoMeshControls } from '../AddMeshControls'
-
+import MeshLine from  'three.meshline';
 export default class AudioWave extends BaseItem {
     constructor(info) {
         super(info);

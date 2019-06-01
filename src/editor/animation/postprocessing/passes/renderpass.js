@@ -1,6 +1,7 @@
 /**
  * @author alteredq / http://alteredqualia.com/
  */
+import { Color } from 'three';
 import Pass from "./pass";
 export default class RenderPass extends Pass {
     constructor(obj) {
@@ -17,12 +18,18 @@ export default class RenderPass extends Pass {
         this.clear = true;
         this.clearDepth = false;
         this.needsSwap = false;
-				
+
+
+        this.clearColor = new Color( 0, 0, 0 );
+	    this.clearAlpha = 0;
     }
 
     __setUpGUI = folder => {
         //this.folder = folder.addFolder("Render pass");
         //this.folder.add(this, "renderToSceen");
+        this.addController(folder, this, "renderToScreenInternal").name(
+            "Skip fx and render to screen"
+        );
     };
 
     render(renderer, writeBuffer, readBuffer, delta, maskActive) {
@@ -44,8 +51,7 @@ export default class RenderPass extends Pass {
             renderer.clearDepth();
         }
 
-
-				renderer.setRenderTarget(this.renderToScreen ? null : readBuffer);
+        renderer.setRenderTarget(this.renderToScreen ? null : readBuffer);
 
         // TODO: Avoid using autoClear properties, see https://github.com/mrdoob/three.js/pull/15571#issuecomment-465669600
         if (this.clear)

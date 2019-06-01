@@ -54,9 +54,9 @@ export default class Monstercat extends WebGLManager {
         songText.setFolderName("Song Text");
         remixText.setFolderName("Remix Text");
 
-        artistText.updateDisplay();
-        songText.updateDisplay();
-        remixText.updateDisplay();
+        artistText.folder.updateDisplay();
+        songText.folder.updateDisplay();
+        remixText.folder.updateDisplay();
         particlesScene.addItemFromText("ParticlesSideways");
 
         this.postProcessing.addEffectPass("GlitchPass");

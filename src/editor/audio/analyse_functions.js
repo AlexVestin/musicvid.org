@@ -70,6 +70,9 @@ export function transformToVisualBins(array, object) {
             array[Math.floor(bin) + start] * (bin % 1) +
             array[Math.floor(bin + 1) + start] * (1 - (bin % 1));
         
+            if (!newArray[i]) {
+                newArray[i] = 0;
+            }
         newArray[i] *= m;
     }
     return newArray;
@@ -221,6 +224,7 @@ export function smoothDropoff(array, object) {
     for(var i = 0; i < array.length; i++) {
         newArr[i] = (array[i] + (prevArr[i] * dropoffAmount)) / (1+dropoffAmount)
         if(newArr[i] <= 0) newArr[i] = 0.01
+        if(!newArr[i]) newArr[i] = 0;
         /*
         if(array[i] > prevArr[i] || prevArr - dropoffAmount < 0) {
             newArr[i] = array[i];

@@ -104,6 +104,9 @@ export default class Scene extends SerializableObject {
             this.settingsFolder.add(this.pass, "clear");
             this.settingsFolder.add(this.pass, "clearDepth");
             this.settingsFolder.add(this.pass, "needsSwap");
+            this.settingsFolder.add(this.pass, "enabled");
+
+            this.settingsFolder.add(this.pass, "renderToScreenInternal").name("Skip fx and render to screen");
         }
        
     }
@@ -159,13 +162,12 @@ export default class Scene extends SerializableObject {
     removeItem = (args) => {
         const { item } = args;
         const index = this.items.findIndex(e => e === item);
-        if(this.type !== "canvas"){
+        if(this.type !== "canvas" && this.type !== "pixi"){
             this.scene.remove(item.mesh);
         }
 
         item.dispose();
         Object.keys(item.__controllers).forEach((key) => {
-            console.log(key, item.__controllers)
             item.__controllers[key].__subControllers.forEach((folder) => {
                 try {
                     folder.parent.remove(folder);
@@ -208,7 +210,11 @@ export default class Scene extends SerializableObject {
 
             if(this.type  === "canvas") {
                 info = {...info, ctx: this.ctx, canvas: this.canvas};
+            }else if(this.type === "pixi") {
+                info = {...info,  canvas: this.canvas, container: this.container, graphics: this.graphics};
             }
+
+
             
             const itemClass = getItemClassFromText(this.type, name);
             const item = new itemClass(info);
@@ -228,6 +234,10 @@ export default class Scene extends SerializableObject {
     addItem = () => {
         const ref = this.itemsFolder.__root.modalRef;
         ref.toggleModal(this.MODAL_REF_NR).then((text) => this.addItemFromText(text, false));
+    }
+
+    render = (renderer) => {
+        renderer.render(this.scene, this.camera);
     }
 
     update = (time, audioData, shouldIncrement) => {

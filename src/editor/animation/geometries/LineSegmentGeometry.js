@@ -4,27 +4,36 @@
  */
 
 import * as THREE from 'three';
+/**
+ * @author WestLangley / http://github.com/WestLangley
+ *
+ */
 
+const LineSegmentsGeometry = function () {
 
-export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry {
-    constructor() {
-        super();
-        
-        this.type = 'LineSegmentsGeometry';
+	THREE.InstancedBufferGeometry.call( this );
 
-        var plane = new THREE.BufferGeometry();
+	this.type = 'LineSegmentsGeometry';
 
-        var positions = [ - 1, 2, 0, 1, 2, 0, - 1, 1, 0, 1, 1, 0, - 1, 0, 0, 1, 0, 0, - 1, - 1, 0, 1, - 1, 0 ];
-        var uvs = [ - 1, 2, 1, 2, - 1, 1, 1, 1, - 1, - 1, 1, - 1, - 1, - 2, 1, - 2 ];
-        var index = [ 0, 2, 1, 2, 3, 1, 2, 4, 3, 4, 5, 3, 4, 6, 5, 6, 7, 5 ];
+	var plane = new THREE.BufferGeometry();
 
-        this.isLineSegmentsGeometry= true
-        this.setIndex( index );
-        this.addAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
-        this.addAttribute( 'uv', new THREE.Float32BufferAttribute( uvs, 2 ) );
-    }
+	var positions = [ - 1, 2, 0, 1, 2, 0, - 1, 1, 0, 1, 1, 0, - 1, 0, 0, 1, 0, 0, - 1, - 1, 0, 1, - 1, 0 ];
+	var uvs = [ - 1, 2, 1, 2, - 1, 1, 1, 1, - 1, - 1, 1, - 1, - 1, - 2, 1, - 2 ];
+	var index = [ 0, 2, 1, 2, 3, 1, 2, 4, 3, 4, 5, 3, 4, 6, 5, 6, 7, 5 ];
 
-    applyMatrix =  ( matrix ) => {
+	this.setIndex( index );
+	this.addAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+	this.addAttribute( 'uv', new THREE.Float32BufferAttribute( uvs, 2 ) );
+
+};
+
+LineSegmentsGeometry.prototype = Object.assign( Object.create( THREE.InstancedBufferGeometry.prototype ), {
+
+	constructor: LineSegmentsGeometry,
+
+	isLineSegmentsGeometry: true,
+
+	applyMatrix: function ( matrix ) {
 
 		var start = this.attributes.instanceStart;
 		var end = this.attributes.instanceEnd;
@@ -53,9 +62,9 @@ export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry 
 
 		return this;
 
-    }
-    
-    setPositions = ( array ) => {
+	},
+
+	setPositions: function ( array ) {
 
 		var lineSegments;
 
@@ -67,23 +76,23 @@ export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry 
 
 			lineSegments = new Float32Array( array );
 
-        }
-        
-        console.log(lineSegments)
+		}
 
 		var instanceBuffer = new THREE.InstancedInterleavedBuffer( lineSegments, 6, 1 ); // xyz, xyz
 
 		this.addAttribute( 'instanceStart', new THREE.InterleavedBufferAttribute( instanceBuffer, 3, 0 ) ); // xyz
 		this.addAttribute( 'instanceEnd', new THREE.InterleavedBufferAttribute( instanceBuffer, 3, 3 ) ); // xyz
 
+		//
+
 		this.computeBoundingBox();
 		this.computeBoundingSphere();
 
 		return this;
 
-    }
-    
-    setColors = ( array ) => {
+	},
+
+	setColors: function ( array ) {
 
 		var colors;
 
@@ -104,27 +113,25 @@ export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry 
 
 		return this;
 
-    }
-    
-    
+	},
 
-	fromWireframeGeometry = ( geometry )  =>  {
+	fromWireframeGeometry: function ( geometry ) {
 
 		this.setPositions( geometry.attributes.position.array );
 
 		return this;
 
-	}
+	},
 
-	fromEdgesGeometry = ( geometry ) => {
+	fromEdgesGeometry: function ( geometry ) {
 
 		this.setPositions( geometry.attributes.position.array );
 
 		return this;
 
-	}
+	},
 
-	fromMesh =  ( mesh ) => {
+	fromMesh: function ( mesh ) {
 
 		this.fromWireframeGeometry( new THREE.WireframeGeometry( mesh.geometry ) );
 
@@ -132,9 +139,9 @@ export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry 
 
 		return this;
 
-	}
+	},
 
-	fromLineSegements = ( lineSegments ) => {
+	fromLineSegements: function ( lineSegments ) {
 
 		var geometry = lineSegments.geometry;
 
@@ -152,14 +159,13 @@ export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry 
 
 		return this;
 
-    }
-    
-    
-	computeBoundingBox = () => {
+	},
+
+	computeBoundingBox: function () {
 
 		var box = new THREE.Box3();
 
-		const computeBoundingBox = () => {
+		return function computeBoundingBox() {
 
 			if ( this.boundingBox === null ) {
 
@@ -168,8 +174,7 @@ export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry 
 			}
 
 			var start = this.attributes.instanceStart;
-            var end = this.attributes.instanceEnd;
-            console.log(start, end, this.attributes)
+			var end = this.attributes.instanceEnd;
 
 			if ( start !== undefined && end !== undefined ) {
 
@@ -181,17 +186,15 @@ export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry 
 
 			}
 
-        };
-        
-        return computeBoundingBox();
+		};
 
-    }
-    
-    computeBoundingSphere = ()  => {
+	}(),
+
+	computeBoundingSphere: function () {
 
 		var vector = new THREE.Vector3();
 
-		const computeBoundingSphere = () => {
+		return function computeBoundingSphere() {
 
 			if ( this.boundingSphere === null ) {
 
@@ -236,22 +239,30 @@ export default class LineSegmentsGeometry extends THREE.InstancedBufferGeometry 
 
 			}
 
-        };
-        
-        return computeBoundingSphere();
+		};
 
-    }
-    
-    toJSON =  () => {
+	}(),
+
+	toJSON: function () {
+
 		// todo
-	}
 
-	clone = () => {
+	},
+
+	clone: function () {
+
 		// todo
-	}
 
-	copy = ( source ) => {
+	},
+
+	copy: function ( source ) {
+
+		// todo
+
 		return this;
-	}
-}
 
+	}
+
+} );
+
+export default LineSegmentsGeometry;

@@ -6,16 +6,24 @@
 
 import LineSegmentsGeometry from './LineSegmentGeometry';
 
- export default class LineGeometry extends LineSegmentsGeometry {
-     constructor() {
-         super();
+const LineGeometry = function () {
 
-         this.type = 'LineGeometry';
-         this.isLineGeometry = true;
-     }
+	LineSegmentsGeometry.call( this );
 
-    __setPositions = ( array ) => {
+	this.type = 'LineGeometry';
+
+};
+
+LineGeometry.prototype = Object.assign( Object.create( LineSegmentsGeometry.prototype ), {
+
+	constructor: LineGeometry,
+
+	isLineGeometry: true,
+
+	setPositions: function ( array ) {
+
 		// converts [ x1, y1, z1,  x2, y2, z2, ... ] to pairs format
+
 		var length = array.length - 3;
 		var points = new Float32Array( 2 * length );
 
@@ -28,13 +36,19 @@ import LineSegmentsGeometry from './LineSegmentGeometry';
 			points[ 2 * i + 3 ] = array[ i + 3 ];
 			points[ 2 * i + 4 ] = array[ i + 4 ];
 			points[ 2 * i + 5 ] = array[ i + 5 ];
+
 		}
-		this.setPositions(points);
+
+		LineSegmentsGeometry.prototype.setPositions.call( this, points );
+
 		return this;
-    }
-    
-    __setColors = ( array ) => {
+
+	},
+
+	setColors: function ( array ) {
+
 		// converts [ r1, g1, b1,  r2, g2, b2, ... ] to pairs format
+
 		var length = array.length - 3;
 		var colors = new Float32Array( 2 * length );
 
@@ -49,22 +63,41 @@ import LineSegmentsGeometry from './LineSegmentGeometry';
 			colors[ 2 * i + 5 ] = array[ i + 5 ];
 
 		}
-		this.setColors(colors );
+
+		LineSegmentsGeometry.prototype.setColors.call( this, colors );
+
 		return this;
-    }
-    
-    fromLine = ( line ) => {
+
+	},
+
+	fromLine: function ( line ) {
+
 		var geometry = line.geometry;
+
 		if ( geometry.isGeometry ) {
-			this.__setPositions( geometry.vertices );
+
+			this.setPositions( geometry.vertices );
+
 		} else if ( geometry.isBufferGeometry ) {
-			this.__setPositions( geometry.position.array ); // assumes non-indexed
+
+			this.setPositions( geometry.position.array ); // assumes non-indexed
+
 		}
+
+		// set colors, maybe
+
 		return this;
-    }
-    
-    
-	copy = ( source ) => {
+
+	},
+
+	copy: function ( source ) {
+
+		// todo
+
 		return this;
+
 	}
- }
+
+} );
+
+export default LineGeometry;

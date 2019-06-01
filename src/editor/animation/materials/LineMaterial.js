@@ -15,15 +15,16 @@
  import * as THREE from 'three';
 
  const line = {
-	linewidth: { value: 1 },
+	linewidth: { value: 20 },
 	resolution: { value: new THREE.Vector2( 1, 1 ) },
 	dashScale: { value: 1 },
 	dashSize: { value: 1 },
-	gapSize: { value: 1 } // todo FIX - maybe change to totalSize
+	gapSize: { value: 1 }, // todo FIX - maybe change to totalSize
+	transp: {value: 0.3}
 
 };
 
-const shaders = {
+const shader = {
 
 	uniforms: THREE.UniformsUtils.merge( [
 		THREE.UniformsLib.common,
@@ -193,24 +194,12 @@ const shaders = {
 		varying float vLineDistance;
 
 		#include <common>
-		#include <color_pars_fragment>
-		#include <fog_pars_fragment>
-		#include <logdepthbuf_pars_fragment>
-		#include <clipping_planes_pars_fragment>
 
+		uniform float transp;
 		varying vec2 vUv;
 
 		void main() {
 
-			#include <clipping_planes_fragment>
-
-			#ifdef USE_DASH
-
-				if ( vUv.y < - 1.0 || vUv.y > 1.0 ) discard; // discard endcaps
-
-				if ( mod( vLineDistance, dashSize + gapSize ) > dashSize ) discard; // todo - FIX
-
-			#endif
 
 			if ( abs( vUv.y ) > 1.0 ) {
 
@@ -222,101 +211,167 @@ const shaders = {
 
 			}
 
-			vec4 diffuseColor = vec4( diffuse, opacity );
+			vec4 diffuseColor = vec4( 1.0,1.0,1.0, opacity);
 
-			#include <logdepthbuf_fragment>
-			#include <color_fragment>
+	
 
-			gl_FragColor = vec4( diffuseColor.rgb, diffuseColor.a );
-
-			#include <premultiplied_alpha_fragment>
-			#include <tonemapping_fragment>
-			#include <encodings_fragment>
-			#include <fog_fragment>
+			gl_FragColor = vec4( 1.0,1.0,1.0,0.3);
 
 		}
 		`
 };
 
-export default class LineMaterial extends THREE.ShaderMaterial {
+const LineMaterial = function ( parameters ) {
 
-    constructor(parameters) {
-        super({
-            type: 'LineMaterial',
-            uniforms: THREE.UniformsUtils.clone(shaders.uniforms),
-            vertexShader: shaders.vertexShader,
-            fragmentShader: shaders.fragmentShader
-        })
+	THREE.ShaderMaterial.call( this, {
 
-        this.dashed = false;
-        this.color = {
+		type: 'LineMaterial',
+
+		uniforms: THREE.UniformsUtils.clone( shader.uniforms ),
+
+		vertexShader: shader.vertexShader,
+		fragmentShader: shader.fragmentShader
+
+	} );
+
+	this.dashed = false;
+
+	Object.defineProperties( this, {
+
+		color: {
+
 			enumerable: true,
+
 			get: function () {
+
 				return this.uniforms.diffuse.value;
+
 			},
 
 			set: function ( value ) {
+
 				this.uniforms.diffuse.value = value;
-			}
-        };
 
-        this.linewidth = {
+			}
+
+		},
+
+		linewidth: {
+
 			enumerable: true,
+
 			get: function () {
+
 				return this.uniforms.linewidth.value;
+
 			},
+
 			set: function ( value ) {
+
 				this.uniforms.linewidth.value = value;
+
 			}
-        }
-        
-        this.dashScale = {
+
+		},
+
+		dashScale: {
+
 			enumerable: true,
+
 			get: function () {
+
 				return this.uniforms.dashScale.value;
+
 			},
+
 			set: function ( value ) {
+
 				this.uniforms.dashScale.value = value;
+
 			}
-        }
-        this.dashSize = {
+
+		},
+
+		dashSize: {
+
 			enumerable: true,
+
 			get: function () {
+
 				return this.uniforms.dashSize.value;
+
 			},
+
 			set: function ( value ) {
+
 				this.uniforms.dashSize.value = value;
+
 			}
-        }
-        
-        this.gapSize = {
+
+		},
+
+		gapSize: {
+
 			enumerable: true,
+
 			get: function () {
+
 				return this.uniforms.gapSize.value;
+
 			},
+
 			set: function ( value ) {
+
 				this.uniforms.gapSize.value = value;
+
 			}
-        }
-        this.resolution =  {
+
+		},
+
+		resolution: {
+
 			enumerable: true,
+
 			get: function () {
+
 				return this.uniforms.resolution.value;
+
 			},
+
 			set: function ( value ) {
+
 				this.uniforms.resolution.value.copy( value );
+
 			}
-        }
-        
-        this.setValues( parameters );
 
-    };
+		}
 
-    copy(source) {
-        super.copy(source );
-        this.color.copy( source.color );
-        this.linewidth = source.linewidth;
-        this.resolution = source.resolution;
-        return this;
-    }
+	} );
+
+	this.setValues( parameters );
+
 };
+
+LineMaterial.prototype = Object.create( THREE.ShaderMaterial.prototype );
+LineMaterial.prototype.constructor = LineMaterial;
+
+LineMaterial.prototype.isLineMaterial = true;
+
+LineMaterial.prototype.copy = function ( source ) {
+
+	THREE.ShaderMaterial.prototype.copy.call( this, source );
+
+	this.color.copy( source.color );
+
+	this.linewidth = source.linewidth;
+
+	this.resolution = source.resolution;
+
+	// todo
+
+	return this;
+
+};
+
+
+export default LineMaterial;

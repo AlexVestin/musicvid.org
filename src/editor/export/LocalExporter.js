@@ -17,6 +17,10 @@ export default class LocalExporter {
         this.gui                = config.gui.getRoot();
         this.canceled = false;
 
+        if(config.useCustomTimeRange) {
+            alert("Custom time range not supported on desktop client, using entire song duration")
+        }
+
         this.presetLookup = [
             "ultrafast",
             "veryfast",
@@ -44,6 +48,12 @@ export default class LocalExporter {
     init = (cb) => {
         this.onready = cb;
         this.encoderInitialized();
+    }
+
+    prepare = () => {
+        this.sound.setEncodeStartTime(0);
+        this.animationManager.seekTime(0);
+        this.time = 0;
     }
 
     encoderInitialized = () => {

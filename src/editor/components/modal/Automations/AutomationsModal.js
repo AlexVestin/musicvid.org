@@ -14,6 +14,8 @@ import ItemContainer from "../../automation/ItemContainer";
 import AudioAutomation from "editor/animation/automation/AudioReactiveAutomation";
 import InputAutomation from "editor/animation/automation/InputAutomation";
 import PointAutomation from "editor/animation/automation/PointAutomation";
+import ShakeAutomation from "editor/animation/automation/ShakeAutomation";
+
 
 import uuid from 'uuid/v4';
 const styles = theme => ({
@@ -49,7 +51,7 @@ class ScrollDialog extends React.Component {
 
     onSelect = automation => {
         const { item } = this.props;
-        const link = { id: uuid(), type: "=", controllerID: item.__path, automationID: automation.__id };
+        const link = { id: uuid(), type: "=", controllerID: item.__path, automationID: automation.__id, valueToUse: automation.values[0] };
         item.__parentObject.__automations.push(link);
         this.setState({ index: this.homeIndex });
     }
@@ -57,6 +59,13 @@ class ScrollDialog extends React.Component {
     addAudioAutomation = () => {
         const root = this.props.gui.getRoot();
         this.selectedAutomation = new AudioAutomation(root);
+        root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
+        this.onSelect(this.selectedAutomation);
+    };
+
+    addShakeAutomation = () => {
+        const root = this.props.gui.getRoot();
+        this.selectedAutomation = new ShakeAutomation(root);
         root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
         this.onSelect(this.selectedAutomation);
     };
@@ -125,6 +134,8 @@ class ScrollDialog extends React.Component {
                             addAudioAutomation={this.addAudioAutomation}
                             addMathAutomation={this.addMathAutomation}
                             addPointAutomation={this.addPointAutomation}
+                            addShakeAutomation={this.addShakeAutomation}
+
                         />
                     )}
 

@@ -94,8 +94,7 @@ class LineGenerator extends Object3D {
         // Update current Lines
         for (this.i = this.nbrOfLines; this.i >= 0; this.i--) {
             const line = this.lines[this.i];
-            line.update(mult);
-            line.material.opacity = opacity;
+            line.update(mult, opacity);
         }
 
         // Filter and remove died lines
@@ -146,7 +145,7 @@ export default class CustomLineGenerator extends LineGenerator {
         this.originZ = 0;
         this.nbrOfPoints = 5;
         this.turbulenceAmt = 2.3;
-        this.width = 0.55;
+        this.width = 15;
         this.getRandomColor = false;
         this.color = "#FFFFFF";
         this.randomColor = true;
@@ -199,20 +198,7 @@ export default class CustomLineGenerator extends LineGenerator {
                 this.speedMult;
         }
 
-        let taper = null;
-        switch (this.taper) {
-            case "linear":
-                taper = function(p) {
-                    return 1 - p;
-                };
-                break;
-            case "wavy":
-                taper = function(p) {
-                    return 2 + Math.sin(50 * p);
-                };
-                break;
-            default:
-        }
+      
 
         let color = getRandomItem(COLORS);
         if (!this.getRandomColor) {
@@ -230,16 +216,15 @@ export default class CustomLineGenerator extends LineGenerator {
             opacity,
             nbrOfPoints,
             width: this.width,
-            transformLineMethod: taper,
             nrPrecisionPoints
         });
 
         line.scale.set(this._scale, this._scale, this._scale);
-        console.log(line);
         /*
-        const newPoints = line.__points.clone();
-        for (var i = 0; i < newPoints.vertices.length; i++) {
-            newPoints.vertices[i].x = -line.__points.vertices[i].x;
+        const newPoints = [];
+        for (var i = 0; i < line.__points; i++) {
+            const p = line.__points[i];
+            newPoints.push(new Vector3(-p.x, p.y, p.z));
         }
 
         const l2 = super.addLine({
@@ -258,7 +243,6 @@ export default class CustomLineGenerator extends LineGenerator {
             nrPrecisionPoints
         });
 
-        l2.scale.set(this._scale, this._scale, this._scale);
-        */
+        l2.scale.set(this._scale, this._scale, this._scale);*/
     }
 }

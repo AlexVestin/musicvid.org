@@ -82,7 +82,7 @@ export default function SpectrumAnalyser(gui, object) {
         if(this.enableTailTransform) newArr = tailTransform(newArr, this);
         if(this.enableSmoothingTransform) newArr = smooth(newArr, this);
         if(this.enableExponentialTransform) newArr = exponentialTransform(newArr, this);
-        if(this.enableDropoffSmoothingTransform) newArr = smoothDropoff(newArr, this);
+        //if(this.enableDropoffSmoothingTransform) newArr = smoothDropoff(newArr, this);
         this.prevArr = newArr;
         return newArr;
     }

@@ -7,6 +7,7 @@ export default class Manager extends WebGLManager {
         const back = this.addSceneFromText("ortho");
         const part = this.addSceneFromText("perspective");
         const jsna = this.addSceneFromText("canvas");
+
         back.addItemFromText("Background");
         part.addItemFromText("Particles");
         jsna.addItemFromText("JSNation2");

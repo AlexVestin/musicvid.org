@@ -17,7 +17,8 @@ export default class PixelPass extends Pass  {
             defines: Object.assign( {}, PixelShader.defines ),
             uniforms: this.uniforms,
             vertexShader: PixelShader.vertexShader,
-            fragmentShader: PixelShader.fragmentShader
+            fragmentShader: PixelShader.fragmentShader,
+            transparent: true
         })
 
         this.material.uniforms.resolution.value = new THREE.Vector2(1280, 720);

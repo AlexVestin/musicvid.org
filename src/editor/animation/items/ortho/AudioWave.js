@@ -49,9 +49,9 @@ export default class AudioWave extends BaseItem {
         this.line = new MeshLine();
         this.geometry = new THREE.Geometry();
         for(var i = 0; i < this.targetSize; i++) {
-            this.geometry.vertices.push(new THREE.Vector3(i/1024,0,0));
+            const x = ((i / this.targetSize)*2 *this.width) -1 * this.width;
+            this.geometry.vertices.push(new THREE.Vector3(x, 0, 0));
         }
-
         this.line.setGeometry(this.geometry);
 
         if(this.material) {
@@ -74,7 +74,7 @@ export default class AudioWave extends BaseItem {
             this.lineWidthController.object = this.material;
         }
         
-
+        this.mesh.geometry.attributes.position.needsUpdate = true;
     }
 
     setTaperFunc = () => {

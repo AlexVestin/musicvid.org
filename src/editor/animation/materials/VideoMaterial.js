@@ -64,7 +64,6 @@ export default class ImageMaterial extends THREE.MeshBasicMaterial{
         this.video.muted = true;
 
 
-        this.seekResolve  = () => console.log("seek resolve");
         this.video.addEventListener('seeked', async () => {
             this.seekResolve();
         });

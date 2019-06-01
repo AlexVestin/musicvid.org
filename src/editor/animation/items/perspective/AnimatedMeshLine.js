@@ -80,8 +80,8 @@ import {
         dashRatio, // The ratio between that is visible or not for each dash
         opacity,
         transparent: true,
-        depthTest: false,
-        sizeAttenuation: true,
+
+        resolution: new Vector2(1280, 720),
         color,
       });
   
@@ -98,6 +98,7 @@ import {
   
       this.dyingAt = 1;
       this.diedAt = this.dyingAt + this.dashLength;
+      
   
       // Bind
       this.update = this.update.bind(this);

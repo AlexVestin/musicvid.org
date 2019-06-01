@@ -8,6 +8,8 @@ import ItemContainer from "../automation/ItemContainer";
 import AudioAutomation from "editor/animation/automation/AudioReactiveAutomation";
 import MathAutomation from "editor/animation/automation/InputAutomation";
 import PointAutomation from "editor/animation/automation/PointAutomation";
+import ShakeAutomation from "editor/animation/automation/ShakeAutomation";
+
 import classes from "./Automations.module.scss";
 
 export default class Automations extends PureComponent {
@@ -27,6 +29,9 @@ export default class Automations extends PureComponent {
                         break;
                     case "point":
                         this.selectedAutomation = new PointAutomation(root);
+                        break;
+                    case "shake":
+                        this.selectedAutomation = new ShakeAutomation(root);
                         break;
                     default:
                     console.log("unknown type")
