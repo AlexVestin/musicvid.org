@@ -106,8 +106,6 @@ export default class WebGLManager {
             this.addAutomation(auto);
         })  
 
-        
-
         proj.scenes.forEach(scene => {     
             if(scene.__settings.isScene) {
                 const s = this.addSceneFromText(scene.__settings.type || scene.__settings.TYPE);
@@ -137,7 +135,7 @@ export default class WebGLManager {
                 reader.onload = (e) => {
                     const json = JSON.parse(e.target.result);
                     this.loadProject(json);    
-                }
+                } 
                 reader.readAsText(file);
             }
         })
@@ -154,17 +152,29 @@ export default class WebGLManager {
         const ov = this.gui.getRoot().__folders["Overview"].__folders;
         projFile.overviewFolders = Object.values(ov).map(f => { return {name: f.name, id: f.__id}});
         
-        
         this.scenes.forEach( (scene, i) => {
             projFile.scenes.push(scene.__serialize())
-        })
-
+        });
         return projFile;
+    }
+
+    getProjectConfig = (projFile, ownerId) => {
+        return {
+            projectSrc: JSON.stringify(projFile),
+            width: this.width,
+            height: this.height,
+            name: this.__projectName,
+            public: this.availablePublic,
+            owner:  ownerId,
+            id: this.__id
+        }
     }
 
     saveProjectToFile = () => {
         const projFile = this.serializeProject();
-        const blob = new Blob([JSON.stringify(projFile)], { type: 'application/json' });
+
+        const f = this.getProjectConfig(projFile, this.__id);
+        const blob = new Blob([JSON.stringify(f)], { type: 'application/json' });
         FileSaver.saveAs(blob, this.__projectName + ".json");
     }
 
@@ -187,17 +197,8 @@ export default class WebGLManager {
             });
 
             const allRef = base.collection("projects").doc(this.__id);
-
-
-            const p2 = allRef.set({
-                projectSrc: JSON.stringify(projFile),
-                width: this.width,
-                height: this.height,
-                name: this.__projectName,
-                public: this.availablePublic,
-                owner: myId,
-                id: this.__id
-            });
+            const p2 = allRef.set(this.getProjectConfig(projFile, myId));
+            
             let p3;
             if(!this.__online) {
                 this.redoUpdate();
@@ -205,7 +206,6 @@ export default class WebGLManager {
                 p3 = storage.ref().child(this.__id).put(blob)
             }
             
-
             Promise.all([p1, p2, p3]).then(() => {
                 alert("Saved to profile");
                 window.history.pushState({}, null, "/editor?project=" + this.__id);
@@ -374,7 +374,6 @@ export default class WebGLManager {
                     item.cancelEncoding();
                 })
             } 
-            
         })
     }
 
@@ -545,6 +544,8 @@ export default class WebGLManager {
         this.scenes.forEach(scene => {
             scene.stop();
         });
+        this.gui.getRoot().getAutomations().forEach(auto => auto.stop())
+
         this.renderer.clear();
     };
 

@@ -229,8 +229,6 @@ class App extends PureComponent {
             this.exporter = null;
             this.update();
             this.audio.exportFrameIdx = 0;
-            
-
             this.canvasRef.current.setSize(this.resolution);
             this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
             this.animationManager.refresh( this.gui.canvasMountRef)
