@@ -2,7 +2,7 @@ import {
     average
 } from "./analyse_functions";
 
-export default function ImpactAnalyser(gui, parent = null, disable = false) {
+export default function ImpactAnalyser(gui, parent = null, disable = false, disableLinking = false) {
     let addAttribute = (name, value, folder, configs = {}) => {
         this[name] = value;
 
@@ -15,6 +15,10 @@ export default function ImpactAnalyser(gui, parent = null, disable = false) {
 
         if(disable) {
             c.disableAutomations();
+        }
+
+        if(disableLinking) {
+            c.disableAll();
         }
 
         return c;
@@ -39,7 +43,7 @@ export default function ImpactAnalyser(gui, parent = null, disable = false) {
     addAttribute("useDeltaSmoothing", false, f12, { min: 0 });
     addAttribute("minDeltaNeededToTrigger", 3, f12, { min: 0 });
     addAttribute("deltaDecay", 0.25, f12, {min: 0});
-
+    this.folder = f1;
 
    
     this.lastAmount = 0;
@@ -48,7 +52,7 @@ export default function ImpactAnalyser(gui, parent = null, disable = false) {
         let newArr = array.slice();
         let amount = this.baseAmount;
         if(this.enableImpactAnalysis) amount = average(newArr, this);
-        const amp = this.amplitude / (64 * 16);
+        const amp = this.amplitude / 1024;
         amount = amount * amp;
 
         if(this.useDeltaSmoothing) {

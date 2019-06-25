@@ -6,7 +6,7 @@ export default class Video extends THREE.MeshBasicMaterial {
         super() 
 
         this.video = document.createElement('video'); 
-        this.video.loop = true;
+        // this.video.loop = true;
         this.decoder = new Demuxer(this.onDecoderReady);
         this.transparent = true;    
         this.path = "material";

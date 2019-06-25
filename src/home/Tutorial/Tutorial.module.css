@@ -1,0 +1,14 @@
+
+
+.link {
+    cursor: pointer;
+    text-decoration: none; /* no underline */
+    color: black;
+    width: 100%;
+    height: 100%;
+}
+
+.tutorialContainer:hover {
+    cursor: pointer;
+    background-color: #efefef;
+}

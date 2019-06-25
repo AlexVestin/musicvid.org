@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.item {
+    margin-top: 15px;
+}
+
+.audioWaveCanvas {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border: 1px solid gray;
+}
+
+.grid  div {
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    padding: 5px;
+}
+
+.grid {
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    display: grid;
+    grid-template-columns: 0.4fr 1.6fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: ". ." ". ." ". .";
+      
+}

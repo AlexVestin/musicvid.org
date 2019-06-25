@@ -162,13 +162,9 @@ export function tailTransform(array, object) {
     for (var i = 0; i < spectrumSize; i++) {
         var value = array[i];
         if (i < headMargin) {
-            value *=
-                headMarginSlope * Math.pow(i + 1, marginDecay) +
-                minMarginWeight;
+            value *= headMarginSlope * Math.pow(i + 1, marginDecay) + minMarginWeight;
         } else if (spectrumSize - i <= tailMargin) {
-            value *=
-                tailMarginSlope * Math.pow(spectrumSize - i, marginDecay) +
-                minMarginWeight;
+            value *= tailMarginSlope * Math.pow(spectrumSize - i, marginDecay) + minMarginWeight;
         }
         values[i] = value;
     }
@@ -189,6 +185,7 @@ export function exponentialTransform(array, object) {
         var exp =
             (spectrumMaxExponent - spectrumMinExponent) * (1 - Math.pow(i / spectrumSize, spectrumExponentScale)) + spectrumMinExponent;
 
+        console.log(i, exp, array[i], spectrumHeight, array[i] / spectrumHeight);
         newArr[i] = Math.max(
             Math.pow(array[i] / spectrumHeight, exp) * spectrumHeight,
             0.1

@@ -6,6 +6,18 @@ export default class WaveCanvas extends PureComponent {
         this.audioWaveCanvas = React.createRef();
     }
 
+    get dimensions() {
+        return {width: this.audioWaveCanvas.current.clientWidth, height: this.audioWaveCanvas.current.clientHeight};
+    }
+
+    get width() {
+        return this.audioWaveCanvas.current.clientWidth;
+    }
+
+    get height() {
+        return this.audioWaveCanvas.current.clientWidth;
+    }
+
     generateAudioWave = audioData => {
         const canvas = this.audioWaveCanvas.current;
         const ctx = canvas.getContext("2d");

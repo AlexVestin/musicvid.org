@@ -10,12 +10,21 @@ import {
     getByteSpectrum
 } from "./analyse_functions";
 
-export default function SpectrumAnalyser(gui, object) {
-    this.object = object;
+export default function SpectrumAnalyser(gui, parent, disableAll=false) {
+    this.object = parent;
 
     let addAttribute = (name, value, folder, configs = {}) => {
         this[name] = value;
-        folder.add(this, name, configs.min, configs.max, configs.step);
+        let c; 
+        if(folder && !parent) {
+            c = folder.add(this, name, configs.min, configs.max, configs.step);
+        }else {
+            c = parent.addController(folder, this, name, {min: configs.min, max: configs.max, path: "spectrum-analyser" });
+        }
+
+        if(disableAll) {
+            c.disableAll();
+        }
     };
 
     // ----

@@ -1,13 +1,9 @@
-
-import * as FileSaver from "file-saver";
-import VideoEncoder from './VideoEncodeWorker'
-
-export default class Exporter {
+export default class LocalExporter {
     constructor(config, ondone, onProgress) {
         this.onProgress         = onProgress;
         this.fps                = Number(config.video.fps);
         this.videoBitrate       = config.video.bitrate;
-       
+        this.duration           = config.sound.duration;
         this.encodedVideoFrames = 0;
         this.width              = config.video.width;
         this.height             = config.video.height;
@@ -17,48 +13,47 @@ export default class Exporter {
         this.animationManager   = config.animationManager;
         this.time               = 0;
         this.frames             = [];
-        
         this.presetIdx          = config.video.presetIdx;
         this.gui                = config.gui.getRoot();
-
-        let duration = config.sound.duration;;
-        let time = 0;
+        this.canceled = false;
 
         if(config.useCustomTimeRange) {
-            time = config.startTime;
-            duration  = config.endTime;
+            alert("Custom time range not supported on desktop client, using entire song duration")
         }
 
-        this.duration = duration;
-        this.__startTime = time;
+        this.presetLookup = [
+            "ultrafast",
+            "veryfast",
+            "fast",
+            "medium",
+            "slow",
+            "veryslow"
+        ];
+
+        if(window.__init) {
+            window.__init({
+                fps: this.fps,
+                bitrate: this.videoBitrate,
+                width: this.width,
+                height: this.height,
+                preset: this.presetLookup[this.presetIdx],
+                sound: this.sound,
+                name: this.fileName,
+            });
+        }else {
+            alert("init not a ting");
+        }
+    }
+
+    init = (cb) => {
+        this.onready = cb;
+        this.encoderInitialized();
     }
 
     prepare = () => {
-        this.sound.setEncodeStartTime(this.__startTime);
-        this.animationManager.seekTime(this.__startTime);
-        this.time = this.__startTime;
-    }
-
-    init = (onready) => {
-        this.onready = onready;
-        this.videoEncoder = new VideoEncoder(this.initEncoder);
-    }
-    initEncoder = () => {
-        const videoConfig = {
-            w: this.width,
-            h: this.height,
-            bitrate: this.videoBitrate,
-            fps: this.fps,
-            presetIdx: this.presetIdx,
-        }
-
-        const audioConfig = {
-            channels: 2,
-            sampleRate: this.sound.sampleRate,
-            bitrate: 320000
-        }
-
-        this.videoEncoder.init(videoConfig, audioConfig, this.encoderInitialized, this.encode)
+        this.sound.setEncodeStartTime(0);
+        this.animationManager.seekTime(0);
+        this.time = 0;
     }
 
     encoderInitialized = () => {
@@ -70,56 +65,76 @@ export default class Exporter {
 
     cancel = () => {
         this.canceled = true;
-        this.videoEncoder.close();
-    }
-
-    setTime = (startTime)  => { 
-        this.time  = startTime;
-        this.sound.setEncodeStartTime(startTime);
+        window.__close();
     }
 
     encode = () => {
         if(!this.canceled ) {
-            const videoTs = this.time;
-            const audioTs = (this.sound.exportFrameIdx * this.sound.exportWindowSize) / this.sound.sampleRate; 
-            if( videoTs >= audioTs ) {
-                this.encodeAudioFrame();
-            }else{
-                const audioData = this.sound.getAudioData(this.time);
-                Object.keys(this.gui.__automations).forEach(key => {
-                    this.gui.__automations[key].update(this.time, audioData);
-                });
-                this.animationManager.update(this.time, audioData, true);
-                this.time += 1 / this.fps;
-                this.encodeVideoFrame();
-            }
-    
-            this.videoEncoder.sendFrame();
-    
+
+            const audioData = this.sound.getAudioData(this.time);
+            Object.keys(this.gui.__automations).forEach(key => {
+                this.gui.__automations[key].update(this.time, audioData);
+            });
+
+            this.animationManager.update(this.time, audioData, true);
+            this.time += 1 / this.fps;
+            const sleepTime = this.encodeVideoFrame();
+        
             if(this.encodedVideoFrames % 15 === 0) 
-                this.onProgress(this.encodedVideoFrames, Math.floor((this.duration - this.__startTime) * this.fps))
+                this.onProgress(this.encodedVideoFrames, Math.floor(this.duration * this.fps))
     
-            if(this.time > this.duration) {
-                this.videoEncoder.close(this.saveBlob);
+            if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {
+                if(window.__close) {
+                    window.__encodeAudio(this.sound);
+                    window.__close();
+                    this.canceled = true;
+                }else {
+                    alert("window.__close ? ")
+                }
             }
+
+            setTimeout(this.encode, sleepTime);
         }
     }
 
     encodeVideoFrame = () => {
-        this.pixels = this.animationManager.readPixels();
-        this.videoEncoder.queueFrame( {type: "video", pixels: this.pixels} );
-        this.pixels = null;
-        this.encodedVideoFrames++;
+        this.encodedVideoFrames++;   
+        
+        if(window.__addImage) {
+            const pixels = this.animationManager.readPixels();
+
+            var width = this.animationManager.width;
+            var height = this.animationManager.height;
+           
+            var halfHeight = height / 2 | 0;  // the | 0 keeps the result an int
+            var bytesPerRow = width * 4;
+
+            // make a temp buffer to hold one row
+            var temp = new Uint8Array(width * 4);
+            for (var y = 0; y < halfHeight; ++y) {
+            var topOffset = y * bytesPerRow;
+                var bottomOffset = (height - y - 1) * bytesPerRow;
+
+                // make copy of a row on the top half
+                temp.set(pixels.subarray(topOffset, topOffset + bytesPerRow));
+                pixels.copyWithin(topOffset, bottomOffset, bottomOffset + bytesPerRow);
+                pixels.set(temp, bottomOffset);
+            }
+            return window.__addImage(pixels, this.encodedVideoFrames);
+        }else {
+            alert("add video? :(")
+        }
+
+        return 0;
     }
+
 
     encodeAudioFrame = () => {
         const frame = this.sound.getEncodingFrame();
-        this.videoEncoder.queueFrame(frame);
+        if(window.__addAudio) {
+            window.__addAudio(frame); 
+        }else {
+            //alert("add audio? :(")
+        }
     }
-
-    saveBlob = (vid) => {
-        const blob = new Blob([vid], { type: 'video/mp4' });
-        FileSaver.saveAs(blob, this.fileName);
-        this.ondone(blob, this.fileName);
-    }    
 }

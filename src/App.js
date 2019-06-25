@@ -9,6 +9,8 @@ import FAQ from "./home/FAQ";
 import SignIn from "./home/SignIn";
 import SignUp from "./home/SignUp";
 import Missing from "./home/Missing";
+import Tutorial from "./home/Tutorial/Tutorial";
+
 import AddProject from "./home/AddProject";
 
 import Forgot from "./home/ForgotPassword";
@@ -40,7 +42,7 @@ class Index extends PureComponent {
                     <Route path="/videos" component={Videos} />
                     <Route path="/projects" component={Projects} />
                     <Route path="/add-project" component={AddProject} />
-
+                    <Route path="/tutorial" component={Tutorial} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/editor" component={AppContainer} />
                     <Route path="/faq" component={FAQ} />

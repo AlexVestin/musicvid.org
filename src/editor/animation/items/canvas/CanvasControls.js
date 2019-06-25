@@ -131,7 +131,6 @@ export function addCanvasControls(parent, ctx, folder,  a = {}) {
             }
         })
 
-        console.log(object.translateX, object.translateY);
         ctx.font = `normal ${object.fontSize}px ${object.fontFamily}`;
         ctx.filter = fltStr;
         ctx.translate(object.translateX, object.translateY);
