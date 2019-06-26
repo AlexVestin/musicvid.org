@@ -1,4 +1,7 @@
 let proc, audioProc;
+let procRunning = false;
+let audioProcRunning = false;
+
 
 function log(text, fs) {
     fs.appendFile("log.txt", text, function(err) {});
@@ -7,11 +10,13 @@ function log(text, fs) {
 let local = true;
 let lastEncodedFrame;
 
-window.__init = config => {
+let output = "";
+window.__init = (config) => {
+    
     if (local) {
+        window.__localExporter = true;
         const { spawn } = require("child_process");
-        const { width, height, fps, name = "outmp3.mp4", sound, preset } = config;
-
+        const { width, height, fps, name = "out.mp4", sound, preset } = config;
         //const proc = spawn('ffmpeg', ['-pix_fmt', 'rgb32', '-s:v', '1280x720', '-f', 'rawvideo', '-i', 'pipe:0', '-framerate', '30', 'output.mp4']);
         const args = [
             "-y",
@@ -31,11 +36,9 @@ window.__init = config => {
             //`${preset}`,
             `output.h264`
         ];
-        alert(args.join(" "));
         proc = spawn("ffmpeg", args);
-
+        procRunning = true;
         proc.stdout.on("data", function(data) {});
-
         proc.stderr.on("data", function(data) {
             const msg = data.toString();
             if (msg.includes("fps")) {
@@ -46,9 +49,18 @@ window.__init = config => {
                         .replace(/\s/g, "")
                 );
             }
+
+            output += "\n" + msg;
         });
 
-        proc.on("exit", function() {
+        proc.on("exit", function(code) {
+            procRunning = false;
+            if(code) {
+                window.__onError(code, output);
+                
+                return;
+            } 
+
             var fs = require("fs");
             let args2 = [
                 "-y",
@@ -69,6 +81,7 @@ window.__init = config => {
             let msg = "";
 
             audioProc = spawn("ffmpeg", args2);
+            audioProcRunning = true;
             const ch0 = sound.bufferSource.buffer.getChannelData(0);
             const ch1 = sound.bufferSource.buffer.getChannelData(1);
 
@@ -94,12 +107,16 @@ window.__init = config => {
                 log(data.toString(), fs);
             });
 
-            audioProc.on("exit", function() {
-                alert("Encoding done, check folder for file");
+            audioProc.on("exit", function(code) {
+                audioProcRunning = false;
+                if(code) {
+                    window.__onError(code, output);
+                    return;
+                } 
                 try {
                     fs.unlinkSync("output.h264");
                 } catch (err) {
-                    alert(err);
+                    window.__onError(-1, "Failed to delete temporary file output.h264")
                 }
             });
         });
@@ -129,5 +146,14 @@ window.__addAudio = audio => {};
 window.__close = () => {
     proc.stdin.end();
 };
+
+window.__cancel = () => {
+    if(procRunning) {
+        proc.kill('SIGINT');    
+    }
+    if (audioProcRunning) {
+        audioProc.kill('SIGINT');
+    }
+}
 
 //<script src="export.js"></script>

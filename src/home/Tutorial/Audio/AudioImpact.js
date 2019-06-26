@@ -311,7 +311,7 @@ export default class AudioImpact extends PureComponent {
                         animation. These values are scaled with the amplitude and don't represent an exact value. 
                         <div style={{marginTop: 10, marginBottom: 10}}>
                             <i>useDeltaSmoothing</i> - Bypasses smoothing if not checked. <br/>
-                            <i>minDeltaNeededToTrigger</i> - Minimum positive delta needed from previous value to allow new value. <i>(multiplied with amplitude to keep scale)</i><br/>
+                            <i>minDeltaNeededToTrigger</i> - Minimum positive delta needed from previous value to allow new value, otherwise decay with deltaDecay. <i>(multiplied with amplitude to keep scale)</i><br/>
                             <i>deltaDecay</i> - Amount to decay with. <i>(multiplied with amplitude to keep scale)</i> <br/>
                         </div>
 

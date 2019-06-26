@@ -18,7 +18,7 @@ export default class Manager extends WebGLManager {
         it3.fontSize = 30;
         it3.fillStyle = "#000000";
         
-        it2.updateDisplay();
-        it3.updateDisplay();
+        it2.folder.updateDisplay();
+        it3.folder.updateDisplay();
     }
 }

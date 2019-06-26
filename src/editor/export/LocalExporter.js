@@ -87,6 +87,8 @@ export default class LocalExporter {
                 if(window.__close) {
                     window.__encodeAudio(this.sound);
                     window.__close();
+                    this.onProgress(1, 1);
+                    this.ondone();
                     this.canceled = true;
                 }else {
                     alert("window.__close ? ")

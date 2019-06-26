@@ -68,9 +68,12 @@ class SimpleDialog extends React.Component {
         if(!this.props.encoding) {
             this.setState({modalOpen: !this.state.modalOpen});
         }else {
+            if (window.__cancel) {
+                window.__cancel();
+            }
             this.props.cancel();
+           
         }
-    
     } 
 
     cancel = () => {
@@ -85,7 +88,6 @@ class SimpleDialog extends React.Component {
         //  Very cool scientific constant that predicts export time
         let timeLeft = (1.55*dt / progress) - dt* (1 + Math.pow(progress, 3));
         if(timeLeft < 0) timeLeft = 0;
-
 
         return (
             <div className={classes.container}>
