@@ -5,6 +5,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { ReactComponent as Delete } from "editor/components/automation/baseline-delete-24px.svg";
 
 import Typography from "./modules/components/Typography";
+import Button from "./modules/components/Button";
+
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import { connect } from "react-redux";
 import { app, base, storage } from "backend/firebase";
@@ -39,14 +41,22 @@ function FolderList(props) {
 
 class ProjectList extends React.PureComponent {
 
-  state = { loaded: false, projects: [], redirectTo: "", modalOpen: false, message: "Loading Projects..." };
-  async getProjects() {
-      const snapshot = await base
-          .collection("users")
-          .doc(app.auth().currentUser.uid)
-          .collection("projects")
-          .get();
-      this.setState({ projects: snapshot.docs.map(doc => doc.data()), loaded: true});
+  state = { loaded: false, projects: [], redirectTo: "", modalOpen: false, message: "Loading Projects...", error: false };
+   getProjects = async () => {
+    this.setState({message: "Loading projects...", error: false});
+    let snapshot;
+      try {
+        snapshot = await base
+        .collection("users")
+        .doc(app.auth().currentUser.uid)
+        .collection("projects")
+        .get();
+      } catch(err) {
+        this.setState({message: "Error ocurred while loading projects.", error: true})
+        return;
+      }
+     
+      this.setState({ projects: snapshot.docs.map(doc => doc.data()), loaded: true, error: false});
   }
 
   componentDidMount() {
@@ -101,7 +111,11 @@ class ProjectList extends React.PureComponent {
           {this.state.projects.length === 0 ?
           <React.Fragment>
           {!this.state.loaded ?
-              <Typography style={{color: c1}} variant="h6">{this.state.message}</Typography>   
+              <div style={{textAlign: "center"}}>
+                <Typography style={{color: c1}} variant="h6">{this.state.message}</Typography>   
+                
+                {this.state.error && <Button color="secondary" onClick={this.getProjects}>Try again</Button>}
+              </div>
               :
               <Typography style={{color: c1}} variant="h6">You don't currently have any projects! You can make a new one in the editor</Typography>   
               }

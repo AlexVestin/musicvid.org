@@ -1,4 +1,4 @@
-import withRoot from "./modules/withRoot";
+import withRoot from "../modules/withRoot";
 // --- Post bootstrap -----
 import React from "react";
 import PropTypes from "prop-types";
@@ -6,33 +6,18 @@ import compose from "recompose/compose";
 import { withStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import { Field, Form, FormSpy } from "react-final-form";
-import Typography from "./modules/components/Typography";
-import AppFooter from "./modules/views/AppFooter";
-import AppAppBar from "./modules/views/AppAppBar";
-import AppForm from "./modules/views/AppForm";
-import { email, required } from "./modules/form/validation";
-import RFTextField from "./modules/form/RFTextField";
-import FormButton from "./modules/form/FormButton";
-import FormFeedback from "./modules/form/FormFeedback";
+import Typography from "../modules/components/Typography";
+import AppForm from "../modules/views/AppForm";
+import { email, required } from "../modules/form/validation";
+import RFTextField from "../modules/form/RFTextField";
+import FormButton from "../modules/form/FormButton";
+import FormFeedback from "../modules/form/FormFeedback";
 import { app, facebookProvider, googleProvider } from "backend/firebase";
-import Snackbar from './Snackbar';
-import Button from "@material-ui/core/Button";
+import Snackbar from '../Snackbar';
 import { setIsAuthenticated } from 'fredux/actions/auth'
-import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 
-const bootstrapButtonStyle = {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 10,
-    boxShadow: "none",
-    color: "white",
-    fontSize: 16,
-    padding: "6px 12px",
-    border: "1px solid",
-    backgroundColor: "#007bff",
-    borderColor: "#007bff"
-};
+
 
 const styles = theme => ({
     form: {
@@ -52,7 +37,6 @@ class SignIn extends React.Component {
         sent: false,
         errorSnackBarOpen: false,
         errorMessage: "" ,
-        redirectTo: ""
     };
 
     constructor() {
@@ -77,7 +61,8 @@ class SignIn extends React.Component {
 
     successRedirect = () => {
         setIsAuthenticated(true);
-        this.setState({redirectTo: "/"})
+        console.log("SUCCESS")
+        this.props.success();
     }
 
     submit = (values, props) => {
@@ -160,17 +145,13 @@ class SignIn extends React.Component {
     } 
 
     render() {
-        const { classes, isAuthenticated } = this.props;
-        const { redirectTo, sent, errorSnackBarOpen, errorMessage } = this.state;
-        
-        if(redirectTo || isAuthenticated) 
-            return <Redirect to={redirectTo}></Redirect>
-
+        const { classes } = this.props;
+        const {  sent, errorSnackBarOpen, errorMessage } = this.state;
+    
 
         return (
             <React.Fragment>
                 <Snackbar open={errorSnackBarOpen} message={errorMessage} handleClose={this.toggleError}></Snackbar>
-                <AppAppBar />
                 <AppForm > 
                     <React.Fragment>
                         <Typography
@@ -184,7 +165,7 @@ class SignIn extends React.Component {
                         <Typography variant="body2" align="center">
                             {"Not a member yet? "}
                             <Link
-                                onClick={() => this.setState({redirectTo: "/sign-up"})}
+                                onClick={this.props.move}
                                 style={{cursor: "pointer"}}
                                 align="center"
                                 underline="always"
@@ -268,7 +249,6 @@ class SignIn extends React.Component {
                         </Link>
                     </Typography>
                 </AppForm>
-                <AppFooter />
             </React.Fragment>
         );
     }

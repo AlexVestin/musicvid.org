@@ -1,4 +1,4 @@
-import withRoot from "./modules/withRoot";
+import withRoot from "../modules/withRoot";
 // --- Post bootstrap -----
 import React from "react";
 import PropTypes from "prop-types";
@@ -6,33 +6,17 @@ import compose from "recompose/compose";
 import { withStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import { Field, Form, FormSpy } from "react-final-form";
-import Typography from "./modules/components/Typography";
-import AppFooter from "./modules/views/AppFooter";
-import AppAppBar from "./modules/views/AppAppBar";
-import AppForm from "./modules/views/AppForm";
-import { email, required } from "./modules/form/validation";
-import RFTextField from "./modules/form/RFTextField";
-import FormButton from "./modules/form/FormButton";
-import FormFeedback from "./modules/form/FormFeedback";
-import Button from "@material-ui/core/Button";
+import Typography from "../modules/components/Typography";
+import AppForm from "../modules/views/AppForm";
+import { email, required } from "../modules/form/validation";
+import RFTextField from "../modules/form/RFTextField";
+import FormButton from "../modules/form/FormButton";
+import FormFeedback from "../modules/form/FormFeedback";
 import { app, facebookProvider, googleProvider } from "backend/firebase";
-import Snackbar from "./Snackbar";
+import Snackbar from "../Snackbar";
 import { connect } from "react-redux";
 import { setIsAuthenticated } from "fredux/actions/auth";
-import { Redirect } from 'react-router-dom'
 
-const bootstrapButtonStyle = {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 10,
-    boxShadow: "none",
-    color: "white",
-    fontSize: 16,
-    padding: "6px 12px",
-    border: "1px solid",
-    backgroundColor: "#007bff",
-    borderColor: "#007bff"
-};
 
 const styles = theme => ({
     form: {
@@ -71,7 +55,7 @@ class SignUp extends React.Component {
 
     successRedirect = (res) => {
         setIsAuthenticated(true);
-        this.setState({ redirectTo: "/" });
+        this.props.success();
     };
 
     authWithGoogle = () => {
@@ -147,9 +131,7 @@ class SignUp extends React.Component {
         const { classes } = this.props;
         const { sent, errorMessage, errorSnackBarOpen } = this.state;
 
-        if(this.state.redirectTo || this.props.isAuthenticated)
-          return <Redirect to={this.state.redirectTo || "/"}></Redirect>
-
+      
         return (
             <React.Fragment>
                 <Snackbar
@@ -157,7 +139,6 @@ class SignUp extends React.Component {
                     message={errorMessage}
                     handleClose={this.toggleError}
                 />
-                <AppAppBar />
                 <AppForm>
                     <React.Fragment>
                         <Typography
@@ -169,7 +150,7 @@ class SignUp extends React.Component {
                             Sign Up
                         </Typography>
                         <Typography variant="body2" align="center">
-                            <Link onClick={() => this.setState({redirectTo: "/sign-in"})}
+                            <Link onClick={this.props.move}
                                 style={{cursor: "pointer"}} underline="always">
                                 Already have an account?
                             </Link>
@@ -236,7 +217,6 @@ class SignUp extends React.Component {
                         )}
                     </Form>
                 </AppForm>
-                <AppFooter />
             </React.Fragment>
         );
     }

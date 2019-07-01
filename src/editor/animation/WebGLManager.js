@@ -28,7 +28,7 @@ export default class WebGLManager {
             this.canvasMountRef = parent.gui.canvasMountRef;
             this.modalRef = parent.gui.modalRef;
             this.parent = parent;
-            setUpFullscreenControls(this.canvasMountRef);
+            setUpFullscreenControls(parent.gui);
         }
 
         // Project settings
@@ -93,12 +93,10 @@ export default class WebGLManager {
         const proj = JSON.parse(json.projectSrc);
         if(proj.overviewFolders) {
             proj.overviewFolders.forEach(fold => {
-                const o = new OverviewGroup(root.__folders["Overview"], fold.id, fold.name);            
-                
+                new OverviewGroup(root.__folders["Overview"], fold.id, fold.name);            
             })
         } 
         
-
         this.__ownerId = json.owner;
         this.__online = json.online;
         Object.assign(this, proj.settings);
@@ -127,6 +125,8 @@ export default class WebGLManager {
         if(this.audio){
             this.setFFTSize(this.fftSize);
         }
+
+        this.parent.toggleAdvancedMode(this.advancedMode);
     }
 
     loadProjectFromFile = () => {
@@ -148,6 +148,7 @@ export default class WebGLManager {
             settings: {}
         };
         projFile.settings = serialize(this);
+        projFile.settings.fftSize = this.audio ? this.audio.fftSize : this.fftSize;
         projFile.automations = this.gui.getAutomations().map(auto => auto.__serialize());
 
         const ov = this.gui.getRoot().__folders["Overview"].__folders;
@@ -395,6 +396,7 @@ export default class WebGLManager {
 
     setFFTSize = size => {
         this.audio.setFFTSize(size);
+        this.fftSize = size;
         this.gui.__folders["Audio"].updateDisplay();
     };
 
@@ -458,7 +460,7 @@ export default class WebGLManager {
     }
 
     toggleAdvancedMode = () => {
-        console.log(this.advancedMode)
+
         this.parent.toggleAdvancedMode(this.advancedMode);
     }
 

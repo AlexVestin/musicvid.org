@@ -7,6 +7,9 @@ import { Redirect } from "react-router-dom";
 
 import AppBar from "../components/AppBar";
 import classNames from "classnames";
+import AccountModal from '../../Account/AccountModal';
+import SignUp from '../../Account/SignUpForm';
+import SignIn from '../../Account/SignInForm';
 
 import Toolbar, { styles as toolbarStyles } from "../components/Toolbar";
 import { Typography } from "@material-ui/core";
@@ -46,16 +49,41 @@ const styles = theme => ({
 });
 
 class AppAppBar extends PureComponent {
-    state = { redirectTo: "" };
+    state = { redirectTo: "", signInOpen: false, signUpOpen: false };
+
+
+    openSignUp = () => {
+        if(window.location.href.indexOf("editor") > 0 ){
+            this.setState({signInOpen: false, signUpOpen: true})
+        } else {
+            this.setState({redirectTo: "/sign-up"})
+        }
+        
+    }
+
+    openSignIn = () => {
+        if(window.location.href.indexOf("editor") > 0 ){
+            this.setState({signInOpen: true, signUpOpen:false})
+        } else {
+            this.setState({redirectTo: "/sign-in"})
+        }
+    }
+
+    close = () => {
+        this.setState({signInOpen: false, signUpOpen: false})
+    }
 
     render() {
         const { classes } = this.props;
-        const { redirectTo } = this.state;
+        const { redirectTo, signInOpen, signUpOpen } = this.state;
         if (redirectTo && window.location.pathname !== redirectTo)
             return <Redirect to={redirectTo} />;
 
         return (
             <div className={classes.container}>
+                <AccountModal open={signInOpen} close={this.close}><SignIn success={this.close} move={this.openSignUp} ></SignIn></AccountModal>
+                <AccountModal open={signUpOpen} close={this.close}><SignUp success={this.close} move={this.openSignIn}></SignUp></AccountModal>
+
                 <AppBar position="fixed">
                     <Toolbar className={classes.toolbar}>
                         <div className={classes.left} />
@@ -77,6 +105,18 @@ class AppAppBar extends PureComponent {
                             ALPHA
                         </Typography>
                         <div className={classes.right}>
+
+                                <Link
+                                color="inherit"
+                                variant="h6"
+                                underline="none"
+                                className={classes.rightLink}
+                                onClick={() =>
+                                    this.setState({ redirectTo: "/projects" })
+                                }
+                            >
+                                {"Projects"}
+                            </Link>
                             <Link
                                 color="inherit"
                                 variant="h6"
@@ -102,29 +142,17 @@ class AppAppBar extends PureComponent {
                             </Link>
                             {!this.props.isAuthenticated ? (
                                 <AuthenticationButtonGroup
-                                    signIn={() =>
-                                        this.setState({
-                                            redirectTo: "/sign-in"
-                                        })
-                                    }
-                                    signUp={() =>
-                                        this.setState({
-                                            redirectTo: "/sign-up"
-                                        })
-                                    }
+                                    signIn={this.openSignIn}
+                                    signUp={this.openSignUp}
                                     projects={() =>
-                                        this.setState({
-                                            redirectTo: "/projects"
-                                        })
+                                        this.setState({ redirectTo: "/projects" })
                                     }
                                     classes={classes}
                                 />
                             ) : (
                                 <ProfileButtonGroup
                                     profile={() =>
-                                        this.setState({
-                                            redirectTo: "/sign-out"
-                                        })
+                                        this.setState({ redirectTo: "/sign-out" })
                                     }
                                     classes={classes}
                                 />

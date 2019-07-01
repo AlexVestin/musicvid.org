@@ -264,7 +264,8 @@ export default class AudioTheory extends PureComponent {
                 </Typography>
 
                 <Typography>
-                    Here can the size, height of the spectrum be configured.
+                    Here can the size, height of the spectrum be configured. These will make more sense in the combineBins description
+                    a bit down.
                     <div className={classes.grid}>
 
                         <div>spectrumSize</div>

@@ -76,8 +76,6 @@ const orthoItems = {
     Meme: {class: Meme},
     OctaveMeatballs: {class: OctaveMeatballs},
     Video: {class: OldVideo},
-    
-
     AudioWave: {class: AudioWave}
 }
 

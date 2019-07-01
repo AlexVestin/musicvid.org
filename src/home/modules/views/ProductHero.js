@@ -69,7 +69,7 @@ class ProductHero extends React.PureComponent {
                     onClick={() => this.setState({redirectTo: "/editor"})}
          
                 >
-                    Open empty template
+                    {" "}Open empty project {" "}
                 </Button>
 
                 <Button

@@ -5,7 +5,7 @@ import * as Stats from 'stats.js'
 export default class Canvas extends PureComponent {
     constructor() {
         super();
-        this.state = {aspectRatio: 1920 / 1080, width: 640, height: 480, scaleFactor: 0.5}; 
+        this.state = {aspectRatio: 1920 / 1080, width: 640, height: 480, scaleFactor: 0.5, inFullscreen: false}; 
         this.height = 500;
         
         
@@ -30,8 +30,22 @@ export default class Canvas extends PureComponent {
         this.stats.dom.style.position = "absolute";
         this.stats.dom.style.zIndex = "0";
         this.stats.dom.style.display = "none";
-
     }
+
+    getContainerRef = () => this.containerRef.current;
+    
+    toggleFullscreen = (inFullscreen) => {
+        this.setState({inFullscreen}, () => {
+            if(!inFullscreen) {
+                this.setSize(this.internalResolution);
+            } else {
+                this.canvasRef.current.style.transform = "";
+            }
+
+        })
+    }
+
+    
 
     setSize = (res) => {
         const c = this.canvasRef.current; 
@@ -43,6 +57,7 @@ export default class Canvas extends PureComponent {
             scaleFactor = 0.6;
         }
 
+        this.internalResolution = res;
         c.style.transform = `scale(${scaleFactor})`;
         this.setState({width: res.width * scaleFactor, height: res.height * scaleFactor})
     }
@@ -57,6 +72,10 @@ export default class Canvas extends PureComponent {
                 <div ref={this.canvasRef2} className={classes.canvasMount} style={{width: width, height: height}}>
                     <canvas className={classes.canvas}  ref={this.canvasRef} ></canvas>
                 </div>
+
+                
+
+
             </div>
         )
     }

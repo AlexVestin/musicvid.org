@@ -3,13 +3,14 @@ import Home from "./home/Home";
 import Downloads from "./home/Downloads";
 import Videos from "./home/Videos";
 import Projects from "./home/Community";
-import Profile from "./home/Profile";
+import Profile from "./home/Account/Profile";
 import AppContainer from "./editor/App";
 import FAQ from "./home/FAQ";
-import SignIn from "./home/SignIn";
-import SignUp from "./home/SignUp";
+import SignIn from "./home/Account/SignIn";
+import SignUp from "./home/Account/SignUp";
 import Missing from "./home/Missing";
 import Tutorial from "./home/Tutorial/Tutorial";
+import ErrorComponent from "./home/Error";
 
 import AddProject from "./home/AddProject";
 
@@ -38,6 +39,7 @@ class Index extends PureComponent {
                     <Route path="/" exact component={Home} />
                     <Route path="/index.html" exact component={Home} />
                     <Route path="/home" component={Home} />
+                    <Route path="/error" component={ErrorComponent} />
                     <Route path="/downloads" component={Downloads} />
                     <Route path="/videos" component={Videos} />
                     <Route path="/projects" component={Projects} />

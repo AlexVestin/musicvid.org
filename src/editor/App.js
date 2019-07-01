@@ -15,14 +15,14 @@ import { base } from "backend/firebase";
 import { connect } from "react-redux";
 import WaveCanvas from "./WaveCanvas";
 import OverviewgGroup from "./OverviewGroup";
-import Error from './Error';
+import { setFatalError } from "fredux/actions/error";
+import { Redirect } from "react-router-dom";
 
 class App extends PureComponent {
     constructor() {
         super();
         this.gui = new dat.GUI({ autoPlace: false, width: "100%" });
         this.overviewFolder = this.gui.addFolder("Overview", false);
-
 
         this.layersFolder = this.gui.addFolder("Layers", false);
         this.audioFolder = this.gui.addFolder("Audio", false);
@@ -40,11 +40,11 @@ class App extends PureComponent {
             progress: 0,
             encoding: false,
             doneEncoding: false,
-            advanced: false,
+            advanced: false
         };
 
-        this.firstLoad = true; 
-        this.fastLoad = false;
+        this.firstLoad = true;
+        this.fastLoad = true;
         this.timeOffset = 0;
 
         this.trackRef = React.createRef();
@@ -61,44 +61,57 @@ class App extends PureComponent {
         return this.modalRef.current.toggleModal(1, true).then(this.onSelect);
     };
 
-    toggleAdvancedMode = (advanced) => {
+    toggleAdvancedMode = advanced => {
         if (advanced) {
             this.addOverviewFolderButton = this.overviewFolder
-                .addWithMeta(this, "addFolderToOverview", {}, {first: true})
+                .addWithMeta(this, "addFolderToOverview", {}, { first: true })
                 .name("Add group")
                 .disableAll();
         } else {
             try {
                 this.overviewFolder.remove(this.addOverviewFolderButton);
-            }catch(err){};
-            
+            } catch (err) {}
         }
-        
+
         this.gui.toggleAdvancedMode(advanced);
-        this.setState({advanced})
-    }
+        this.setState({ advanced });
+    };
 
     async loadProject(uid) {
-        return await base
-            .collection("projects")
-            .doc(uid)
-            .get();
+        let proj;
+        try {
+            proj = await base
+                .collection("projects")
+                .doc(uid)
+                .get();
+        } catch (err) {
+
+            console.log("FATAL ERROR FFS")
+            setFatalError({
+                code: -1,
+                message:
+                    "Project doesn't exist or you have insufficient permissions",
+                title: "Error fetching project"
+            });
+            this.setState({ redirectTo: "/error" });
+            return;
+        }
+
+        return proj;
     }
 
     clearOverviewFolder = () => {
-        const _of = this.gui.__folders["Overview"]; 
+        const _of = this.gui.__folders["Overview"];
 
-        _of.__controllers.forEach(c =>  {
-                _of.remove(c);
-                delete _of.__controllers[c.__id];            
-            }
-        )
+        _of.__controllers.forEach(c => {
+            _of.remove(c);
+            delete _of.__controllers[c.__id];
+        });
         Object.values(_of.__folders).forEach(f => {
             _of.removeFolder(f);
             delete _of.__folders[f.__id];
         });
-
-    }
+    };
 
     initFromProjectFile = projectFile => {
         this.resolution = {
@@ -107,14 +120,10 @@ class App extends PureComponent {
         };
         this.canvasRef.current.setSize(this.resolution);
 
-        
-        
         this.animationManager.init(this.resolution);
         this.animationManager.loadProject(projectFile);
         this.loadNewAudioFile();
         this.setState({ shouldLoadProject: false });
-
-        console.log("INIT")
     };
 
     async componentWillReceiveProps(props) {
@@ -122,7 +131,9 @@ class App extends PureComponent {
             const url = new URL(window.location.href);
             const project = url.searchParams.get("project");
             let projectFile = await this.loadProject(project);
-            this.initFromProjectFile(projectFile.data());
+            if (projectFile) {
+                this.initFromProjectFile(projectFile.data());
+            }
         }
     }
 
@@ -138,6 +149,8 @@ class App extends PureComponent {
 
         this.gui.modalRef = this.modalRef.current;
         this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
+        this.gui.canvasContainerRef = this.canvasRef.current.getContainerRef();
+        this.gui.toggleFullscreen = this.canvasRef.current.toggleFullscreen;
 
         const url = new URL(window.location.href);
         const template = url.searchParams.get("template") || "EmptyTemplate";
@@ -153,7 +166,9 @@ class App extends PureComponent {
 
                 if (project && !this.props.authFetching) {
                     projectFile = await this.loadProject(project);
-                    this.initFromProjectFile(projectFile.data());
+                    if (projectFile) {
+                        this.initFromProjectFile(projectFile.data());
+                    }
                 } else if (project && this.props.authFetching) {
                     this.setState({ shouldLoadProject: true });
                 } else {
@@ -163,7 +178,10 @@ class App extends PureComponent {
         );
     };
 
-    onExportError = (code, messgae) => {};
+    onExportError = (code, message) => {
+        setFatalError({ code, message });
+        this.setState({ redirectTo: "/error" });
+    };
 
     toggleMuted = () => {
         this.audio.toggleMuted();
@@ -406,11 +424,15 @@ class App extends PureComponent {
     };
     render() {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
-        const { progress, fileName } = this.state;
+        const { progress, fileName, redirectTo } = this.state;
 
         const loadProject = this.animationManager
             ? this.animationManager.loadProject
             : null;
+
+        if (redirectTo) {
+            return <Redirect to={redirectTo} />;
+        }
 
         return (
             <div className={classes.container}>
@@ -422,28 +444,19 @@ class App extends PureComponent {
                     />
                 }
 
-                {this.state.encoding ? 
-
+                {this.state.encoding ? (
                     <React.Fragment>
-                        {!this.state.error ? 
-
-                            <ExportScreen
-                                encoding={this.state.doneEncoding}
-                                cancel={this.cancelEncoder}
-                                progress={progress}
-                                blobFile={this.file}
-                                fileName={fileName}
-                                items={this.__items}
-                                usingSampleAudio={this.usingSampleAudio}
-                            />:
-                        <Error
-                            code={this.state.code}
-                            messgae={this.state.messgae}
-                        ></Error> 
-                    }
-
+                        <ExportScreen
+                            encoding={this.state.doneEncoding}
+                            cancel={this.cancelEncoder}
+                            progress={progress}
+                            blobFile={this.file}
+                            fileName={fileName}
+                            items={this.__items}
+                            usingSampleAudio={this.usingSampleAudio}
+                        />
                     </React.Fragment>
-                    : 
+                ) : (
                     <React.Fragment>
                         {disabled && (
                             <LinearProgress
@@ -492,7 +505,7 @@ class App extends PureComponent {
                             </TrackContainer>
                         </div>
                     </React.Fragment>
-                }
+                )}
             </div>
         );
     }

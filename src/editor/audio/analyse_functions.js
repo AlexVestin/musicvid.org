@@ -185,7 +185,6 @@ export function exponentialTransform(array, object) {
         var exp =
             (spectrumMaxExponent - spectrumMinExponent) * (1 - Math.pow(i / spectrumSize, spectrumExponentScale)) + spectrumMinExponent;
 
-        console.log(i, exp, array[i], spectrumHeight, array[i] / spectrumHeight);
         newArr[i] = Math.max(
             Math.pow(array[i] / spectrumHeight, exp) * spectrumHeight,
             0.1

@@ -1,11 +1,11 @@
-import withRoot from "./modules/withRoot";
+import withRoot from "../modules/withRoot";
 // --- Post bootstrap -----
 import React from "react";
-import Typography from "./modules/components/Typography";
-import LayoutBody from "./modules/components/LayoutBody";
-import AppAppBar from "./modules/views/AppAppBar";
-import AppFooter from "./modules/views/AppFooter";
-import Button from "./modules/components/Button";
+import Typography from "../modules/components/Typography";
+import LayoutBody from "../modules/components/LayoutBody";
+import AppAppBar from "../modules/views/AppAppBar";
+import AppFooter from "../modules/views/AppFooter";
+import Button from "../modules/components/Button";
 import { Redirect } from 'react-router-dom'
 
 class Profile extends React.PureComponent {
