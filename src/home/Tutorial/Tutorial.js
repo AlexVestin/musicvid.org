@@ -32,7 +32,7 @@ export default class Tutorial extends PureComponent {
                             component={Automations}
                         />
                         <Route
-                            path="/tutorial/export"
+                            path="/tutorial/exporting"
                             exact
                             component={Export}
                         />

@@ -8,13 +8,16 @@ import PerspectiveScene from "./scenes/PerspectiveScene";
 import PostProcessing from "./postprocessing/postprocessing";
 import * as FileSaver from "file-saver";
 import serialize from './Serialize'
-import { base, app, storage } from 'backend/firebase'
+import { base, app } from 'backend/firebase'
 import PointAutomation from './automation/PointAutomation'
 import InputAutomation from './automation/InputAutomation'
 import ImpactAutomation from './automation/AudioReactiveAutomation'
 import uuid from 'uuid/v4'
-import { takeScreenShot } from 'editor/util/FlipImage'
+//import { takeScreenShot } from 'editor/util/FlipImage'
 //import MockWebGLManager from './MockWebGLManager'
+
+import OverviewGroup from '../OverviewGroup'
+
 import { setUpFullscreenControls } from './FullscreenUtils'
 export default class WebGLManager {
     constructor(parent) {
@@ -27,8 +30,9 @@ export default class WebGLManager {
             this.parent = parent;
             setUpFullscreenControls(this.canvasMountRef);
         }
-        
+
         // Project settings
+        this.advancedMode = false;
         this.inFullScreen = false;
         this.clearColor = "#000000";
         this.clearAlpha = 1.0;
@@ -41,6 +45,7 @@ export default class WebGLManager {
         this.__projectName  = "ProjectName";
         this.__lastEdited = new Date().toString();
         this.availablePublic = false;
+        
 
         // Redraw animations settings
         this.__lastTime = 0;
@@ -81,19 +86,15 @@ export default class WebGLManager {
             this.renderer.dispose();
         }
 
-        const root = this.gui.getRoot();
-        try {
-            Object.values(root.__folders["Overview"].__folders).forEach(f => f.parent.removeFolder(f));
-        } catch(err) {}
-      
+        const root = this.gui.getRoot();      
+        this.parent.clearOverviewFolder();
         root.__automations = [];
 
         const proj = JSON.parse(json.projectSrc);
         if(proj.overviewFolders) {
             proj.overviewFolders.forEach(fold => {
-                const f = this.gui.getRoot().__folders["Overview"].addFolder(fold.id);
-                f.name = fold.name;
-                f.__id = fold.id;
+                const o = new OverviewGroup(root.__folders["Overview"], fold.id, fold.name);            
+                
             })
         } 
         
@@ -199,14 +200,14 @@ export default class WebGLManager {
             const allRef = base.collection("projects").doc(this.__id);
             const p2 = allRef.set(this.getProjectConfig(projFile, myId));
             
-            let p3;
+            /*let p3;
             if(!this.__online) {
                 this.redoUpdate();
                 const blob = takeScreenShot(this.canvas);
                 p3 = storage.ref().child(this.__id).put(blob)
-            }
+            }*/
             
-            Promise.all([p1, p2, p3]).then(() => {
+            Promise.all([p1, p2]).then(() => {
                 alert("Saved to profile");
                 window.history.pushState({}, null, "/editor?project=" + this.__id);
                 this.__online = true;
@@ -456,6 +457,11 @@ export default class WebGLManager {
         this.scenes.push(effect);
     }
 
+    toggleAdvancedMode = () => {
+        console.log(this.advancedMode)
+        this.parent.toggleAdvancedMode(this.advancedMode);
+    }
+
     setUpRenderers = (setUpFolders = true) => {
         this.setUpRenderer();
           
@@ -485,7 +491,9 @@ export default class WebGLManager {
             ps.add(this, "__projectName").name("Project name").disableAll();
             ps.add(this, "availablePublic").name("Project available to public").disableAll();
             ps.add(this, "loadProjectFromFile").disableAll();
-            ps.add(this, "createThumbnail").disableAll();
+            //ps.add(this, "createThumbnail").disableAll();
+            ps.add(this, "advancedMode").onChange(this.toggleAdvancedMode).disableAll();
+            
             ps.add(this, "saveProjectToFile").disableAll();
             ps.add(this, "saveProjectToProfile").disableAll();
         }
@@ -546,7 +554,10 @@ export default class WebGLManager {
         });
         this.gui.getRoot().getAutomations().forEach(auto => auto.stop())
 
-        this.renderer.clear();
+        if(this.renderer) {
+            this.renderer.clear();
+        }
+        
     };
 
     redoUpdate = () => {

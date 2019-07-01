@@ -5,7 +5,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { withStyles } from "@material-ui/core/styles";
-import { storage } from 'backend/firebase'
+//import { storage } from 'backend/firebase'
 import { Typography } from "@material-ui/core";
 
 const styles = theme => ({
@@ -46,10 +46,10 @@ class ScrollDialog extends React.Component {
         const img = this.canvasRef.current.toDataURL("image/jpeg", 0.88);
         this.setState({message: "Uploading..."});
         const imgBlob = dataURLtoBlob(img);
-        storage.ref().child(this.props.manager.__id).put(imgBlob).then(() => {
+        /*storage.ref().child(this.props.manager.__id).put(imgBlob).then(() => {
             this.setState({message: "Uploaded! closing modal"})
            setTimeout(() => this.props.onSelect(), 1000);
-        });
+        });*/
     }
 
     onLoad = () => {};

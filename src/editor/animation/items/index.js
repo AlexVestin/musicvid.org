@@ -18,6 +18,8 @@ import SpriteText from './ortho/SpriteText'
 import Meme from './ortho/Meme'
 import Video from './ortho/Video'
 import Line from './ortho/Line'
+import OctaveMeatballs from './ortho/OctaveMeatballs'
+
 
 import OldVideo from './ortho/OldVideo'
 
@@ -72,7 +74,7 @@ const orthoItems = {
     TimeRep: {authors: "GamleGaz", class: TimeRep, img: "img/items/AudioWaveItem.png"},
     SpriteText: {class: SpriteText, img: "img/items/SpriteText.png"},
     Meme: {class: Meme},
-
+    OctaveMeatballs: {class: OctaveMeatballs},
     Video: {class: OldVideo},
     
 

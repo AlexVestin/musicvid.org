@@ -3,7 +3,6 @@ import Typography from "../../modules/components/Typography";
 import LayoutBody from "../../modules/components/LayoutBody";
 import classes from "./AudioTheory.module.css";
 import Sound from "editor/audio/Sound";
-import WaveCanvas from "editor/WaveCanvas";
 import {Link} from 'react-router-dom'
 import eq from './eq.PNG';
 import * as dat from 'editor/dat.gui.src';
@@ -320,11 +319,9 @@ export default class AudioTheory extends PureComponent {
                 <Typography className={classes.item}>
                     We don't want to use all the thousands of bins that the analyser spits when it transforms 
                     the audio data to frequency data. Instead we pick out <i>spectrumSize</i> number of bins 
-                    from these. How we pick these values are determined by the <i>spectrumStart, spectrumEnd & 
+                    from these. How we pick these values is determined by the <i>spectrumStart, spectrumEnd & 
                     spectrumScale</i>.
 
-
-    
                     <div style={{marginTop: 20}}>
                     A linear representation doesn't look as good as a logarithmic. What does that mean?
                     if we look at FL Studio 12's Fruity Parametric EQ 2:
@@ -334,19 +331,32 @@ export default class AudioTheory extends PureComponent {
                         <img src={eq} alt="Parametric EQ"/>  
                     </div>
                     <div style={{marginTop: 15}}>
-                    we can see that the bottom 500Hz of frequencies take up as more space than 
+                    we can see that the bottom 500Hz of frequencies take up more space than 
                     the rest of the 19000+ frequencies. This is because it is using a logarithmic 
-                    scale which is more closely matched to our perception of the sound spectrum. 
+                    scale, which is more closely matched to our perception of the sound spectrum. 
                      
                     </div>
 
-                    <Typography>
-                        A green line represents where a bin is grabbed from.
+                    <Typography style={{marginTop: 10}}>
+                    
+                        I put together a demo to showcase how the bins are chosen from the range. 
+                        Below is the frequency data, but note that it only displays the bins from <i>spectrumStart</i>
+                        to <i>spectrumEnd</i>. A green line represents which bins are grabbed to be used.
                     </Typography>
                     <div style={{marginTop: 15, marginBot: 10}}>
                         <button onClick={this.play}>play</button>
                         <button onClick={this.stop}>stop</button>
                     </div>
+
+                    <div>
+                            window size:
+                            <select onChange={this.setfftSize}>
+                                <option>16384</option>
+                                <option>8192</option>
+                                <option>4096</option>
+                                <option>2048</option>
+                            </select>
+                        </div>
                     <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
                         <Mount width="33%" gui={this.gui.__folders["General settings"]}></Mount>
                         <canvas style={{width: "66%", height: 400}} ref={this.frequencyCanvasRef}/>
@@ -368,7 +378,9 @@ export default class AudioTheory extends PureComponent {
                         style={{ marginTop: 15 }}
                         className={classes.item}
                     >
-                        And we already have something that looks a lot better.
+                        And we already have something that looks a lot better. An important thing to note is to 
+                        remember to scale the <i>spectrumStart</i> and <i>spectrumEnd</i> with the window size. 
+                        
                         <br/>
                         <br/>
 

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Link from "@material-ui/core/Link";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom'
+import { Redirect } from "react-router-dom";
 
 import AppBar from "../components/AppBar";
 import classNames from "classnames";
@@ -77,14 +77,6 @@ class AppAppBar extends PureComponent {
                             ALPHA
                         </Typography>
                         <div className={classes.right}>
-                        <Link
-                                    variant="h6"
-                                    underline="none"
-                                    className={classNames(classes.rightLink)}
-                                    onClick={ () => this.setState({ redirectTo: "/projects" })}
-                                >
-                                    {"Community projects"}
-                                </Link>
                             <Link
                                 color="inherit"
                                 variant="h6"
@@ -108,29 +100,35 @@ class AppAppBar extends PureComponent {
                             >
                                 {"help"}
                             </Link>
-                            {!this.props.isAuthenticated ?
-                               <AuthenticationButtonGroup
-                               signIn={() =>
-                                   this.setState({ redirectTo: "/sign-in" })
-                               }
-                               signUp={() =>
-                                   this.setState({ redirectTo: "/sign-up" })
-                               }
-                               projects={() =>
-                                this.setState({ redirectTo: "/projects" })
-                            }
-                               classes={classes}
-                           />:
-                           <ProfileButtonGroup
-                               
-                               profile={() =>
-                                   this.setState({ redirectTo: "/sign-out" })
-                               }
-                               classes={classes}
-                           />
-                            }
-
-                           
+                            {!this.props.isAuthenticated ? (
+                                <AuthenticationButtonGroup
+                                    signIn={() =>
+                                        this.setState({
+                                            redirectTo: "/sign-in"
+                                        })
+                                    }
+                                    signUp={() =>
+                                        this.setState({
+                                            redirectTo: "/sign-up"
+                                        })
+                                    }
+                                    projects={() =>
+                                        this.setState({
+                                            redirectTo: "/projects"
+                                        })
+                                    }
+                                    classes={classes}
+                                />
+                            ) : (
+                                <ProfileButtonGroup
+                                    profile={() =>
+                                        this.setState({
+                                            redirectTo: "/sign-out"
+                                        })
+                                    }
+                                    classes={classes}
+                                />
+                            )}
                         </div>
                     </Toolbar>
                 </AppBar>
@@ -141,29 +139,25 @@ class AppAppBar extends PureComponent {
 }
 
 const ProfileButtonGroup = function(props) {
-  const { classes } = props;
-  return (
-      <React.Fragment>
-
-           
-
-          <Link
-              variant="h6"
-              underline="none"
-              className={classNames(classes.rightLink, classes.linkSecondary)}
-              onClick={props.profile}
-          >
-              {"Sign out"}
-          </Link>
-      </React.Fragment>
-  )
-}
+    const { classes } = props;
+    return (
+        <React.Fragment>
+            <Link
+                variant="h6"
+                underline="none"
+                className={classNames(classes.rightLink, classes.linkSecondary)}
+                onClick={props.profile}
+            >
+                {"Sign out"}
+            </Link>
+        </React.Fragment>
+    );
+};
 
 const AuthenticationButtonGroup = function(props) {
     const { classes } = props;
     return (
         <React.Fragment>
-
             <Link
                 color="inherit"
                 variant="h6"

@@ -28,8 +28,6 @@ const tutorials = [
 export default class Audio extends PureComponent {
     render() {
         return (
-
-
             <div>
                 <LayoutBody margin marginBottom>
 
@@ -63,7 +61,7 @@ export default class Audio extends PureComponent {
                     behind the analyser, or why settings appear as they do you can skip the first part and 
                     go straight to the impact analyser tutorial.
                 </Typography>
-                {tutorials.map(tut => {
+                    {tutorials.map(tut => {
                         return (
                             <div key={tut.path} className={classes.tutorialContainer}>
                                 <Link

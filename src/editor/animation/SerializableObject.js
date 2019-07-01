@@ -60,6 +60,15 @@ export default class SerializableObject {
         return obj;
     };
 
+    addControllerWithMeta = (gui, object, name, params, meta) => {
+        const c = gui.addWithMeta(object, name, {}, meta);
+        const n = params.path ? params.path + ":" + name : name;
+        c.__path = n;
+        c.__parentObject = this;
+        this.__controllers[n] = c;
+        return c;
+    }
+
     addController = (gui, object, name, arg1 = null, arg2 = null, arg3 = null) => {
         let options = {};
         if (arg2) {

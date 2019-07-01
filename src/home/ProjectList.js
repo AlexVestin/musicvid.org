@@ -65,15 +65,7 @@ class ProjectList extends React.PureComponent {
 
   handleRemove = async (project) => {
 
-    let p4;
-    try {
-      await storage.ref().child(project.id).getDownloadURL();
-      p4 = storage.ref().child(project.id).delete();
-    }catch (err) {
-      p4 = null;
-    }
-
-    
+   
     const p1 = base.collection("users")
       .doc(app.auth().currentUser.uid)
       .collection("projects")
@@ -83,7 +75,7 @@ class ProjectList extends React.PureComponent {
     const p2 = base.collection("projects").doc(project.id).delete();
     const p3 = base.collection("featured").doc("all").collection("projects").doc(project.id).delete();
   
-    Promise.all([p1, p2, p3, p4]).then(() => {
+    Promise.all([p1, p2, p3]).then(() => {
       const projects = [...this.state.projects].filter(p => p.id !== project.id);
       this.setState({projects, loaded: true, project: null, modalOpen: false})
     })

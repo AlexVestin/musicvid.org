@@ -114,6 +114,8 @@ export default class ControllerContainer extends PureComponent {
         const bg = nav === 0 ? selectedColor : "";
         const c = nav === 0 ? "#FFF" : "";
 
+        const w = this.props.advanced ? "16.67%" : "25%";
+
         return (
             <div className={classes.container}>
                 <div className={classes.wrapper}>
@@ -128,6 +130,7 @@ export default class ControllerContainer extends PureComponent {
                             <button
                                 onClick={() => this.setState({ nav: 1 })}
                                 style={{
+                                    width: w,
                                     backgroundColor:
                                         nav === 1 ? selectedColor : "",
                                     color: nav === 1 ? "#FFF" : ""
@@ -145,13 +148,15 @@ export default class ControllerContainer extends PureComponent {
                                 <div
                                     onClick={() => this.setState({ index: 0 })}
                                     style={{
+                                        width: w,
                                         backgroundColor:
                                             index === 0 ? selectedColor : ""
                                     }}
                                 >
-                                    Overview
+                                    overview
                                 </div>
-                                <div
+                                
+                                {this.props.advanced && <React.Fragment><div
                                     onClick={() => this.setState({ index: 1 })}
                                     style={{
                                         backgroundColor:
@@ -160,18 +165,24 @@ export default class ControllerContainer extends PureComponent {
                                 >
                                     layers
                                 </div>
+
+                                
                                 <div
                                     onClick={() => this.setState({ index: 2 })}
                                     style={{
+                                        width: w,
                                         backgroundColor:
                                             index === 2 ? selectedColor : ""
                                     }}
                                 >
                                     automations
                                 </div>
+                                </React.Fragment>
+                                }
                                 <div
                                     onClick={() => this.setState({ index: 3 })}
                                     style={{
+                                        width: w,
                                         backgroundColor:
                                             index === 3 ? selectedColor : ""
                                     }}
@@ -181,6 +192,7 @@ export default class ControllerContainer extends PureComponent {
                                 <div
                                     onClick={() => this.setState({ index: 4 })}
                                     style={{
+                                        width: w,
                                         backgroundColor:
                                             index === 4 ? selectedColor : ""
                                     }}
@@ -190,6 +202,7 @@ export default class ControllerContainer extends PureComponent {
                                 <div
                                     onClick={() => this.setState({ index: 5 })}
                                     style={{
+                                        width: w,
                                         backgroundColor:
                                             index === 5 ? selectedColor : ""
                                     }}

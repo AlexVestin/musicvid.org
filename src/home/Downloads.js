@@ -63,7 +63,7 @@ function Terms() {
 
 
             <Typography style={{textAlign:"center", marginTop: 40}} variant="h4">
-                How to install
+                How to install & info
             </Typography>
                 <ol>
                     <FAQItem title="Download and extract the zipped files">
@@ -72,7 +72,7 @@ function Terms() {
                     </FAQItem>
 
                     <FAQItem title="Run the musicvid.org file">
-                        On Windows just open and double click the file, on linux run /path/to/musicvid.org
+                        On Windows just open and double click the <i>musicvid.org</i> file, on linux run /path/to/musicvid.org
                     </FAQItem>   
 
                     <FAQItem title="Use the client like you would on the web">
@@ -80,6 +80,20 @@ function Terms() {
                     </FAQItem>   
                     
                 </ol>
+
+                <ul style={{marginTop: 30}}>
+                    <li>
+                        <Typography>The program gets throttled when minimized, so keep it open when you export.</Typography>
+                    </li>
+                    
+                    <li>
+                        <Typography>It automatically uses the default bitrate (chosen by the encoder) and preset.</Typography>
+                    </li>
+
+                    <li>
+                        <Typography>Exported videos are found in the same folder as the <i>musicvid.org</i> file.</Typography>
+                    </li>
+                </ul>
 
                 <Typography style={{textAlign:"center", marginTop: 40, color: "red"}} variant="h4">
                     Disclaimer

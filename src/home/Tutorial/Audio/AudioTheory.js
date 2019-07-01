@@ -199,7 +199,7 @@ export default class AudioTheory extends PureComponent {
 
                 <Typography>
                     There are two main ways to repesent audio viusally; either
-                    using the <b>time domain</b> or the <b>frequency domain</b>.
+                    using the <b>time</b> or <b>frequency</b> representation.
                     You have probably seen these before, either in a DAW,
                     youtube video or on a stereo.
                     <div
@@ -224,7 +224,7 @@ export default class AudioTheory extends PureComponent {
                                     src="/time.mp4"
                                 />
                             </video>
-                            <i>Time domain</i>
+                            <i>Time</i>
                         </div>
 
                         <div
@@ -241,7 +241,7 @@ export default class AudioTheory extends PureComponent {
                                     src="/bars.mp4"
                                 />
                             </video>
-                            <i>Frequency domain</i>
+                            <i>Frequency</i>
                         </div>
                     </div>
                     <div style={{ marginTop: 15 }}>
@@ -354,7 +354,7 @@ export default class AudioTheory extends PureComponent {
                         transform the time data. This is done by using the
                         Fourier transform. The Fourier transform is out of scope
                         for this tutorial, but 3Blue1Brown has a great{" "}
-                        <a href="https://www.youtube.com/watch?v=spUNpyF58BY&t=884s">
+                        <a href="https://www.youtube.com/watch?v=spUNpyF58BY">
                             video
                         </a>{" "}
                         on the subject. We send the windowed audio data to the

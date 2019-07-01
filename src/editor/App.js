@@ -22,10 +22,7 @@ class App extends PureComponent {
         super();
         this.gui = new dat.GUI({ autoPlace: false, width: "100%" });
         this.overviewFolder = this.gui.addFolder("Overview", false);
-        this.overviewFolder
-            .add(this, "addFolderToOverview")
-            .name("Add group")
-            .disableAll();
+
 
         this.layersFolder = this.gui.addFolder("Layers", false);
         this.audioFolder = this.gui.addFolder("Audio", false);
@@ -42,10 +39,11 @@ class App extends PureComponent {
             loaded: false,
             progress: 0,
             encoding: false,
-            doneEncoding: false
+            doneEncoding: false,
+            advanced: false,
         };
 
-        this.firstLoad = true;
+        this.firstLoad = true; 
         this.fastLoad = false;
         this.timeOffset = 0;
 
@@ -63,11 +61,43 @@ class App extends PureComponent {
         return this.modalRef.current.toggleModal(1, true).then(this.onSelect);
     };
 
+    toggleAdvancedMode = (advanced) => {
+        if (advanced) {
+            this.addOverviewFolderButton = this.overviewFolder
+                .addWithMeta(this, "addFolderToOverview", {}, {first: true})
+                .name("Add group")
+                .disableAll();
+        } else {
+            try {
+                this.overviewFolder.remove(this.addOverviewFolderButton);
+            }catch(err){};
+            
+        }
+        
+        this.gui.toggleAdvancedMode(advanced);
+        this.setState({advanced})
+    }
+
     async loadProject(uid) {
         return await base
             .collection("projects")
             .doc(uid)
             .get();
+    }
+
+    clearOverviewFolder = () => {
+        const _of = this.gui.__folders["Overview"]; 
+
+        _of.__controllers.forEach(c =>  {
+                _of.remove(c);
+                delete _of.__controllers[c.__id];            
+            }
+        )
+        Object.values(_of.__folders).forEach(f => {
+            _of.removeFolder(f);
+            delete _of.__folders[f.__id];
+        });
+
     }
 
     initFromProjectFile = projectFile => {
@@ -76,10 +106,15 @@ class App extends PureComponent {
             height: projectFile.height
         };
         this.canvasRef.current.setSize(this.resolution);
+
+        
+        
         this.animationManager.init(this.resolution);
         this.animationManager.loadProject(projectFile);
         this.loadNewAudioFile();
         this.setState({ shouldLoadProject: false });
+
+        console.log("INIT")
     };
 
     async componentWillReceiveProps(props) {
@@ -433,6 +468,7 @@ class App extends PureComponent {
                                 loaded={this.state.videoLoaded}
                                 firstLoad={this.firstLoad}
                                 loadProject={loadProject}
+                                advanced={this.state.advanced}
                             />
                             <Canvas ref={this.canvasRef} />
                         </div>

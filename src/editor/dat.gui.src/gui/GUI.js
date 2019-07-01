@@ -543,12 +543,37 @@ common.extend(
       );
     },
 
+    addWithMeta: function(object, property, params, meta) {
+      return add(
+        this,
+        object,
+        property,
+        {
+          factoryArgs: Object.keys(params).map(k => params[k]),
+          object:  Object.keys(params).map(k => params[k])
+        },
+        meta
+      );
+    },
+
     getAutomations: function() {
       const autos = this.getRoot().__automations;
-      console.log(this.getRoot(), this.getRoot().__automations);
       return Object.keys(autos).map(key => autos[key]);
     },
 
+    toggleAdvancedMode: function(on) {
+
+      this.__folders["Overview"].__controllers.forEach(c => c.hideRemoveButton(on));
+      const f = this.__folders["Overview"].__folders; 
+      Object.values(f).forEach(folder =>  {
+        folder.__controllers.forEach(c => c.hideRemoveButton(on))
+        folder.__hide();
+      }
+      )
+    },
+
+    
+ 
     addUndoItem: function(item) {
      
     },
@@ -955,7 +980,7 @@ function addRow(gui, newDom, liBefore) {
 
 
   if (liBefore) {
-    gui.__ul.insertBefore(li, gui.__ul.lastChild);
+    gui.__ul.insertBefore(li, liBefore);
    
   } else {
     gui.__ul.appendChild(li);
@@ -1246,19 +1271,20 @@ export function copyController(options) {
       g.remove();
     }
 
+    g.removeButton = removeButton;
+
     g.name(options.name);
     item.__subControllers.push(g);
   }
-
 }
 
-function add(gui, object, property, params) {
+function add(gui, object, property, params, meta = {}) {
   if (object[property] === undefined) {
     throw new Error(`Object "${object}" has no property "${property}"`);
   }
 
   let controller, innerHTMLName;
-  // very good code to use name instead of 
+  // very good code to use name instead of other thing
   if(params.factoryArgs && params.factoryArgs[0] && params.factoryArgs[0].name) {
       innerHTMLName = params.factoryArgs[0].name;
 
@@ -1279,6 +1305,7 @@ function add(gui, object, property, params) {
     params.before = params.before.__li;
   }
 
+
   controller.parent = gui;
   controller.__name = property;
 
@@ -1297,9 +1324,14 @@ function add(gui, object, property, params) {
 
   controller.getName = () => name.innerHTML;
 
-  
-  const li = addRow(gui, container, params.before);
-  
+  let li;
+  if(meta.first) {
+    li = addRow(gui, container, gui.__ul.firstChild);
+  }else if( meta.last) {
+    li = addRow(gui, container, null);
+  } else {
+    li = addRow(gui, container, params.before);
+  }
   dom.addClass(li, GUI.CLASS_CONTROLLER_ROW);
   if (controller instanceof ColorController) {
     dom.addClass(li, 'color');

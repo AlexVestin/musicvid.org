@@ -17,6 +17,10 @@ window.__init = (config) => {
         window.__localExporter = true;
         const { spawn } = require("child_process");
         const { width, height, fps, name = "out.mp4", sound, preset } = config;
+
+        let n = name;
+        if(!n.endsWith(".mp4"))
+            n += ".mp4"
         //const proc = spawn('ffmpeg', ['-pix_fmt', 'rgb32', '-s:v', '1280x720', '-f', 'rawvideo', '-i', 'pipe:0', '-framerate', '30', 'output.mp4']);
         const args = [
             "-y",
@@ -76,7 +80,7 @@ window.__init = (config) => {
                 "-",
                 "-c:v",
                 "copy",
-                `${name}`
+                `${n}`
             ];
             let msg = "";
 

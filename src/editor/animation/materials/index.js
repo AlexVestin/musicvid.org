@@ -9,6 +9,7 @@ import NoiseMaterial from './NoiseMaterial'
 import StarNestMaterial from './StarNestMaterial'
 import VideoMaterial from './VideoMaterial'
 import OldVideoMaterial from './OldVideoMaterial'
+import OctaveMeatballs from './OctaveMeatballs'
 
 
 
@@ -22,7 +23,8 @@ const materials = {
     Noise: {img: "img/items/Noise.png", class: NoiseMaterial },
     StarNest: {img: 'img/items/StarNest.js', class: StarNestMaterial},
     Video: {class: VideoMaterial},
-    OldVideo: {class: OldVideoMaterial}
+    OldVideo: {class: OldVideoMaterial},
+    OctaveMeatballs: {class: OctaveMeatballs}
 };
 
 export function loadMaterialFromText(text) {

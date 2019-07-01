@@ -386,12 +386,12 @@ export default class AudioImpact extends PureComponent {
                         style={{ marginTop: 15, marginBottom: 15 }}
                         className={classes.item}
                     >
-                       Up next is the spectrum analyser where we use the frequency data to generate an impact value
-                       which can be used to animate items.  
+                       Up next is the spectrum analyser where we transform the frequency data to 
+                       look more intuitive and smoother.  
                         
                         <div style={{width: "100%", display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
                        <Link to="/tutorial/audio_analysers/theory">Previous tutorial</Link>
-                       <Link to="/tutorial/audio_analysers/impact">Next tutorial</Link>
+                       <Link to="/tutorial/audio_analysers/spectrum">Next tutorial</Link>
                        </div>
                     </Typography>
 

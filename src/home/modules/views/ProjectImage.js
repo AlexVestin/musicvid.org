@@ -4,8 +4,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 
 import Typography from "../components/Typography";
 import styles from "./GridStyles";
-import { base, storage } from "backend/firebase";
-import { Redirect } from "react-router-dom";
+import { base } from "backend/firebase";
 
 class Image extends PureComponent {
     constructor() {
@@ -28,19 +27,7 @@ class Image extends PureComponent {
         const { id } = this.props.project;
         const project = await this.loadProject(id);
         let url = "img/256placeholder.png";
-        let img = await storage
-            .ref()
-            .child(id)
-            .getDownloadURL()
-            .catch(err => {
-                this.setState({
-                    title: project.data().name,
-                    img: url,
-                    fetched: true,
-                    project: project.data()
-                });
-            });
-        this.setState({ project: project.data(), title: project.data().name, img: img, fetched: true });
+        this.setState({ project: project.data(), title: project.data().name, img: url, fetched: true });
     };
 
     loadMoreInfo = event => {

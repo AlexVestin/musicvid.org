@@ -88,7 +88,7 @@ class CustomizedTable extends React.PureComponent {
 
     render() {
         const { classes, automations, controller, item } = this.props;
-        console.log(automations);
+
         return (
             <Paper className={classes.root}>
                 <div>Base value: {item.preAutomationValue}</div>

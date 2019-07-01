@@ -91,6 +91,17 @@ class Controller {
     this.overviewButton.style.display = "none";
   }
 
+  hideRemoveButton(hide) {
+    
+    if (this.removeButton) {
+      if (!hide) {
+        this.removeButton.style.display = "none";
+      } else {
+        this.removeButton.style.display = "inherit";
+      }
+    }
+  }
+
   disableAll() {
     this.disableAutomations();
     this.disableOverview();
