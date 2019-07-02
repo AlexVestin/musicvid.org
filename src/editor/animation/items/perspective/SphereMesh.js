@@ -13,7 +13,7 @@ export default class SphereMesh extends MeshItem {
         this.setUpFolder();
     }
 
-    update = (time, audioData) => {
+    update = (time, dt, audioData) => {
         this.material.updateMaterial(time, audioData);
     }
 }

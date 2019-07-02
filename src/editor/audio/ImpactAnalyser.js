@@ -1,5 +1,5 @@
 import {
-    average
+    average,
 } from "./analyse_functions";
 
 export default function ImpactAnalyser(gui, parent = null, disable = false, disableLinking = false) {
@@ -33,6 +33,7 @@ export default function ImpactAnalyser(gui, parent = null, disable = false, disa
     addAttribute("baseAmount", 1, f1, { min: 0 });
     addAttribute("enableImpactAnalysis", true, f1, { min: 0 });
     addAttribute("amplitude", 64, f1, { min: 0 });
+    addAttribute("normalizeWindowSize", false, f1).name("Normalize value according to window size");
 
     let f13 = f1.addFolder("Clamping");
     addAttribute("maxAmount", 280, f13, { min: 0 });
@@ -51,7 +52,15 @@ export default function ImpactAnalyser(gui, parent = null, disable = false, disa
         
         let newArr = array.slice();
         let amount = this.baseAmount;
-        if(this.enableImpactAnalysis) amount = average(newArr, this);
+        if (this.enableImpactAnalysis) {
+            amount = average(newArr, this);
+        }
+        
+        if (this.normalizeWindowSize) {
+           amount /= (2048 / array.length); 
+        }
+        
+
         const amp = this.amplitude / 1024;
         amount = amount * amp;
 
@@ -61,7 +70,7 @@ export default function ImpactAnalyser(gui, parent = null, disable = false, disa
                 amount = this.lastAmount - (this.deltaDecay * amp);
             }
         }
-        
+
         if(amount > this.maxAmount) 
             amount = this.maxAmount;
         

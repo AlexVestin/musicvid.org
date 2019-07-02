@@ -31,10 +31,10 @@ export default class CanvasScene extends Scene{
         this.canvas = canvas;
     }
 
-    update = (time, audioData, shouldIncrement) => {
+    update = (time, dt, audioData, shouldIncrement) => {
        this.items.forEach(item => {
-           item.update(time, audioData, shouldIncrement)
-       })
+           item.update(time, dt, audioData, shouldIncrement)
+       });
     }
 
     render = (renderer) => {

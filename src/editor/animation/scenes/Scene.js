@@ -240,13 +240,13 @@ export default class Scene extends SerializableObject {
         renderer.render(this.scene, this.camera);
     }
 
-    update = (time, audioData, shouldIncrement) => {
+    update = (time, dt, audioData, shouldIncrement) => {
         this.applyAutomations(shouldIncrement);
         if(shouldIncrement) {
             this.items.forEach(item =>  {
                 item.mesh.visible = (item.__startTime <= time && item.__endTime >= time);
                 item.applyAutomations(shouldIncrement);
-                item.update(time, audioData)  
+                item.update(time, dt, audioData)  
             });
         }
     }

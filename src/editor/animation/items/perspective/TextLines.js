@@ -102,7 +102,7 @@ export default class Box extends BaseItem {
         this.mesh.material.dispose();
     };
 
-    update = (time, audioData) => {
+    update = (time, dt, audioData) => {
         if (this.loaded) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData);
             this.mesh.rotation.y = 0.25 * time;

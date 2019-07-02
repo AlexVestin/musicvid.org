@@ -97,8 +97,8 @@ export default class ParticleLines extends BaseItem {
         this.addController(folder, this, "updateOpacity", {min: 0, max: 1.0});
     }
 
-    update = (time, audioData) => {
-        this.mesh.update(this.updateSpeedAmplitude, this.updateOpacity);
+    update = (time, dt, audioData) => {
+        this.mesh.update(this.updateSpeedAmplitude * dt * 60, this.updateOpacity);
     }
 }
 

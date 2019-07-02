@@ -57,7 +57,7 @@ export default class SImage extends BaseItem {
         return this.__addFolder(folder);
     };
 
-    update = (time, data) => { 
+    update = (time, dt, data) => { 
         const {width,height} = this.canvas;
         const x = this.positionX * width;
         const y = this.positionY * height;

@@ -39,10 +39,10 @@ export default class PostProcessing {
         this.passes.push(obj);   
     }
 
-    update = (time, audioData, shouldIncrement) => {
+    update = (time, dt, audioData, shouldIncrement) => {
         this.passes.forEach( e =>  {
             e.applyAutomations(shouldIncrement)
-            e.update(time, audioData, shouldIncrement)
+            e.update(time, dt, audioData, shouldIncrement)
         });
     }
 

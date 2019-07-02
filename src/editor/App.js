@@ -86,7 +86,6 @@ class App extends PureComponent {
                 .get();
         } catch (err) {
 
-            console.log("FATAL ERROR FFS")
             setFatalError({
                 code: -1,
                 message:
@@ -198,12 +197,15 @@ class App extends PureComponent {
             this.modalRef.current.toggleModal(10);
         }
 
-        this.audioWaveCanvasRef.current.generateAudioWave(
-            this.audio.combinedAudioData
-        );
-
-        this.animationManager.setAudio(this.audio);
-        this.setState({ audioDuration: duration, audioLoaded: true });
+        if(this.audioWaveCanvasRef.current) {
+            this.audioWaveCanvasRef.current.generateAudioWave(
+                this.audio.combinedAudioData
+            );
+    
+            this.animationManager.setAudio(this.audio);
+            this.setState({ audioDuration: duration, audioLoaded: true });
+        }
+       
     };
 
     play = () => {

@@ -62,7 +62,7 @@ export default class PointBed extends BaseItem {
         return this.__addFolder(folder);
     };
 
-    update = (time, data) => {
+    update = (time, dt, data) => {
 
         if(this.updateCount++ % 2 === 0) {
             let freq = []

@@ -249,7 +249,7 @@ export default class JSNationSpectrum extends BaseItem {
         return points;
     }
 
-    update = (time, audioData, shouldUpdate = true) => {
+    update = (time, dt, audioData,  shouldUpdate = true) => {
         const { width, height } = this.canvas;
         this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX,Math.floor(this.y * height / 2) + this.sumShakeY);
         let newAudioData = audioData.frequencyData.length !== 0;

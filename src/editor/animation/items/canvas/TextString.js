@@ -22,7 +22,7 @@ export default class TextString extends Text {
         this.addController(folder,this, "text");
     };
 
-    getText = (time, audioData) => {
+    getText = (time,  audioData) => {
         return this.text;
     }
 }

@@ -380,6 +380,7 @@ export default class WebGLManager {
     }
 
     seekTime = (t) => {
+        this.__lastTime = t;
         this.scenes.forEach(scene => scene.seekTime(t));
     }
 
@@ -567,17 +568,20 @@ export default class WebGLManager {
     }
 
     update = (time, audioData, shouldIncrement) => {
+
+        let dt = time - this.__lastTime;
+
         if (!this.postprocessingEnabled) {
             this.renderer.clear();
             this.scenes.forEach(scene => {
                 if (scene.isScene) {
-                    scene.update(time, audioData, shouldIncrement);
+                    scene.update(time, dt, audioData, shouldIncrement);
                     scene.render(this.renderer);
                     this.renderer.clearDepth();
                 }
             });
         } else {
-            this.postProcessing.update(time, audioData, shouldIncrement);
+            this.postProcessing.update(time, dt, audioData, shouldIncrement);
             this.postProcessing.render();
         }
 

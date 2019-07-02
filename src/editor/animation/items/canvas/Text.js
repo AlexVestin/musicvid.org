@@ -68,7 +68,7 @@ export default class Text extends BaseItem {
     
     getText = () => {}
 
-    update = (time, data) => { 
+    update = (time, dt, data) => { 
         
         this.contextSettings.apply(this.ctx);
         const text = this.getText(time, data);

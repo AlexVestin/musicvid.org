@@ -131,7 +131,7 @@ export default class Polartone extends BaseItem {
         return this.__addFolder(folder);
     };
 
-    update = (time, data) => {
+    update = (time, dt, data) => {
         const dur = time / this.songDuration;
         if(!data) {
             return;

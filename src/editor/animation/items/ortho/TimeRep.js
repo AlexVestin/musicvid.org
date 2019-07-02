@@ -52,7 +52,7 @@ export default class AudioWave extends BaseItem {
         this.geometry.dispose();
     }
 
-    update = (time, data) => {
+    update = (time, dt, data) => {
         const audioData = data.timeData;
         const bufferLength = audioData.length;
         var linePos = this.mesh.geometry.attributes.position.array;

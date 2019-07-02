@@ -98,7 +98,7 @@ export default class SpriteText extends MeshItem {
         return this.__addFolder(folder);
     };
 
-    update = (time, data) => {  };
+    update = (time, dt, data) => {  };
 }
 
 

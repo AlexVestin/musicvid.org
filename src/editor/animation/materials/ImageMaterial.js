@@ -131,7 +131,7 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.__item = item;
     }
 
-    updateMaterial = (time, audioData) => {
+    updateMaterial = (time, dt, audioData) => {
         if(this.impactAnalyser) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData) ;
             this.uniforms.vignette_amt.value = this.vignetteAmount + impact * -this.brightenMultipler;
@@ -154,7 +154,6 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
             texture.wrapT = this.wrapLookup[this.wrapT];
             texture.needsUpdate = true;
         } 
-       
     }
 
     setBackground = (texture) => {

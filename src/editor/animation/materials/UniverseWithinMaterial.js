@@ -16,7 +16,6 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
         });
 
         this.time = 0;
-        this.lastTime = 0;
         this.amplitude = 0.1;
         this.baseSpeed = 0.8;
         this.frequency = 0.02;
@@ -53,28 +52,6 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
         this.__item = item;
     }
 
-    updateMaterial = (time, audioData, shouldIncrement) => {
-        const idx = Math.floor(
-            this.frequency * (audioData.frequencyData.length / 2)
-        );
-
-        this.uniforms.iTime.value = time;
-        if (this.moveToAudioImpact && this.impactAnalyser) {
-            const impact = this.impactAnalyser.analyse(audioData.frequencyData);
-
-            this.time +=this.baseSpeed * 0.01 + (time - this.lastTime) * impact  * this.movementExaggeration;
-            this.uniforms.iTime.value = this.time;
-        }
-
-        this.uniforms.fft.value =
-            0.01 + audioData.frequencyData[idx] * this.amplitude * 0.02;
-        this.lastTime = time;
-    };
-
-    stop = () => {
-        this.time = 0;
-        this.lastTime = 0;
-    };
 
     __setUpGUI = folder => {
         const i = this.__item;
@@ -92,4 +69,29 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
         this.impactAnalyser.deltaDecay = 20;
         return folder;
     };
+
+    updateMaterial = (time, dt, audioData, shouldIncrement) => {
+        const idx = Math.floor(
+            this.frequency * (audioData.frequencyData.length / 2)
+        );
+
+        this.uniforms.iTime.value = time;
+
+          
+        if (this.moveToAudioImpact && this.impactAnalyser) {
+            const impact = this.impactAnalyser.analyse(audioData.frequencyData);
+            const fftMult = 1024 / audioData.frequencyData.length;
+            this.time +=this.baseSpeed * 0.01 + dt * impact  * this.movementExaggeration * fftMult;
+            this.uniforms.iTime.value = this.time;
+        }
+
+        this.uniforms.fft.value =
+            0.01 + audioData.frequencyData[idx] * this.amplitude * 0.02;
+    };
+
+    stop = () => {
+        this.time = 0;
+    };
+
+    
 }

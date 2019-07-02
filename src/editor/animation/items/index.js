@@ -33,7 +33,6 @@ import Polartone2D from './canvas/Polartone2D'
 import BeatCounter from './canvas/BeatCounter'
 import JSNation2D from './canvas/JSNation'
 import JSNation2D2 from './canvas/JSNation2'
-import JSNation2D3 from './canvas/JSNation3'
 
 
 
@@ -62,7 +61,6 @@ const canvasItems = {
     
     JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D},
     JSNation2: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D2},
-    JSNation3: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D3},
 
     BasicMeshItem: {class: BasicMeshItem}
 }

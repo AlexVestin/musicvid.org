@@ -419,9 +419,9 @@ export default class Particles extends BaseItem {
         }
     }
 
-    update = (time, audioData) => {
-        const amp = this.analyser.analyse(audioData.frequencyData) * this.amplitude;     
-        this.velMult = amp / 512;
+    update = (time,  dt, audioData) => {
+        const amp = this.analyser.analyse(audioData.frequencyData) * this.amplitude * dt; 
+        this.velMult = amp / 10;
         this.velMult = isNaN(this.velMult) ? 0 : this.velMult;
         particleSize = this.velMult;
         this.velMult = Math.pow(this.velMult, particleExponent) * (1 - this.baseSpeed / 1000) + (this.baseSpeed / 1000);

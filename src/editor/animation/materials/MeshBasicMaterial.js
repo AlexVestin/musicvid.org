@@ -28,7 +28,7 @@ export default class HexaGoneMaterial extends MeshBasicMaterial {
         this.needsUpdate = true;
     }
 
-    updateMaterial = (time, audioData) => { };
+    updateMaterial = (time, dt, audioData) => { };
 
     __setUpGUI = (folder) => {
         const i = this.__item;

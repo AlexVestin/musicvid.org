@@ -198,10 +198,10 @@ export default class Particles extends BaseItem {
         this.scene.add(this.mesh);
     }
 
-    update = function(time, audioData) {
+    update = function(time, dt, audioData) {
 
         if(this.mesh) {
-            const multiplier = this.impactAnalyser.analyse(audioData.frequencyData) * this.movementAmplitude;
+            const multiplier = this.impactAnalyser.analyse(audioData.frequencyData) * this.movementAmplitude * dt * 60;
             for (let i = 0; i < this.maxParticleCount / 2; i++) {
 
                 this.updatePosition(i, multiplier);

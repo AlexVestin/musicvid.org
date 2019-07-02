@@ -41,7 +41,7 @@ export default class BeatCounter extends BaseItem {
         this.addController(this.colorFolder, this, "color7", {color: true});
         return this.__addFolder(folder);
     };
-    update = (time, data) => { 
+    update = (time, dt, data) => { 
         const { width, height } =  this.canvas;
         const t = time + this.offset;
         const stepSize = (60 / this.bpm) * (4/this.timeSignatureDivider);

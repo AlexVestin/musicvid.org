@@ -96,7 +96,7 @@ export default class Video extends THREE.MeshBasicMaterial {
         }
     }
 
-    updateMaterial = (time) => {
+    updateMaterial = (time, dt, data) => {
         this.time = time;
         
         if(this.decoderReady && this.encoding) {

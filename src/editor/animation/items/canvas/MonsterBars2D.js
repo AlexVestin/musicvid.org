@@ -103,7 +103,7 @@ export default class MonsterCat extends BaseItem {
         return this.__addFolder(folder);
     };
 
-    update = (time, audioData, shouldIncrement) => {
+    update = (time, dt, audioData, shouldIncrement) => {
         const {
             spectrumHeight,
             spectrumWidth,

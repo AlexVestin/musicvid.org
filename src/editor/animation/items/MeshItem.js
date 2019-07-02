@@ -79,9 +79,9 @@ export default class MeshItem extends BaseItem {
             this.material.seekTime(t)
     }
 
-    update = (time, audioData) => {
+    update = (time, dt, audioData) => {
         if(this.material && this.material.updateMaterial)
-            this.material.updateMaterial(time, audioData);
+            this.material.updateMaterial(time, dt, audioData);
     }
 
     newGeometryModal() {

@@ -108,11 +108,11 @@ export default class NoiseMaterial extends ShaderToyMaterial {
         this.lastTime = 0;
     }
 
-    updateMaterial = (time, audioData) => {
+    updateMaterial = (time, dt, audioData) => {
         this.uniforms.iTime.value = time;
         if(this.impactAnalyser) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData) ;
-            this.time += this.baseSpeed * 0.01 + (time  - this.lastTime) * impact * this.amplitude / 10; 
+            this.time += this.baseSpeed * 0.01 + dt * impact * this.amplitude / 10; 
             this.uniforms.iTime.value = this.time ;
             this.lastTime = time;
         }

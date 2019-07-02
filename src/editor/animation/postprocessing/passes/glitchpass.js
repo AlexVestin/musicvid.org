@@ -50,7 +50,7 @@ export default class GlitchPass extends Pass {
 		folder.updateDisplay();
 	}
 
-	update = (time, audioData) => {
+	update = (time, dt, audioData) => {
 		this.impact = this.impactAnalyser.analyse(audioData.frequencyData);
 	}
 

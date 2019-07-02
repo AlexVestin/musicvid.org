@@ -97,7 +97,7 @@ export default class AudioWave extends BaseItem {
         return this.__addFolder(folder);
     };
 
-    update = (time, audioData) => {
+    update = (time, dt, audioData) => {
         const t = time + this.offset;
         const stepSize = 60 / this.bpm;
         const beatIndex = Math.floor(t / stepSize);

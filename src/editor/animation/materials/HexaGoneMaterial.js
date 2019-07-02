@@ -18,7 +18,6 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
         )
 
         this.time = 0;
-        this.lastTime = 0;
         this.amplitude = 10;
         this.baseSpeed = 0.8;
 
@@ -47,15 +46,13 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
 
     stop = () => {
         this.time = 0;
-        this.lastTime = 0;
     }
 
-    updateMaterial = (time, audioData) => {
+    updateMaterial = (time, dt, audioData) => {
+
         this.uniforms.iTime.value = time;
-        this.time += this.baseSpeed * 0.01 + (time  - this.lastTime) * this.amplitude / 10; 
+        this.time += this.baseSpeed * 0.01 + dt * this.amplitude / 10; 
         this.uniforms.iTime.value = this.time ;
-        this.lastTime = time;
-        
     }
 
     __serialize = () => {

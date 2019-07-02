@@ -117,7 +117,7 @@ export default class AudioWave extends BaseItem {
         this.geometry.dispose();
     }
 
-    update = (time, data) => {
+    update = (time, dt, data) => {
         const audioData = data.timeData;
         const bufferLength = audioData.length;
         this.line.geometry.dispose();
