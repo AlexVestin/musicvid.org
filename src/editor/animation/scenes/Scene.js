@@ -65,7 +65,7 @@ export default class Scene extends SerializableObject {
 
 
     handleMouseUp = () => {
-        this.gui.getRoot().addUndoItem({type: "action", func: this.undoCameraMovement, args: this.lastCameraArray});
+        //this.gui.getRoot().addUndoItem({type: "action", func: this.undoCameraMovement, args: this.lastCameraArray});
         this.lastCameraArray = this.camera.matrix.toArray();
         this.cameraFolder.updateDisplay();
     }
@@ -153,6 +153,14 @@ export default class Scene extends SerializableObject {
         this.items.forEach((item) => {
             this.removeItem({item});
         });
+
+        if (this.type === "canvas") {
+            this.tex.dispose();
+            this.geo.dispose();
+            this.mat.dispose();
+        }
+
+        this.controls.dispose();
         this.items = [];
         this.scene.dispose();
 

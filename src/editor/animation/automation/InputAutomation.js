@@ -14,7 +14,6 @@ export default class InputAutomation extends Automation {
         try {
             this.value = mathjs.eval(this.inputString, {t: time});
         }catch(err) {
-            console.log(err)
         } 
     }
 }

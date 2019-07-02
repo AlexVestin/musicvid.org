@@ -70,7 +70,9 @@ class App extends PureComponent {
         } else {
             try {
                 this.overviewFolder.remove(this.addOverviewFolderButton);
-            } catch (err) {}
+            } catch (err) {
+                console.log("Failed to remove folder")
+            }
         }
 
         this.gui.toggleAdvancedMode(advanced);

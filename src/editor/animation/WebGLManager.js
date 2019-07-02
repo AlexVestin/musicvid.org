@@ -83,6 +83,7 @@ export default class WebGLManager {
         }
         
         if(this.renderer) {
+            this.renderer.renderLists.dispose();
             this.renderer.dispose();
         }
 

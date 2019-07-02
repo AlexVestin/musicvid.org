@@ -17,7 +17,10 @@ export default class CanvasScene extends Scene{
         this.tex.magFilter = THREE.LinearFilter;
         this.tex.generateMipmaps = false;
 
-        this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.MeshBasicMaterial({map: this.tex, transparent: true}));
+        this.geo = new THREE.PlaneGeometry(2,2);
+        this.mat = new THREE.MeshBasicMaterial({map: this.tex, transparent: true});
+
+        this.mesh = new THREE.Mesh(this.geo, this.mat);
         this.scene.add(this.mesh);
         
         this.MODAL_REF_NR = 5;
