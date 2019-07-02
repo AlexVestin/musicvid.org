@@ -3,12 +3,17 @@ import SignInForm from './SignInForm'
 import AppFooter from "../modules/views/AppFooter";
 import AppAppBar from "../modules/views/AppAppBar";
 import { Redirect } from 'react-router-dom'
+import { setSnackbarMessage } from '../../fredux/actions/message';
  
 
 export default class SignIn extends PureComponent {
     state = {redirectTo: ""};
     move = () => {
         this.setState({redirectTo: "/sign-up"})
+    }
+    success = () => {
+        setSnackbarMessage('Login succeeded!');
+        this.setState({redirectTo: "/"})
     }
 
     render() {
@@ -18,7 +23,7 @@ export default class SignIn extends PureComponent {
         return (
             <React.Fragment>
                 <AppAppBar></AppAppBar>
-                <SignInForm success={this.move} move={this.move}></SignInForm>
+                <SignInForm success={this.success} move={this.move}></SignInForm>
                 <AppFooter></AppFooter>
             </React.Fragment>
         )

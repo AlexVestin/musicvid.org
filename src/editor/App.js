@@ -409,16 +409,23 @@ class App extends PureComponent {
             const items = this.animationManager.getAllItems();
             this.__items = items;
             let attribFound = false;
+            let uniqueItems = [];
+
             items.forEach(item => {
-                if (item.license === license.REQUIRE_ATTRIBUTION) {
-                    this.modalRef.current.openLicenseModal(
-                        items,
-                        this.usingSampleAudio,
-                        resolve,
-                        reject
-                    );
-                    attribFound = true;
+                if (!uniqueItems.indexOf(item.__itemName) >= 0) {
+                    uniqueItems.push(item.__itemName);
+                    if (item.license === license.REQUIRE_ATTRIBUTION) {
+                        this.modalRef.current.openLicenseModal(
+                            items,
+                            this.usingSampleAudio,
+                            resolve,
+                            reject
+                        );
+                        attribFound = true;
+                    }
                 }
+
+                
             });
 
             if (!attribFound) resolve();

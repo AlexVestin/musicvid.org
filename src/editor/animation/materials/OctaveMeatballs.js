@@ -49,7 +49,7 @@ export default class OctaveMeatballs extends ShaderToyMaterial {
         if (this.moveToAudioImpact && this.impactAnalyser) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData);
 
-            this.time +=this.baseSpeed * 0.01 + dt * impact  * this.movementExaggeration / 10;
+            this.time += this.baseSpeed * 0.01 + dt * impact  * this.movementExaggeration / 10;
             this.uniforms.iTime.value = this.time;
         }
 

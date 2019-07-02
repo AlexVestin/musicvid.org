@@ -270,7 +270,7 @@ export default class JSNationSpectrum extends BaseItem {
 
     }
 
-    update = (time, audioData, shouldUpdate = true) => {
+    update = (time, dt, audioData, shouldUpdate = true) => {
         
         const { width, height } = this.canvas;
         this.ctx.translate(Math.floor(this.x * width / 2) + this.sumShakeX, Math.floor(this.y * height / 2) + this.sumShakeY);
@@ -334,8 +334,6 @@ export default class JSNationSpectrum extends BaseItem {
         const dir = pull + Math.random();        
         return dir > 1.0 ? -1 : 1; 
     }
-
-   
 
     drawPoints = (points, radius) => {
         if (!points || points.length === 0) {

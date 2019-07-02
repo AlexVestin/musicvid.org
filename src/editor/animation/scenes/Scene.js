@@ -214,8 +214,6 @@ export default class Scene extends SerializableObject {
                 info = {...info,  canvas: this.canvas, container: this.container, graphics: this.graphics};
             }
 
-
-            
             const itemClass = getItemClassFromText(this.type, name);
             const item = new itemClass(info);
             item.__itemName = name;

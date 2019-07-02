@@ -24,7 +24,16 @@ class AlertDialog extends React.Component {
 
     getContributors = items => {
         const authors = {};
-        items.forEach(item => {
+        let uniqueItems = [];
+
+
+        items.forEach(i => {
+            if (uniqueItems.findIndex(e => e.name === i.name) === -1) {
+                uniqueItems.push(i);
+            }
+        })
+
+        uniqueItems.forEach(item => {
             if (item.license === license.REQUIRE_ATTRIBUTION) {
                 item.authors.forEach(author => {
                     if (author.name in authors) {

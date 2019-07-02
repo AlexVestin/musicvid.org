@@ -13,6 +13,7 @@ import SignIn from '../../Account/SignInForm';
 
 import Toolbar, { styles as toolbarStyles } from "../components/Toolbar";
 import { Typography } from "@material-ui/core";
+import { setSnackbarMessage } from "../../../fredux/actions/message";
 
 const styles = theme => ({
     container: {
@@ -63,7 +64,7 @@ class AppAppBar extends PureComponent {
 
     openSignIn = () => {
         if(window.location.href.indexOf("editor") > 0 ){
-            this.setState({signInOpen: true, signUpOpen:false})
+            this.setState({signInOpen: true, signUpOpen: false})
         } else {
             this.setState({redirectTo: "/sign-in"})
         }
@@ -71,6 +72,16 @@ class AppAppBar extends PureComponent {
 
     close = () => {
         this.setState({signInOpen: false, signUpOpen: false})
+    }
+
+    signInSuccess = () => {
+        setSnackbarMessage("Sign in succeeded!", "success", 2000);
+        this.close();
+    }
+
+    signUpSuccess = () => {
+        setSnackbarMessage("Sign up succeeded!", "success", 2000);
+        this.close();
     }
 
     render() {
@@ -81,8 +92,8 @@ class AppAppBar extends PureComponent {
 
         return (
             <div className={classes.container}>
-                <AccountModal open={signInOpen} close={this.close}><SignIn success={this.close} move={this.openSignUp} ></SignIn></AccountModal>
-                <AccountModal open={signUpOpen} close={this.close}><SignUp success={this.close} move={this.openSignIn}></SignUp></AccountModal>
+                <AccountModal open={signInOpen} close={this.close}><SignIn success={this.signInSuccess} move={this.openSignUp} ></SignIn></AccountModal>
+                <AccountModal open={signUpOpen} close={this.close}><SignUp success={this.signUpSuccess} move={this.openSignIn}></SignUp></AccountModal>
 
                 <AppBar position="fixed">
                     <Toolbar className={classes.toolbar}>

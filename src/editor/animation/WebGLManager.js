@@ -19,6 +19,7 @@ import uuid from 'uuid/v4'
 import OverviewGroup from '../OverviewGroup'
 
 import { setUpFullscreenControls } from './FullscreenUtils'
+import { setSnackbarMessage } from "../../fredux/actions/message";
 export default class WebGLManager {
     constructor(parent) {
         
@@ -41,7 +42,6 @@ export default class WebGLManager {
 
         // Project file settings
         this.__id = uuid();
-        this.__owner = this.__id;
         this.__projectName  = "ProjectName";
         this.__lastEdited = new Date().toString();
         this.availablePublic = false;
@@ -96,14 +96,18 @@ export default class WebGLManager {
                 new OverviewGroup(root.__folders["Overview"], fold.id, fold.name);            
             })
         } 
+
         
-        this.__ownerId = json.owner;
-        this.__online = json.online;
+
         Object.assign(this, proj.settings);
         this.settingsFolder.updateDisplay();
         proj.automations.forEach(auto => {
             this.addAutomation(auto);
         })  
+        // NEEDS TO BE AFTER Object.assign above
+        this.__id = json.id;
+        this.__ownerId = json.owner;
+        this.__online = json.online;
 
         proj.scenes.forEach(scene => {     
             if(scene.__settings.isScene) {
@@ -148,6 +152,7 @@ export default class WebGLManager {
             settings: {}
         };
         projFile.settings = serialize(this);
+        projFile.settings.__lastTime  = undefined;
         projFile.settings.fftSize = this.audio ? this.audio.fftSize : this.fftSize;
         projFile.automations = this.gui.getAutomations().map(auto => auto.__serialize());
 
@@ -174,8 +179,8 @@ export default class WebGLManager {
 
     saveProjectToFile = () => {
         const projFile = this.serializeProject();
-
-        const f = this.getProjectConfig(projFile, this.__id);
+        console.log(this.__ownerId)
+        const f = this.getProjectConfig(projFile, this.__ownerId);
         const blob = new Blob([JSON.stringify(f)], { type: 'application/json' });
         FileSaver.saveAs(blob, this.__projectName + ".json");
     }
@@ -183,15 +188,18 @@ export default class WebGLManager {
     saveProjectToProfile = () => {
         const projFile = this.serializeProject();
         const cu = app.auth().currentUser; 
-        if(cu) {
-
-            if(cu.uid !== this.__owner) {
+        if(cu) {    
+            console.log(this.__ownerId, cu.uid, this.__ownerId === cu.uid);
+            if(cu.uid !== this.__ownerId) {
                 this.__id = uuid();
-                this.__owner = cu.uid;
+                this.__ownerId = cu.uid;
+                console.log("Setting new uid")
             }
 
             const myId = app.auth().currentUser.uid;
             const ref = base.collection("users").doc(myId).collection("projects").doc(this.__id);
+
+            
             const p1 = ref.set({
                 lastEdited: new Date().toString(),
                 name: this.__projectName,
@@ -209,14 +217,14 @@ export default class WebGLManager {
             }*/
             
             Promise.all([p1, p2]).then(() => {
-                alert("Saved to profile");
+                setSnackbarMessage("Saved to profile", "success", 2000)
                 window.history.pushState({}, null, "/editor?project=" + this.__id);
                 this.__online = true;
                 allRef.update({online: true});
             })
 
         }else {
-            alert("Log in to save to profile")
+            setSnackbarMessage("You need to log in to be able to save to your profile.", "error")
         }
     }
 
