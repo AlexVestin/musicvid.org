@@ -56,7 +56,10 @@ export default class WebGLManager {
         this.audio = null;
 
         // Set project to advanced to add correct buttons
-        this.parent.toggleAdvancedMode(true);
+        if (!this.parent.test) {
+            this.parent.toggleAdvancedMode(true);
+        }
+        
     }
 
     saveAsNewProjectToProfile = () => {
@@ -457,6 +460,7 @@ export default class WebGLManager {
             this.renderer.clear = () => {};
             this.renderer.clearDepth = () => {};
             this.renderer.render = () => {};
+            this.renderer.setRenderTarget = () => {};
             this.postProcessing = {};
         }
 

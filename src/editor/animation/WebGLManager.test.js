@@ -15,7 +15,7 @@ describe('Animation Manager Basics', () => {
         gui.addFolder('Audio');
         gui.addFolder('Export');
 
-        manager =  new WebGLManager({gui}); 
+        manager =  new WebGLManager({gui, test: true}); 
         manager.init(resolution, true);
     })
 
