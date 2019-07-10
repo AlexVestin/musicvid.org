@@ -182,6 +182,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.analyser.spectrumEnd = 400;
         this.analyser.enableDropoffSmoothing = false;
         this.analyser.smoothingTimeConstant = 0.03;
+        this.analyser.setUpGUI();
         spFolder.updateDisplay();
         const colFolder = spFolder.addFolder("colors");
         

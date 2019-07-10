@@ -90,7 +90,6 @@ export default class Video extends THREE.MeshBasicMaterial {
 
     onframe = (frame, shouldUpdate = true) => {
         if( (shouldUpdate && this.playing) || this.encoding) {
-            console.log("Updating frame")
             this.texData.set(frame);
             this.map.needsUpdate = true;
         }

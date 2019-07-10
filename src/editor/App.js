@@ -22,13 +22,13 @@ class App extends PureComponent {
     constructor() {
         super();
         this.gui = new dat.GUI({ autoPlace: false, width: "100%" });
-        this.overviewFolder = this.gui.addFolder("Overview", false);
+        this.overviewFolder = this.gui.addFolder("Overview", { useTitleRow: false });
 
-        this.layersFolder = this.gui.addFolder("Layers", false);
-        this.audioFolder = this.gui.addFolder("Audio", false);
+        this.layersFolder = this.gui.addFolder("Layers", { useTitleRow: false });
+        this.audioFolder = this.gui.addFolder("Audio", { useTitleRow: false });
         this.audioFolder.add(this, "loadNewAudioFile");
-        this.settingsFolder = this.gui.addFolder("Settings", false);
-        this.exportFolder = this.gui.addFolder("Export", false);
+        this.settingsFolder = this.gui.addFolder("Settings", { useTitleRow: false });
+        this.exportFolder = this.gui.addFolder("Export", { useTitleRow: false });
         this.state = {
             shouldLoadProject: false,
             videoLoaded: false,
@@ -40,7 +40,7 @@ class App extends PureComponent {
             progress: 0,
             encoding: false,
             doneEncoding: false,
-            advanced: false
+            advanced: true
         };
 
         this.firstLoad = true;

@@ -33,7 +33,7 @@ export default class WebGLManager {
         }
 
         // Project settings
-        this.advancedMode = false;
+        this.advancedMode = true;
         this.inFullScreen = false;
         this.clearColor = "#000000";
         this.clearAlpha = 1.0;
@@ -54,6 +54,14 @@ export default class WebGLManager {
         // Scenes
         this.scenes = [];
         this.audio = null;
+
+        // Set project to advanced to add correct buttons
+        this.parent.toggleAdvancedMode(true);
+    }
+
+    saveAsNewProjectToProfile = () => {
+        this.__id = uuid();
+        this.saveProjectToProfile();
     }
 
     
@@ -97,8 +105,6 @@ export default class WebGLManager {
                 new OverviewGroup(root.__folders["Overview"], fold.id, fold.name);            
             })
         } 
-
-        
 
         Object.assign(this, proj.settings);
         this.settingsFolder.updateDisplay();
@@ -180,7 +186,6 @@ export default class WebGLManager {
 
     saveProjectToFile = () => {
         const projFile = this.serializeProject();
-        console.log(this.__ownerId)
         const f = this.getProjectConfig(projFile, this.__ownerId);
         const blob = new Blob([JSON.stringify(f)], { type: 'application/json' });
         FileSaver.saveAs(blob, this.__projectName + ".json");
@@ -190,7 +195,6 @@ export default class WebGLManager {
         const projFile = this.serializeProject();
         const cu = app.auth().currentUser; 
         if(cu) {    
-            console.log(this.__ownerId, cu.uid, this.__ownerId === cu.uid);
             if(cu.uid !== this.__ownerId) {
                 this.__id = uuid();
                 this.__ownerId = cu.uid;
@@ -470,7 +474,6 @@ export default class WebGLManager {
     }
 
     toggleAdvancedMode = () => {
-
         this.parent.toggleAdvancedMode(this.advancedMode);
     }
 
@@ -508,6 +511,8 @@ export default class WebGLManager {
             
             ps.add(this, "saveProjectToFile").disableAll();
             ps.add(this, "saveProjectToProfile").disableAll();
+            ps.add(this, "saveAsNewProjectToProfile").disableAll();
+
         }
     };
 

@@ -16,7 +16,6 @@ import Background from './ortho/Background'
 import StarField from './ortho/StarField'
 import SpriteText from './ortho/SpriteText'
 import Meme from './ortho/Meme'
-import Video from './ortho/Video'
 import Line from './ortho/Line'
 import OctaveMeatballs from './ortho/OctaveMeatballs'
 
@@ -54,14 +53,11 @@ const canvasItems = {
     Monstercat2D: { url:"https://github.com/caseif/vis.js", authors: "@Caseif & @Incept", class: Monstercat2D,  img: "img/items/MonsterBars.png" },
     Text2D: {class: Text2D, img: "img/items/Text2D.png"},
     TimeText: {class: TimeText, img: "img/items/Text2D.png"},
-
     Image2D: {class: Image2D, img: "img/items/Image.png"},
     Polartone2D: {class: Polartone2D, img: "img/items/Polartone.png", url: "https://github.com/mattdesl/Polartone", authors: "Mattdesl"},
     BeatCounter: {class: BeatCounter},
-    
     JSNation: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D},
     JSNation2: {img: "img/items/JSNation.png", authors: "@Caseif & @Incept", class: JSNation2D2},
-
     BasicMeshItem: {class: BasicMeshItem}
 }
 

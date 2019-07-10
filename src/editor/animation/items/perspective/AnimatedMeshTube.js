@@ -68,14 +68,11 @@ export default class AnimatedMeshLine extends Line2 {
     linePoints.forEach(point => {
       positions2.push(point.x);
       positions2.push(point.y);
-  
       positions2.push(point.z);
     })
     // THREE.Line2 ( LineGeometry, LineMaterial )
     var geometry = new LineGeometry();
 
-
-    console.log(width)
     const matLine = new LineMaterial( {
         color: new Color(color),
         linewidth: width, // in pixels
@@ -121,10 +118,10 @@ export default class AnimatedMeshLine extends Line2 {
 
     if (this.isDying()) {
       this.material.uniforms.opacity = opacity;
-      this.material.opacity = opacity * ((1.05 - this.currentPosition) * 10);
+      //this.material.opacity = opacity * ((1.05 - this.currentPosition) * 10);
     } else {
       this.material.uniforms.opacity.value = opacity;
-      this.material.opacity = opacity;
+      //this.material.opacity = opacity;
     }
     
     this.currentPosition += this.speed * mult;

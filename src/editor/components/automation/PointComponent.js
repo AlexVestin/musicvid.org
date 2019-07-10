@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import Typography from "@material-ui/core/Typography";
 import { ReactComponent as Delete } from "./baseline-delete-24px.svg";
-
+import classes from './PointComponent.module.css'
 export default class Point extends PureComponent {
     constructor(props) {
         super(props);
@@ -25,6 +25,8 @@ export default class Point extends PureComponent {
         this.props.point.time = Number(val);
     };
     render() {
+
+
         return (
             <div
                 style={{
@@ -32,11 +34,16 @@ export default class Point extends PureComponent {
                     borderBottom: "1px solid gray",
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "center"
+                    justifyContent: "center",
+                    alignItems: "center",
+                    boxSizing: "border-box",
+                    marginTop: 0,
                 }}
             >
                 <div style={{ display: "flex", flexDirection: "row" }}>
-                    <Typography variant="h6">Time: </Typography>
+
+                    <Typography >Time: </Typography>
+                    
                     <input
                         style={{
                             width: 50,
@@ -47,7 +54,9 @@ export default class Point extends PureComponent {
                         value={this.state.time}
                         onChange={this.changeTime}
                     />
-                    <Typography variant="h6">Value: </Typography>
+                    <button className={classes.button} onClick={console.log}>O</button>
+                    <Typography >Value: </Typography>
+                    
                     <input
                         style={{
                             width: 50,
@@ -58,6 +67,7 @@ export default class Point extends PureComponent {
                         value={this.state.value}
                         onChange={this.changeValue}
                     />
+                    <button className={classes.button} onClick={console.log}>O</button>
                 </div>
                 <Delete
                     fill="red"

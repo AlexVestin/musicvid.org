@@ -6,7 +6,7 @@ export default class InputAutomation extends Automation {
     constructor(gui) {
         super(gui);
         this.type = "math";
-        this.name = "Math Input Thing";
+        this.name = "Input Based Automation";
         this.inputString = "sin(t)";
     }
 

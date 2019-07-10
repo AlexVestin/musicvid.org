@@ -6,8 +6,8 @@ export default class AudioReactiveAutomation extends Automation {
     constructor(gui) {
         super(gui);
         this.type = "audio";
-        this.name = "Audio Reactive Thing";
-        this.folder = gui.addFolder("my folder", false); 
+        this.name = "Audio Impact Automation";
+        this.folder = gui.addFolder("Audio impact analyser", {useTitleRow: false}); 
         this.folder.open(); 
         this.impactAnalyser = new ImpactAnalyser(this.folder, this, true);
     }

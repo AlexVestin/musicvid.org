@@ -75,7 +75,7 @@ export default class StarNestMaterial extends ShaderToyMaterial {
         return folder;
     };
 
-    updateMaterial = (time, audioData, shouldIncrement) => {
+    updateMaterial = (time, dt, audioData, shouldIncrement) => {
         this.uniforms.iTime.value = time;
         if (this.brightenToAudio && this.impactAnalyser) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData);

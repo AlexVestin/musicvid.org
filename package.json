@@ -35,7 +35,7 @@
     "simplebar": "^3.1.3",
     "simplebar-react": "^0.1.4",
     "stats.js": "^0.17.0",
-    "three": "^0.103.0",
+    "three": "^0.106.0",
     "three.meshline": "^1.2.0",
     "three.textsprite": "^18.10.24",
     "uuid": "^3.3.2",
@@ -51,7 +51,7 @@
     "deploy-prod": "aws s3 sync ./build  s3://musicvid.org/ --delete",
     "deploy-dev": "aws s3 sync ./build s3://mvid2.org/ --delete",
     "nw-linux": " ~/Downloads/nwjs-v0.37.4-linux-x64/nw build/",
-    "nw-windows": "C:/Users/alex/Desktop/nwjs-sdk-v0.39.1-win-x64/nw build/",
+    "nw-windows": "C:/Users/alex/Desktop/nwjs-sdk-v0.39.2-win-x64/nw build/",
     "prepare-builds": "python local/prepare.py",
     "invalidate-cache": "aws cloudfront create-invalidation --distribution-id E3KDNOXC03JXHV --paths /*",
     "sync": "aws s3 sync C:/Users/alex/Desktop/mvid_deps/build s3://mvid-build/ --delete"

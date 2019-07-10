@@ -18,6 +18,7 @@ export default class AudioTheory extends PureComponent {
 
         this.gui = new dat.GUI({ autoPlace: false, width: "50%" });
         this.analyser = new SpectrumAnalyser(this.gui, null, true);
+        this.analyser.setUpGUI();
         this.gui.__folders["General settings"].open();
 
         this.fftSize = 16384;
@@ -526,53 +527,7 @@ export default class AudioTheory extends PureComponent {
                     </Typography>
                    
 
-                    
-                    <Typography
-                        style={{ marginTop: 15 }}
-                        className={classes.item}
-                        component="h4"
-                        variant="h4"
-
-                    >
-                        Demo
-                        </Typography>
-
-                    <Typography
-                        style={{ marginTop: 15, marginBottom: 15 }}
-                        className={classes.item}
-                    >
-                        Below is a demonstration of of how the windowing looks.
-                        The red line is the playback time and the blue area is the
-                        window containing the samples extracted. In the next part we 
-                        will go over how to use the frequency data in an impact analyser.
-                    </Typography>
-
-
-                    <div
-                    style={{
-                        width: "100%",
-                        margin: 20,
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between"
-                    }}
-                >
-                    <div>
-                        <button onClick={this.play}>play</button>
-                        <button onClick={this.stop}>stop</button>
-                    </div>
-
-                    <div>
-                        window size:
-                        <select onChange={this.setfftSize}>
-                            <option>16384</option>
-                            <option>8192</option>
-                            <option>4096</option>
-                            <option>2048</option>
-                        </select>
-                    </div>
-                </div>
-
+        
                     
                 </div>
 

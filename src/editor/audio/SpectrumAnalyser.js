@@ -12,22 +12,36 @@ import {
 
 export default function SpectrumAnalyser(gui, parent, disableAll=false) {
     this.object = parent;
+    let controllerProperties = [];
 
     let addAttribute = (name, value, folder, configs = {}) => {
         this[name] = value;
-        let c; 
-        if(folder && !parent) {
-            c = folder.add(this, name, configs.min, configs.max, configs.step);
-        }else {
-            c = parent.addController(folder, this, name, {min: configs.min, max: configs.max, path: "spectrum-analyser" });
-        }
-
-        if(disableAll) {
-            c.disableAll();
-        }
+        controllerProperties.push( {folder, obj: this, name, configs: {min: configs.min, max: configs.max, path: "spectrum-analyser" }});
     };
 
-    // ----
+    this.setUpGUI = () => {
+        controllerProperties.forEach(cp => {
+            const {
+                folder,
+                obj, 
+                name,
+                configs
+            } = cp;
+
+            let c; 
+            if(folder && !parent) {
+                c = folder.add(obj, name, configs.min, configs.max, configs.step);
+            }else {
+                c = parent.addController(folder, obj, name, {min: configs.min, max: configs.max, path: "spectrum-analyser" });
+            }
+    
+            if(disableAll) {
+                c.disableAll();
+            }
+        })
+    }
+
+        // ----
     const f1 = gui.addFolder("General settings");
     addAttribute("spectrumSize", 64, f1, { min: 0 });
     addAttribute("shouldCapHeight", false, f1, { min: 0 });
@@ -73,9 +87,10 @@ export default function SpectrumAnalyser(gui, parent, disableAll=false) {
 
     const f5 = gui.addFolder("Dropoff Smoothing");
     addAttribute("dropoffAmount", 0.2, f5, { min: 0 });
-
+    
+  
     this.prevOrigArray = [];
-
+    this.folder = gui;
 
     this.analyse = (array) => {
         let newArr = array.slice();

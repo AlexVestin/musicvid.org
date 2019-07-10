@@ -37,8 +37,6 @@ const shader = {
 		#include <common>
 		#include <color_pars_vertex>
 		#include <fog_pars_vertex>
-		#include <logdepthbuf_pars_vertex>
-		#include <clipping_planes_pars_vertex>
 
 		uniform float linewidth;
 		uniform vec2 resolution;
@@ -77,17 +75,8 @@ const shader = {
 
 		void main() {
 
-			#ifdef USE_COLOR
+	
 
-				vColor.xyz = ( position.y < 0.5 ) ? instanceColorStart : instanceColorEnd;
-
-			#endif
-
-			#ifdef USE_DASH
-
-				vLineDistance = ( position.y < 0.5 ) ? dashScale * instanceDistanceStart : dashScale * instanceDistanceEnd;
-
-			#endif
 
 			float aspect = resolution.x / resolution.y;
 
@@ -120,7 +109,7 @@ const shader = {
 
 			// clip space
 			vec4 clipStart = projectionMatrix * start;
-			vec4 clipEnd = projectionMatrix * end;
+			vec4 clipEnd = projectionMatrix * end ;
 
 			// ndc space
 			vec2 ndcStart = clipStart.xy / clipStart.w;
@@ -168,12 +157,11 @@ const shader = {
 
 			clip.xy += offset;
 
-			gl_Position = clip;
+			gl_Position = clip*0.2;
 
 			vec4 mvPosition = ( position.y < 0.5 ) ? start : end; // this is an approximation
 
-			#include <logdepthbuf_vertex>
-			#include <clipping_planes_vertex>
+			
 			#include <fog_vertex>
 
 		}
@@ -215,7 +203,7 @@ const shader = {
 
 	
 
-			gl_FragColor = vec4( 1.0,1.0,1.0,0.3);
+			gl_FragColor = vec4( 1.0,1.0,1.0,1.0);
 
 		}
 		`

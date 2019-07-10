@@ -59,7 +59,13 @@ class ColorController extends Controller {
     this.__input.type = 'text';
     this.__input_textShadow = '0 1px 1px ';
 
+    dom.bind(this.__input, 'keyup', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    })
+
     dom.bind(this.__input, 'keydown', function(e) {
+
       if (e.keyCode === 13) { // on enter
         onBlur.call(this);
       }
@@ -70,7 +76,8 @@ class ColorController extends Controller {
     dom.bind(this.__selector, 'mousedown', function(/* e */) {
       dom
         .addClass(this, 'drag')
-        .bind(window, 'mouseup', function(/* e */) {
+        .bind(window, 'mouseup', function(e/* e */) {
+       
           dom.removeClass(_this.__selector, 'drag');
         });
     });
@@ -177,7 +184,7 @@ class ColorController extends Controller {
       dom.bind(window, 'touchend', fieldUpH);
     }
 
-    function fieldUpSV() {
+    function fieldUpSV(e) {
       dom.unbind(window, 'mousemove', setSV);
       dom.unbind(window, 'touchmove', setSV);
       dom.unbind(window, 'mouseup', fieldUpSV);

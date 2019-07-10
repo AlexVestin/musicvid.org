@@ -11,7 +11,7 @@ export default class PointAutomation extends Automation {
     constructor(gui) {
         super(gui);
         this.type = "point";
-        this.name = "Point Thing";
+        this.name = "Point Automation";
         this.points = [];
         this.interpolation = "linear";
     }

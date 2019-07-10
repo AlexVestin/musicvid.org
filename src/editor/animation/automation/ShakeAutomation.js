@@ -6,8 +6,8 @@ export default class AudioReactiveAutomation extends Automation {
     constructor(gui) {
         super(gui);
         this.type = "shake";
-        this.name = "Audio Reactive Thing";
-        this.folder = gui.addFolder("my folder", false); 
+        this.name = "Shake automation";
+        this.folder = gui.addFolder("my folder", { useTitleRow: false }); 
 
         this.values = ["x", "y"];
 
@@ -53,7 +53,7 @@ export default class AudioReactiveAutomation extends Automation {
     }
 
     __setUpGUI = (folder) => {
-        this.addController(folder, this, )
+
     }
 
     update = (time, audioData) => {
@@ -82,7 +82,6 @@ export default class AudioReactiveAutomation extends Automation {
         let dx = trigFuncX(this.waveFrameX) * this.maxShakeDisplacement * this.waveAmplitudeX * multiplier;
         let dy = trigFuncY(this.waveFrameY) * this.maxShakeDisplacement * this.waveAmplitudeY * multiplier;
 
-        console.log(multiplier, this.waveFrameX, this.maxShakeDisplacement,dx,dy,this.x,this.y)
         this.x += dx;
         this.y += dy;
     }

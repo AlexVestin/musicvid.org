@@ -59,6 +59,7 @@ export default class PointBed extends BaseItem {
         this.analyser.smoothingTimeConstant = 0.03;
         this.analyser.smoothingPasses = 3;
         this.analyser.smoothingPoints = 9;
+        this.analyser.setUpGUI();
         return this.__addFolder(folder);
     };
 

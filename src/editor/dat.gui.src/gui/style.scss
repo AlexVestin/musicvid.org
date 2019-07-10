@@ -176,6 +176,19 @@ $input-color: lighten($background-color, 8.5%);
 
     }
 
+    & .buttonContainer button .removeIcon {
+      display: block;
+      text-indent: -9999px;
+
+      width: 16px;
+      height: 16px;
+
+     background-size: 16px 16px;
+      //background: url("baseline-keyboard_arrow_down-24px.svg") no-repeat;
+      background:   url("1x/baseline_keyboard_arrow_up_white_18dp.png") no-repeat;
+      
+    }
+
   }
 
   .closed li.title {

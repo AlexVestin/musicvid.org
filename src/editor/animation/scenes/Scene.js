@@ -32,8 +32,7 @@ export default class Scene extends SerializableObject {
     addItems = (items) => {
         items.forEach(item => {
             const i = this.addItemFromText(item.__itemName);
-            i.__setControllerValues(item.controllers);
-            i.__automations = item.__automations;
+            i.__setControllerValues(item.controllers, item.__automations);
             i.setFolderName(i.name);
         });         
     }
@@ -113,10 +112,10 @@ export default class Scene extends SerializableObject {
 
     setUpGui = (before =  null) => {
         const gui = this.gui;
-        this.folder = gui.addFolder(this.__id, true, true, before);
+        this.folder = gui.addFolder(this.__id, {useTitleRow: true, moveButtons: true, before, remove: this.removeMe});
         this.folder.upFunction = () => this.__moveScene({up: true, scene: this});
         this.folder.downFunction = () => this.__moveScene({up: false, scene: this});
-        this.itemsFolder = this.folder.addFolder("Items");
+        this.itemsFolder = this.folder.addFolder("Items", {addButton: true});
         
         this.itemsFolder.add(this, "addItem");
         this.cameraFolder = this.folder.addFolder("Camera");
@@ -213,7 +212,7 @@ export default class Scene extends SerializableObject {
                 height: this.resolution.height,
                 scene: this.scene,
                 camera: this.camera,
-                remove: this.removeItem
+                remove: this.removeItem,
             };
 
             if(this.type  === "canvas") {
@@ -243,6 +242,10 @@ export default class Scene extends SerializableObject {
     }
 
     render = (renderer) => {
+        this.items.forEach(item => {
+            item.render(renderer, this.camera);
+        });
+        
         renderer.render(this.scene, this.camera);
     }
 

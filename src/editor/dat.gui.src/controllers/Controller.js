@@ -28,9 +28,9 @@ class Controller {
     this.__uuid = uuid();
     this.__updateCounter = 0;
     this.__subControllers = [];
-    this.__linkedTo = [];
     this.isSubController = false;
-    
+
+  
     /**
      * Those who extend this class will put their DOM elements in here.
      * @type {DOMElement}
@@ -63,6 +63,10 @@ class Controller {
      * @ignore
      */
     this.__onFinishChange = undefined;
+  }
+
+  reset() {
+    this.setValue(this.initialValue);
   }
 
   /**

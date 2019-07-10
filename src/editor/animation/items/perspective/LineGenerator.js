@@ -1,8 +1,10 @@
 // FROM: https://github.com/Jeremboo/animated-mesh-lines/blob/master/app/objects/LineGenerator.js
 // Project license apply
 
-import { Object3D, Vector3, Color } from "three";
+import { Object3D, Vector3, Color, BackSide } from "three";
 import AnimatedMeshLine from "./AnimatedMeshTube";
+
+
 
 const getRandomFloat = (min, max) => Math.random() * (max - min) + min;
 const getRandomInt = (min, max) =>
@@ -47,7 +49,7 @@ class LineGenerator extends Object3D {
 
     dispose = () => {
         this.stop();
-    }
+    };
 
     stop(callback) {
         this.isStarted = false;
@@ -129,9 +131,9 @@ export default class CustomLineGenerator extends LineGenerator {
         this.lengthUpper = 15;
         this.lengthMult = 1;
         this.directionXUpper = 0;
-        this.directionXLower = -0.8;
-        this.directionYLower = -0.8;
-        this.directionYUpper = 0.8;
+        this.directionXLower = -0.4;
+        this.directionYLower = -0.4;
+        this.directionYUpper = 0.4;
         this.directionZLower = 0;
         this.directionZUpper = 0.8;
         this.visibleLengthLower = 0.05;
@@ -145,7 +147,7 @@ export default class CustomLineGenerator extends LineGenerator {
         this.originZ = 0;
         this.nbrOfPoints = 5;
         this.turbulenceAmt = 2.3;
-        this.width = 15;
+        this.width = 3;
         this.getRandomColor = false;
         this.color = "#FFFFFF";
         this.randomColor = true;
@@ -198,8 +200,6 @@ export default class CustomLineGenerator extends LineGenerator {
                 this.speedMult;
         }
 
-      
-
         let color = getRandomItem(COLORS);
         if (!this.getRandomColor) {
             color = this.color;
@@ -220,13 +220,12 @@ export default class CustomLineGenerator extends LineGenerator {
         });
 
         line.scale.set(this._scale, this._scale, this._scale);
-        /*
+        
         const newPoints = [];
-        for (var i = 0; i < line.__points; i++) {
+        for (var i = 0; i < line.__points.length; i++) {
             const p = line.__points[i];
             newPoints.push(new Vector3(-p.x, p.y, p.z));
         }
-
         const l2 = super.addLine({
             length,
             visibleLength,
@@ -239,10 +238,9 @@ export default class CustomLineGenerator extends LineGenerator {
             opacity,
             nbrOfPoints,
             width: this.width,
-            transformLineMethod: taper,
             nrPrecisionPoints
         });
 
-        l2.scale.set(this._scale, this._scale, this._scale);*/
+        l2.scale.set(this._scale, this._scale, this._scale);
     }
 }

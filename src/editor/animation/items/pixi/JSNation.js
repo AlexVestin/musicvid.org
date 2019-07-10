@@ -115,6 +115,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.container = info.container;
         this.resetPoints();
         this.analyser = new SpectrumAnalyser(this.folder);
+        this.analyser.setUpGUI();
         this.container.addChild(this.graphics)
         const filter = new GlowFilter(40, 4, 0, 0xFF0000, 0.5);
         filter.padding = 50;

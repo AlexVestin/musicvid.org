@@ -5,9 +5,10 @@ export default class SerializableObject {
     constructor() {
         this.__id = uuid();
         this.__automations = [];
+        this.__initialAutomations = [];
         this.__controllers = {};
     }
-    __setControllerValues = values => {
+    __setControllerValues = (values, autos) => {
         let keysChanged = [];
         Object.keys(values).forEach(key => {
             const obj = values[key];
@@ -21,7 +22,7 @@ export default class SerializableObject {
 
             if(obj.subcontrollers && obj.subcontrollers.length > 0) {
                 obj.subcontrollers.forEach(c => {
-                    copyController({item: controller, location: c.location, name: c.name});
+                    copyController({item: controller, location: c.location, name: c.name, initialLoad: true});
                 })
             }
         });
@@ -29,23 +30,30 @@ export default class SerializableObject {
         if(keysChanged.length > 0)
             alert(`${this.name}:${keysChanged.join(" ")} settings has changed internal id or does no longer exist`)
 
+
+        if (autos) {
+            this.__automations = autos;
+            this.__initialAutomations = [...autos];
+        }
+
     };
 
     __serializeControllers = () => {
         const obj = { controllers: {} };
         Object.keys(this.__controllers).forEach(key => {
             const c = this.__controllers[key];
-            const subcontrollers  = c.__subControllers.map(e => {return { name: e.getName(), location: e.__location}});
+            obj.controllers[key] = {};
+            
+            // Check if the controller has a value or is a function controller
             if (c.object[c.property] !== Object(c.object[c.property])) {
-                obj.controllers[key] = {
-                    value: c.object[c.property],
-
-                };
-
-                if(subcontrollers.length > 0) {
-                    obj.controllers[key].subcontrollers = subcontrollers;
-                }
+                obj.controllers[key].value = c.object[c.property];
             } 
+
+            // Check if it has been added to the overview tab
+            const subcontrollers  = c.__subControllers.map(e => {return { name: e.getName(), location: e.__location}});
+            if(subcontrollers.length > 0) {
+                obj.controllers[key].subcontrollers = subcontrollers;
+            }
         });
         return obj;
     };
@@ -59,6 +67,11 @@ export default class SerializableObject {
         obj.__endTime = this.__endTime;
         return obj;
     };
+
+    reset = () => {
+        this.__automations = [...this.__initialAutomations];
+        Object.values(this.__controllers).forEach(controller => controller.reset());
+    }
 
     addControllerWithMeta = (gui, object, name, params, meta) => {
         const c = gui.addWithMeta(object, name, {}, meta);

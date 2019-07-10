@@ -8,7 +8,7 @@ export default function errorReducer(state = {
         
         switch(action.type){
             case "SET_FATAL_ERROR":
-                    const { code , title, message } = action.payload;
+                const { code , title, message } = action.payload;
                 return { ...state, code, message, title }
    
         default:

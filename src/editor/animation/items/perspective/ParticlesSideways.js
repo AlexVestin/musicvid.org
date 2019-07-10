@@ -72,6 +72,13 @@ export default class Particles extends BaseItem {
         this.particles = new THREE.Geometry();
         this.flecks = new THREE.Geometry();
         this.bokeh = new THREE.Geometry();
+        
+
+        // TODO FIX THIS, USE BUFFERGEOMETRY INSTEAD
+        this.particles.morphAttributes = {};
+        this.flecks.morphAttributes = {};
+        this.bokeh.morphAttributes = {};
+
 
         const textureLoader = new THREE.TextureLoader();
 
@@ -224,9 +231,9 @@ export default class Particles extends BaseItem {
         }
 
         // create the particle systems
-        var particleSystem = new THREE.Points(this.particles, this.pMaterial);
-        var fleckSystem = new THREE.Points(this.flecks, this.fleckMaterial);
-        var bokehSystem = new THREE.Points(this.bokeh, this.bokehMaterial);
+        const particleSystem = new THREE.Points(this.particles, this.pMaterial);
+        const fleckSystem = new THREE.Points(this.flecks, this.fleckMaterial);
+        const bokehSystem = new THREE.Points(this.bokeh, this.bokehMaterial);
 
         particleSystem.sortParticles = true;
         particleSystem.geometry.dynamic = true;
@@ -421,7 +428,6 @@ export default class Particles extends BaseItem {
 
     update = (time,  dt, audioData) => {
         const amp = this.analyser.analyse(audioData.frequencyData) * this.amplitude * dt; 
-        console.log(amp, dt)
         this.velMult = amp / 10;
         this.velMult = isNaN(this.velMult) ? 0 : this.velMult;
         particleSize = this.velMult;

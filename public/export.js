@@ -21,7 +21,7 @@ window.__init = (config) => {
         let n = name;
         if(!n.endsWith(".mp4"))
             n += ".mp4"
-        //const proc = spawn('ffmpeg', ['-pix_fmt', 'rgb32', '-s:v', '1280x720', '-f', 'rawvideo', '-i', 'pipe:0', '-framerate', '30', 'output.mp4']);
+
         const args = [
             "-y",
             "-pix_fmt",
@@ -35,6 +35,7 @@ window.__init = (config) => {
             "-i",
             "-",
             "-c:v",
+            //"h264_nvenc",
             "libx264",
             //'-preset',
             //`${preset}`,

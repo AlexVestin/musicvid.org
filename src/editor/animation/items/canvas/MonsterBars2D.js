@@ -31,22 +31,26 @@ export default class MonsterCat extends BaseItem {
         this.shadowBlur = 12;
         this.shadowOffsetX = 0;
         this.shadowOffsetY = 0;
+        this.invertHorizontal = false;
+        this.invertVertical = false;
+
 
         this.color = "#ff0000";
         this.shadowAlpha = 0.5;
         this.spectrumAnimation = "phase_1";
-        this.spectrumSize = 63;
+        this.barsToDraw = 64;
         this.resRatio = info.width / info.height;
-        this.barWidth = Math.floor( ( info.width - (info.width * 0.3) ) / this.spectrumSize);
+        this.barWidth = Math.floor( ( info.width - (info.width * 0.3) ) / this.barsToDraw);
         this.spectrumSpacing = Math.floor(this.barWidth / 5);
         this.blockTopPadding = 50 * this.resRatio;
-        this.spectrumWidth = this.spectrumSize * (this.barWidth + this.spectrumSpacing);
+        this.spectrumWidth = this.barsToDraw * (this.barWidth + this.spectrumSpacing);
         this.spectrumHeight = info.height;
         this.positionX = 0.5;
         this.positionY = 0.5;
         this.animTime = 0.5;
-        this.setUpFolder();
         this.analyser = new SpectrumAnalyser(this.folder);
+        this.setUpFolder();
+        this.analyser.setUpGUI();
 
         
         this.lastArray = [];
@@ -90,6 +94,10 @@ export default class MonsterCat extends BaseItem {
 
     __setUpGUI = (folder) => {
         this.addController(folder, this, "color", {color: true});
+        this.addController(folder,this, "barsToDraw", 0, 1000, 1);
+        this.addController(folder,this.analyser, "spectrumSize", 0, 1000, 1).onChange(this.analyser.folder.updateDisplay());
+        this.addController(folder,this, "invertHorizontal");
+        this.addController(folder,this, "invertVertical");
         this.addController(folder,this, "animTime", 0, 10);
         this.addController(folder,this, "barWidth", 0, 20, 1);
         this.addController(folder,this, "positionX");
@@ -100,6 +108,7 @@ export default class MonsterCat extends BaseItem {
         this.addController(folder,this, "barHeightMultiplier", 0, 25.0, 0.01);
         this.addController(folder,this, "shadowOffsetX", -300, 300);
         this.addController(folder,this, "shadowOffsetY", -300, 300);
+        
         return this.__addFolder(folder);
     };
 
@@ -108,12 +117,17 @@ export default class MonsterCat extends BaseItem {
             spectrumHeight,
             spectrumWidth,
             resRatio,
-            spectrumSize,
             spectrumSpacing,
             barWidth,
             positionX,
             positionY,
+            barsToDraw,
         } = this;
+
+        let spectrumSize = barsToDraw;
+        if (barsToDraw > this.analyser.spectrumSize) {
+            spectrumSize = this.analyser.spectrumSize;
+        }
 
         let array; 
         if(shouldIncrement) {
@@ -131,10 +145,14 @@ export default class MonsterCat extends BaseItem {
         this.ctx.shadowOffsetX = this.shadowOffsetX;
         this.ctx.shadowOffsetY = this.shadowOffsetY;
         this.ctx.fillStyle = this.color;
-        this.spectrumWidth = this.spectrumSize * (this.barWidth + this.spectrumSpacing);
+        this.spectrumWidth = spectrumSize * (this.barWidth + this.spectrumSpacing);
         let ratio;
         const x = positionX * this.canvas.width - this.spectrumWidth / 2;
         const y = (positionY-1) * this.canvas.height;
+
+        if (this.invertHorizontal) {
+            array = array.reverse();
+        }
 
         if (this.spectrumAnimation === "phase_1") {
             ratio = time * 2;
@@ -188,7 +206,9 @@ export default class MonsterCat extends BaseItem {
                     value = 2 * resRatio;
                 }
 
-      
+                if (this.invertVertical) {
+                    value = -value;
+                }
 
                 this.ctx.fillRect(
                     x  + i * (barWidth + spectrumSpacing),

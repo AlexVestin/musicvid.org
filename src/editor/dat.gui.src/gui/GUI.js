@@ -379,25 +379,62 @@ const GUI = function(pars) {
       };
 
       dom.addClass(this.__ul, GUI.CLASS_CLOSED);
+      
+      // Create container for folder buttons
+      const div = document.createElement("div");
+      dom.addClass(div, "buttonContainer");
+      titleRow.appendChild(div);
 
-      if(params.addButtons) {
-        const div = document.createElement("div");
-        dom.addClass(div, "buttonContainer");
+      // Move scene up and down buttons
+      if(params.moveButtons) {
+  
         const upIcon = document.createElement("span");
         const downIcon = document.createElement("span");
-
 
         this.downButton = document.createElement("button");
         div.appendChild(this.downButton);
         this.downButton.appendChild(downIcon);
-        titleRow.appendChild(div);
+        
         this.upButton = document.createElement("button");
         this.upButton.appendChild(upIcon);
         div.appendChild(this.upButton);
 
-
         dom.addClass(downIcon, 'downIcon');
         dom.addClass(upIcon, 'upIcon');
+      }
+
+      if (params.add) {
+        const addIcon = document.createElement("span");
+        this.addButton = document.createElement("button");
+        this.addButtons.appendChild(addIcon);
+        addIcon.style.color = "green";
+        addIcon.innerHTML = "+";
+        div.appendChild(this.addButton);
+      } 
+
+      if (params.remove) {
+        const removeIcon = document.createElement("span");
+        this.removeButton = document.createElement("button");
+        this.removeButton.appendChild(removeIcon);
+        removeIcon.innerHTML = "del";
+        removeIcon.style.color = "red";
+        div.appendChild(this.removeButton);
+      }
+
+
+      if (params.reset) {
+        const reset = document.createElement("span");
+        this.resetButton = document.createElement("button");
+        this.resetButton.appendChild(reset);
+        reset.innerHTML = "reset";
+        reset.style.color = "white";
+        div.appendChild(this.resetButton);
+
+        this.resetButton.onclick = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          params.reset();
+        }
       }
       
 
@@ -657,8 +694,8 @@ common.extend(
       removeListeners(this);
     },
 
-    
 
+  
     /**
      * Creates a new subfolder GUI instance.
      * @param name
@@ -667,25 +704,35 @@ common.extend(
      * name
      * @instance
      */
-    addFolder: function(name, useTitleRow = true, addButtons = false, before = null) {
+    addFolder: function(name, params = {}) {
+      const { useTitleRow = true, moveButtons = false, before = null, remove = null, reset= null } = params;
       // We have to prevent collisions on names in order to have a key
       // by which to remember saved values
-     
+      
+
+      let n = name;
       if (this.__folders[name] !== undefined) {
-          let s = "", i = name.length -1 ;
-          while (!isNaN(parseInt(name[i--], 10)) && i >= 0) 
-            s+= name[i+1];
-          name =  (s === "") ? (name + "1") : name
+          const match = name.match(/\d+$/);
+          if(match !== null) {
+            const nr = parseInt(match[0], 10);
+            n = name.split(match[0])[0]  + String(nr + 1);
+          } else {
+            n = name + " 2";
+          } 
+          
+
           /*
         throw new Error('You already have a folder in this GUI by the' +
           ' name "' + name + '"');*/
       }
 
       const newGuiParams = { 
-        name: name, 
+        name: n, 
         parent: this, 
         useTitleRow: useTitleRow, 
-        addButtons: addButtons, 
+        moveButtons: moveButtons, 
+        remove: null,
+        reset: reset,
       };
 
       // We need to pass down the autoPlace trait so that we can
@@ -696,18 +743,18 @@ common.extend(
       // Do we have saved appearance data for this folder?
       if (this.load && // Anything loaded?
         this.load.folders && // Was my parent a dead-end?
-        this.load.folders[name]) { // Did daddy remember me?
+        this.load.folders[n]) { // Did daddy remember me?
         // Start me closed if I was closed
-        newGuiParams.closed = this.load.folders[name].closed;
+        newGuiParams.closed = this.load.folders[n].closed;
 
         // Pass down the loaded data
-        newGuiParams.load = this.load.folders[name];
+        newGuiParams.load = this.load.folders[n];
       }
 
       const gui = new GUI(newGuiParams);
-      this.__folders[name] = gui;
+      this.__folders[n] = gui;
 
-      if(addButtons) {
+      if(moveButtons) {
         gui.downButton.onclick = (event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -727,9 +774,6 @@ common.extend(
         }
       }
       
-
-  
-
       if(!this.__root) {
         gui.__root = this;
       }else {
@@ -737,7 +781,7 @@ common.extend(
       }
       const beforeLi = before ? before : null;
       const li = addRow(this, gui.domElement, beforeLi);      
-      this.__folders[name].li = li;
+      this.__folders[n].li = li;
       dom.addClass(li, 'folder');
       return gui;
     },
@@ -1274,6 +1318,7 @@ export function copyController(options) {
     g.removeButton = removeButton;
 
     g.name(options.name);
+
     item.__subControllers.push(g);
   }
 }

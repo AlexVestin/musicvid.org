@@ -13,10 +13,10 @@ const styles = theme => ({
 function FolderList(props) {
     const { classes, points } = props;
     return (
-        <div className={classes.root}>
+        <div className={classes.root} style={{marginTop: 10}}>
             {points.map( (point,i) => {
                 return (
-                    <div key={point.id} style={{marginTop: 10}}>
+                    <div key={point.id} >
                         <Point removePoint={props.removePoint} point={point}></Point>
                     </div>
                 );

@@ -29,7 +29,7 @@ export default class BaseItem extends SerializableObject {
             this.__scale = 1;
             this.__gui = info.gui;
             this.parentRemove = info.remove;
-            this.folder = this.__gui.addFolder(this.__id);
+            this.folder = this.__gui.addFolder(this.__id, { reset: this.reset } );
         }
     }
 
@@ -92,5 +92,6 @@ export default class BaseItem extends SerializableObject {
     setUpGUI = () => {};
     prepareEncoding = () => {};
     cancelEncoding = () => {};
+    render = () => {};
 
 }
