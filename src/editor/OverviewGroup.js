@@ -18,7 +18,9 @@ export default class OverviewgGroup extends SerializableObject {
         this.folder.__id = this.__id;
         this.folder.__hide = this.toggleHide;
         this.hidden = false;
-        this.addControllers();
+        
+        this.added = true;
+        this.addControllers();   
     }
 
     removeMe = () => {
@@ -38,16 +40,22 @@ export default class OverviewgGroup extends SerializableObject {
         this.removeBtn = this.addControllerWithMeta(this.folder, this, "removeMe", {}).disableAll();
     }
 
-    toggleHide = () => {
-        if (this.hidden) {
+    toggleHide = (on) => {
+        console.log(on, "souinfg")
+        if (!this.added && on) {
+            this.added = true;
             this.addControllers();
-        } else {
-            this.folder.remove(this.removeBtn);
-            this.folder.remove(this.nameBtn);
-            delete this.folder.__controllers[this.removeBtn.__id];
-            delete this.folder.__controllers[this.nameBtn.__id];
+        } else if(!on){
+            if (this.added) {
+                this.folder.remove(this.removeBtn);
+                this.folder.remove(this.nameBtn);
+                delete this.folder.__controllers[this.removeBtn.__id];
+                delete this.folder.__controllers[this.nameBtn.__id];
+            }
+
+            this.added = false;
         }
 
-        this.hidden = !this.hidden;
+        this.hidden = !on;
     }
 }

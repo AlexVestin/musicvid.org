@@ -15,16 +15,19 @@ export default class SerializableObject {
             const controller = this.__controllers[key];
             if(!controller) {
                 keysChanged.push(key);
-            }else {
+            }else if(values[key].value){
                 controller.setValue(values[key].value);
                 controller.updateDisplay();
             }
 
-            if(obj.subcontrollers && obj.subcontrollers.length > 0) {
-                obj.subcontrollers.forEach(c => {
-                    copyController({item: controller, location: c.location, name: c.name, initialLoad: true});
-                })
+            if(values[key].value !== undefined) {
+                if(obj.subcontrollers && obj.subcontrollers.length > 0) {
+                    obj.subcontrollers.forEach(c => {
+                        copyController({item: controller, location: c.location, name: c.name, initialLoad: true});
+                    })
+                }
             }
+            
         });
 
         if(keysChanged.length > 0)

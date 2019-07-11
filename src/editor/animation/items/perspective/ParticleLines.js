@@ -105,7 +105,7 @@ export default class ParticleLines extends BaseItem {
         this.lines.stop();
     };
 
-    play = () => {
+    start = () => {
         this.lines.start();
     };
 
@@ -183,5 +183,6 @@ export default class ParticleLines extends BaseItem {
             this.updateSpeedAmplitude * dt * 60,
             this.updateOpacity
         );
+
     };
 }

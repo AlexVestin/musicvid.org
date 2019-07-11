@@ -88,6 +88,7 @@ export default class BaseItem extends SerializableObject {
     setTime = () => {};
     stop = () => {};
     seekTime = (t) => {}; 
+    start = () => {};
     play = (t) => {};
     setUpGUI = () => {};
     prepareEncoding = () => {};

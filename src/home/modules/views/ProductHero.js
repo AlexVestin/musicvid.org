@@ -58,7 +58,7 @@ class ProductHero extends React.PureComponent {
                 >
                     Make professional visuals directly in your browser.
                     <br />
-                    No payments, watermarks or sign-ups!
+                    No payments, watermarks or forced sign-ups!
                 </Typography>
                 <Button
                     color="secondary"

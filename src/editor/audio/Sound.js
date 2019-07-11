@@ -1,4 +1,5 @@
 import KissFFT from "./KissFFT";
+import { setSnackbarMessage } from "../../fredux/actions/message";
 
 export default class Audio {
     constructor(infile, gui, onprogress) {
@@ -32,7 +33,12 @@ export default class Audio {
 
     loadFft = () => {
         this.Module = {};
-        KissFFT(this.Module);
+        try {
+            KissFFT(this.Module);
+        } catch(err) {
+            setSnackbarMessage("Failed to initialize FFT module, please reload", "error", 10000000);
+        }
+        
         this.Module["onRuntimeInitialized"] = () => {
             this.Module._init_r(this.fftSize);
             this.moduleLoaded = true;

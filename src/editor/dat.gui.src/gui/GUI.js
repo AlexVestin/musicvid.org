@@ -617,10 +617,10 @@ common.extend(
 
       this.__folders["Overview"].__controllers.forEach(c => c.hideRemoveButton(on));
       const f = this.__folders["Overview"].__folders; 
-      Object.values(f).forEach(folder =>  {
-        folder.__controllers.forEach(c => c.hideRemoveButton(on))
-        folder.__hide();
-      }
+        Object.values(f).forEach(folder =>  {
+          folder.__controllers.forEach(c => c.hideRemoveButton(on));
+          folder.__hide(on);
+        }
       )
     },
 
@@ -1307,6 +1307,8 @@ export function copyController(options) {
     }else if(item instanceof BooleanController || item instanceof Function) {
       g = target.add(item.object, item.property);
     } else {
+
+      console.log(item.object)
       g = target.add(item.object, item.property, item.__min, item.__max, item.__step);
     }
     g.__onChange = item.__onChange; 

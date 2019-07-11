@@ -121,12 +121,11 @@ class ProductHowItWorks extends React.PureComponent {
                         </Grid>
                     </div>
                     <Button
-                        disabled
                         color="secondary"
                         size="large"
                         variant="contained"
                         className={classes.button}
-                        onClick={() => this.setState({ redirectTo: "" })}
+                        onClick={() => this.setState({ redirectTo: "/tutorial" })}
                     >
                         More information
                     </Button>

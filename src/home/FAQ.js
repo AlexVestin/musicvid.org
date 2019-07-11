@@ -16,7 +16,6 @@ function Terms() {
 
             <LayoutBody margin marginBottom>
             <Typography
-                variant="h6"
                 align="center"
                 style={{display:"flex", flexDirection:"row", justifyContent:"center"}}
             >
@@ -28,7 +27,6 @@ function Terms() {
             </Typography>
 
             <Typography
-                variant="h6"
                 align="center"
                 style={{display:"flex", flexDirection:"row",justifyContent:"center"}}
             >
@@ -59,13 +57,21 @@ function Terms() {
                         the site.     
                     </FAQItem>
 
+                    <FAQItem title="Can I use my exported video commercially?">
+                        Yes, however if there are licensed items in your project the attribution clause applies to these.
+                        This means that the author of the visualizer needs to be credited if you share the video. You can
+                        find more info on this in the <i>What 'add attribution visibly to my content' means:</i> point
+                        a bit further down on this page.  
+                    </FAQItem>
+
                     <FAQItem title="How do I use the site?">
                        Check out the <Link to="/tutorial">tutorials</Link>
                     </FAQItem>
 
                     <FAQItem title="Something broke/doesn't work!">
                         The site is developed to work in Chrome/FireFox, so make sure that you're
-                        using a recent version of either of those. After that you can find help in the bugs channel 
+                        using a recent version of either of those. Try to refreshing the page, since some bugs may have caused the
+                        browser to hang. If it still doesn't work you can find help in the bugs channel 
                         on the <a href="https://discord.gg/Qf7y579">discord</a>, or email me at musicvid.org@gmail.com.     
                     </FAQItem>
 
@@ -93,7 +99,7 @@ function Terms() {
                     </FAQItem>
 
                     <FAQItem title="Are the images free to use?">
-                        Yes! The images are grabbed from Pexel. So the pexel license applies to them.
+                        Yes! The images are grabbed from Pexel. So the <a href="https://www.pexels.com/photo-license/">Pexel license</a> applies to them.
                     </FAQItem>
 
                     <FAQItem title="What does the desktop version do?">

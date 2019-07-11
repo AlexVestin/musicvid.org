@@ -61,6 +61,89 @@ class App extends PureComponent {
         return this.modalRef.current.toggleModal(1, true).then(this.onSelect);
     };
 
+    keyBindings = (e) => {
+        if (!this.state.encoding && this.state.audioLoaded && this.state.videoLoaded) {
+
+        
+            console.log("kje")
+            if (e.keyCode === 90 && e.ctrlKey) {
+                alert("Ctrl+z");
+            } else
+
+            if (e.ctrlKey) {
+                switch(e.keyCode) {
+                    // Left key
+                    case 37:
+                        this.time -= 20;
+                        if(this.time < 0)
+                            this.time = 0;
+                        
+                        this.seek(this.time);     
+                    break;
+                    // right key
+                    case 39:
+                    this.time += 20;
+                    if(this.time < this.state.duration)
+                        this.time = this.state.duation;
+                    
+                    this.seek(this.time);     
+                    break;
+                    // spacebar
+                    case 32:
+                        this.stop();
+                       
+                    break;
+                    default:
+                        console.log()
+                }
+            } else if(e.shiftKey) {
+                switch(e.keyCode) {
+                    // Left key
+                    case 37:
+                        
+                    break;
+                    // right key
+                    case 39:
+                
+                    break;
+                    // spacebar
+                    case 32:
+                        this.stop();
+                        this.play();
+                    break;
+                    default:
+                        console.log()
+                }
+            }else {
+                switch(e.keyCode) {
+                    // Left key
+                    case 37:
+                        this.time -= 5;
+                        if(this.time < 0)
+                            this.time = 0;
+                        
+                        this.seek(this.time);     
+                    break;
+                    // right key
+                    case 39:
+                    this.time += 5;
+                    if(this.time < this.state.duration)
+                        this.time = this.state.duation;
+                    
+                    this.seek(this.time);     
+                    break;
+                    // spacebar
+                    case 32:
+                        this.play();
+                    break;
+                    default:
+                        console.log()
+                }
+            }
+        }
+      
+    }
+
     toggleAdvancedMode = advanced => {
         if (advanced) {
             this.addOverviewFolderButton = this.overviewFolder
@@ -139,6 +222,8 @@ class App extends PureComponent {
     }
 
     componentDidMount = async () => {
+        document.onkeyup = this.keyBindings;
+        
         if (!this.fastLoad) {
             window.onbeforeunload = function(event) {
                 // do stuff here
@@ -310,6 +395,7 @@ class App extends PureComponent {
         this.stop();
 
         this.exporter.prepare();
+        this.animationManager.start();
         this.exporter.encode();
         this.setState({ encoding: true });
     };
@@ -510,6 +596,7 @@ class App extends PureComponent {
                                 ref={this.trackRef}
                             >
                                 <WaveCanvas
+                                
                                     ref={this.audioWaveCanvasRef}
                                     classes={classes}
                                 />

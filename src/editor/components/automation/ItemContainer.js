@@ -29,7 +29,13 @@ export default class ItemContainer extends PureComponent {
     };
 
     remove = () => {
-        this.props.onRemove(this.props.item);
+        const root = this.props.gui.getRoot();
+        root.modalRef.toggleModal(22, true, { title: "automation" }).then((response) => {
+            if(response) {
+                this.props.onRemove(this.props.item);
+            }
+            
+        })
     }
 
     render() {

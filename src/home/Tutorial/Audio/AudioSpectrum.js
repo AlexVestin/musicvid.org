@@ -129,7 +129,7 @@ export default class AudioTheory extends PureComponent {
 
         for(let i = 0; i < spectrumSize; i++) {
             
-            var bin = Math.pow(i / spectrumSize, spectrumScale) * (e - s) + s;
+            var bin = Math.pow(i / spectrumSize, spectrumScale) * (e - s);
             const x = (bin / length) * width;
 
             let val =  fd[Math.floor(bin) + s] * (bin % 1) + fd[Math.floor(bin + 1) + s] * (1 - (bin % 1));
@@ -225,8 +225,8 @@ export default class AudioTheory extends PureComponent {
                 </Typography>
 
                 <Typography>
-                    The spectrum analyser is in my opinion the more interesting of the two analysers since it allows for more advanced
-                    visualizers. This analyser is almost entirely built from functions in Caseifs Vis.js project. 
+                    The spectrum analyser allows for more advanced visualizers. This analyser is almost entirely built from functions in 
+                    Caseifs Vis.js project. 
 
                     <div style={{marginTop: 30, display: "flex", flexDirection: "row", justifyContent: "space-evenly"}}>
                         <div style={{display:"flex", flexDirection: "column",alignItems: "center"}}>

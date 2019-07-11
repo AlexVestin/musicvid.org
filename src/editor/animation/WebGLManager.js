@@ -107,10 +107,12 @@ export default class WebGLManager {
                 new OverviewGroup(
                     root.__folders["Overview"],
                     fold.id,
-                    fold.name
+                    fold.name,
+                
                 );
             });
-        }
+        };
+        console.log(proj);
 
         Object.assign(this, proj.settings);
         this.settingsFolder.updateDisplay();
@@ -400,7 +402,12 @@ export default class WebGLManager {
         return items;
     };
 
+    start = () => {
+        this.scenes.forEach(scene => scene.items.forEach(item => item.start()));
+    }
+
     play = t => {
+        this.start();
         this.scenes.forEach(scene => scene.play(t));
     };
 

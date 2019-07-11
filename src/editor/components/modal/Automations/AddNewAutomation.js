@@ -8,9 +8,6 @@ const customAutomations = [
   {name: "Audio Reactive Automation", description: "Uses the impact analyser to automate a value", type: "audio"},
   {name: "Math Input Automation", description: "Use a formula/script to make a custom automation", type: "math"},
   {name: "Shake Automation", description: "Triggers random values, useful for shake animations", type: "shake"},
-  {name: "Color Automation", description: "Automate color using RGB or hue/saturation", type: "color"},
-
-
 ]
 
 export default class AddNewAutomation extends PureComponent {

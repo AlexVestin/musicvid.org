@@ -143,7 +143,8 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
         this.uniforms.texture1.value.dispose();
     }
 
-    changeImage() {
+
+    changeImage = () => {
         loadImageTexture(this, "setBackground");
     }
 

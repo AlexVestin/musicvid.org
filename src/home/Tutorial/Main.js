@@ -10,13 +10,16 @@ const tutorials = [
     {
         path: "basics",
         title: "Basics",
-        description: "How to edit and export a video using the site"
+        description: "How to edit and export a video using the site",
+        disabled: true
     },
 
     {
         path: "advanced",
         title: "Advanced",
-        description: "More advanced features, such as creating and sharing projects."
+        description:
+            "More advanced features, such as creating and sharing projects.",
+        disabled: true
     },
 
     {
@@ -28,17 +31,20 @@ const tutorials = [
     {
         path: "automations",
         title: "Automations",
-        description: "How the automations work and how to use them in your projects"
+        description:
+            "How the automations work and how to use them in your projects",
+        disabled: true
     },
 
     {
         path: "exporting",
         title: "Exporting",
-        description: "What the export settings does, and how to make sure your video looks great"
+        description:
+            "What the export settings does, and how to make sure your video looks great"
     }
 ];
 
-function Terms() {
+function Terms(props) {
     return (
         <React.Fragment>
             <LayoutBody margin marginBottom>
@@ -51,21 +57,30 @@ function Terms() {
                     Tutorials
                 </Typography>
 
-                <ul>
-                    {tutorials.map(tut => {
-                        return (
-                            <div key={tut.path} className={classes.tutorialContainer}>
-                                <Link
-                                    className={classes.link}
-                                    to={"/tutorial/" + tut.path}
-                                >
-                                    <h4>{tut.title}</h4>
-                                    {tut.description}
-                                </Link>
-                            </div>
-                        );
-                    })}
-                </ul>
+                <Typography
+                    variant="h6"
+                    gutterBottom
+                    marked="center"
+                    align="center"
+                >
+                    All tutorials are not done yet but will show up here when they are ready
+                </Typography>
+
+
+                {tutorials.map(tut => {
+                    return (
+                        <ul
+                            className={!tut.disabled ? classes.tutorialContainer : ""}
+                            onClick={() =>
+                                props.history.push("/tutorial/" + tut.path)
+                            }
+                            style={{ color: tut.disabled ? "#afafaf" : "" }}
+                        >
+                            <h4>{tut.title}</h4>
+                            {tut.description}
+                        </ul>
+                    );
+                })}
             </LayoutBody>
         </React.Fragment>
     );
