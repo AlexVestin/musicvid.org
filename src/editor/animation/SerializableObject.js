@@ -96,8 +96,26 @@ export default class SerializableObject {
             c = gui.add(object, name, options.values);
         } else if (options.color) {
             c = gui.addColor(object, name);
+            const f = gui.addFolder(c.__uuid, {useTitleRow: false});
+            c.__colorControllers = f;
+            c.__useHue = this.addController(f, c, "useHue", {path: name + "-useHue"}).onChange(c.enableUseHue);
+            c.__hue = this.addController(f, c, "hue", {path: name + "-hue", min: 0, max: 360, colAuto: c}).onChange(c.setColor);
+            c.__saturation = this.addController(f, c, "saturation", {path: name + "-saturation", min: 0, max: 1, colAuto: c}).onChange(c.setColor);
+            c.__lightness = this.addController(f, c, "lightness", {path: name + "-lightness", min: 0, max: 1, colAuto: c}).onChange(c.setColor);
+
+            c.__useRGB = this.addController(f, c, "useRGB", {path: name + "-useRGB"}).onChange(c.enableUseRGB);
+            c.__red = this.addController(f, c, "red", {path: name + "-red", min: 0, max: 255, step: 1, colAuto: c}).onChange(c.setColor);
+            c.__green = this.addController(f, c, "green", {path: name + "-green", min: 0, max: 255, step: 1, colAuto: c}).onChange(c.setColor);
+            c.__blue = this.addController(f, c, "blue", {path: name + "-blue", min: 0, max: 255, step: 1, colAuto: c}).onChange(c.setColor);
+            f.close();
+            c.setControllerValues();
         } else {
             c = gui.add(object, name, options.min, options.max, options.step);
+        }
+
+        if (options.colAuto) {
+            c.colorPropertyController = true;
+            c.colorController = options.colAuto;
         }
         const n = options.path ? options.path + ":" + name : name;
         c.__path = n;

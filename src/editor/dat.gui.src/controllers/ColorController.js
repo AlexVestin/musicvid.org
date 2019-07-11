@@ -16,6 +16,11 @@ import dom from '../dom/dom';
 import Color from '../color/Color';
 import interpret from '../color/interpret';
 import common from '../utils/common';
+import { hslToRgb, rgbToHex, hexToRgb, hexToHSL } from './ColorConversions'
+
+
+
+
 
 /**
  * @class Represents a given property of an object that is a color.
@@ -29,15 +34,26 @@ class ColorController extends Controller {
     this.__color = new Color(this.getValue());
     this.__temp = new Color(0);
 
-    const _this = this;
+    const _this = this; 
+
+    this.useRGB = true;
+    this.useHue = false;
+
+    this.red = 0;
+    this.green = 0;
+    this.blue = 0;
+    this.hue = 0;
+    this.lightness = 0;
+    this.saturation = 0;
+    this.__valueOptions = ["Red", "Green", "Blue", "Hue", "Saturation"];
 
     
 
     this.domElement = document.createElement('div');
-    this.domElement.style.width = "122px";
-
-
+    
     dom.makeSelectable(this.domElement, false);
+    
+    
 
     this.__selector = document.createElement('div');
     this.__selector.className = 'selector';
@@ -55,9 +71,19 @@ class ColorController extends Controller {
     this.__hue_field = document.createElement('div');
     this.__hue_field.className = 'hue-field';
 
+    const container = document.createElement("div");
+
+
     this.__input = document.createElement('input');
     this.__input.type = 'text';
     this.__input_textShadow = '0 1px 1px ';
+    this.__input.style.width = "122px";
+    
+    container.appendChild(this.__input);
+    container.appendChild(this.__selector);
+
+    dom.addClass(container, "input-color");
+    
 
     dom.bind(this.__input, 'keyup', function(e) {
       e.stopPropagation();
@@ -158,7 +184,7 @@ class ColorController extends Controller {
       fontWeight: 'bold',
       textShadow: this.__input_textShadow + 'rgba(0,0,0,0.7)'
     });
-
+    
     dom.bind(this.__saturation_field, 'mousedown', fieldDown);
     dom.bind(this.__saturation_field, 'touchstart', fieldDown);
 
@@ -216,6 +242,7 @@ class ColorController extends Controller {
       }
 
       _this.__onFinishUndo(_this);
+      _this.setControllerValues();
     }
 
     this.__saturation_field.appendChild(valueField);
@@ -224,8 +251,8 @@ class ColorController extends Controller {
     this.__selector.appendChild(this.__hue_field);
     this.__hue_field.appendChild(this.__hue_knob);
 
-    this.domElement.appendChild(this.__input);
-    this.domElement.appendChild(this.__selector);
+    this.domElement.appendChild(container);
+    this.domElement.appendChild(container);
 
     this.updateDisplay();
 
@@ -277,6 +304,54 @@ class ColorController extends Controller {
 
       return false;
     }
+
+  }
+
+  setControllerValues = () => {
+    const v = this.object[this.property];
+    const hsl = hexToHSL(v);
+    const rgb = hexToRgb(v);
+
+    this.__red.setValue(rgb.r);
+    this.__blue.setValue(rgb.b);
+    this.__green.setValue(rgb.g);
+    this.__hue.setValue(hsl.h);
+    this.__saturation.setValue(hsl.s);
+    this.__lightness.setValue(hsl.l);
+  }
+
+  setColor = () => {
+    let hex = "";
+    if (this.useHue) {
+      const rgb = hslToRgb(this.hue / 360, this.saturation, this.lightness);
+      hex = rgbToHex(rgb);
+     
+    } else {
+      hex = rgbToHex({r: Math.floor(this.red), g: Math.floor(this.green), b: Math.floor(this.blue)});
+    }
+    this.setValue(hex);
+  }
+
+  enableUseRGB = (value) => {
+    if (value) {
+      this.useHue = false;
+      this.__useHue.updateDisplay();
+    } else if(!this.useHue) {
+      this.useRGB = true;
+      this.__useRGB.updateDisplay();
+    }
+
+  }
+
+  enableUseHue = (value) => {
+    if(value) {
+      this.useRGB = false;
+      this.__useRGB.updateDisplay();
+    } else if(!this.useRGB) {
+      this.useHue = true;
+      this.__useRGB.updateDisplay();
+    }
+  
   }
 
   updateDisplay() {

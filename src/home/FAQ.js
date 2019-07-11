@@ -6,11 +6,39 @@ import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
 import { Link } from 'react-router-dom'
 import FAQItem from './FAQitem'
+
+import info from 'util/version'
+
 function Terms() {
     return (
         <React.Fragment>
             <AppAppBar />
+
             <LayoutBody margin marginBottom>
+            <Typography
+                variant="h6"
+                align="center"
+                style={{display:"flex", flexDirection:"row", justifyContent:"center"}}
+            >
+                musicvid.org version: 
+
+                <div style={{color:"rgb(255, 51, 102)", marginLeft: 4}}>
+                    {info.version / 1000}
+                </div>
+            </Typography>
+
+            <Typography
+                variant="h6"
+                align="center"
+                style={{display:"flex", flexDirection:"row",justifyContent:"center"}}
+            >
+                Last updated: 
+                <div style={{color:"rgb(255, 51, 102)", marginLeft: 4}}>
+                {info.updated}
+                </div>
+                
+            </Typography>
+
                 <Typography
                     variant="h3"
                     gutterBottom

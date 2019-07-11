@@ -15,9 +15,9 @@ import AudioAutomation from "editor/animation/automation/AudioReactiveAutomation
 import InputAutomation from "editor/animation/automation/InputAutomation";
 import PointAutomation from "editor/animation/automation/PointAutomation";
 import ShakeAutomation from "editor/animation/automation/ShakeAutomation";
+import ColorAutomation from "editor/animation/automation/ShakeAutomation";
 
-
-import uuid from 'uuid/v4';
+import uuid from "uuid/v4";
 const styles = theme => ({
     form: {
         display: "flex",
@@ -35,13 +35,11 @@ const styles = theme => ({
 });
 
 class ScrollDialog extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.homeIndex = 0;
-        if(props.mainMenu)
-            this.homeIndex = 1;
+        if (props.mainMenu) this.homeIndex = 1;
 
         this.state = {
             scroll: "paper",
@@ -49,39 +47,36 @@ class ScrollDialog extends React.Component {
         };
     }
 
-    onSelect = automation => {
-        const { item } = this.props;
-        const link = { id: uuid(), type: "=", controllerID: item.__path, automationID: automation.__id, valueToUse: automation.values[0] };
-        item.__parentObject.__automations.push(link);
+    onSelect = (automation) => {
+        const { item, property } = this.props;
+        const controller = item.controller;
+        const link = {
+            id: uuid(),
+            type: "=",
+            controllerID: controller.__path,
+            automationID: automation.__id,
+            valueToUse: automation.values[0],
+            property: property,
+        };
+        controller.__parentObject.__automations.push(link);
         this.setState({ index: this.homeIndex });
-    }
-
-    addAudioAutomation = () => {
-        const root = this.props.gui.getRoot();
-        this.selectedAutomation = new AudioAutomation(root);
-        root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
-        this.onSelect(this.selectedAutomation);
     };
 
-    addShakeAutomation = () => {
+    addAutomation = type => {
         const root = this.props.gui.getRoot();
-        this.selectedAutomation = new ShakeAutomation(root);
-        root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
-        this.onSelect(this.selectedAutomation);
-    };
 
-    addPointAutomation = () => {
-        const root = this.props.gui.getRoot();
-        this.selectedAutomation = new PointAutomation(root);
+        const Auto = {
+            math: InputAutomation,
+            audio: AudioAutomation,
+            point: PointAutomation,
+            shake: ShakeAutomation,
+            color: ColorAutomation
+        };
 
-        root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
-        this.onSelect(this.selectedAutomation);
-    };
-
-    addMathAutomation = () => {
-        const root = this.props.gui.getRoot();
-        this.selectedAutomation = new InputAutomation(root);
-        root.__automations[this.selectedAutomation.__id] = this.selectedAutomation;
+        this.selectedAutomation = new Auto[type](root);
+        root.__automations[
+            this.selectedAutomation.__id
+        ] = this.selectedAutomation;
         this.onSelect(this.selectedAutomation);
     };
 
@@ -121,7 +116,9 @@ class ScrollDialog extends React.Component {
                         <SelectAutomation
                             item={item}
                             gui={rootGui}
-                            back={() => this.setState({ index: this.homeIndex })}
+                            back={() =>
+                                this.setState({ index: this.homeIndex })
+                            }
                             addNewAutomation={() => this.setState({ index: 2 })}
                             onSelect={this.onSelect}
                         />
@@ -130,12 +127,10 @@ class ScrollDialog extends React.Component {
                     {index === 2 && (
                         <AddNewAutomation
                             item={item}
-                            back={() => this.setState({ index: this.homeIndex })}
-                            addAudioAutomation={this.addAudioAutomation}
-                            addMathAutomation={this.addMathAutomation}
-                            addPointAutomation={this.addPointAutomation}
-                            addShakeAutomation={this.addShakeAutomation}
-
+                            back={() =>
+                                this.setState({ index: this.homeIndex })
+                            }
+                            addAutomation={this.addAutomation}
                         />
                     )}
 

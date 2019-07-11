@@ -16,7 +16,7 @@ export default function SpectrumAnalyser(gui, parent, disableAll=false) {
 
     let addAttribute = (name, value, folder, configs = {}) => {
         this[name] = value;
-        controllerProperties.push( {folder, obj: this, name, configs: {min: configs.min, max: configs.max, path: "spectrum-analyser" }});
+        controllerProperties.push( {folder, obj: this, name, configs: {min: configs.min, step: configs.step, max: configs.max, path: "spectrum-analyser" }});
     };
 
     this.setUpGUI = () => {
@@ -32,7 +32,7 @@ export default function SpectrumAnalyser(gui, parent, disableAll=false) {
             if(folder && !parent) {
                 c = folder.add(obj, name, configs.min, configs.max, configs.step);
             }else {
-                c = parent.addController(folder, obj, name, {min: configs.min, max: configs.max, path: "spectrum-analyser" });
+                c = parent.addController(folder, obj, name, {min: configs.min, max: configs.max, step: configs.step, path: "spectrum-analyser" });
             }
     
             if(disableAll) {

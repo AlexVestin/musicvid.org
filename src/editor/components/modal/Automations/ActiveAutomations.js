@@ -87,7 +87,7 @@ class CustomizedTable extends React.PureComponent {
     
 
     render() {
-        const { classes, automations, controller, item } = this.props;
+        const { classes, automations, item } = this.props;
 
         return (
             <Paper className={classes.root}>
@@ -119,7 +119,7 @@ class CustomizedTable extends React.PureComponent {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {automations.map( (row,i) => (
+                        {automations.map((row, i) => (
                             <TableRow
                                 className={classes.row}
                                 key={row.automation.id}
@@ -134,14 +134,15 @@ class CustomizedTable extends React.PureComponent {
                                 </CustomTableCell>
 
                                 <CustomTableCell component="th" scope="row">
-                                <select defaultValue={row.item.valueToUse || "value"} onChange={(e) => this.changeValueToUse(e, row.item)}>
-                                    {row.automation.values.map(val => {  
-                                        return( 
-                                            <option value={val}>{val}</option>
-                                        )
-                                    })}
+                                    <select defaultValue={row.item.valueToUse || "value"} onChange={(e) => this.changeValueToUse(e, row.item)}>
+                                        {row.automation.values.map(val => {  
+                                            return( 
+                                                <option value={val}>{val}</option>
+                                            )
+                                        })}
                                     </select>
-                                    
+                        
+                                        
                                 </CustomTableCell>
 
                                 <CustomTableCell align="center">
@@ -163,7 +164,7 @@ class CustomizedTable extends React.PureComponent {
 
 
                                 <CustomTableCell align="center">
-                                    <input defaultValue={row.item.type} onChange={e =>
+                                    <input  style={{width: 80}} defaultValue={row.item.type} onChange={e =>
                                             (row.item.type = e.target.value)
                                         }></input>
                                 </CustomTableCell>

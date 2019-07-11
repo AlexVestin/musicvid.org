@@ -14,7 +14,6 @@ import SignIn from '../../Account/SignInForm';
 import Toolbar, { styles as toolbarStyles } from "../components/Toolbar";
 import { Typography } from "@material-ui/core";
 import { setSnackbarMessage } from "../../../fredux/actions/message";
-
 const styles = theme => ({
     container: {
         height: "7vh"
@@ -115,6 +114,8 @@ class AppAppBar extends PureComponent {
                             {" "}
                             ALPHA
                         </Typography>
+
+                       
                         <div className={classes.right}>
 
                                 <Link

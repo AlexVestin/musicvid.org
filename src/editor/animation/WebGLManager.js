@@ -7,24 +7,23 @@ import OrthographicScene from "./scenes/OrthographicScene";
 import PerspectiveScene from "./scenes/PerspectiveScene";
 import PostProcessing from "./postprocessing/postprocessing";
 import * as FileSaver from "file-saver";
-import serialize from './Serialize'
-import { base, app } from 'backend/firebase'
-import PointAutomation from './automation/PointAutomation'
-import InputAutomation from './automation/InputAutomation'
-import ImpactAutomation from './automation/AudioReactiveAutomation'
-import uuid from 'uuid/v4'
+import serialize from "./Serialize";
+import { base, app } from "backend/firebase";
+import PointAutomation from "./automation/PointAutomation";
+import InputAutomation from "./automation/InputAutomation";
+import ImpactAutomation from "./automation/AudioReactiveAutomation";
+import uuid from "uuid/v4";
 //import { takeScreenShot } from 'editor/util/FlipImage'
 //import MockWebGLManager from './MockWebGLManager'
 
-import OverviewGroup from '../OverviewGroup'
+import OverviewGroup from "../OverviewGroup";
 
-import { setUpFullscreenControls } from './FullscreenUtils'
+import { setUpFullscreenControls } from "./FullscreenUtils";
 import { setSnackbarMessage } from "../../fredux/actions/message";
 export default class WebGLManager {
     constructor(parent) {
-        
         // Set up for headless testing;
-        if(parent) {
+        if (parent) {
             this.gui = parent.gui;
             this.canvasMountRef = parent.gui.canvasMountRef;
             this.modalRef = parent.gui.modalRef;
@@ -42,14 +41,16 @@ export default class WebGLManager {
 
         // Project file settings
         this.__id = uuid();
-        this.__projectName  = "ProjectName";
+        this.__projectName = "ProjectName";
         this.__lastEdited = new Date().toString();
         this.availablePublic = false;
-        
 
         // Redraw animations settings
         this.__lastTime = 0;
-        this.__lastAudioData = {frequencyData: new Float32Array(this.fftSize/2), timeData: new Float32Array(this.fftSize)};
+        this.__lastAudioData = {
+            frequencyData: new Float32Array(this.fftSize / 2),
+            timeData: new Float32Array(this.fftSize)
+        };
 
         // Scenes
         this.scenes = [];
@@ -59,102 +60,111 @@ export default class WebGLManager {
         if (!this.parent.test) {
             this.parent.toggleAdvancedMode(true);
         }
-        
     }
 
     saveAsNewProjectToProfile = () => {
         this.__id = uuid();
         this.saveProjectToProfile();
-    }
+    };
 
-    
-    addAutomation = (template) => {
-        let auto  = {};
-        switch(template.type) {
+    addAutomation = template => {
+        let auto = {};
+        switch (template.type) {
             case "point":
-            auto =  new PointAutomation(this.gui);
-            break;
+                auto = new PointAutomation(this.gui);
+                break;
             case "math":
-            auto =  new InputAutomation(this.gui);
-            break;
+                auto = new InputAutomation(this.gui);
+                break;
             case "audio":
-            auto =  new ImpactAutomation(this.gui);
-            break;
-        default:
-            alert("Automation type not found");
+                auto = new ImpactAutomation(this.gui);
+                break;
+            default:
+                alert("Automation type not found");
         }
         auto.__id = template.__id;
         auto.__setUpValues(template);
         this.gui.getRoot().__automations[auto.__id] = auto;
-    }
+    };
 
-    loadProject = (json) => {
-        while(this.scenes.length > 0) {
+    loadProject = json => {
+        while (this.scenes.length > 0) {
             this.scenes[0].removeMe();
         }
-        
-        if(this.renderer) {
+
+        if (this.renderer) {
             this.renderer.renderLists.dispose();
             this.renderer.dispose();
         }
 
-        const root = this.gui.getRoot();      
+        const root = this.gui.getRoot();
         this.parent.clearOverviewFolder();
         root.__automations = [];
 
         const proj = JSON.parse(json.projectSrc);
-        if(proj.overviewFolders) {
+        if (proj.overviewFolders) {
             proj.overviewFolders.forEach(fold => {
-                new OverviewGroup(root.__folders["Overview"], fold.id, fold.name);            
-            })
-        } 
+                new OverviewGroup(
+                    root.__folders["Overview"],
+                    fold.id,
+                    fold.name
+                );
+            });
+        }
 
         Object.assign(this, proj.settings);
         this.settingsFolder.updateDisplay();
         proj.automations.forEach(auto => {
             this.addAutomation(auto);
-        })  
+        });
         // NEEDS TO BE AFTER Object.assign above
         this.__id = json.id;
         this.__ownerId = json.owner;
         this.__online = json.online;
 
-        proj.scenes.forEach(scene => {     
-            if(scene.__settings.isScene) {
-                const s = this.addSceneFromText(scene.__settings.type || scene.__settings.TYPE);
+        proj.scenes.forEach(scene => {
+            if (scene.__settings.isScene) {
+                const s = this.addSceneFromText(
+                    scene.__settings.type || scene.__settings.TYPE
+                );
                 s.undoCameraMovement(scene.camera);
-                s.controls.enabled = scene.controlsEnabled; 
+                s.controls.enabled = scene.controlsEnabled;
                 s.__automations = scene.__automations;
-                if(scene.__controllers)
+                if (scene.__controllers)
                     s.__setControllerValues(scene.__controllers.controllers);
                 s.addItems(scene.__items || scene.items);
                 s.updateSettings();
                 Object.assign(s.pass, scene.__passSettings);
-            }else {
-                const e = this.postProcessing.addEffectPass(scene.__settings.type || scene.__settings.TYPE);
+            } else {
+                const e = this.postProcessing.addEffectPass(
+                    scene.__settings.type || scene.__settings.TYPE
+                );
                 e.__setControllerValues(scene.controllers);
             }
-        })
+        });
 
-        if(this.audio){
+        if (this.audio) {
             this.setFFTSize(this.fftSize);
         }
 
         this.parent.toggleAdvancedMode(this.advancedMode);
-    }
+    };
 
     loadProjectFromFile = () => {
-        this.gui.getRoot().modalRef.toggleModal(16).then(file => {
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const json = JSON.parse(e.target.result);
-                    this.loadProject(json);    
-                } 
-                reader.readAsText(file);
-            }
-        })
-    }
+        this.gui
+            .getRoot()
+            .modalRef.toggleModal(16)
+            .then(file => {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const json = JSON.parse(e.target.result);
+                        this.loadProject(json);
+                    };
+                    reader.readAsText(file);
+                }
+            });
+    };
 
     serializeProject = () => {
         const projFile = {
@@ -162,18 +172,24 @@ export default class WebGLManager {
             settings: {}
         };
         projFile.settings = serialize(this);
-        projFile.settings.__lastTime  = undefined;
-        projFile.settings.fftSize = this.audio ? this.audio.fftSize : this.fftSize;
-        projFile.automations = this.gui.getAutomations().map(auto => auto.__serialize());
+        projFile.settings.__lastTime = undefined;
+        projFile.settings.fftSize = this.audio
+            ? this.audio.fftSize
+            : this.fftSize;
+        projFile.automations = this.gui
+            .getAutomations()
+            .map(auto => auto.__serialize());
 
         const ov = this.gui.getRoot().__folders["Overview"].__folders;
-        projFile.overviewFolders = Object.values(ov).map(f => { return {name: f.name, id: f.__id}});
-        
-        this.scenes.forEach( (scene, i) => {
-            projFile.scenes.push(scene.__serialize())
+        projFile.overviewFolders = Object.values(ov).map(f => {
+            return { name: f.name, id: f.__id };
+        });
+
+        this.scenes.forEach((scene, i) => {
+            projFile.scenes.push(scene.__serialize());
         });
         return projFile;
-    }
+    };
 
     getProjectConfig = (projFile, ownerId) => {
         return {
@@ -182,32 +198,37 @@ export default class WebGLManager {
             height: this.height,
             name: this.__projectName,
             public: this.availablePublic,
-            owner:  ownerId,
+            owner: ownerId,
             id: this.__id
-        }
-    }
+        };
+    };
 
     saveProjectToFile = () => {
         const projFile = this.serializeProject();
         const f = this.getProjectConfig(projFile, this.__ownerId);
-        const blob = new Blob([JSON.stringify(f)], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify(f)], {
+            type: "application/json"
+        });
         FileSaver.saveAs(blob, this.__projectName + ".json");
-    }
+    };
 
     saveProjectToProfile = () => {
         const projFile = this.serializeProject();
-        const cu = app.auth().currentUser; 
-        if(cu) {    
-            if(cu.uid !== this.__ownerId) {
+        const cu = app.auth().currentUser;
+        if (cu) {
+            if (cu.uid !== this.__ownerId) {
                 this.__id = uuid();
                 this.__ownerId = cu.uid;
-                console.log("Setting new uid")
+                console.log("Setting new uid");
             }
 
             const myId = app.auth().currentUser.uid;
-            const ref = base.collection("users").doc(myId).collection("projects").doc(this.__id);
+            const ref = base
+                .collection("users")
+                .doc(myId)
+                .collection("projects")
+                .doc(this.__id);
 
-            
             const p1 = ref.set({
                 lastEdited: new Date().toString(),
                 name: this.__projectName,
@@ -216,25 +237,31 @@ export default class WebGLManager {
 
             const allRef = base.collection("projects").doc(this.__id);
             const p2 = allRef.set(this.getProjectConfig(projFile, myId));
-            
+
             /*let p3;
             if(!this.__online) {
                 this.redoUpdate();
                 const blob = takeScreenShot(this.canvas);
                 p3 = storage.ref().child(this.__id).put(blob)
             }*/
-            
-            Promise.all([p1, p2]).then(() => {
-                setSnackbarMessage("Saved to profile", "success", 2000)
-                window.history.pushState({}, null, "/editor?project=" + this.__id);
-                this.__online = true;
-                allRef.update({online: true});
-            })
 
-        }else {
-            setSnackbarMessage("You need to log in to be able to save to your profile.", "error")
+            Promise.all([p1, p2]).then(() => {
+                setSnackbarMessage("Saved to profile", "success", 2000);
+                window.history.pushState(
+                    {},
+                    null,
+                    "/editor?project=" + this.__id
+                );
+                this.__online = true;
+                allRef.update({ online: true });
+            });
+        } else {
+            setSnackbarMessage(
+                "You need to log in to be able to save to your profile.",
+                "error"
+            );
         }
-    }
+    };
 
     setUpAttrib() {
         // Set up scene for attribution text
@@ -250,10 +277,10 @@ export default class WebGLManager {
         const { scene } = args;
         try {
             this.layersFolder.removeFolder(scene.folder);
-            this.layersFolder.__folders[scene.__id] =  undefined;
+            this.layersFolder.__folders[scene.__id] = undefined;
             delete this.layersFolder.__folders[scene.__id];
-        }catch(err) {
-            console.log("Scene folder not removed correctly")
+        } catch (err) {
+            console.log("Scene folder not removed correctly");
         }
 
         const index = this.scenes.findIndex(e => e === scene);
@@ -261,27 +288,31 @@ export default class WebGLManager {
         this.postProcessing.remove(scene, index);
     };
 
-
-
     moveScene = args => {
         let { up, scene } = args;
 
         const folder = scene.folder.domElement.parentElement;
         const list = folder.parentElement;
         const ch = Array.prototype.slice.call(list.children);
-        
-        // nr items in the gui before the layers 
+
+        // nr items in the gui before the layers
         const ni = 2;
         const index = ch.indexOf(folder) - ni;
         if (up && index > 0 && index !== ch.length - ni) {
-            list.insertBefore(list.children[index + ni], list.children[index + ni - 1]);
+            list.insertBefore(
+                list.children[index + ni],
+                list.children[index + ni - 1]
+            );
             this.scenes.splice(index, 1);
             this.scenes.splice(index - 1, 0, scene);
             this.postProcessing.move(index, index - 1, scene);
         }
 
         if (!up && index < ch.length - 1 - ni) {
-            list.insertBefore(list.children[index + ni + 1], list.children[index + ni]);
+            list.insertBefore(
+                list.children[index + ni + 1],
+                list.children[index + ni]
+            );
             this.scenes.splice(index, 1);
             this.scenes.splice(index + 1, 0, scene);
             this.postProcessing.move(index, index + 1, scene);
@@ -294,11 +325,11 @@ export default class WebGLManager {
             ortho: OrthographicScene,
             perspective: PerspectiveScene,
             pixi: PixiScene
-        }
+        };
         let scene;
-        if(!(sceneName in sceneTypes)) {
+        if (!(sceneName in sceneTypes)) {
             this.postProcessing.addEffect(sceneName);
-            return
+            return;
         } else {
             scene = new sceneTypes[sceneName](
                 this.layersFolder,
@@ -307,9 +338,9 @@ export default class WebGLManager {
                 this.moveScene,
                 this.renderer,
                 this.canvas
-            )
+            );
         }
-        
+
         this.postProcessing.addRenderPass(scene);
         this.scenes.push(scene);
         scene.setUpPassConfigs();
@@ -320,8 +351,7 @@ export default class WebGLManager {
     serialize = () => {
         const settings = {};
         settings.clearColor = this.clearColor;
-
-    }
+    };
 
     addScene = () => {
         this.modalRef.toggleModal(8).then(sceneName => {
@@ -340,16 +370,17 @@ export default class WebGLManager {
 
         if (setUpFolders) {
             this.layersFolder = this.gui.__folders["Layers"];
-            this.layersFolder.add(this, "addScene").name("Add layer").disableAll();
+            this.layersFolder
+                .add(this, "addScene")
+                .name("Add layer")
+                .disableAll();
         }
         this.canvas = this.canvasMountRef;
         this.setUpRenderers(setUpFolders);
         this.setUpScene();
     };
 
-    setUpScene() {
-        
-    }
+    setUpScene() {}
 
     refresh = ref => {
         this.canvasMountRef = ref;
@@ -360,46 +391,43 @@ export default class WebGLManager {
     getAllItems = () => {
         const items = [];
         this.scenes.forEach(scene => {
-            if(scene.isScene) {
+            if (scene.isScene) {
                 scene.items.forEach(item => {
                     items.push(item.__attribution);
                 });
             }
-            
         });
         return items;
     };
 
-    play = (t) =>  {
+    play = t => {
         this.scenes.forEach(scene => scene.play(t));
-    }
+    };
 
     prepareEncoding = () => {
         this.scenes.forEach(scene => {
-            if(scene.isScene) {
+            if (scene.isScene) {
                 scene.items.forEach(item => {
                     item.prepareEncoding();
-                })
-            } 
-            
-        })
-    }
+                });
+            }
+        });
+    };
 
     cancelEncoding = () => {
         this.scenes.forEach(scene => {
-            if(scene.isScene) {
+            if (scene.isScene) {
                 scene.items.forEach(item => {
                     item.cancelEncoding();
-                })
-            } 
-        })
-    }
+                });
+            }
+        });
+    };
 
-    seekTime = (t) => {
+    seekTime = t => {
         this.__lastTime = t;
         this.scenes.forEach(scene => scene.seekTime(t));
-    }
-
+    };
 
     setClear = () => {
         this.renderer.setClearColor(this.clearColor);
@@ -434,15 +462,20 @@ export default class WebGLManager {
     };
 
     setUpRenderer() {
-        const supportsWebGL = ( function () {
+        const supportsWebGL = (function() {
             try {
-                return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' );
-            } catch( e ) {
+                return (
+                    !!window.WebGLRenderingContext &&
+                    !!document
+                        .createElement("canvas")
+                        .getContext("experimental-webgl")
+                );
+            } catch (e) {
                 return false;
             }
-        } )();
+        })();
 
-        if(supportsWebGL) {
+        if (supportsWebGL) {
             this.renderer = new THREE.WebGLRenderer({
                 antialias: true,
                 alpha: true,
@@ -452,10 +485,19 @@ export default class WebGLManager {
             this.renderer.mock = false;
             this.renderer.setSize(this.width, this.height);
             this.setClear();
-        }else {
+        } else {
             // TODO Error message
+
+            if (!this.parent.test) {
+                setSnackbarMessage(
+                    "Couldn't load WebGL, make sure you have hardware graphics enabled",
+                    "error"
+                );
+            }
             this.renderer = {};
-            this.renderer.getDrawingBufferSize = () => { return  {width: 1080, height: 720} }
+            this.renderer.getDrawingBufferSize = () => {
+                return { width: 1080, height: 720 };
+            };
             this.renderer.mock = true;
             this.renderer.clear = () => {};
             this.renderer.clearDepth = () => {};
@@ -473,67 +515,71 @@ export default class WebGLManager {
         });
     }
 
-    addNewEffect  = (effect) => {
+    addNewEffect = effect => {
         this.scenes.push(effect);
-    }
+    };
 
     toggleAdvancedMode = () => {
         this.parent.toggleAdvancedMode(this.advancedMode);
-    }
+    };
 
     setUpRenderers = (setUpFolders = true) => {
         this.setUpRenderer();
-          
+
         if (setUpFolders) {
-            const frequencies = [1,5,30,60];
+            const frequencies = [1, 5, 30, 60];
             this.settingsFolder = this.gui.__folders["Settings"];
             this.settingsFolder
                 .add(this.gui, "__automationConfigUpdateFrequency", frequencies)
                 .name("configUpdateFrequency");
             const rs = this.settingsFolder.addFolder("Render settings");
-            
-            rs.addColor(this, "clearColor")
-                .onChange(this.setClear);
-            
+
+            rs.addColor(this, "clearColor").onChange(this.setClear);
+
             rs.add(this, "clearAlpha", 0, 1, 0.001)
                 .onChange(this.setClear)
                 .disableAll();
-            rs.add(this, "drawAttribution")
-                .onChange(this.updateAttribution);
+            rs.add(this, "drawAttribution").onChange(this.updateAttribution);
             this.gui.__folders["Layers"].add(this, "postprocessingEnabled");
 
-            const cs = this.settingsFolder.addFolder("Camera and control settings");
+            const cs = this.settingsFolder.addFolder(
+                "Camera and control settings"
+            );
             cs.add(this, "enableAllControls");
             cs.add(this, "disableAllControls");
             cs.add(this, "resetAllCameras");
             const ps = this.settingsFolder.addFolder("Project settings");
-            ps.add(this, "__projectName").name("Project name").disableAll();
-            ps.add(this, "availablePublic").name("Project available to public").disableAll();
+            ps.add(this, "__projectName")
+                .name("Project name")
+                .disableAll();
+            ps.add(this, "availablePublic")
+                .name("Project available to public")
+                .disableAll();
             ps.add(this, "loadProjectFromFile").disableAll();
             //ps.add(this, "createThumbnail").disableAll();
-            ps.add(this, "advancedMode").onChange(this.toggleAdvancedMode).disableAll();
-            
+            ps.add(this, "advancedMode")
+                .onChange(this.toggleAdvancedMode)
+                .disableAll();
+
             ps.add(this, "saveProjectToFile").disableAll();
             ps.add(this, "saveProjectToProfile").disableAll();
             ps.add(this, "saveAsNewProjectToProfile").disableAll();
-
         }
     };
 
     createThumbnail = () => {
         this.gui.getRoot().modalRef.toggleModal(19, true, this);
-    }
+    };
 
     resetAllCameras = () => {
         this.scenes.forEach(scene => {
-            if(scene.isScene)
-                scene.resetCamera();
+            if (scene.isScene) scene.resetCamera();
         });
     };
 
     disableAllControls = () => {
         this.scenes.forEach(scene => {
-            if(scene.isScene) {
+            if (scene.isScene) {
                 scene.controls.enabled = false;
                 scene.cameraFolder.updateDisplay();
             }
@@ -542,15 +588,13 @@ export default class WebGLManager {
 
     enableAllControls = () => {
         this.scenes.forEach(scene => {
-            if(scene.isScene) {
+            if (scene.isScene) {
                 scene.controls.enabled = true;
                 scene.cameraFolder.updateDisplay();
             }
-           
         });
     };
 
-    
     readPixels = () => {
         const { width, height } = this;
         const glContext = this.renderer.getContext();
@@ -569,24 +613,25 @@ export default class WebGLManager {
 
     stop = () => {
         this.__lastTime = 0;
-        this.__lastAudioData = {frequencyData: [], timeData: []};
+        this.__lastAudioData = { frequencyData: [], timeData: [] };
         this.scenes.forEach(scene => {
             scene.stop();
         });
-        this.gui.getRoot().getAutomations().forEach(auto => auto.stop())
+        this.gui
+            .getRoot()
+            .getAutomations()
+            .forEach(auto => auto.stop());
 
-        if(this.renderer) {
+        if (this.renderer) {
             this.renderer.clear();
         }
-        
     };
 
     redoUpdate = () => {
         this.update(this.__lastTime, this.__lastAudioData, false);
-    }
+    };
 
     update = (time, audioData, shouldIncrement) => {
-
         let dt = time - this.__lastTime;
 
         if (!this.postprocessingEnabled) {

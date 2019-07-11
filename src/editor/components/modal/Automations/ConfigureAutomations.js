@@ -16,13 +16,14 @@ export default class ConfigureAutomations extends PureComponent {
     update = () => {
         const {item, gui} = this.props;
         const automations = gui.getRoot().__automations;
+        const controller = item.controller; 
 
         const autos = [];
 
-        item.__parentObject.__automations.forEach(link => {
-            const a = automations[link.automationID];
-            if(link.controllerID === item.__path) 
-                autos.push({automation: a, item: link, controller: item});
+        controller.__parentObject.__automations.forEach(link => {
+            const automation = automations[link.automationID];
+            if(link.controllerID === controller.__path) 
+                autos.push({automation, item: link, controller});
         })
 
         this.setState({autos: autos});
@@ -30,20 +31,22 @@ export default class ConfigureAutomations extends PureComponent {
 
     remove = (it) => {
         const { item } = this.props;
-        item.__parentObject.__automations = item.__parentObject.__automations.filter(l => l.id !== it.item.id);
+        const controller = item.controller;
+        controller.__parentObject.__automations = controller.__parentObject.__automations.filter(l => l.id !== it.item.id);
         this.update();
     }
 
     render() {
         const { item } = this.props;
+        const controller = item.controller;
         return (
             <div>
                 <DialogContentText>
                     Configure automations for{" "}
-                    {item.object.name + "-" + item.property} :
+                    {controller.object.name + "-" + controller.property} :
                 </DialogContentText>
 
-                <ActiveAutomations remove={this.remove} automations={this.state.autos} item={item} />
+                <ActiveAutomations remove={this.remove} automations={this.state.autos} item={controller} />
                 <Button onClick={this.props.selectAutomation}>
                     {" "}
                     Select new automation{" "}

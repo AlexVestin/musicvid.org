@@ -176,7 +176,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.addController(spFolder, this, "alpha", {min: 0.0, max: 1.0});
         this.addController(spFolder, this, "drawType", {values: ["fill", "stroke"]});
         this.addController(spFolder, this, "lineWidth", {min: 0, max: 30, step: 1});
-        this.analyser = new SpectrumAnalyser(spFolder);
+        this.analyser = new SpectrumAnalyser(spFolder, this);
         this.analyser.spectrumSize = 40;
         this.analyser.spectrumHeight = 770;
         this.analyser.spectrumEnd = 400;
@@ -306,7 +306,7 @@ export default class JSNationSpectrum extends BaseItem {
 
     drawPoints = (points) => {
         
-        if (!points || points.length === 0) {
+        if (!points || points.length <= 4) {
             return;
         }
         
@@ -321,6 +321,7 @@ export default class JSNationSpectrum extends BaseItem {
             this.ctx.moveTo(halfWidth, points[0].y + halfHeight);
 
             let len = points.length;
+
             for (let i = 1; i < len - 2; i++) {
                 let c = xMult * (points[i].x + points[i + 1].x) / 2 + halfWidth;
                 let d = (points[i].y + points[i + 1].y) / 2 + halfHeight;

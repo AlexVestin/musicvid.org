@@ -375,6 +375,21 @@ const GUI = function(pars) {
       const onClickTitle = function(e) {
         e.preventDefault();
         _this.closed = !_this.closed;
+
+        let traverse = (obj) => {
+          obj.__controllers.forEach(c => {
+            c.toggleOpen(true);
+          });
+
+          Object.values(obj.__folders).forEach(traverse);
+        } 
+
+        if (_this.closed) {
+          traverse(_this);
+        }
+        
+
+
         return false;
       };
 
@@ -1203,7 +1218,7 @@ function augmentController(gui, li, controller) {
   }
 
   controller.setValue = common.compose(function(val) {
-    if (gui.getRoot().__preset_select && controller.isModified()) {
+    if (gui.getRoot && gui.getRoot().__preset_select && controller.isModified()) {
       markPresetModified(gui.getRoot(), true);
     }
 
@@ -1212,57 +1227,65 @@ function augmentController(gui, li, controller) {
 }
 
 function recallSavedValue(gui, controller) {
-  // Find the topmost GUI, that's where remembered objects live.
-  const root = gui.getRoot();
-
-  // Does the object we're controlling match anything we've been told to
+  
+  
+  if(gui.getRoot && gui.getRoot().__rememberedObjects) {
+    // Find the topmost GUI, that's where remembered objects live.
+    const root = gui.getRoot();
+     // Does the object we're controlling match anything we've been told to
   // remember?
-  const matchedIndex = root.__rememberedObjects.indexOf(controller.object);
+    const matchedIndex = root.__rememberedObjects.indexOf(controller.object);
 
-  // Why yes, it does!
-  if (matchedIndex !== -1) {
-    // Let me fetch a map of controllers for thcommon.isObject.
-    let controllerMap = root.__rememberedObjectIndecesToControllers[matchedIndex];
-
-    // Ohp, I believe this is the first controller we've created for this
-    // object. Lets make the map fresh.
-    if (controllerMap === undefined) {
-      controllerMap = {};
-      root.__rememberedObjectIndecesToControllers[matchedIndex] =
-        controllerMap;
+    // Why yes, it does!
+    if (matchedIndex !== -1) {
+      // Let me fetch a map of controllers for thcommon.isObject.
+      let controllerMap = root.__rememberedObjectIndecesToControllers[matchedIndex];
+  
+      // Ohp, I believe this is the first controller we've created for this
+      // object. Lets make the map fresh.
+      if (controllerMap === undefined) {
+        controllerMap = {};
+        root.__rememberedObjectIndecesToControllers[matchedIndex] =
+          controllerMap;
+      }
+  
+      // Keep track of this controller
+      controllerMap[controller.property] = controller;
+  
+      // Okay, now have we saved any values for this controller?
+      if (root.load && root.load.remembered) {
+        const presetMap = root.load.remembered;
+  
+        // Which preset are we trying to load?
+        let preset;
+  
+        if (presetMap[gui.preset]) {
+          preset = presetMap[gui.preset];
+        } else if (presetMap[DEFAULT_DEFAULT_PRESET_NAME]) {
+          // Uhh, you can have the default instead?
+          preset = presetMap[DEFAULT_DEFAULT_PRESET_NAME];
+        } else {
+          // Nada.
+          return;
+        }
+  
+        // Did the loaded object remember thcommon.isObject? &&  Did we remember this particular property?
+        if (preset[matchedIndex] && preset[matchedIndex][controller.property] !== undefined) {
+          // We did remember something for this guy ...
+          const value = preset[matchedIndex][controller.property];
+  
+          // And that's what it is.
+          controller.initialValue = value;
+          controller.setValue(value);
+        }
+      }
     }
 
-    // Keep track of this controller
-    controllerMap[controller.property] = controller;
-
-    // Okay, now have we saved any values for this controller?
-    if (root.load && root.load.remembered) {
-      const presetMap = root.load.remembered;
-
-      // Which preset are we trying to load?
-      let preset;
-
-      if (presetMap[gui.preset]) {
-        preset = presetMap[gui.preset];
-      } else if (presetMap[DEFAULT_DEFAULT_PRESET_NAME]) {
-        // Uhh, you can have the default instead?
-        preset = presetMap[DEFAULT_DEFAULT_PRESET_NAME];
-      } else {
-        // Nada.
-        return;
-      }
-
-      // Did the loaded object remember thcommon.isObject? &&  Did we remember this particular property?
-      if (preset[matchedIndex] && preset[matchedIndex][controller.property] !== undefined) {
-        // We did remember something for this guy ...
-        const value = preset[matchedIndex][controller.property];
-
-        // And that's what it is.
-        controller.initialValue = value;
-        controller.setValue(value);
-      }
-    }
   }
+  
+
+ 
+ 
 }
 
 export function copyController(options) {
@@ -1339,7 +1362,7 @@ function add(gui, object, property, params, meta = {}) {
         delete params.factoryArgs[0].name;
   }
 
-  if (params.color) {
+  if (params.color || meta.color) {
     controller = new ColorController(object, property);
   } else {
     const factoryArgs = [object, property].concat(params.factoryArgs);
@@ -1350,7 +1373,7 @@ function add(gui, object, property, params, meta = {}) {
     params.before = params.before.__li;
   }
 
-
+  controller.getName = () => name.innerHTML;
   controller.parent = gui;
   controller.__name = property;
 
@@ -1362,12 +1385,9 @@ function add(gui, object, property, params, meta = {}) {
   dom.addClass(name, 'property-name');
 
   name.innerHTML = innerHTMLName ? innerHTMLName : controller.property;
-
   const container = document.createElement('div');
   container.appendChild(name);
   container.appendChild(controller.domElement);
-
-  controller.getName = () => name.innerHTML;
 
   let li;
   if(meta.first) {
@@ -1377,6 +1397,7 @@ function add(gui, object, property, params, meta = {}) {
   } else {
     li = addRow(gui, container, params.before);
   }
+
   dom.addClass(li, GUI.CLASS_CONTROLLER_ROW);
   if (controller instanceof ColorController) {
     dom.addClass(li, 'color');
@@ -1391,10 +1412,9 @@ function add(gui, object, property, params, meta = {}) {
     const sd = document.createElement("button");
     sd.innerHTML = "A";
     sd.classList.add('controller-button');
-  
 
     sd.onclick = () => {
-      gui.getRoot().modalRef.toggleModal(11, true, controller);
+      gui.__root.modalRef.toggleModal(11, true, {controller, property: meta.property});
     }
     controller.automationButton = sd;
     editGroup.appendChild(sd);
@@ -1405,11 +1425,106 @@ function add(gui, object, property, params, meta = {}) {
   addControllerToOverview.style.marginLeft = "auto";
   addControllerToOverview.classList.add('controller-button');
 
+  if (meta.parent) {
+    controller.__parentObject = meta.parent;
+  }
+
+  if (meta.id) {
+    controller.__uuid = meta.id;
+  } 
   
   addControllerToOverview.onclick = (event) => {
     event.preventDefault();
     event.stopPropagation();
     gui.getRoot().modalRef.toggleModal(21, true, controller).then(copyController);
+  }
+  controller.toggleOpen = () => {};
+
+  if (controller instanceof ColorController) {
+    const sd = document.createElement("button");
+    sd.innerHTML = "V";
+    sd.classList.add('controller-button');
+    /*
+    
+    const colorControllers = {};
+    colorControllers.domElement = document.createElement("div");
+    colorControllers.domElement.style.display = "flex";
+    colorControllers.domElement.style.flexDirection = "column";
+    colorControllers.onResize  = () => {};
+    colorControllers.__root = gui.getRoot();
+    colorControllers.__controllers  = [];
+    colorControllers.folders  = [];
+    
+
+    colorControllers.__ul  = document.createElement('ul');
+
+    const hueArgs = { factoryArgs: [0, 1], object:  [0, 1] }
+    const rgbArgs = { factoryArgs: [0, 255, 1], object:  [0, 255, 1] }
+    const buttonArgs = { factoryArgs: [], object:  [] }
+    colorControllers.domElement.appendChild(colorControllers.__ul);
+
+    controller.__useHue = add(colorControllers, controller, "useHue", buttonArgs).onChange(controller.enableUseHue);
+    controller.__hue = add(colorControllers, controller, "hue", hueArgs, {property: "hue", parent: controller.__parentObject, id: controller.__uuid}).onChange(controller.setColor);
+    controller.__saturation = add(colorControllers, controller, "saturation", hueArgs, {property: "saturation", parent: controller.__parentObject, id: controller.__uuid}).onChange(controller.setColor);
+    controller.__useRGB = add(colorControllers, controller, "useRGB", buttonArgs).onChange(controller.enableUseRGB);
+    controller.__red = add(colorControllers, controller, "red", rgbArgs, {property: "red", parent: controller.__parentObject, id: controller.__uuid}).onChange(controller.setColor);
+    controller.__green = add(colorControllers, controller, "green", rgbArgs, {property: "green", parent: controller.__parentObject, id: controller.__uuid}).onChange(controller.setColor);
+    controller.__blue = add(colorControllers, controller, "blue", rgbArgs, {property: "blue", parent: controller.__parentObject, id: controller.__uuid}).onChange(controller.setColor);
+
+
+    
+      const hue = document.createElement("button");
+      const saturation = document.createElement("button");
+      const red = document.createElement("button");
+      const green = document.createElement("button");
+      const blue = document.createElement("button");
+
+      hue.innerHTML = "hue";
+      saturation.innerHTML = "saturation";
+      red.innerHTML = "red";
+      green.innerHTML = "green";
+      blue.innerHTML = "blue";
+
+      colorControllers.appendChild(red);
+      colorControllers.appendChild(green);
+      colorControllers.appendChild(blue);
+      colorControllers.appendChild(hue);
+      colorControllers.appendChild(saturation);
+   
+
+    let open = false;
+    let h = 28; 
+    
+    controller.toggleOpen = (forceClosed = null) => {
+      open = !open;
+      
+      if (forceClosed === true) {
+        open =  false;
+      }
+
+      if (open) {
+        li.style.height = String(h * 8 + "px");
+        containerContainer.appendChild(colorControllers.domElement);
+      } else {
+        li.style.height = "";
+        if (colorControllers.domElement.parentNode === containerContainer) {
+          containerContainer.removeChild(colorControllers.domElement);
+        }
+      
+      }
+    }
+
+     */
+    sd.onclick = () => {
+      if (controller.__colorControllers.closed) {
+        controller.__colorControllers.open();
+      } else {
+        controller.__colorControllers.close();
+      }
+      
+    };
+    controller.automationButton = sd;
+    editGroup.appendChild(sd);
   }
   
   controller.overviewButton = addControllerToOverview;

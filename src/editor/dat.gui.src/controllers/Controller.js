@@ -28,6 +28,7 @@ class Controller {
     this.__uuid = uuid();
     this.__updateCounter = 0;
     this.__subControllers = [];
+    this.__valueOptions = ["Value"];
     this.isSubController = false;
 
   

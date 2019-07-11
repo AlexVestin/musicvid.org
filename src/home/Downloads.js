@@ -87,7 +87,14 @@ function Terms() {
                     </li>
                     
                     <li>
-                        <Typography>It automatically uses the default bitrate (chosen by the encoder) and preset.</Typography>
+                        <Typography>It automatically uses a default bitrate (chosen by the encoder) and preset.</Typography>
+                    </li>
+
+                    <li>
+                        <Typography>
+                            The client doesn't auto-update so it needs to be redownloaded when a new version is available. 
+                            In the more recent versions you can find the date of the version in the help section.
+                        </Typography>
                     </li>
 
                     <li>

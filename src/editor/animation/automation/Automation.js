@@ -69,7 +69,7 @@ export default class Automation extends SerializableObject {
                     v1 = v;
                 }
             }catch(err) {
-
+                // just pass
             }
         }
 
@@ -79,6 +79,10 @@ export default class Automation extends SerializableObject {
         if (v1 < item.__min)
             v1 = item.__min;
 
+        
+        if (item.colorPropertyController) {
+            item.colorController.setColor();
+        }
         item.object[item.property] = v1;
         if (item.__onChange) {
             item.__onChange();

@@ -48,11 +48,11 @@ export default class MonsterCat extends BaseItem {
         this.positionX = 0.5;
         this.positionY = 0.5;
         this.animTime = 0.5;
-        this.analyser = new SpectrumAnalyser(this.folder);
+        this.analyser = new SpectrumAnalyser(this.folder, this);
+        this.test1 = 0;
+        this.test2 = 0;
         this.setUpFolder();
         this.analyser.setUpGUI();
-
-        
         this.lastArray = [];
 
         this.__attribution = {
