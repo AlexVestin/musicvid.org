@@ -47,12 +47,16 @@ window.__init = (config) => {
         proc.stderr.on("data", function(data) {
             const msg = data.toString();
             if (msg.includes("fps")) {
-                lastEncodedFrame = Number(
-                    msg
-                        .split("fps")[0]
-                        .split("frame=")[1]
-                        .replace(/\s/g, "")
-                );
+                let part1 =  msg.split("fps")[0];
+                if(part1.includes("frame=")) {
+                    let part2 = msg.split("frame=")[1];
+                    if(part2) {
+                        lastEncodedFrame = Number(part2.replace(/\s/g, ""));
+                        console.log(lastEncodedFrame);
+                        console.log(part2);
+
+                    }
+                }
             }
 
             output += "\n" + msg;
@@ -139,7 +143,8 @@ window.__addImage = (image, frameIdx) => {
         console.log("Error: process closed");
     }
 
-    if (frameIdx > lastEncodedFrame + 5) {
+    if (frameIdx > lastEncodedFrame + 70) {
+        console.log("5 Frames ahead", lastEncodedFrame)
         return 100;
     }
 

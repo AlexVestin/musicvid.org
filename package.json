@@ -44,7 +44,7 @@
     "scripts": {
         "start": "react-scripts start",
         "make-build": "python local/generate_version.py && npm run build && npm run deploy-prod && npm run invalidate-cache && npm run build-nw && npm run prepare-builds && npm run sync",
-        "build-nw": "python local/generate_version.py && python local/ehmcopy.py nw && react-scripts build",
+        "build-nw": "python local/generate_version.py && python local/ehmcopy.py nw && react-scripts build && python local/copy.py local/package.json build/package.json",
         "build": "python local/ehmcopy.py web && react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",

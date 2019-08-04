@@ -37,11 +37,10 @@ export default class OverviewgGroup extends SerializableObject {
 
     addControllers = () => {
         this.nameBtn = this.addControllerWithMeta(this.folder, this, "name", {}).onChange(() => this.folder.name = this.name).disableAll();
-        this.removeBtn = this.addControllerWithMeta(this.folder, this, "removeMe", {}).disableAll();
+        this.removeBtn = this.addControllerWithMeta(this.folder, this, "removeMe", {}).disableAll().name("Remove this group");
     }
 
     toggleHide = (on) => {
-        console.log(on, "souinfg")
         if (!this.added && on) {
             this.added = true;
             this.addControllers();

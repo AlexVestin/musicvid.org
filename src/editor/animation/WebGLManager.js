@@ -555,22 +555,22 @@ export default class WebGLManager {
             cs.add(this, "enableAllControls");
             cs.add(this, "disableAllControls");
             cs.add(this, "resetAllCameras");
-            const ps = this.settingsFolder.addFolder("Project settings");
+            const ps = this.gui.addFolder("Project", {useTitleRow: false});
             ps.add(this, "__projectName")
                 .name("Project name")
                 .disableAll();
             ps.add(this, "availablePublic")
                 .name("Project available to public")
                 .disableAll();
-            ps.add(this, "loadProjectFromFile").disableAll();
+            ps.add(this, "loadProjectFromFile").disableAll().name("Load from file");
             //ps.add(this, "createThumbnail").disableAll();
             ps.add(this, "advancedMode")
                 .onChange(this.toggleAdvancedMode)
                 .disableAll();
 
-            ps.add(this, "saveProjectToFile").disableAll();
-            ps.add(this, "saveProjectToProfile").disableAll();
-            ps.add(this, "saveAsNewProjectToProfile").disableAll();
+            ps.add(this, "saveProjectToFile").disableAll().name("Save to file");
+            ps.add(this, "saveProjectToProfile").disableAll().name("Save");
+            ps.add(this, "saveAsNewProjectToProfile").disableAll().name("Save as new");
         }
     };
 

@@ -28,3 +28,16 @@ $border-radius: 0.5em;
     margin-left:auto;
     margin-right: auto;
 }
+
+.resize {
+    width: 4%;
+    height: 4%;
+    position: absolute;
+
+    top: 98%;
+    left: -2%;
+    cursor: ne-resize;
+
+    z-index: 20000;
+
+}

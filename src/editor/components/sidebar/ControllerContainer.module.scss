@@ -10,7 +10,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    align-content: center;
+    align-content: center;  
+}
+
+.bar {
+    width :100%;
+    height: 10px;
+    background-color: white;
+}
+
+.wrapper {
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;
+    flex-direction: row;
+
+    width: 82%;
+    height: 70%;
+    border-radius: 0.5em;
+    
+
+    border: 1px solid rgba(255,255,255,0.354);
+    border-top: 4px solid rgba(255,255,255,0.315);
+    background-color: #1c1a23;
+    padding: 22px;
+   
 }
 
 .nav {
@@ -28,38 +52,43 @@
     text-decoration: none;
     display: inline-block;
     padding: 6px;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
     overflow: hidden;
 }
 
-.wrapper {
-    margin-top: auto;
-    margin-bottom: auto;
 
-    width: 82%;
-    height: 70%;
-    border: 1px solid rgba(155,155,155,0.3);
-    border-radius: 0.5em;
-    padding: 30px;
-   
-}
 
 .navWrapper {
-    width: 100%;
     display: flex;
     align-content: center;
     justify-content: center;
     
 }
 
+.sideNav {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11pt;
+    margin-right: 15px;
+    
+
+}
+
+.sideNav div {
+    cursor: pointer;
+    margin-top: 2px;
+    width: 120px;
+}
+
 
 
 .scrollbar  {
-
-    border-bottom: 1px solid rgba(10,10,10,0.5);
-    border-left: 1px solid rgba(10,10,10,0.5);
-    border-right: 1px solid rgba(10,10,10,0.5);
+    //border-bottom: 1px solid rgba(10,10,10,0.5);
+    //border-left: 1px solid rgba(10,10,10,0.5);
+    //border-right: 1px solid rgba(10,10,10,0.5);
 }
 
 .headerButtons {

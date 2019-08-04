@@ -6,8 +6,7 @@ import "simplebar/dist/simplebar.min.css";
 import Projects from "./Projects";
 import { app, base } from "backend/firebase";
 
-
-class GUIMount extends PureComponent {
+export class GUIMount extends PureComponent {
     constructor() {
         super();
 
@@ -52,13 +51,18 @@ export default class ControllerContainer extends PureComponent {
             "veryslow"
         ];
         this.fileName = "myvid.mp4";
-        folder.add(this, "useCustomTimeRange").name("Use custom time range").disableAll();
+        folder
+            .add(this, "useCustomTimeRange")
+            .name("Use custom time range")
+            .disableAll();
         folder
             .add(this, "startTime")
-            .name("Start time (if custom time range is enabled)").disableAll();
+            .name("Start time (if custom time range is enabled)")
+            .disableAll();
         folder
             .add(this, "endTime")
-            .name("End time (if custom time range is enabled)").disableAll();
+            .name("End time (if custom time range is enabled)")
+            .disableAll();
 
         folder.add(this, "fileName").disableAll();
         folder.add(this, "fps", [24, 25, 30, 48, 60]).disableAll();
@@ -79,30 +83,44 @@ export default class ControllerContainer extends PureComponent {
                 fileName: this.fileName,
                 useCustomTimeRange: this.useCustomTimeRange,
                 startTime: this.startTime,
-                endTime: this.endTime,
+                endTime: this.endTime
             };
             startEncoding(settings);
         }
     };
 
     convertAndLoad = projectFile => {
-        if(projectFile.str) {
-            base.collection("projects").doc(projectFile.id).set({
-                projectSrc: projectFile.str,
-                name: projectFile.name,
-                width: projectFile.name,
-                height: projectFile.name,
-                owner: app.auth().currentUser.uid
-            }).then(() => {
-                let p = {...projectFile, projectSrc: projectFile.src}
-                window.history.pushState({}, null, "/editor?project=" + projectFile.id);
-                this.props.loadProject(p);
-            })
-        }else {
-            base.collection("projects").doc(projectFile.id).get().then((snapshot) => {
-                window.history.pushState({}, null, "/editor?project=" + projectFile.id);
-                this.props.loadProject(snapshot.data());
-            })                  
+        if (projectFile.str) {
+            base.collection("projects")
+                .doc(projectFile.id)
+                .set({
+                    projectSrc: projectFile.str,
+                    name: projectFile.name,
+                    width: projectFile.name,
+                    height: projectFile.name,
+                    owner: app.auth().currentUser.uid
+                })
+                .then(() => {
+                    let p = { ...projectFile, projectSrc: projectFile.src };
+                    window.history.pushState(
+                        {},
+                        null,
+                        "/editor?project=" + projectFile.id
+                    );
+                    this.props.loadProject(p);
+                });
+        } else {
+            base.collection("projects")
+                .doc(projectFile.id)
+                .get()
+                .then(snapshot => {
+                    window.history.pushState(
+                        {},
+                        null,
+                        "/editor?project=" + projectFile.id
+                    );
+                    this.props.loadProject(snapshot.data());
+                });
         }
     };
 
@@ -116,148 +134,57 @@ export default class ControllerContainer extends PureComponent {
 
         const w = this.props.advanced ? "16.67%" : "25%";
 
+
+
         return (
             <div className={classes.container}>
+                
                 <div className={classes.wrapper}>
-                    <div className={classes.navWrapper}>
-                        <div className={classes.nav}>
-                            <button
-                                onClick={() => this.setState({ nav: 0 })}
-                                style={{ backgroundColor: bg, color: c }}
-                            >
-                                Editor
-                            </button>
-                            <button
-                                onClick={() => this.setState({ nav: 1 })}
-                                style={{
-                                    width: w,
-                                    backgroundColor:
-                                        nav === 1 ? selectedColor : "",
-                                    color: nav === 1 ? "#FFF" : ""
-                                }}
-                            >
-                                Projects
-                            </button>
-                            <button disabled>Community</button>
-                        </div>
+                    
+                    <div className={classes.sideNav}>
+                        <div style={{backgroundColor: index === 0 ? selectedColor : ""}} onClick={() => this.setState({index: 0})}>Quick Settings</div>
+                        <div style={{backgroundColor: index === 1 ? selectedColor : ""}} onClick={() => this.setState({index: 1})}>Audio</div>
+                        <div style={{marginLeft: 0, backgroundColor: index === 2 ? selectedColor : ""}} onClick={() => this.setState({index: 2})}>Layers</div>
+                        <div style={{marginLeft: 0, backgroundColor: index === 3 ? selectedColor : ""}} onClick={() => this.setState({index: 3})}>Automations</div>
+                        <div style={{marginLeft: 0, backgroundColor: index === 4 ? selectedColor : ""}} onClick={() => this.setState({index: 4})}>Settings</div>
+                        <div style={{backgroundColor: index === 5 ? selectedColor : ""}} onClick={() => this.setState({index: 5})}>Project</div>
+                        <div style={{backgroundColor: index === 6 ? selectedColor : ""}}onClick={() => this.setState({index: 6})}>Export</div>
                     </div>
+                    <SimpleBar
+                        data-simplebar-force-visible
+                        className={classes.scrollbar}
+                        style={{  height: "90%" }}
+                    >
+                        {index === 0 && loaded && (
+                            <GUIMount
+                                gui={gui.__folders["Overview"].domElement}
+                            />
+                        )}
 
-                    {this.state.nav === 0 && (
-                        <React.Fragment>
-                            <div className={classes.headerButtons}>
-                                <div
-                                    onClick={() => this.setState({ index: 0 })}
-                                    style={{
-                                        width: w,
-                                        backgroundColor:
-                                            index === 0 ? selectedColor : ""
-                                    }}
-                                >
-                                    overview
-                                </div>
-                                
-                                {this.props.advanced && <React.Fragment><div
-                                    onClick={() => this.setState({ index: 1 })}
-                                    style={{
-                                        backgroundColor:
-                                            index === 1 ? selectedColor : ""
-                                    }}
-                                >
-                                    layers
-                                </div>
+                        {index === 1 && loaded && (
+                            <GUIMount gui={gui.__folders["Audio"].domElement} />
+                        )}
 
-                                
-                                <div
-                                    onClick={() => this.setState({ index: 2 })}
-                                    style={{
-                                        width: w,
-                                        backgroundColor:
-                                            index === 2 ? selectedColor : ""
-                                    }}
-                                >
-                                    automations
-                                </div>
-                                </React.Fragment>
-                                }
-                                <div
-                                    onClick={() => this.setState({ index: 3 })}
-                                    style={{
-                                        width: w,
-                                        backgroundColor:
-                                            index === 3 ? selectedColor : ""
-                                    }}
-                                >
-                                    audio
-                                </div>
-                                <div
-                                    onClick={() => this.setState({ index: 4 })}
-                                    style={{
-                                        width: w,
-                                        backgroundColor:
-                                            index === 4 ? selectedColor : ""
-                                    }}
-                                >
-                                    settings
-                                </div>
-                                <div
-                                    onClick={() => this.setState({ index: 5 })}
-                                    style={{
-                                        width: w,
-                                        backgroundColor:
-                                            index === 5 ? selectedColor : ""
-                                    }}
-                                >
-                                    export
-                                </div>
-                            </div>
-                            <SimpleBar
-                                data-simplebar-force-visible
-                                className={classes.scrollbar}
-                                style={{ width: "100%", height: "90%" }}
-                            >
-                                {index === 0 && loaded && (
-                                    <GUIMount
-                                        gui={gui.__folders["Overview"].domElement}
-                                    />
-                                )}
+                        {index === 2 && loaded && (
+                            <GUIMount
+                                gui={gui.__folders["Layers"].domElement}
+                            />
+                        )}
+                        {index === 3 && loaded && <Automations gui={gui} />}
+                       
+                        {index === 4 && loaded && (
+                            <GUIMount
+                                gui={gui.__folders["Settings"].domElement}
+                            />
+                        )}
 
-                                {index === 1 && loaded && (
-                                    <GUIMount
-                                        gui={gui.__folders["Layers"].domElement}
-                                    />
-                                )}
-                                {index === 2 && loaded && (
-                                    <Automations gui={gui} />
-                                )}
-                                {index === 3 && loaded && (
-                                    <GUIMount
-                                        gui={gui.__folders["Audio"].domElement}
-                                    />
-                                )}
-                                {index === 4 && loaded && (
-                                    <GUIMount
-                                        gui={
-                                            gui.__folders["Settings"].domElement
-                                        }
-                                    />
-                                )}
-                                {index === 5 && loaded && (
-                                    <GUIMount
-                                        gui={gui.__folders["Export"].domElement}
-                                    />
-                                )}
-                            </SimpleBar>
-                        </React.Fragment>
-                    )}
-                    {this.state.nav === 1 && (
-                        <SimpleBar
-                            data-simplebar-force-visible
-                            className={classes.scrollbar}
-                            style={{ width: "100%", height: "90%" }}
-                        >
-                            <Projects loadProject={this.convertAndLoad} />
-                        </SimpleBar>
-                    )}
+                        {index === 5 && loaded && <Projects loadProject={this.convertAndLoad} gui={gui}></Projects> }
+                        {index === 6 && loaded && (
+                            <GUIMount
+                                gui={gui.__folders["Export"].domElement}
+                            />
+                        )}
+                    </SimpleBar>
                 </div>
             </div>
         );

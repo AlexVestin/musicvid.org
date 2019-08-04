@@ -273,11 +273,15 @@ class App extends PureComponent {
         this.audio.toggleMuted();
     };
 
+    setFFTSize = () => {
+        this.audio.setFFTSize(this.audio.fftSize)
+    }
+
     audioReady = duration => {
         if (this.firstLoad) {
             this.audioFolder
-                .add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384])
-                .onChange(() => this.audio.setFFTSize(this.audio.fftSize));
+                .add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384,32768])
+                .onChange(this.setFFTSize);
             this.firstLoad = false;
         }
         if (duration > 8 * 60) {
@@ -579,6 +583,7 @@ class App extends PureComponent {
                                 firstLoad={this.firstLoad}
                                 loadProject={loadProject}
                                 advanced={this.state.advanced}
+                                manager={this.animationManager}
                             />
                             <Canvas ref={this.canvasRef} />
                         </div>

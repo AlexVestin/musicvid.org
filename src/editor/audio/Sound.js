@@ -49,6 +49,7 @@ export default class Audio {
         this.fftSize = Number(fftSize);
         if(this.moduleLoaded) {
             this.Module._init_r(this.fftSize);
+            console.log("set fft size?")
             if(this.gui)
                 this.gui.updateDisplay();
         }
