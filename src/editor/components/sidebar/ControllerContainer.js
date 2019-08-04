@@ -33,10 +33,7 @@ export default class ControllerContainer extends PureComponent {
         if (firstLoad) this.initExportGUI();
 
         const d = document.getElementsByClassName("simplebar-mask")[0];
-        d.style.setProperty('width', '97%', 'important');
-        
-
-        console.log(d.style.width);
+        d.style.setProperty('width', '95%', 'important');
     }
 
     initExportGUI = () => {

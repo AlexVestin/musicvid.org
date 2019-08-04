@@ -72,6 +72,8 @@ export default class Canvas extends PureComponent {
 
     setSize = (res, userFactor = -1) => {
         const c = this.canvasRef.current; 
+        if(!c)
+            return
         let factor = (window.innerWidth * window.innerHeight) / (1.88 * Math.pow(10, 6));
         let scaleFactor = 1.0;
         
@@ -84,8 +86,11 @@ export default class Canvas extends PureComponent {
 
         this.internalResolution = res;
         this.internalScaleFactor = scaleFactor;
+
         c.style.transform = `scale(${scaleFactor})`;
         this.setState({width: res.width * scaleFactor, height: res.height * scaleFactor})
+        
+        
     }
 
     getMountRef = () => this.canvasRef.current;

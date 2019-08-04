@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
+import Input from "./Input";
 
 const CustomTableCell = withStyles(theme => ({
     head: {
@@ -51,12 +52,17 @@ class NameInput extends React.PureComponent {
 
     
 
+    
+
     componentDidMount() {
-        this.ref.current.onkeyup = (event) => {
+
+        const prevent = (event) => {
             event.stopPropagation();
             event.preventDefault(); 
         }
 
+        this.ref.current.onkeyup = prevent;
+        this.ref.current.onkeydown = prevent;
        
     }
     render() {
@@ -67,7 +73,25 @@ class NameInput extends React.PureComponent {
 }
 
 class CustomizedTable extends React.PureComponent {
+
+    constructor() {
+        super();
+
+        this.startRef = React.createRef();
+        this.endRef = React.createRef();
+        this.typeRef = React.createRef();
+
+    }
     state = {values: []};
+
+
+    onKey = (e) => {
+        console.log("kkey")
+        e.preventDefault();
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
+
+    }
     updateLinks = () => {
         const automations = this.props.automations;
         this.setState({values: automations.map(e => e.controller.object[e.controller.property])});
@@ -148,25 +172,24 @@ class CustomizedTable extends React.PureComponent {
                                 <CustomTableCell align="center">
                                     <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                                         Start: 
-                                        <input style={{width: 40}} defaultValue={row.item.startTime} onChange={e =>
-                                            (row.item.startTime = e.target.value)
-                                        }></input>
+                                        <Input ref={this.startRef} style={{width: 40}} defaultValue={row.item.startTime} onChange={e => (row.item.startTime = e.target.value)
+                                        }></Input>
                                     </div>
                                     
                                     <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 4}}>
                                         End: 
-                                        <input style={{width: 40}} defaultValue={row.item.endTime} onChange={e =>
+                                        <Input  style={{width: 40}} defaultValue={row.item.endTime} onChange={e =>
                                             (row.item.endTime = e.target.value)
-                                        }></input>
+                                        }></Input>
                                     </div>
                                     
                                 </CustomTableCell>
 
 
                                 <CustomTableCell align="center">
-                                    <input  style={{width: 80}} defaultValue={row.item.type} onChange={e =>
+                                    <Input ref={this.typeRef} style={{width: 80}} defaultValue={row.item.type} onChange={e =>
                                             (row.item.type = e.target.value)
-                                        }></input>
+                                        }></Input>
                                 </CustomTableCell>
 
                                 <CustomTableCell align="center">

@@ -57,6 +57,9 @@ class NumberControllerBox extends NumberController {
       }
     }
 
+
+
+
     function onKeyUp(e) {
       e.stopPropagation();
       e.preventDefault();
@@ -101,6 +104,8 @@ class NumberControllerBox extends NumberController {
 
     dom.bind(this.__input, 'change', onChange);
     dom.bind(this.__input, 'keyup', onKeyUp);
+    dom.bind(this.__input, 'keydown', onKeyUp);
+
 
     dom.bind(this.__input, 'blur', onBlur);
     dom.bind(this.__input, 'mousedown', onMouseDown);

@@ -28,6 +28,11 @@ class StringController extends Controller {
 
     const _this = this;
 
+    function preventKeydown(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
     function onChange(e) {
       e.stopPropagation();
       e.preventDefault();
@@ -47,6 +52,8 @@ class StringController extends Controller {
     this.__input.setAttribute('type', 'text');
 
     dom.bind(this.__input, 'keyup', onChange);
+    dom.bind(this.__input, 'preventKeydown', onChange);
+
     dom.bind(this.__input, 'change', onChange);
     dom.bind(this.__input, 'blur', onBlur);
     dom.bind(this.__input, 'keydown', function(e) {
