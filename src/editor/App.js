@@ -62,15 +62,14 @@ class App extends PureComponent {
     };
 
     keyBindings = (e) => {
+
+        if (e.keyCode === 17) {
+            this.ctrlKeyDown = false;
+        }
+
         if (!this.state.encoding && this.state.audioLoaded && this.state.videoLoaded) {
 
-        
-            console.log("kje")
-            if (e.keyCode === 90 && e.ctrlKey) {
-                alert("Ctrl+z");
-            } else
-
-            if (e.ctrlKey) {
+            if (e.ctrlKey || this.ctrlKeyDown) {
                 switch(e.keyCode) {
                     // Left key
                     case 37:
@@ -91,8 +90,8 @@ class App extends PureComponent {
                     // spacebar
                     case 32:
                         this.stop();
-                       
-                    break;
+                        break;
+
                     default:
                         console.log()
                 }
@@ -222,7 +221,23 @@ class App extends PureComponent {
     }
 
     componentDidMount = async () => {
-        document.onkeyup = this.keyBindings;
+        window.onkeydown = (e) => {
+            if(e.ctrlKey && (e.keyCode === 83)) {
+                e.preventDefault();
+            }
+
+            if (e.keyCode === 17) {
+                this.ctrlKeyDown = true;
+            }
+
+            if (e.keyCode === 83 && e.ctrlKey) {
+                this.animationManager.saveProjectToProfile();
+            }
+        }
+
+        
+        
+        window.onkeyup = this.keyBindings;
         
         if (!this.fastLoad) {
             window.onbeforeunload = function(event) {

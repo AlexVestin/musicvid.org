@@ -30,7 +30,6 @@ export default class Scene extends SerializableObject {
 
     addItems = items => {
         items.forEach(item => {
-            console.log(item);
             const i = this.addItemFromText(item.__itemName);
             i.__setControllerValues(item.controllers, item.__automations);
             i.setFolderName(i.name);

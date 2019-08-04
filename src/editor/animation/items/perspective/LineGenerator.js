@@ -91,7 +91,6 @@ class LineGenerator extends Object3D {
      */
     update(mult, opacity) {
         // Add lines randomly
-        console.log(this.isStarted)
         if (this.isStarted && Math.random() < this.frequency) this.addLine();
 
         // Update current Lines

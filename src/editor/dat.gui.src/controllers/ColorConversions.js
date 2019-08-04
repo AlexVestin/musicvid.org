@@ -49,7 +49,6 @@ export function hslToRgb(h, s, l) {
 }
 
 export function hexToHSL(hex) {
-    console.log(hex);
     let {r,g,b} = hexToRgb(hex);
 
     r /= 255;

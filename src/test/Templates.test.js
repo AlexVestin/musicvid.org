@@ -1,5 +1,4 @@
-const faker = require('faker');
-const puppeteer = require('puppeteer');
+/*const puppeteer = require('puppeteer');
 
 describe('H1 Text', () => {
     test('h1 loads correctly', async () => {
@@ -14,4 +13,4 @@ describe('H1 Text', () => {
   
       browser.close();
     }, 16000);
-  }); 
+  }); */
