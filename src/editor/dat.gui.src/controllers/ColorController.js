@@ -308,16 +308,20 @@ class ColorController extends Controller {
   }
 
   setControllerValues = () => {
-    const v = this.object[this.property];
-    const hsl = hexToHSL(v);
-    const rgb = hexToRgb(v);
 
-    this.__red.setValue(rgb.r);
-    this.__blue.setValue(rgb.b);
-    this.__green.setValue(rgb.g);
-    this.__hue.setValue(hsl.h);
-    this.__saturation.setValue(hsl.s);
-    this.__lightness.setValue(hsl.l);
+    if(this.__red) {
+      const v = this.object[this.property];
+      const hsl = hexToHSL(v);
+      const rgb = hexToRgb(v);
+  
+      this.__red.setValue(rgb.r);
+      this.__blue.setValue(rgb.b);
+      this.__green.setValue(rgb.g);
+      this.__hue.setValue(hsl.h);
+      this.__saturation.setValue(hsl.s);
+      this.__lightness.setValue(hsl.l);
+    }
+   
   }
 
   setColor = () => {

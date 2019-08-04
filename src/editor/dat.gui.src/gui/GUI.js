@@ -1518,15 +1518,19 @@ function add(gui, object, property, params, meta = {}) {
 
      */
     sd.onclick = () => {
-      if (controller.__colorControllers.closed) {
-        controller.__colorControllers.open();
-      } else {
-        controller.__colorControllers.close();
+
+      if(controller.__colorControllers) {
+        if (controller.__colorControllers.closed) {
+          controller.__colorControllers.open();
+        } else {
+          controller.__colorControllers.close();
+        }
+        
+      };
+      controller.automationButton = sd;
+      editGroup.appendChild(sd);
       }
       
-    };
-    controller.automationButton = sd;
-    editGroup.appendChild(sd);
   }
   
   controller.overviewButton = addControllerToOverview;

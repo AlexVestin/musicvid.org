@@ -31,6 +31,12 @@ export default class ControllerContainer extends PureComponent {
     componentDidMount() {
         const { firstLoad } = this.props;
         if (firstLoad) this.initExportGUI();
+
+        const d = document.getElementsByClassName("simplebar-mask")[0];
+        d.style.setProperty('width', '97%', 'important');
+        
+
+        console.log(d.style.width);
     }
 
     initExportGUI = () => {
@@ -142,6 +148,7 @@ export default class ControllerContainer extends PureComponent {
                 <div className={classes.wrapper}>
                     
                     <div className={classes.sideNav}>
+                        <div style={{borderRight: "1px solid rgba(255,255,255,0.3)"}}>
                         <div style={{backgroundColor: index === 0 ? selectedColor : ""}} onClick={() => this.setState({index: 0})}>Quick Settings</div>
                         <div style={{backgroundColor: index === 1 ? selectedColor : ""}} onClick={() => this.setState({index: 1})}>Audio</div>
                         <div style={{marginLeft: 0, backgroundColor: index === 2 ? selectedColor : ""}} onClick={() => this.setState({index: 2})}>Layers</div>
@@ -149,11 +156,12 @@ export default class ControllerContainer extends PureComponent {
                         <div style={{marginLeft: 0, backgroundColor: index === 4 ? selectedColor : ""}} onClick={() => this.setState({index: 4})}>Settings</div>
                         <div style={{backgroundColor: index === 5 ? selectedColor : ""}} onClick={() => this.setState({index: 5})}>Project</div>
                         <div style={{backgroundColor: index === 6 ? selectedColor : ""}}onClick={() => this.setState({index: 6})}>Export</div>
+                        </div>
                     </div>
                     <SimpleBar
                         data-simplebar-force-visible
                         className={classes.scrollbar}
-                        style={{  height: "90%" }}
+                        style={{  height: "90%", width: "99%" }}
                     >
                         {index === 0 && loaded && (
                             <GUIMount

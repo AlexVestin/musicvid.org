@@ -20,13 +20,14 @@
 }
 
 .wrapper {
+    box-sizing: content-box;
     margin-top: auto;
     margin-bottom: auto;
     display: flex;
     flex-direction: row;
-
-    width: 82%;
+    overflow-x: hidden;
     height: 70%;
+    width:85%;
     border-radius: 0.5em;
     
 
@@ -89,6 +90,7 @@
     //border-bottom: 1px solid rgba(10,10,10,0.5);
     //border-left: 1px solid rgba(10,10,10,0.5);
     //border-right: 1px solid rgba(10,10,10,0.5);
+    width: 80%;
 }
 
 .headerButtons {

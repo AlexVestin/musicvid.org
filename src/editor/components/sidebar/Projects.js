@@ -21,7 +21,7 @@ export default class Projects extends PureComponent {
         <div className={classes.content}>
           {index === 0 &&  <GUIMount gui={this.props.gui.__folders["Project"].domElement}/>}
           {index === 1 && <ProjectList loadProject={this.props.loadProject}></ProjectList>}
-          {index === 2 && <div>dd</div>}
+          {index === 2 && <div>Community projects will be moved here</div>}
         </div>
           
       </div>
