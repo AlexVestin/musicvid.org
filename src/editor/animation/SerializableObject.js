@@ -13,9 +13,11 @@ export default class SerializableObject {
         Object.keys(values).forEach(key => {
             const obj = values[key];
             const controller = this.__controllers[key];
+            
+            // Check if the controller exists, otherwise tell the user the internal id has changed
             if(!controller) {
                 keysChanged.push(key);
-            }else if(values[key].value){
+            }else if(values[key].value !== undefined){
                 controller.setValue(values[key].value);
                 controller.updateDisplay();
             }

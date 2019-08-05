@@ -150,6 +150,8 @@ export default class WebGLManager {
         }
 
         this.parent.toggleAdvancedMode(this.advancedMode);
+        this.projectSettingsFolder.updateDisplay();
+        this.gui.updateDisplay();
     };
 
     loadProjectFromFile = () => {
@@ -246,6 +248,8 @@ export default class WebGLManager {
                 const blob = takeScreenShot(this.canvas);
                 p3 = storage.ref().child(this.__id).put(blob)
             }*/
+
+            console.log(projFile)
 
             Promise.all([p1, p2]).then(() => {
                 setSnackbarMessage("Saved to profile", "success", 2000);
@@ -403,7 +407,11 @@ export default class WebGLManager {
     };
 
     start = () => {
-        this.scenes.forEach(scene => scene.items.forEach(item => item.start()));
+        this.scenes.forEach(scene =>  { 
+            if(scene.isScene) {
+                scene.items.forEach(item => item.start())
+            }
+        });
     }
 
     play = t => {
@@ -571,6 +579,8 @@ export default class WebGLManager {
             ps.add(this, "saveProjectToFile").disableAll().name("Save to file");
             ps.add(this, "saveProjectToProfile").disableAll().name("Save");
             ps.add(this, "saveAsNewProjectToProfile").disableAll().name("Save as new");
+
+            this.projectSettingsFolder = ps;
         }
     };
 

@@ -98,7 +98,7 @@ export default class Particles extends BaseItem {
         this.scene = info.scene;
         this.particleData = [];
         this.baseSizes = [];
-        this.color = 0xFFFFFF;
+        this.color = "#ffffff";
         this.baseSpeed = 1.0;
         this.movementAmplitude = 1.0;
         this.useCustomParticleImage = false;

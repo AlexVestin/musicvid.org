@@ -288,6 +288,10 @@ class App extends PureComponent {
         this.audio.toggleMuted();
     };
 
+    setUnmuted = () => {
+        this.audio.setUnmuted();
+    }
+
     setFFTSize = () => {
         this.audio.setFFTSize(this.audio.fftSize)
     }
@@ -613,6 +617,8 @@ class App extends PureComponent {
                                 audio={this.audio}
                                 canvas={this.audioWaveCanvas}
                                 toggleMuted={this.toggleMuted}
+                                setUnmuted={this.setUnmuted}
+
                                 ref={this.trackRef}
                             >
                                 <WaveCanvas

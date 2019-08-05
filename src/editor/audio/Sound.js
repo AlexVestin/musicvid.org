@@ -119,9 +119,12 @@ export default class Audio {
             this.setVolume(0);
         }else {
             this.setVolume(this.storedVolume);
-        }
+        }   
+    }
 
-        
+    setUnmuted = () => {
+        this.setVolume(this.storedVolume);
+        this.muted = false;
     }
 
     getAudioData = time => {

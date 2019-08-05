@@ -55,12 +55,18 @@ export default class TrackContainer extends PureComponent {
         const seekerWidth = (t / this.props.audioDuration) * ele.clientWidth || 0;
         this.timeRef.current.innerHTML = formatTime(t);
         this.seekOverlayRef.current.style.width = String(Math.floor(seekerWidth)) + "px" ;
+
     };
 
     toggleMuted = () => {
         this.props.toggleMuted();
         this.setState({ muted: !this.state.muted });
     };
+
+    setUnmuted = () => {
+        this.props.setUnmuted();
+        this.setState({ muted: false });
+    }
 
     render() {
 
@@ -130,6 +136,7 @@ export default class TrackContainer extends PureComponent {
                             disabled={this.props.disabled}
                             audio={this.props.audio}
                             style={{ marginLeft: 10 }}
+                            toggleMuted={this.setUnmuted}
                         />
                     </div>
                 </div>

@@ -7,7 +7,10 @@ export default class Slider extends PureComponent {
     if(this.props.disabled) {
       e.stopPropagation();
       return;
+
     }
+    this.props.toggleMuted();
+
     this.props.audio.setVolume(e.target.value /  100);
     this.setState({value: e.target.value});
   }
