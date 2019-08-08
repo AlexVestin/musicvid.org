@@ -17,7 +17,7 @@ export default class BaseItem extends SerializableObject {
     constructor(info) {
         super();
         this.__startTime = 0;
-        this.__endTime = 600;
+        this.__endTime = 60000;
         this.name = "";
         this.__isEncoding = false;
 

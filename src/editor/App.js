@@ -297,6 +297,7 @@ class App extends PureComponent {
     }
 
     audioReady = duration => {
+        console.log(duration)
         if (this.firstLoad) {
             this.audioFolder
                 .add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384,32768])
@@ -364,10 +365,13 @@ class App extends PureComponent {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
 
         if (!disabled && this.canvasRef.current !== null) {
-            this.canvasRef.current.begin();
 
             let time, audioData;
+
+            console.log(this.time, this.audio.duration, this.state.playing)
             if (this.state.playing && this.time < this.audio.duration) {
+
+                
                 time =
                     (performance.now() - this.startTime) / 1000 +
                     this.timeOffset;
@@ -378,6 +382,7 @@ class App extends PureComponent {
                 this.gui.__time = time;
                 this.time = time;
 
+                console.log(time, audioData)
                 this.applyAutomation(time, audioData);
                 this.animationManager.update(time, audioData, true);
             } else {
@@ -386,8 +391,6 @@ class App extends PureComponent {
                     this.play();
                 }
             }
-
-            this.canvasRef.current.end();
         }
 
         if (!this.encoding) requestAnimationFrame(this.update);
@@ -409,7 +412,13 @@ class App extends PureComponent {
             this.audio.exportFrameIdx = 0;
             this.canvasRef.current.setSize(this.resolution);
             this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
+            
             this.animationManager.refresh(this.gui.canvasMountRef);
+            if(this.audioWaveCanvasRef.current) {
+                this.audioWaveCanvasRef.current.generateAudioWave(
+                    this.audio.combinedAudioData
+                );
+            }
         });
     };
 
@@ -418,6 +427,7 @@ class App extends PureComponent {
         this.stop();
 
         this.exporter.prepare();
+        this.animationManager.fps = this.exporter.fps;
         this.animationManager.start();
         this.exporter.encode();
         this.setState({ encoding: true });

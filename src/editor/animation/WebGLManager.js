@@ -60,6 +60,8 @@ export default class WebGLManager {
         if (!this.parent.test) {
             this.parent.toggleAdvancedMode(true);
         }
+
+        this.fps = 60;
     }
 
     saveAsNewProjectToProfile = () => {
@@ -447,6 +449,8 @@ export default class WebGLManager {
     setClear = () => {
         this.renderer.setClearColor(this.clearColor);
         this.renderer.setClearAlpha(this.clearAlpha);
+
+        console.log(this.clearAlpha,this.clearColor);
     };
 
     setAudio = audio => {
@@ -549,7 +553,7 @@ export default class WebGLManager {
                 .name("configUpdateFrequency");
             const rs = this.settingsFolder.addFolder("Render settings");
 
-            rs.addColor(this, "clearColor").onChange(this.setClear);
+            rs.addColor(this, "clearColor").onChange(this.setClear).disableAll();
 
             rs.add(this, "clearAlpha", 0, 1, 0.001)
                 .onChange(this.setClear)
@@ -649,8 +653,11 @@ export default class WebGLManager {
     };
 
     update = (time, audioData, shouldIncrement) => {
-        let dt = time - this.__lastTime;
 
+
+        let dt = 1 / this.fps;
+
+        console.log(time, dt, audioData, shouldIncrement)
         if (!this.postprocessingEnabled) {
             this.renderer.clear();
             this.scenes.forEach(scene => {
