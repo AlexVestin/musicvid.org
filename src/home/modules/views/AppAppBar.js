@@ -118,17 +118,6 @@ class AppAppBar extends PureComponent {
                        
                         <div className={classes.right}>
 
-                                <Link
-                                color="inherit"
-                                variant="h6"
-                                underline="none"
-                                className={classes.rightLink}
-                                onClick={() =>
-                                    this.setState({ redirectTo: "/projects" })
-                                }
-                            >
-                                {"Projects"}
-                            </Link>
                             <Link
                                 color="inherit"
                                 variant="h6"

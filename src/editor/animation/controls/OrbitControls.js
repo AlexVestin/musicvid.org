@@ -138,11 +138,11 @@ export default class OrbitControls extends THREE.EventDispatcher  {
 		var quat = new THREE.Quaternion().setFromUnitVectors( object.up, new THREE.Vector3( 0, 1, 0 ) );
 		var quatInverse = quat.clone().inverse();
 
+
 		var lastPosition = new THREE.Vector3();
 		var lastQuaternion = new THREE.Quaternion();
 
 		return function update() {
-
 			var position = scope.object.position;
 
 			offset.copy( position ).sub( scope.target );
@@ -223,7 +223,7 @@ export default class OrbitControls extends THREE.EventDispatcher  {
 			}
 
 			return false;
-
+			
 		};
 
 	}();

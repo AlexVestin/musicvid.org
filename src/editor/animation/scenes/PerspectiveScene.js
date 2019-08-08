@@ -14,9 +14,9 @@ export default class Scene3DPerspective extends Scene {
         if(this.folder) {
             this.folder.name = "webgl 3d scene";
             this.setUpControls();
-            this.cameraXController.min(-1000).max(1000).step(0.2);
-            this.cameraYController.min(-1000).max(1000).step(0.2);
-            this.cameraZController.min(-1000).max(1000).step(0.2);
+            this.cameraXController.min(-100000).max(100000).step(0.2);
+            this.cameraYController.min(-100000).max(100000).step(0.2);
+            this.cameraZController.min(-100000).max(100000).step(0.2);
         }       
     }
 }

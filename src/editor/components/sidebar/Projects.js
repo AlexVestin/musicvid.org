@@ -1,7 +1,7 @@
 
 
 import React, { PureComponent } from 'react'
-import ProjectList from 'home/ProjectList'
+import ProjectContainer from './ProjectContainer'
 
 import classes from './Project.module.css';
 import { GUIMount } from './ControllerContainer'; 
@@ -20,7 +20,7 @@ export default class Projects extends PureComponent {
 
         <div className={classes.content}>
           {index === 0 &&  <GUIMount gui={this.props.gui.__folders["Project"].domElement}/>}
-          {index === 1 && <ProjectList loadProject={this.props.loadProject}></ProjectList>}
+          {index === 1 && <ProjectContainer loadProject={this.props.loadProject}></ProjectContainer>}
           {index === 2 && <div>Community projects will be moved here</div>}
         </div>
           

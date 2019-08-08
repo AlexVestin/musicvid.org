@@ -2,7 +2,7 @@ import getItemClassFromText from "../items";
 import OrbitControls from "../controls/OrbitControls";
 import SerializableObject from "../SerializableObject";
 import serialize from "../Serialize";
-
+import { Vector3 } from 'three'
 export default class Scene extends SerializableObject {
     constructor(gui, resolution, remove, moveScene) {
         super();
@@ -52,22 +52,37 @@ export default class Scene extends SerializableObject {
         this.cameraFolder.updateDisplay();
     };
 
-    updateSettings = () => {};
+    updateSettings = () => {
+        if(this.controls) {
+            this.controls.update();
+        }
+    };
 
-    undoCameraMovement = matrix => {
-        const { camera } = this;
-        camera.matrix.fromArray(matrix);
-        camera.matrix.decompose(
-            camera.position,
-            camera.quaternion,
-            camera.scale
+    undoCameraMovement = (matrix, controlConfigs) => {
+        this.camera.matrix.fromArray(matrix);
+        this.camera.matrix.decompose(
+            this.camera.position,
+            this.camera.quaternion,
+            this.camera.scale
         );
         this.lastCameraArray = this.camera.matrix.toArray();
         this.cameraFolder.updateDisplay();
+
+        if (controlConfigs) {
+            this.controls.enabled = controlConfigs.enabled;
+            const { x, y, z } = controlConfigs.target; 
+            this.controls.target = new Vector3(x, y, z);
+
+            this.controls.update();
+        } else {
+            this.controls.enabled = false;
+            this.controls.update();
+        }
+     
+        
     };
 
     handleMouseUp = () => {
-        //this.gui.getRoot().addUndoItem({type: "action", func: this.undoCameraMovement, args: this.lastCameraArray});
         this.lastCameraArray = this.camera.matrix.toArray();
         this.cameraFolder.updateDisplay();
     };
@@ -218,6 +233,11 @@ export default class Scene extends SerializableObject {
             sceneConfig.__items.push(item.serialize());
         });
         sceneConfig.camera = this.camera.matrix.toArray();
+        sceneConfig.controls = {
+            enabled: this.controls.enabled,
+            target: this.controls.target
+        }
+
         sceneConfig.controlsEnabled = this.controls.enabled;
 
         return sceneConfig;

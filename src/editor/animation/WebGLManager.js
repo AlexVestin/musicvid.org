@@ -13,7 +13,7 @@ import PointAutomation from "./automation/PointAutomation";
 import InputAutomation from "./automation/InputAutomation";
 import ImpactAutomation from "./automation/AudioReactiveAutomation";
 import uuid from "uuid/v4";
-//import { takeScreenShot } from 'editor/util/FlipImage'
+import { takeFirestoreScreenShot } from 'editor/util/FlipImage'
 //import MockWebGLManager from './MockWebGLManager'
 
 import OverviewGroup from "../OverviewGroup";
@@ -131,8 +131,8 @@ export default class WebGLManager {
                 const s = this.addSceneFromText(
                     scene.__settings.type || scene.__settings.TYPE
                 );
-                s.undoCameraMovement(scene.camera);
-                s.controls.enabled = scene.controlsEnabled;
+                s.undoCameraMovement(scene.camera, scene.controls);
+                
                 s.__automations = scene.__automations;
                 if (scene.__controllers)
                     s.__setControllerValues(scene.__controllers.controllers);
@@ -194,6 +194,7 @@ export default class WebGLManager {
         this.scenes.forEach((scene, i) => {
             projFile.scenes.push(scene.__serialize());
         });
+
         return projFile;
     };
 
@@ -218,14 +219,20 @@ export default class WebGLManager {
         FileSaver.saveAs(blob, this.__projectName + ".json");
     };
 
-    saveProjectToProfile = () => {
+    takeScreenshot = () => {
+        this.gui.getRoot().modalRef.toggleModal(19, true, this);
+    }
+
+    saveProjectToProfile = async () => {
         const projFile = this.serializeProject();
         const cu = app.auth().currentUser;
         if (cu) {
+
+            let str = "Saved to profile!";
             if (cu.uid !== this.__ownerId) {
                 this.__id = uuid();
                 this.__ownerId = cu.uid;
-                console.log("Setting new uid");
+                str = "Saved as new project!"
             }
 
             const myId = app.auth().currentUser.uid;
@@ -242,19 +249,18 @@ export default class WebGLManager {
             });
 
             const allRef = base.collection("projects").doc(this.__id);
-            const p2 = allRef.set(this.getProjectConfig(projFile, myId));
 
-            /*let p3;
-            if(!this.__online) {
-                this.redoUpdate();
-                const blob = takeScreenShot(this.canvas);
-                p3 = storage.ref().child(this.__id).put(blob)
-            }*/
-
-            console.log(projFile)
-
+            let doc = null, p2 = null;
+            const c = this.getProjectConfig(projFile, myId)
+            try {
+                doc = await allRef.get();
+                p2 = doc.exists ? allRef.update(c) : allRef.set(c);
+            } catch(err) {
+                p2 = allRef.set(c);
+            }
+    
             Promise.all([p1, p2]).then(() => {
-                setSnackbarMessage("Saved to profile", "success", 2000);
+                setSnackbarMessage(str, "success", 2000);
                 window.history.pushState(
                     {},
                     null,
@@ -263,6 +269,7 @@ export default class WebGLManager {
                 this.__online = true;
                 allRef.update({ online: true });
             });
+
         } else {
             setSnackbarMessage(
                 "You need to log in to be able to save to your profile.",
@@ -449,8 +456,6 @@ export default class WebGLManager {
     setClear = () => {
         this.renderer.setClearColor(this.clearColor);
         this.renderer.setClearAlpha(this.clearAlpha);
-
-        console.log(this.clearAlpha,this.clearColor);
     };
 
     setAudio = audio => {
@@ -575,7 +580,7 @@ export default class WebGLManager {
                 .name("Project available to public")
                 .disableAll();
             ps.add(this, "loadProjectFromFile").disableAll().name("Load from file");
-            //ps.add(this, "createThumbnail").disableAll();
+            ps.add(this, "takeScreenshot").name("Create thumbnail for project").disableAll();
             ps.add(this, "advancedMode")
                 .onChange(this.toggleAdvancedMode)
                 .disableAll();
@@ -586,10 +591,6 @@ export default class WebGLManager {
 
             this.projectSettingsFolder = ps;
         }
-    };
-
-    createThumbnail = () => {
-        this.gui.getRoot().modalRef.toggleModal(19, true, this);
     };
 
     resetAllCameras = () => {
@@ -657,7 +658,6 @@ export default class WebGLManager {
 
         let dt = 1 / this.fps;
 
-        console.log(time, dt, audioData, shouldIncrement)
         if (!this.postprocessingEnabled) {
             this.renderer.clear();
             this.scenes.forEach(scene => {

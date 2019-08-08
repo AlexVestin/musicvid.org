@@ -41,3 +41,15 @@ export function takeScreenShot(canvas) {
     const img = scaleCanvas.toDataURL("image/jpeg", 0.88);
     return dataURLtoBlob(img);
 }
+
+export function takeFirestoreScreenShot(canvas) {
+    const scaleCanvas = document.createElement("canvas");
+    scaleCanvas.width = 280 * (canvas.width / canvas.height);
+    scaleCanvas.height = 280;
+    const scaleCtx = scaleCanvas.getContext("2d");
+    scaleCtx.drawImage(canvas, 0, 0, scaleCanvas.width, scaleCanvas.height);
+    const img = scaleCanvas.toDataURL("image/jpeg", 0.88);
+
+    console.log(img);
+    return img;
+}

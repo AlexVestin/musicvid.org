@@ -222,16 +222,31 @@ class App extends PureComponent {
 
     componentDidMount = async () => {
         window.onkeydown = (e) => {
-            if(e.ctrlKey && (e.keyCode === 83)) {
-                e.preventDefault();
-            }
+   
 
             if (e.keyCode === 17) {
                 this.ctrlKeyDown = true;
             }
-
+            // s
             if (e.keyCode === 83 && e.ctrlKey) {
+                e.preventDefault();
                 this.animationManager.saveProjectToProfile();
+            }
+
+            // e
+            if (e.keyCode === 69 && e.ctrlKey) {
+                e.preventDefault();
+                this.animationManager.enableAllControls();
+            }
+            // r
+            if (e.keyCode === 82 && e.ctrlKey) {
+                e.preventDefault();
+                this.animationManager.disableAllControls();
+            }
+            // y
+            if (e.keyCode === 89 && e.ctrlKey) {
+                e.preventDefault();
+                this.animationManager.resetAllCameras();
             }
         }
 
@@ -368,7 +383,6 @@ class App extends PureComponent {
 
             let time, audioData;
 
-            console.log(this.time, this.audio.duration, this.state.playing)
             if (this.state.playing && this.time < this.audio.duration) {
 
                 
@@ -382,7 +396,6 @@ class App extends PureComponent {
                 this.gui.__time = time;
                 this.time = time;
 
-                console.log(time, audioData)
                 this.applyAutomation(time, audioData);
                 this.animationManager.update(time, audioData, true);
             } else {

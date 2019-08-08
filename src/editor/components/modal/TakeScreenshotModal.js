@@ -5,8 +5,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { withStyles } from "@material-ui/core/styles";
-//import { storage } from 'backend/firebase'
+import { app, base } from 'backend/firebase'
 import { Typography } from "@material-ui/core";
+import { setSnackbarMessage } from "fredux/actions/message";
 
 const styles = theme => ({
     form: {
@@ -24,14 +25,6 @@ const styles = theme => ({
     }
 });
 
-function dataURLtoBlob(dataurl) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], {type:mime});
-}
 
 class ScrollDialog extends React.Component {
     constructor(props) {
@@ -40,16 +33,57 @@ class ScrollDialog extends React.Component {
         this.state = { width: 1, height: 1 };
         this.canvasRef = React.createRef();
         this.loaded = false;
+        this.drawn = false;
     }
 
     upload = () => {
         const img = this.canvasRef.current.toDataURL("image/jpeg", 0.88);
         this.setState({message: "Uploading..."});
-        const imgBlob = dataURLtoBlob(img);
-        /*storage.ref().child(this.props.manager.__id).put(imgBlob).then(() => {
-            this.setState({message: "Uploaded! closing modal"})
-           setTimeout(() => this.props.onSelect(), 1000);
-        });*/
+
+        const cu = app.auth().currentUser;
+        if (!cu) {
+            setSnackbarMessage(
+                "You need to be logged and have created a project in order to save a screenshot.",
+                "error"
+            );
+            return;
+        }
+
+        if (cu.uid !== this.props.manager.__ownerId) {
+            setSnackbarMessage(
+                "Couldn't add thumbnail, this isn't your project. You can create a copy by saving the project first.",
+                "error"
+            );
+            return;
+        }
+
+        
+        let docRef = base.collection("projects").doc(this.props.manager.__id);
+        docRef.get()
+            .then((doc) => {
+                if(!doc.exists) {
+                    setSnackbarMessage(
+                        "You need to save the project before you can take a thumbnail for it",
+                        "error"
+                    );
+                    return;
+                } else {
+                    docRef.update( {thumbnail: img} );
+                    setSnackbarMessage(
+                        "Successfully set thumbnail",
+                        "success", 
+                        2000
+                    );
+                }
+            }).catch(err => {
+                setSnackbarMessage(
+                    err.message,
+                    "error"
+                );
+            });
+       
+        this.setState({message: "Uploaded! closing modal"})
+        setTimeout(() => this.props.onSelect(), 1000);
     }
 
     onLoad = () => {};
@@ -59,8 +93,9 @@ class ScrollDialog extends React.Component {
         const c = manager.canvas;
 
         if (this.canvasRef.current) {
-            this.canvasRef.current.width = 280 * (c.width / c.height);
-            this.canvasRef.current.height = 280;
+            this.drawn = true;
+            this.canvasRef.current.width = 200 * (c.width / c.height);
+            this.canvasRef.current.height = 200;
 
             const ctx = this.canvasRef.current.getContext("2d");
             manager.redoUpdate();
@@ -72,6 +107,8 @@ class ScrollDialog extends React.Component {
 
     componentDidMount() {
         this.drawToCanvas();
+
+        setTimeout(this.drawToCanvas, 100);
     }
 
     render() {

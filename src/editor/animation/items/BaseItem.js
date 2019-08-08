@@ -17,7 +17,7 @@ export default class BaseItem extends SerializableObject {
     constructor(info) {
         super();
         this.__startTime = 0;
-        this.__endTime = 60000;
+        this.__endTime = 1000000;
         this.name = "";
         this.__isEncoding = false;
 
@@ -43,8 +43,8 @@ export default class BaseItem extends SerializableObject {
         this.__nameDisplay = this.addController(folder, this, "name")
             .onChange(() => this.setFolderName(this.name))
             .disableAll();
-        this.addController(folder, this, "__startTime", 0, 1000).name("Start time(sec)").disableAutomations();
-        this.addController(folder, this, "__endTime", 0, 1000).name("End time(sec)").disableAutomations();
+        this.addController(folder, this, "__startTime", 0, 1000000).name("Start time(sec)").disableAutomations();
+        this.addController(folder, this, "__endTime", 0, 1000000).name("End time(sec)").disableAutomations();
     };
 
     postFolderSetup = folder => {
@@ -64,7 +64,6 @@ export default class BaseItem extends SerializableObject {
         return folder;
     };
 
-    
 
     remove = () => {
         if (!this.parentRemove) {

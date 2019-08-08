@@ -9,7 +9,7 @@ import Button from "./modules/components/Button";
 
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import { connect } from "react-redux";
-import { app, base, storage } from "backend/firebase";
+import { app, base } from "backend/firebase";
 import classes from './ProjectList.module.css'
 import RemoveDialog from './RemoveDialog'
 
