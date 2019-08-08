@@ -14,8 +14,8 @@ export default class Projects extends PureComponent {
       <div className={classes.container}>
           <div className={classes.nav} >
             <div style={{backgroundColor: index === 0 ? "#2f2f2f" : ""}} onClick={()=>this.setState({index: 0})}>Settings</div>
-            <div style={{backgroundColor: index === 1 ? "#2f2f2f" : ""}} onClick={()=>this.setState({index: 1})}>My projects</div>
-            <div style={{backgroundColor: index === 2 ? "#2f2f2f" : ""}} onClick={()=>this.setState({index: 2})}>Community projects</div>
+            <div style={{backgroundColor: index === 1 ? "#2f2f2f" : ""}} onClick={()=>this.setState({index: 1})}>My Projects</div>
+            <div style={{backgroundColor: index === 2 ? "#2f2f2f" : ""}} onClick={()=>this.setState({index: 2})}>Community Projects</div>
           </div>
 
         <div className={classes.content}>

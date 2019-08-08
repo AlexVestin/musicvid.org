@@ -128,22 +128,14 @@ export default class ControllerContainer extends PureComponent {
     };
 
     render() {
-        const { index, nav } = this.state;
+        const { index } = this.state;
         const { gui, loaded } = this.props;
-
         const selectedColor = "#444";
-        const bg = nav === 0 ? selectedColor : "";
-        const c = nav === 0 ? "#FFF" : "";
-
-        const w = this.props.advanced ? "16.67%" : "25%";
-
-
-
         return (
             <div className={classes.container}>
                 
                 <div className={classes.wrapper}>
-                    
+                
                     <div className={classes.sideNav}>
                         <div style={{borderRight: "1px solid rgba(255,255,255,0.3)"}}>
                         <div style={{backgroundColor: index === 0 ? selectedColor : ""}} onClick={() => this.setState({index: 0})}>Quick Settings</div>

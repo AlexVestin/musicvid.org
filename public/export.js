@@ -10,6 +10,34 @@ function log(text, fs) {
 let local = true;
 let lastEncodedFrame;
 
+window.openFolder = () => {
+    const { spawn } = require('child_process');
+
+    let opsys = process.platform;
+    
+    
+    if (opsys === "win32" || opsys === "win64") {
+        let subpaths = global.__dirname.split("\\");
+	if(subpaths[subpaths.length - 1] === "")
+	    subpaths.pop(); 
+        subpaths.pop(); 
+        let path = subpaths.join("\\") + "\\videos";
+        let p = spawn('explorer', [path]);
+
+        p.on('error', (err) => {
+            p.kill();
+        });
+    } else {
+        let p = spawn('xdg-open', ['/']);
+        p.on('error', (err) => {
+            p.kill();
+        });
+    }
+}
+    
+    
+
+
 let output = "";
 window.__init = (config) => {
     

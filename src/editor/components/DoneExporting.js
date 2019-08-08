@@ -4,6 +4,8 @@ import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Link from "@material-ui/core/Link";
 
+
+
 export default function(props, classes) {
     let f = "/"
     if(!window.__localExporter) {
@@ -40,13 +42,14 @@ export default function(props, classes) {
 
              : 
                 <Typography
-                    style={{ color: "#efefef" }}
+                    style={{ color: "#efefef", textAlign: "center" }}
                     component="h6"
                     variant="h6"
                 >
                     File should be located in the same folder as the executable is in!
                     <br/>
-                    {window.__dirname}
+
+                    <a style={{cursor: "pointer"}} href="#" onClick={window.openFolder}>Click here to open containing folder</a>
                 </Typography>
             }
            

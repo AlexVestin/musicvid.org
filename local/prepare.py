@@ -28,7 +28,7 @@ if os.path.isdir(sync_dir):
     os.makedirs(sync_dir)
 
 for platform in platforms:
-    build_dst =  dest + 'build_' + platform + "/bin"
+    build_dst =  dest + 'build_' + platform + "/musicvid.org/bin"
     if os.path.isdir(build_dst):
         try:
             shutil.rmtree(build_dst)
