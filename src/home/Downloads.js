@@ -100,6 +100,10 @@ function Terms() {
                     <li>
                         <Typography>Exported videos are found in the same folder as the <i>musicvid.org</i> file.</Typography>
                     </li>
+
+                    <li>
+                        <Typography>When you have exported a video you need to reload the program manually.</Typography>
+                    </li>
                 </ul>
 
                 <Typography style={{textAlign:"center", marginTop: 40, color: "red"}} variant="h4">

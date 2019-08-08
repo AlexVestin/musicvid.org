@@ -18,7 +18,14 @@ window.__init = (config) => {
         const { spawn } = require("child_process");
         const { width, height, fps, name = "out.mp4", sound, preset } = config;
 
-        let n = name;
+
+        let opsys = process.platform;
+        let pre = "";
+       if (opsys === "win32" || opsys === "win64") {
+            pre = "../videos/";
+        }
+
+        let n = pre + name;
         if(!n.endsWith(".mp4"))
             n += ".mp4"
 

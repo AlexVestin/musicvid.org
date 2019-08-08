@@ -51,7 +51,7 @@
         "deploy-prod": "aws s3 sync ./build  s3://musicvid.org/ --delete",
         "deploy-dev": "aws s3 sync ./build s3://mvid2.org/ --delete",
         "nw-linux": " ~/Downloads/nwjs-v0.37.4-linux-x64/nw build/",
-        "nw-windows": "C:/Users/alex/Desktop/nwjs-sdk-v0.39.2-win-x64/nw build/",
+        "nw-windows": "C:/Users/alex/Desktop/nwjs-sdk-v0.40.1-win-x64/nw build/",
         "prepare-builds": "python local/prepare.py",
         "invalidate-cache": "aws cloudfront create-invalidation --distribution-id E3KDNOXC03JXHV --paths /*",
         "sync": "aws s3 sync C:/Users/alex/Desktop/mvid_deps/build s3://mvid-build/ --delete"

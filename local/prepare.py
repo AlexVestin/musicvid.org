@@ -28,18 +28,22 @@ if os.path.isdir(sync_dir):
     os.makedirs(sync_dir)
 
 for platform in platforms:
-    build_dst =  dest + 'build_' + platform + "/musicvid.org"
+    build_dst =  dest + 'build_' + platform + "/bin"
     if os.path.isdir(build_dst):
-        shutil.rmtree(build_dst)
+        try:
+            shutil.rmtree(build_dst)
+        except:
+            pass
         print("Removing: ", build_dst)
     try:
         print("Copying to", build_dst)
+        print(src, build_dst)
         shutil.copytree(src, build_dst)
         shutil.copy('./local/package.json', build_dst)
         copytree(dest + platform, build_dst)
         print("zipping to", sync_dir+platform)
         
-        shutil.make_archive(sync_dir+'musicvid_'+platform, ext[platform], root_dir=dest + 'build_' + platform,  base_dir='musicvid.org')
+        shutil.make_archive(sync_dir+'musicvid_'+platform, ext[platform], root_dir=dest + 'build_' + platform)
 
     # Directories are the same
     except shutil.Error as e:
