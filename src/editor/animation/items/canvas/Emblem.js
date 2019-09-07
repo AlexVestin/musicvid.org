@@ -8,7 +8,7 @@ export default class Emblem {
         this.emblemSizeScale = 0.9;
         this.emblemShadowBlur = 20;
         this.circleSizeScale = 1.0;
-        this.circleFillColor = "#FFF"
+        this.circleFillColor = "#FFFFFF"
         this.shouldFillCircle = true;
         this.shouldClipImageToCircle = true;
         this.visible = true;

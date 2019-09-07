@@ -14,8 +14,6 @@ window.openFolder = () => {
     const { spawn } = require('child_process');
 
     let opsys = process.platform;
-    
-    
     if (opsys === "win32" || opsys === "win64") {
         let subpaths = global.__dirname.split("\\");
 	if(subpaths[subpaths.length - 1] === "")
@@ -35,8 +33,6 @@ window.openFolder = () => {
     }
 }
     
-    
-
 
 let output = "";
 window.__init = (config) => {
@@ -44,7 +40,7 @@ window.__init = (config) => {
     if (local) {
         window.__localExporter = true;
         const { spawn } = require("child_process");
-        const { width, height, fps, name = "out.mp4", sound, preset } = config;
+        const { width, height, fps, name = "out.mp4", sound, preset, bitrate } = config;
 
 
         let opsys = process.platform;
@@ -69,6 +65,9 @@ window.__init = (config) => {
             `${fps}`,
             "-i",
             "-",
+            "-b:v",
+            `${bitrate}`,
+           
             "-c:v",
             //"h264_nvenc",
             "libx264",
@@ -115,6 +114,8 @@ window.__init = (config) => {
                 `${sound.sampleRate}`,
                 "-i",
                 "-",
+                "-b:a",
+                `${256000}`,
                 "-c:v",
                 "copy",
                 `${n}`

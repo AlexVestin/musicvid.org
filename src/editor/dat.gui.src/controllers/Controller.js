@@ -157,8 +157,7 @@ class Controller {
     this.previousValue = this.object[this.property];
   }
   
-  setValue(newValue, update=true) {
-    
+  setValue(newValue, update=true) {    
   
     this.object[this.property] = newValue;
     this.preAutomationValue = newValue;

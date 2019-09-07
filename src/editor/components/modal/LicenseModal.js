@@ -8,6 +8,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import license from "../../util/License";
 import Typography from "@material-ui/core/Typography";
 
+
+
+
 class AlertDialog extends React.Component {
     handleClickOpen = () => {
         this.setState({ open: true });
@@ -50,6 +53,7 @@ class AlertDialog extends React.Component {
 
     render() {
         const authors = this.getContributors(this.props.items);
+
         return (
             <Dialog
                 open={this.props.open}
@@ -91,20 +95,18 @@ class AlertDialog extends React.Component {
                             </React.Fragment>
                         }
                             <Typography
-                                component="h6"
-                                variant="h6"
+               
                                 color="inherit"
-                                style={{ fontSize: 18 }}
+                                style={{ fontSize: 16 }}
                             >
-                                {`Visuals made by: `}
+                                {`Visuals made using https://musicvid.org` + (Object.keys(authors).length > 0 ?  ' and by creators: ' : '')}
                             </Typography>
                             {Object.keys(authors).map(key => {
                                 const author = authors[key];
                                 return (
                                     <div key={key}>
                                         <Typography
-                                            component="h6"
-                                            variant="h6"
+                            
                                             color="inherit"
                                             style={{ fontSize: 15 }}
                                         >
@@ -112,8 +114,6 @@ class AlertDialog extends React.Component {
                                         </Typography>
 
                                         {author.social1 && author.social1.url}
-                                        <br />
-                                        {author.social2 && author.social2.url}
                                         <br />
                                     </div>
                                 );

@@ -80,7 +80,7 @@ export default class LocalExporter {
             this.time += 1 / this.fps;
             const sleepTime = this.encodeVideoFrame();
         
-            if(this.encodedVideoFrames % 15 === 0) 
+            if(this.encodedVideoFrames % 60 === 0) 
                 this.onProgress(this.encodedVideoFrames, Math.floor(this.duration * this.fps))
     
             if(this.encodedVideoFrames >= Math.floor(this.duration * this.fps)) {

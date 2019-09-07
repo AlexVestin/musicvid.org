@@ -1308,10 +1308,11 @@ export function copyController(options) {
       g = target.add(item.object, item.property);
     } else {
 
-      console.log(item.object)
+      
       g = target.add(item.object, item.property, item.__min, item.__max, item.__step);
     }
-    g.__onChange = item.__onChange; 
+
+    g.onChange(item.__onChange); 
     g.__location = options.location;
     g.isSubController = true;
     g.master = item;

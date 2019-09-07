@@ -108,6 +108,7 @@ export default class TrackContainer extends PureComponent {
                         {this.state.muted && (
                             <svg
                                 style={{
+                                    userSelect: "none",
                                     width: 20,
                                     height: 20,
                                     position: "absolute",
@@ -127,8 +128,9 @@ export default class TrackContainer extends PureComponent {
                             </svg>
                         )}
                         <img
+
                             onClick={this.toggleMuted}
-                            style={{ cursor: "pointer", width: 20, height: 20 }}
+                            style={{userSelect: "none", cursor: "pointer", width: 20, height: 20 }}
                             src={volumeimg}
                             alt="volume"
                         />

@@ -9,6 +9,7 @@ $size: 30px;
   width: $size;
   height: $size;
   cursor: pointer;
+  user-select: none;
 }
 
 .img:hover {

@@ -13,7 +13,6 @@ import PointAutomation from "./automation/PointAutomation";
 import InputAutomation from "./automation/InputAutomation";
 import ImpactAutomation from "./automation/AudioReactiveAutomation";
 import uuid from "uuid/v4";
-import { takeFirestoreScreenShot } from 'editor/util/FlipImage'
 //import MockWebGLManager from './MockWebGLManager'
 
 import OverviewGroup from "../OverviewGroup";
@@ -38,6 +37,8 @@ export default class WebGLManager {
         this.clearAlpha = 1.0;
         this.postprocessingEnabled = false;
         this.fftSize = 16384;
+        this.size = "0x0";
+        this.reloadOnSizeChange = false;
 
         // Project file settings
         this.__id = uuid();
@@ -89,7 +90,29 @@ export default class WebGLManager {
         this.gui.getRoot().__automations[auto.__id] = auto;
     };
 
+    addSceenFromJSON = (scene) => {
+        if (scene.__settings.isScene) {
+            const s = this.addSceneFromText(
+                scene.__settings.type || scene.__settings.TYPE
+            );
+            s.undoCameraMovement(scene.camera, scene.controls);
+            
+            s.__automations = scene.__automations;
+            if (scene.__controllers)
+                s.__setControllerValues(scene.__controllers.controllers);
+            s.addItems(scene.__items || scene.items);
+            s.updateSettings();
+            Object.assign(s.pass, scene.__passSettings);
+        } else {
+            const e = this.postProcessing.addEffectPass(
+                scene.__settings.type || scene.__settings.TYPE
+            );
+            e.__setControllerValues(scene.controllers);
+        }
+    }
+
     loadProject = json => {
+        // Clean up
         while (this.scenes.length > 0) {
             this.scenes[0].removeMe();
         }
@@ -99,8 +122,9 @@ export default class WebGLManager {
             this.renderer.dispose();
         }
 
-        const root = this.gui.getRoot();
         this.parent.clearOverviewFolder();
+        
+        const root = this.gui.getRoot();
         root.__automations = [];
 
         const proj = JSON.parse(json.projectSrc);
@@ -127,29 +151,29 @@ export default class WebGLManager {
         this.__online = json.online;
 
         proj.scenes.forEach(scene => {
-            if (scene.__settings.isScene) {
-                const s = this.addSceneFromText(
-                    scene.__settings.type || scene.__settings.TYPE
-                );
-                s.undoCameraMovement(scene.camera, scene.controls);
-                
-                s.__automations = scene.__automations;
-                if (scene.__controllers)
-                    s.__setControllerValues(scene.__controllers.controllers);
-                s.addItems(scene.__items || scene.items);
-                s.updateSettings();
-                Object.assign(s.pass, scene.__passSettings);
-            } else {
-                const e = this.postProcessing.addEffectPass(
-                    scene.__settings.type || scene.__settings.TYPE
-                );
-                e.__setControllerValues(scene.controllers);
-            }
+            this.addSceenFromJSON(scene);
         });
 
         if (this.audio) {
             this.setFFTSize(this.fftSize);
         }
+
+        // Set the automation values
+        const automations = root.getAutomations();            
+        automations.forEach(item => {
+            item.update(this.__lastTime, this.__lastAudioData);
+        });
+
+        this.scenes.forEach(scene => {
+            if (scene.isScene) {
+                scene.items.forEach(item => {
+                    item.applyAutomations(true);
+                })
+            }
+        });
+
+        this.size = String(this.width) + "x" + String(this.height);
+
 
         this.parent.toggleAdvancedMode(this.advancedMode);
         this.projectSettingsFolder.updateDisplay();
@@ -278,6 +302,30 @@ export default class WebGLManager {
         }
     };
 
+    setSize = () => {
+        const [width, height] = this.size.split("x");
+        this.resolution.width = width;
+        this.resolution.height = height;
+        this.width = width;
+        this.height = height;
+
+
+        this.renderer.setSize(width, height);
+        this.parent.canvasRef.current.setSize( { width, height });
+
+
+        if (this.reloadOnSizeChange) {
+            const scenes = this.scenes.map(scene =>  scene.__serialize());
+            while (this.scenes.length > 0) {
+                this.scenes[0].removeMe();
+            }
+
+            scenes.forEach(scene => {
+                this.addSceenFromJSON(scene);
+            });
+        }
+    }
+
     setUpAttrib() {
         // Set up scene for attribution text
         this.attribScene = new THREE.Scene();
@@ -378,6 +426,7 @@ export default class WebGLManager {
 
     init = (resolution, setUpFolders = true) => {
         this.resolution = resolution;
+        this.size = String(resolution.width) + "x" + String(resolution.height);
         this.width = resolution.width;
         this.height = resolution.height;
         this.aspect = this.width / this.height;
@@ -508,6 +557,7 @@ export default class WebGLManager {
             this.renderer.autoClear = false;
             this.renderer.mock = false;
             this.renderer.setSize(this.width, this.height);
+
             this.setClear();
         } else {
             // TODO Error message
@@ -558,8 +608,14 @@ export default class WebGLManager {
                 .name("configUpdateFrequency");
             const rs = this.settingsFolder.addFolder("Render settings");
 
+            rs.add(this, "reloadOnSizeChange").disableAll();
+            rs.add(this, "size", ["640x480", "1280x720", "1920x1080"])
+                .onChange(this.setSize)
+                .disableAll();
+
             rs.addColor(this, "clearColor").onChange(this.setClear).disableAll();
 
+    
             rs.add(this, "clearAlpha", 0, 1, 0.001)
                 .onChange(this.setClear)
                 .disableAll();

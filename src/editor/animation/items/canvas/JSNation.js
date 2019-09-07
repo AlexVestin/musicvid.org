@@ -159,8 +159,10 @@ export default class JSNationSpectrum extends BaseItem {
         this.addController(emFolder, this.emblem, "alpha", {path: "emblem"});
         this.addController(emFolder, this.emblem, "shouldClipImageToCircle", {path: "emblem"});
         this.addController(emFolder, this.emblem, "emblemSizeScale", {path: "emblem", min: 0.0, max: 4.0});
+        this.addController(emFolder, this.emblem, "emblemShadowBlur", {path: "emblem", min: 0, max: 100});
+
         this.addController(emFolder, this.emblem, "shouldFillCircle", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "circleFillColor", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "circleFillColor", {path: "emblem", color: true});
         this.addController(emFolder, this.emblem, "circleSizeScale", {path: "emblem", min: 0, max: 2.0});
 
         const moveFolder = folder.addFolder("Movement");

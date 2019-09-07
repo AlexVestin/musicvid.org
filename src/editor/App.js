@@ -368,9 +368,8 @@ class App extends PureComponent {
 
     applyAutomation = (time, audioData) => {
         const root = this.gui.getRoot();
-        const automations = Object.keys(root.__automations).map(
-            key => root.__automations[key]
-        );
+        const automations = root.getAutomations();
+            
         automations.forEach(item => {
             item.update(time, audioData);
         });
@@ -542,27 +541,13 @@ class App extends PureComponent {
         return new Promise((resolve, reject) => {
             const items = this.animationManager.getAllItems();
             this.__items = items;
-            let attribFound = false;
-            let uniqueItems = [];
 
-            items.forEach(item => {
-                if (!uniqueItems.indexOf(item.__itemName) >= 0) {
-                    uniqueItems.push(item.__itemName);
-                    if (item.license === license.REQUIRE_ATTRIBUTION) {
-                        this.modalRef.current.openLicenseModal(
-                            items,
-                            this.usingSampleAudio,
-                            resolve,
-                            reject
-                        );
-                        attribFound = true;
-                    }
-                }
-
-                
-            });
-
-            if (!attribFound) resolve();
+            this.modalRef.current.openLicenseModal(
+                items,
+                this.usingSampleAudio,
+                resolve,
+                reject
+            );
         });
     };
     render() {

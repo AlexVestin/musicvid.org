@@ -76,7 +76,7 @@ const fragmentShader = [
 
         
         "gl_FragColor = texture2D(texture1, pos) - vig_amt;",
-        "gl_FragColor.a *= opacity;",
+        "gl_FragColor.a = opacity;",
         "if(should_resize && should_blackbox && (vUv.y < offset || vUv.y > 1. - offset))",
             "gl_FragColor = vec4(0.,0.,0.,0.);",
     "}"
@@ -113,7 +113,7 @@ export default class ImageMaterial extends THREE.ShaderMaterial{
             matScale: {value: 1.0},
             matScaleX: {value: 1.0},
             matScaleY: {value: 1.0},
-            opacity: {value: 0.8},
+            opacity: {value: 1.0},
             should_resize: {value: true},
             canvas_aspect: {value: item.width / item.height},
             img_aspect: {value: item.width / item.height},

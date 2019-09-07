@@ -9,11 +9,12 @@ Module["onRuntimeInitialized"] = () => {
 };
 
 openVideo = (config) => {
+    let ms = "err"
     let { w, h, fps, bitrate, presetIdx } = config;
     try {
         Module._open_video(w, h, fps, bitrate, presetIdx, fileType, fileType);
     }catch(err) {
-        alert("Error in initializing video: ", err.message);
+        console.error("Error in initializing video: ", err.message);
     }
 }
 
@@ -31,7 +32,7 @@ addAudioFrame = (buffer) => {
         Module.HEAPF32.set(right, right_p >> 2)
         Module._add_audio_frame(left_p, right_p, audioWindowLength)
     }catch(err) {
-        alert("Error in encoding audio: ", err.message);
+        console.error("Error in encoding audio: ", err.message);
         return;
     }
 
@@ -57,7 +58,7 @@ close_stream = () => {
     try{
         video_p = Module._close_stream(size_p);
     }catch(err) {
-        alert("Error closing streams: ", err.message);
+        console.error("Error closing streams: ", err.message);
     }
    
     size = Module.HEAP32[size_p >> 2];
@@ -73,7 +74,7 @@ addVideoFrame = (buffer) => {
         Module.HEAPU8.set(buffer, encodedBuffer_p)
         Module._add_video_frame(encodedBuffer_p)
     }catch (err) {
-        alert("Error encoding video: ", err.message);
+        console.error("Error encoding video: ", err.message);
     }finally {
         Module._free(encodedBuffer_p)
     }

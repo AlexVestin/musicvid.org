@@ -61,7 +61,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.minRadius = this.canvas.width / 8;
         this.invertSpectrum = false;
         this.spectrumRotation = 0;
-        this.scale = 1;
+
         //SHAKE 
         this.emblemExponential = 0.8;
         this.sumShakeX = 0;
@@ -165,9 +165,11 @@ export default class JSNationSpectrum extends BaseItem {
         this.addController(emFolder, this.emblem, "alpha", {path: "emblem", min: 0, max: 1});
         this.addController(emFolder, this, "changeEmblemImage", {path: "emblem"});
         this.addController(emFolder, this.emblem, "shouldClipImageToCircle", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "emblemShadowBlur", {path: "emblem", min: 0, max:100});
+
         this.addController(emFolder, this.emblem, "emblemSizeScale", {path: "emblem", min: 0.0, max: 4.0});
         this.addController(emFolder, this.emblem, "shouldFillCircle", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "circleFillColor", {path: "emblem"});
+        this.addController(emFolder, this.emblem, "circleFillColor", {path: "emblem", color: true});
         this.addController(emFolder, this.emblem, "circleSizeScale", {path: "emblem", min: 0, max: 2.0});
 
         const moveFolder = folder.addFolder("Movement");
@@ -216,6 +218,7 @@ export default class JSNationSpectrum extends BaseItem {
     }
 
     resetPoints = () => {
+        
         this.previousPoints = [];
         const invert = this.invertSpectrum ? -1 : 1; 
         for(var i = 0; i < this.colors.length; i++) {
@@ -292,7 +295,7 @@ export default class JSNationSpectrum extends BaseItem {
     
             this.shake(mult / 32);
             curRad = this.calcRadius(mult) * this.scale;
-            curRad = curRad > this.minRadius * this.scale ? curRad : this.minRadius * this.scale;
+            curRad = curRad > (this.minRadius * this.scale) ? curRad : this.minRadius * this.scale;
             this.spectrumCache.push(spectrum);
         }
         

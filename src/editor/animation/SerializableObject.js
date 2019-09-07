@@ -22,12 +22,12 @@ export default class SerializableObject {
                 controller.updateDisplay();
             }
 
-            if(values[key].value !== undefined) {
-                if(obj.subcontrollers && obj.subcontrollers.length > 0) {
-                    obj.subcontrollers.forEach(c => {
-                        copyController({item: controller, location: c.location, name: c.name, initialLoad: true});
-                    })
-                }
+
+            if(obj.subcontrollers && obj.subcontrollers.length > 0) {
+                obj.subcontrollers.forEach(c => {
+                    copyController({item: controller, location: c.location, name: c.name, initialLoad: true});
+                })
+                
             }
             
         });
