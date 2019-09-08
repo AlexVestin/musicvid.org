@@ -19,8 +19,11 @@ import OverviewGroup from "../OverviewGroup";
 
 import { setUpFullscreenControls } from "./FullscreenUtils";
 import { setSnackbarMessage } from "../../fredux/actions/message";
-export default class WebGLManager {
+import SerializableObject from "./SerializableObject";
+
+export default class WebGLManager extends SerializableObject {
     constructor(parent) {
+        super();
         // Set up for headless testing;
         if (parent) {
             this.gui = parent.gui;
@@ -71,20 +74,13 @@ export default class WebGLManager {
     };
 
     addAutomation = template => {
-        let auto = {};
-        switch (template.type) {
-            case "point":
-                auto = new PointAutomation(this.gui);
-                break;
-            case "math":
-                auto = new InputAutomation(this.gui);
-                break;
-            case "audio":
-                auto = new ImpactAutomation(this.gui);
-                break;
-            default:
-                alert("Automation type not found");
+        const possibleAutomations = {
+            point: PointAutomation,
+            math: InputAutomation,
+            audio: ImpactAutomation
         }
+
+        let auto = new possibleAutomations[template.type](this.gui);
         auto.__id = template.__id;
         auto.__setUpValues(template);
         this.gui.getRoot().__automations[auto.__id] = auto;

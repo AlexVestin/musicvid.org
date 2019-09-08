@@ -47,14 +47,11 @@ class ColorController extends Controller {
     this.saturation = 0;
     this.__valueOptions = ["Red", "Green", "Blue", "Hue", "Saturation"];
 
-    
-
     this.domElement = document.createElement('div');
     
     dom.makeSelectable(this.domElement, false);
     
-    
-
+  
     this.__selector = document.createElement('div');
     this.__selector.className = 'selector';
 

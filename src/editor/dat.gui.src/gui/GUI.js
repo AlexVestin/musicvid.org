@@ -24,10 +24,17 @@ import requestAnimationFrame from '../utils/requestAnimationFrame';
 import CenteredDiv from '../dom/CenteredDiv';
 import dom from '../dom/dom';
 import common from '../utils/common';
-import styleSheet from './style.scss'; // CSS to embed in build
 import OptionController from '../controllers/OptionController';
 
-css.inject(styleSheet);
+
+const isNode = typeof module !== 'undefined' && module.exports; 
+if(!isNode) {
+  import('./style.scss')
+    .then((m) => {
+       css.inject(m.default);
+    });
+}
+
 
 /** @ignore Outer-most className for GUI's */
 const CSS_NAMESPACE = 'dg';
