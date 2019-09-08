@@ -10,6 +10,7 @@ Module["onRuntimeInitialized"] = () => {
 
 openVideo = (config) => {
     let ms = "err"
+    console.error("Error opeing video", ms)
     let { w, h, fps, bitrate, presetIdx } = config;
     try {
         Module._open_video(w, h, fps, bitrate, presetIdx, fileType, fileType);

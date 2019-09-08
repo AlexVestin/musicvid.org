@@ -1,6 +1,5 @@
 
 import BaseItem from '../BaseItem'
-import fonts from 'editor/util/Fonts'
 import  { addCanvasControls } from './CanvasControls'
 
 function hexToRgb(hex) {

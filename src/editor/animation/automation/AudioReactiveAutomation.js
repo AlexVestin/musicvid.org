@@ -1,6 +1,6 @@
 
 import Automation from './Automation'
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import ImpactAnalyser from '../audio/ImpactAnalyser'
 
 export default class AudioReactiveAutomation extends Automation {
     constructor(gui) {

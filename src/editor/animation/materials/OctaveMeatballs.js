@@ -1,6 +1,6 @@
-import ShaderToyMaterial from "../../util/ShaderToyMaterial";
+import ShaderToyMaterial from 'editor/animation/util/ShaderToyMaterial'
 import { Vector2 } from "three";
-import ImpactAnalyser from "editor/audio/ImpactAnalyser";
+import ImpactAnalyser from "../audio/ImpactAnalyser";
 import fragShader from "../shaders/OctaveMeatballs";
 
 export default class OctaveMeatballs extends ShaderToyMaterial {

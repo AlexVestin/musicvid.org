@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import ImpactAnalyser from '../../audio/ImpactAnalyser'
 import BaseItem from '../BaseItem'
-import { loadImageTexture } from 'editor/util/ImageLoader';
+import { loadImageTexture } from 'editor/animation/util/ImageLoader';
 
 
 /**

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { loadImageTexture, loadImageTextureFromChoice } from 'editor/util/ImageLoader';
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import { loadImageTexture, loadImageTextureFromChoice } from 'editor/animation/util/ImageLoader';
+import ImpactAnalyser from '../audio/ImpactAnalyser'
 import getRandomImage from './GetRandomImage'
 
 import serialize from '../Serialize'

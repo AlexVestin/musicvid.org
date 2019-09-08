@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import MeshItem from '../MeshItem'
 import { addOrthoMeshControls }  from '../AddMeshControls'
-import fonts from 'editor/util/Fonts'
+import fonts from 'editor/animation/util/Fonts'
 
 
 

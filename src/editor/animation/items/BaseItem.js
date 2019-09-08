@@ -1,4 +1,4 @@
-import license from "editor/util/License";
+import license from "editor/animation/util/License";
 import SerializableObject from "../SerializableObject";
 
 export default class BaseItem extends SerializableObject {

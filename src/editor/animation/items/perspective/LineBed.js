@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { smooth, toWebAudioForm, getByteSpectrum } from 'editor/audio/analyse_functions'
+import { smooth, toWebAudioForm, getByteSpectrum } from '../../audio/AnalyseFunctions'
 import BaseItem from '../BaseItem'
-import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
+import SpectrumAnalyser from "../../audio/SpectrumAnalyser";
 
 
 export default class PointBed extends BaseItem {

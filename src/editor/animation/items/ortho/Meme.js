@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import BaseItem from "../BaseItem";
-import ImpactAnalyser from "editor/audio/ImpactAnalyser";
-import { loadImageTextureFromChoice, loadImageTexture } from "editor/util/ImageLoader";
+import ImpactAnalyser from "../../audio/ImpactAnalyser";
+import { loadImageTextureFromChoice, loadImageTexture } from "editor/animation/util/ImageLoader";
 
 export default class AudioWave extends BaseItem {
     constructor(info) {

@@ -1,6 +1,6 @@
 import {
     average,
-} from "./analyse_functions";
+} from "./AnalyseFunctions";
 
 export default function ImpactAnalyser(gui, parent = null, disable = false, disableLinking = false) {
     let addAttribute = (name, value, folder, configs = {}) => {

@@ -1,6 +1,6 @@
 
-import { smooth, toWebAudioForm, getByteSpectrum } from 'editor/audio/analyse_functions'
-import { loadImage } from 'editor/util/ImageLoader'
+import { smooth, toWebAudioForm, getByteSpectrum } from '../../audio/AnalyseFunctions'
+import { loadImage } from 'editor/animation/util/ImageLoader'
 import Emblem from "./Emblem";
 import BaseItem from '../BaseItem'
 import { addCanvasControls } from './CanvasControls';
@@ -165,7 +165,7 @@ export default class JSNationSpectrum extends BaseItem {
         this.addController(emFolder, this.emblem, "alpha", {path: "emblem", min: 0, max: 1});
         this.addController(emFolder, this, "changeEmblemImage", {path: "emblem"});
         this.addController(emFolder, this.emblem, "shouldClipImageToCircle", {path: "emblem"});
-        this.addController(emFolder, this.emblem, "emblemShadowBlur", {path: "emblem", min: 0, max:100});
+        this.addController(emFolder, this.emblem, "emblemShadowBlur", {path: "emblem", min: 0, max: 100});
 
         this.addController(emFolder, this.emblem, "emblemSizeScale", {path: "emblem", min: 0.0, max: 4.0});
         this.addController(emFolder, this.emblem, "shouldFillCircle", {path: "emblem"});

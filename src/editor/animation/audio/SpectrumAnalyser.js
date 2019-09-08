@@ -8,7 +8,7 @@ import {
     smoothDropoff,
     toWebAudioForm, 
     getByteSpectrum
-} from "./analyse_functions";
+} from "./AnalyseFunctions";
 
 export default function SpectrumAnalyser(gui, parent, disableAll=false) {
     this.object = parent;

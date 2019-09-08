@@ -1,11 +1,11 @@
 
-import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
-import { loadImage } from 'editor/util/ImageLoader'
+import SpectrumAnalyser from "../../audio/SpectrumAnalyser";
+import { loadImage } from 'editor/animation/util/ImageLoader'
 //import Emblem from "./Emblem";
 import BaseItem from '../BaseItem'
 import *  as PIXI from 'pixi.js';
 import { GlowFilter } from 'pixi-filters'
-import { smooth, toWebAudioForm, getByteSpectrum } from 'editor/audio/analyse_functions'
+import { smooth, toWebAudioForm, getByteSpectrum } from '../../audio/AnalyseFunctions'
 
 /**
  * My Extension of js.nation

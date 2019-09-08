@@ -3,7 +3,7 @@
 import Manager from '../Manager'
 import { initQuad, createTexture, makeProgram } from '../shaders/CommonFunctions'
 import Filaments from '../shaders'
-import ImpactAnalyser from '../../audio/ImpactAnalyser'
+import ImpactAnalyser from '../audio/ImpactAnalyser'
 
 const WIDTH = 1280;
 const HEIGHT = 720;

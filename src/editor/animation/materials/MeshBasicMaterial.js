@@ -1,5 +1,5 @@
 import {MeshBasicMaterial, Color, LinearFilter } from 'three';
-import { loadImageTexture } from 'editor/util/ImageLoader';
+import { loadImageTexture } from 'editor/animation/util/ImageLoader';
 
 export default class HexaGoneMaterial extends MeshBasicMaterial {
 

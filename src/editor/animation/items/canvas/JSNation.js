@@ -1,6 +1,6 @@
 
-import SpectrumAnalyser from "editor/audio/SpectrumAnalyser";
-import { loadImage } from 'editor/util/ImageLoader'
+import SpectrumAnalyser from "../../audio/SpectrumAnalyser";
+import { loadImage } from 'editor/animation/util/ImageLoader'
 import Emblem from "./Emblem";
 import BaseItem from '../BaseItem'
 import { addCanvasControls } from './CanvasControls' 

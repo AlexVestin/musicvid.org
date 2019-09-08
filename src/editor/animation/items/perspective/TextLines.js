@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import BaseItem from "../BaseItem";
 import addMeshControls from "../AddMeshControls";
-import ImpactAnalyser from "editor/audio/ImpactAnalyser";
+import ImpactAnalyser from "../../audio/ImpactAnalyser";
 
 const fragmentShader = [
     "uniform vec3 color;",

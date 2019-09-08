@@ -7,8 +7,8 @@ import {Link} from 'react-router-dom'
 import eq from './eq.PNG';
 import * as dat from 'editor/dat.gui.src';
 import Mount from './Mount'
-import SpectrumAnalyser from 'editor/audio/SpectrumAnalyser';
-import { transformToVisualBins } from 'editor/audio/analyse_functions'
+import SpectrumAnalyser from 'editor/animation/audio/SpectrumAnalyser';
+import { transformToVisualBins } from 'editor/animation/audio/AnalyseFunctions'
 export default class AudioTheory extends PureComponent {
     constructor() {
         super();

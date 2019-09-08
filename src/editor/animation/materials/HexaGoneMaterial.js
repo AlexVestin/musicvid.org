@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import ShaderToyMaterial from 'editor/util/ShaderToyMaterial'
+import ShaderToyMaterial from 'editor/animation/util/ShaderToyMaterial'
 import fragShader from '../shaders/licensed/HexaGone'
 import serialize from '../Serialize'
 

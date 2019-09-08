@@ -1,7 +1,7 @@
 import Pass from "./pass";
 import DigitalGlitch from "../shaders/glitchshader";
 import FullScreenQuad from './fullscreenquad'
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import ImpactAnalyser from '../../audio/ImpactAnalyser'
 import * as THREE from "three";
 /**
  * @author alteredq / http://alteredqualia.com/

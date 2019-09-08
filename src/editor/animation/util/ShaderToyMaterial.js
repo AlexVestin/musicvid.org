@@ -3,7 +3,7 @@ import commentRegex from 'comment-regex';
 
 
 const vert = [
-    "attribute vec3 position;",
+"attribute vec3 position;",
 "attribute vec2 uv;",
 "uniform mat4 projectionMatrix;",
 "uniform mat4 modelViewMatrix;",

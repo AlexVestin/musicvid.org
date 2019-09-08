@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 import impactSettings from './impactsettings.PNG'
 import * as dat from 'editor/dat.gui.src';
 import Mount from './Mount'
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import ImpactAnalyser from 'editor/animation/audio/ImpactAnalyser'
 
 
 export default class AudioImpact extends PureComponent {

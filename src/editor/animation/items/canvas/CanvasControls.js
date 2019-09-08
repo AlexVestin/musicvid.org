@@ -1,4 +1,4 @@
-import fonts from "editor/util/Fonts";
+import fonts from "editor/animation/util/Fonts";
 
 export function addCanvasControls(parent, ctx, folder,  a = {}) {
     const ctxFolder = folder.addFolder("Context");

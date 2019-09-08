@@ -8,7 +8,7 @@
  */
 
 import * as THREE from "three";
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import ImpactAnalyser from '../../audio/ImpactAnalyser'
 import BaseItem from "../BaseItem";
 /* *************************** */
 /* * Basic particle settings * */

@@ -1,9 +1,9 @@
 
 import * as THREE from 'three';
-import ShaderToyMaterial from 'editor/util/ShaderToyMaterial'
+import ShaderToyMaterial from 'editor/animation/util/ShaderToyMaterial'
 import fragShader from '../shaders/licensed/Noise'
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
-import { loadImageTextureFromChoice } from 'editor/util/ImageLoader';
+import ImpactAnalyser from '../audio/ImpactAnalyser'
+import { loadImageTextureFromChoice } from 'editor/animation/util/ImageLoader';
 import addNoise from './AddNoise'
 
 export default class NoiseMaterial extends ShaderToyMaterial {

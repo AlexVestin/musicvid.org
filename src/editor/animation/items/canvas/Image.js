@@ -1,6 +1,6 @@
 
 import BaseItem from '../BaseItem'
-import { loadImage } from 'editor/util/ImageLoader';
+import { loadImage } from 'editor/animation/util/ImageLoader';
 
 export default class SImage extends BaseItem {
     constructor(info) {

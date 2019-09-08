@@ -1,6 +1,6 @@
-import ShaderToyMaterial from "../../util/ShaderToyMaterial";
+import ShaderToyMaterial from 'editor/animation/util/ShaderToyMaterial'
 import fragShader from "../shaders/StarNest";
-import ImpactAnalyser from 'editor/audio/ImpactAnalyser'
+import ImpactAnalyser from '../audio/ImpactAnalyser'
 
 export default class StarNestMaterial extends ShaderToyMaterial {
     constructor(item) {

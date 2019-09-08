@@ -3,9 +3,9 @@
 import Manager from '../Manager'
 import { initQuad, loadTextureFromImage, createTexture, makeProgram, makeTextureProgram } from '../shaders/CommonFunctions'
 import Sinuous from '../shaders'
-import ImpactAnalyser from '../../audio/ImpactAnalyser'
+import ImpactAnalyser from '../audio/ImpactAnalyser'
 import AttribItemGL from '../items/ortho/AttributionGL'
-import LICENSE from '../../util/License'
+import LICENSE from '../util/License'
 
 export default class Man extends Manager {
 
