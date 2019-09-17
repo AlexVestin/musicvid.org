@@ -46,7 +46,7 @@ class SimpleDialog extends React.Component {
     }
 
     loadSampleAudio = () => {
-        this.props.onSelect("https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3")
+        this.props.onSelect("https://s3.eu-west-3.amazonaws.com/fysiklabb/tropical_4.mp3")
     }
 
   handleClose = () => {
@@ -79,7 +79,7 @@ class SimpleDialog extends React.Component {
                         <Cloud />
                         </Avatar>
                     </ListItemAvatar>
-                      <ListItemText  onClick={this.loadSampleAudio} primary="Use sample audio file"  secondary="Reverie by Nomyn"/>
+                      <ListItemText  onClick={this.loadSampleAudio} primary="Use sample audio file"  secondary="Tropical"/>
                     </ListItem>
                 </List>
                 </div>

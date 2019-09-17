@@ -74,26 +74,7 @@ class AlertDialog extends React.Component {
                         <br />
                         <br />
                         <div style={{ backgroundColor: "#efefef" }}>
-                        {this.props.usingSampleAudio && 
-                        <React.Fragment>
-                            <Typography
-                                component="h6"
-                                variant="h6"
-                                color="inherit"
-                                style={{ fontSize: 18 }}
-                            >
-                                {`Audio: `}
-                            </Typography>
-                            <Typography
-                                component="h6"
-                                variant="h6"
-                                color="inherit"
-                                style={{ fontSize: 15 }}
-                            >
-                            Nomyn - Reverie
-                            </Typography>
-                            </React.Fragment>
-                        }
+
                             <Typography
                
                                 color="inherit"

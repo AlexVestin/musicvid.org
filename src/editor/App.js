@@ -311,7 +311,6 @@ class App extends PureComponent {
     }
 
     audioReady = duration => {
-        console.log(duration)
         if (this.firstLoad) {
             this.audioFolder
                 .add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384,32768])
@@ -532,7 +531,7 @@ class App extends PureComponent {
 
         this.usingSampleAudio =
             selected ===
-            "https://s3.eu-west-3.amazonaws.com/fysiklabb/Reverie.mp3";
+            "https://s3.eu-west-3.amazonaws.com/fysiklabb/tropical_4.mp3";
         this.loadNewAudio(selected).then(this.audioReady);
     };
 

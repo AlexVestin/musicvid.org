@@ -71,6 +71,8 @@ window.__init = (config) => {
             "-c:v",
             //"h264_nvenc",
             "libx264",
+            '-pix_fmt',
+            'yuv420p',
             //'-preset',
             //`${preset}`,
             `output.h264`
