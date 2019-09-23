@@ -134,9 +134,6 @@ export default class WebGLManager extends SerializableObject {
                 );
             });
         };
-        const width = this.width;
-        const height = this.height;
-
 
         Object.assign(this, proj.settings);
         this.settingsFolder.updateDisplay();
@@ -170,7 +167,7 @@ export default class WebGLManager extends SerializableObject {
             }
         });
 
-        this.size = String(width) + "x" + String(height);
+        this.size = String(this.width) + "x" + String(this.height);
 
 
         this.parent.toggleAdvancedMode(this.advancedMode);
@@ -307,6 +304,13 @@ export default class WebGLManager extends SerializableObject {
         this.width = width;
         this.height = height;
 
+        this.scenes.forEach(scene => {
+            if (scene.type === 'canvas') {
+                scene.canvas.width = width;
+                scene.canvas.height = height;
+
+            }
+        })
 
         this.renderer.setSize(width, height);
         this.parent.canvasRef.current.setSize( { width, height });

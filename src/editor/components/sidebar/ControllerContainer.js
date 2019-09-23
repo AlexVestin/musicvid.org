@@ -25,7 +25,7 @@ export class GUIMount extends PureComponent {
 export default class ControllerContainer extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = { index: 1, nav: 0 };
+        this.state = { index: 0, nav: 0 };
     }
 
     componentDidMount() {
