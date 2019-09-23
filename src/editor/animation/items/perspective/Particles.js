@@ -142,9 +142,9 @@ export default class Particles extends BaseItem {
         this.addController(folder, this.pMaterial.uniforms.opacity, "value", { path: "material-opacity", min: 0, max: 1}).name("Opacity");
         this.addController(folder, this, "maxParticleCount", 0, 5000).onChange(() => this.initializeParticles())
         this.addController(folder, this, "color", {color: true}).onChange(this.changeColor);
-        this.addController(folder, this, "particleMinSpeed", 0, 10);
+        this.addController(folder, this, "particleMinSpeed", 0, 3);
         this.addController(folder, this, "baseSpeed", 0, 10);        
-        this.addController(folder, this, "movementAmplitude");
+        this.addController(folder, this, "movementAmplitude", 0, 3);
         this.addController(folder, this, "sizeMult", 0, 20.0, 0.01).onChange(() => this.updateSizes());
         return this.__addFolder(folder);
     }

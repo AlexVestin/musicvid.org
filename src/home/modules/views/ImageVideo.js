@@ -157,7 +157,7 @@ class Image extends PureComponent {
             <ButtonBase
                 onClick={() =>
                     this.setState({
-                        redirectTo: "editor?template=" + image.templateName
+                        redirectTo: image.templateName
                     })
                 }
                 className={classes.imageWrapper}

@@ -86,7 +86,7 @@ export default class NoiseMaterial extends ShaderToyMaterial {
     __setUpGUI = (folder) => {
         const i = this.__item;
         i.addController(folder, this, "baseSpeed", -10, 10, 0.01);
-        i.addController(folder, this, "amplitude", -1, 1, 0.001);
+        i.addController(folder, this, "amplitude", -3, 3, 0.001);
         i.addController(folder, this, "width").onChange(() => this.uniforms.iResolution.value = new THREE.Vector2(this.width, this.height))
         i.addController(folder, this, "height").onChange(() => this.uniforms.iResolution.value = new THREE.Vector2(this.width, this.height))
         i.addController(folder, this.uniforms.textureZoom, "value", {min: 0, max: 40, path:"TextureZoom"}).name("Texture zoom");

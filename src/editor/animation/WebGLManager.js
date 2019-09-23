@@ -134,7 +134,9 @@ export default class WebGLManager extends SerializableObject {
                 );
             });
         };
-        console.log(proj);
+        const width = this.width;
+        const height = this.height;
+
 
         Object.assign(this, proj.settings);
         this.settingsFolder.updateDisplay();
@@ -168,7 +170,7 @@ export default class WebGLManager extends SerializableObject {
             }
         });
 
-        this.size = String(this.width) + "x" + String(this.height);
+        this.size = String(width) + "x" + String(height);
 
 
         this.parent.toggleAdvancedMode(this.advancedMode);

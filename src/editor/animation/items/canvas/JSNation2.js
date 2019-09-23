@@ -322,7 +322,11 @@ export default class JSNationSpectrum extends BaseItem {
                 }
                 const curSpectrum = this.smooth(spec,  this.smoothMargins[s]);
                 points = this.makePoints(curSpectrum, curRad, exponent);
-                this.drawPoints(points, curRad);
+
+                if(points.length > 5) {
+                    this.drawPoints(points, curRad);
+                }
+                
             }       
         }
         this.ctx.globalAlpha = oldAlpha;

@@ -20,7 +20,7 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
         this.time = 0;
         this.amplitude = 10;
         this.baseSpeed = 0.8;
-
+        this.audioReactiveness = 1;
         this.transparent = true;
         
         item.__attribution = {
@@ -51,7 +51,7 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
     updateMaterial = (time, dt, audioData) => {
 
         this.uniforms.iTime.value = time;
-        this.time += this.baseSpeed * 0.01 + dt * this.amplitude / 10; 
+        this.time += this.baseSpeed * 0.01 + (dt * this.amplitude / 10) * this.audioReactiveness; 
         this.uniforms.iTime.value = this.time ;
     }
 
@@ -63,6 +63,8 @@ export default class HexaGoneMaterial extends ShaderToyMaterial {
         const i = this.__item;
         i.addController(f, this, "baseSpeed", {path: this.path});
         i.addController(f, this, "amplitude", {path: this.path});
+        i.addController(f, this, "audioReactiveness", {path: this.path});
+
 
         this.folder = f;
         return f;
