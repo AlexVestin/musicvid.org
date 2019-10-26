@@ -3,7 +3,7 @@ https://musicvid.org
 
 
 # License 
-GPL3 for the time being
+LGPL 2.1
 
 # Credit - Visualizations and audio analysation
 * Audio visualizing functions: https://github.com/caseif/vis.js
