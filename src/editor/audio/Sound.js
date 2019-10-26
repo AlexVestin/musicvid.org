@@ -161,6 +161,9 @@ export default class Audio {
     onload = ev => {
         this.audioCtx.decodeAudioData(ev.target.result).then(buffer => {
             this.bufferSource = this.audioCtx.createBufferSource();
+            if(buffer.numberOfChannels === 1 || buffer.numberOfChannels > 2) {
+                setSnackbarMessage("Only stereo audio is currently supported, please load a new audio file.", "error", 1000000);
+            }
             this.bufferSource.buffer = buffer;
             this.duration = buffer.duration;
             this.sampleRate = buffer.sampleRate;
