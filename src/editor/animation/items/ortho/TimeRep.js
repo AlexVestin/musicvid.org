@@ -42,7 +42,11 @@ export default class AudioWave extends BaseItem {
         this.addController(folder,this, "extent", 0, 2.0, 0.01);
         this.addController(folder,this, "width", 0, 5.0, 0.01);
         this.addController(folder,this, "color").onChange(() => this.mesh.material.color = new THREE.Color(this.color));
-        this.addController(folder,this.mesh.material, "linewidth", 0, 10, 1).onChange(()=>this.mesh.material.needsUpdate = true);
+        this.addController(folder,this.mesh.material, "linewidth", 0, 10, 1).onChange(()=> {
+            console.log(this.mesh.material.linewidth)
+            this.mesh.material.needsUpdate = true
+        }
+        );
         addOrthoMeshControls(this, this.mesh, folder);
         return this.__addFolder(folder);
     };

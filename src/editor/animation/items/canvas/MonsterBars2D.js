@@ -82,7 +82,7 @@ export default class MonsterCat extends BaseItem {
             ],
             projectUrl: "https://github.com/caseif/vis.js",
             description: "Monstercat visualizer in Javascript and three.js.",
-            license: this.LICENSE.REQUIRE_ATTRIBUTION,
+            license: this.LICENSE.MIT,
             changeDisclaimer: true,
             imageUrl: "img/templates/Monstercat.png"
         };
@@ -105,7 +105,7 @@ export default class MonsterCat extends BaseItem {
         this.addController(folder,this, "spectrumSpacing", 0, 10, 1);
         this.addController(folder,this, "shadowBlur", 0, 100);
         this.addController(folder,this, "shadowAlpha", 0, 1, 0.001);
-        this.addController(folder,this, "barHeightMultiplier", 0, 25.0, 0.01);
+        this.addController(folder,this, "barHeightMultiplier", 0, 40.0, 0.01);
         this.addController(folder,this, "shadowOffsetX", -300, 300);
         this.addController(folder,this, "shadowOffsetY", -300, 300);
         

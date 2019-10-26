@@ -1,5 +1,5 @@
 {
-    "name": "helloworld",
+    "name": "musicvid.org",
     "main": "index.html",
     "chromium-args": "--enable-logging=stderr --no-user-gesture-required --disable-raf-throttling --disable-renderer-backgrounding" ,
     "window": {

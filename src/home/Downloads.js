@@ -8,7 +8,9 @@ import Button from './modules/components/Button';
 import FAQItem from './FAQitem'
 
 const linuxPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_linux.tar.gz";
-const windowsPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_windows.zip";
+const windows64Path = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_windows64.zip";
+const windows32Path = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_windows32.zip";
+
 const macPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_mac.zip";
 
 
@@ -32,10 +34,21 @@ function Terms() {
                         variant="contained"
                         size="large"
                         style={{textAlign: "center", marginTop: 10, width: 255}}
-                        href={windowsPath}
+                        href={windows64Path}
                 
                     >
                         Windows x64
+                    </Button>
+
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        size="large"
+                        style={{textAlign: "center", marginTop: 10, width: 255}}
+                        href={windows32Path}
+                
+                    >
+                        Windows x32
                     </Button>
 
                     <Button

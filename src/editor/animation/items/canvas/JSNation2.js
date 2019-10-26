@@ -104,7 +104,7 @@ export default class JSNationSpectrum extends BaseItem {
             ],
             projectUrl: "https://github.com/caseif/js.nation",
             description: "Trap Nation visualizer emulation in JavaScript.",
-            license: this.LICENSE.REQUIRE_ATTRIBUTION,
+            license: this.LICENSE.MIT,
             changeDisclaimer: true,
             imageUrl: "img/templates/JSNation.png"
         }
@@ -270,7 +270,6 @@ export default class JSNationSpectrum extends BaseItem {
         ctx.closePath();
         ctx.fill();
         ctx.restore();
-
     }
 
     update = (time, dt, audioData, shouldUpdate = true) => {

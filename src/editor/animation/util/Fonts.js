@@ -13,5 +13,6 @@ export default [
     "Palatino",
     "Garamond",
     "Bookman",
-    "Comic Sans MS"
+    "Comic Sans MS",
+    "Segoe Print"
 ];

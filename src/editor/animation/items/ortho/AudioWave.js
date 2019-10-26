@@ -25,6 +25,10 @@ export default class AudioWave extends BaseItem {
 
         this.targetSize = 1024; 
 
+        this.lineWidth = 10;
+        this.opacity = 10;
+
+
        
        
         this.scene = info.scene;
@@ -100,12 +104,10 @@ export default class AudioWave extends BaseItem {
         this.addController(folder, this, "amplitude", 0, 10.0, 0.01);
         this.addController(folder, this, "extent", 0, 2.0, 0.01);
         this.addController(folder, this, "width", 0, 5.0, 0.01);
-        this.lineWidthController = this.addController(folder, this.material, "lineWidth", 0, 0.03);
-        this.lineOpacityController = this.addController(folder, this.material, "opacity", 0, 1);
+        this.lineWidthController = this.addController(folder, this, "lineWidth", 0, 0.03).onChange(() => this.material.lineWidth = this.lineWidth);
+        this.lineOpacityController = this.addController(folder, this, "opacity", 0, 1).onChange(() => this.material.opacity = this.opacity);;
         this.addController(folder, this, "taper",  {values: ["linear", "none", "wavy", "middle-out"]}).onChange(this.setTaperFunc);
         this.addController(folder, this, "targetSize",  {values: [64, 128, 256, 512, 1024, 2048, 4096]}).onChange(this.initLine);
-
-
 
         this.addController(folder,this, "color", {color:true}).onChange(() => this.mesh.material.color = new THREE.Color(this.color));
         addOrthoMeshControls(this, this.mesh, folder);

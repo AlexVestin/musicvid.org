@@ -12,6 +12,8 @@ import { base, app } from "backend/firebase";
 import PointAutomation from "./automation/PointAutomation";
 import InputAutomation from "./automation/InputAutomation";
 import ImpactAutomation from "./automation/AudioReactiveAutomation";
+import ShakeAutomation from "./automation/ShakeAutomation";
+
 import uuid from "uuid/v4";
 //import MockWebGLManager from './MockWebGLManager'
 
@@ -77,9 +79,10 @@ export default class WebGLManager extends SerializableObject {
         const possibleAutomations = {
             point: PointAutomation,
             math: InputAutomation,
-            audio: ImpactAutomation
+            audio: ImpactAutomation,
+            shake: ShakeAutomation
         }
-
+        console.log(template)
         let auto = new possibleAutomations[template.type](this.gui);
         auto.__id = template.__id;
         auto.__setUpValues(template);
@@ -317,6 +320,7 @@ export default class WebGLManager extends SerializableObject {
 
 
         if (this.reloadOnSizeChange) {
+            this.parent.clearOverviewFolder();
             const scenes = this.scenes.map(scene =>  scene.__serialize());
             while (this.scenes.length > 0) {
                 this.scenes[0].removeMe();

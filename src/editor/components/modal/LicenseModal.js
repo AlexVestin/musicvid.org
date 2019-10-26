@@ -28,6 +28,7 @@ class AlertDialog extends React.Component {
     getContributors = items => {
         const authors = {};
         let uniqueItems = [];
+        let isNeeded = false;
 
 
         items.forEach(i => {
@@ -38,21 +39,24 @@ class AlertDialog extends React.Component {
 
         uniqueItems.forEach(item => {
             if (item.license === license.REQUIRE_ATTRIBUTION) {
-                item.authors.forEach(author => {
-                    if (author.name in authors) {
-                        authors[author.name].items += " & " + item.name;
-                    } else {
-                        authors[author.name] = { ...author, items: item.name };
-                    }
-                });
+                isNeeded = true;
+               
             }
+
+            item.authors.forEach(author => {
+                if (author.name in authors) {
+                    authors[author.name].items += " & " + item.name;
+                } else {
+                    authors[author.name] = { ...author, items: item.name };
+                }
+            });
         });
 
-        return authors;
+        return { authors, isNeeded };
     };
 
     render() {
-        const authors = this.getContributors(this.props.items);
+        const { authors, isNeeded } = this.getContributors(this.props.items);
 
         return (
             <Dialog
@@ -69,8 +73,16 @@ class AlertDialog extends React.Component {
                         style={{ lineHeight: 0.95 }}
                         component={"span"}
                     >
-                        This composition contains licensed work, and in order to share it with others you are required to attribute
-                        the authors, by displaying their information on or alongside your content.
+                        {isNeeded ? <div>
+
+                            This composition contains licensed work, and in order to share it with others you are required to attribute
+                            the authors, by displaying their information on or alongside your content.
+                        </div> : 
+                        <div>
+                            Adding the attribution below is appreciated, but not required for this project! 
+                        </div>
+                        }
+                       
                         <br />
                         <br />
                         <div style={{ backgroundColor: "#efefef" }}>
@@ -93,14 +105,15 @@ class AlertDialog extends React.Component {
                                         >
                                             {author.name + " - " + author.items}
                                         </Typography>
-
                                         {author.social1 && author.social1.url}
-                                        <br />
                                     </div>
                                 );
                             })}
                         </div>
                         <br />
+
+                        {isNeeded ? <div>
+
                         By selecting "I AGREE" you agree to honor the license of{" "}
                         <a
                             href="https://creativecommons.org/licenses/by/4.0/"
@@ -113,6 +126,9 @@ class AlertDialog extends React.Component {
                         <a  href="/faq#attribution"
                             target="_blank"
                             rel="noopener noreferrer"> visibly to your content. </a>
+                        </div> : 
+                            null
+                        }
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -127,7 +143,8 @@ class AlertDialog extends React.Component {
                         color="primary"
                         autoFocus
                     >
-                        I Agree
+
+                        { isNeeded ? "I Agree" : "Export"}
                     </Button>
                 </DialogActions>
             </Dialog>

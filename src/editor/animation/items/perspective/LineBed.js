@@ -17,9 +17,10 @@ export default class PointBed extends BaseItem {
         this.spacing = 20;
         this.lineLength =  9;
         this.useAnalyser = true;
+        this.color = "#fff";
 
         this.updateCount = 0;
-        this.size = 256*4;
+        this.size = 256;
 
         this.nrLines = 200;
         for(var ix = 0; ix < this.nrLines; ix++) {
@@ -48,6 +49,21 @@ export default class PointBed extends BaseItem {
         this.setUpFolder();
     }
 
+    stop = () => {
+        
+        for(var ix = 0; ix < this.nrLines; ix++) {
+            var positions = new Float32Array(this.size * 3);
+            for(var i = 0; i < this.size; i++) {
+                positions[i*3] =  i*this.lineLength;
+                positions[i*3+1] = 0;
+                positions[i*3+2] = -(this.nrLines/2)*this.spacing + ix*this.spacing + 1;
+            }
+            const linePositions = this.particles[ix].geometry.getAttribute('position');
+            linePositions.set(positions);
+        }
+
+    }
+
     __setUpGUI = (folder) => {
          
         this.addController(folder, this, "useAnalyser");
@@ -60,6 +76,7 @@ export default class PointBed extends BaseItem {
         this.analyser.smoothingPasses = 3;
         this.analyser.smoothingPoints = 9;
         this.analyser.setUpGUI();
+        this.addController(this.folder, this, 'spacing', 1, 100).onChange(this.stop);
         return this.__addFolder(folder);
     };
 

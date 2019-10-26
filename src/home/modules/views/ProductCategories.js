@@ -48,7 +48,7 @@ function ProductCategories(props) {
       src: "vid/templates/MonstercatX.mp4",
       title: 'Monstercat Bar Visualizer',
       width: '36%',
-      templateName: "editor?template=Monstercat2D",
+      templateName: "editor?project=c1ec78f7-3c67-4d10-80bc-70cdb8b8cf0d",
       attrib: "@caseif & @Incept",
       attribUrl: "https://github.com/caseif/vis.js",
       license: "Attribution Required"
@@ -64,15 +64,15 @@ function ProductCategories(props) {
       license: "MIT"
     },
     {
-      url: 'img/templates/Sinuous.png',
-      src: "vid/templates/SinuousX.mp4",
-      title: 'Sinuous',
+      url: 'img/templates/linebed.PNG',
+      src: "vid/templates/linebed.mp4",
+      title: 'Linebed',
       width: '38%',
-      templateName:"editor?template=Sinuous",
-      attrib: "nmz (@stormoid)",
-      attribUrl: "https://www.shadertoy.com/user/nimitz",
-      twitter: "https://twitter.com/stormoid",
-      license: "Attribution Required"
+      templateName:"editor?project=a9a2e6e3-8c8b-44ca-8d44-f4400e6d835e",
+      attrib: "GamleGaz",
+      attribUrl: "https://musicvid.org",
+      twitter: "",
+      license: "MIT"
     },
     {
       url: 'img/templates/UniverseWithin.png',
@@ -111,7 +111,7 @@ function ProductCategories(props) {
       src: "vid/templates/HexagoneX.mp4",
       title: 'HexaGone',
       width: '40%',
-      templateName:"editor?template=HexaGone",
+      templateName:"editor?project=96f76587-2e0a-4e00-9ad5-fddc96d9925e",
       attribUrl: "https://www.youtube.com/channel/UCcAlTqd9zID6aNX3TzwxJXg",
       twitter: "https://twitter.com/The_ArtOfCode",
       attrib: "@BigWIngs",

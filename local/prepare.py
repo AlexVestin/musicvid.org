@@ -1,7 +1,9 @@
 dest = "C:/Users/alex/Desktop/mvid_deps/"
-platforms = ["windows", "linux"]
+platforms = ["windows64", "windows32", "linux"]
 ext = {
-    "windows": "zip",
+    "windows64": "zip",
+    "windows32": "zip",
+
     "linux": "gztar",
     "mac": "zip"
 }

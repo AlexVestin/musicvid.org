@@ -297,7 +297,7 @@ export default class Particles extends BaseItem {
             ],
             projectUrl: "https://github.com/caseif/vis.js",
             description: "",
-            license: this.LICENSE.REQUIRE_ATTRIBUTION,
+            license: this.LICENSE.MIT,
             changeDisclaimer: true,
             //TODO change image
             imageUrl: "img/templates/Monstercat.png"

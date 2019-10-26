@@ -102,7 +102,7 @@ export default class JSNationSpectrum extends BaseItem {
             ],
             projectUrl: "https://github.com/caseif/js.nation",
             description: "Trap Nation visualizer emulation in JavaScript.",
-            license: this.LICENSE.REQUIRE_ATTRIBUTION,
+            license: this.LICENSE.MIT,
             changeDisclaimer: true,
             imageUrl: "img/templates/JSNation.png"
         }
