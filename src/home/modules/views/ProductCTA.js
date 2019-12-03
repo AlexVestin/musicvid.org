@@ -84,10 +84,10 @@ class ProductCTA extends React.Component {
             <div className={classes.card}>
               <form onSubmit={this.handleSubmit} className={classes.cardContent}>
                 <Typography variant="h2" component="h2" gutterBottom>
-                 Help out!
+                 Come discuss
                 </Typography>
                 <Typography variant="h5">
-                  Join the community! Request features and visuals, ask for help, or show off your videos
+                  Join the community! Talk about features and visuals, ask for help, or show off your videos
                 </Typography>
                 <Button
                   type="submit"
@@ -112,11 +112,7 @@ class ProductCTA extends React.Component {
             </Hidden>
           </Grid>
         </Grid>
-        <Snackbar
-          open={this.state.open}
-          onClose={this.handleClose}
-          message="We will send you our best offers, once a week."
-        />
+
       </LayoutBody>
     );
   }

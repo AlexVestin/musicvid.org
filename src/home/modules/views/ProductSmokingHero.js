@@ -34,17 +34,7 @@ function ProductSmokingHero(props) {
 
   return (
     <LayoutBody className={classes.root} component="section">
-      <Button className={classes.button} href="mailto:musicvid.org@gmail.com" target="_top">
-        <Typography variant="h4" component="span">
-          Got any questions? Need help?
-        </Typography>
-      </Button>
-      <Typography variant="subtitle1" className={classes.link}>
-        We are here to help. Get in touch!
-        <br/>
-        musicvid.org@gmail.com
-      </Typography>
-      <img src="onepirate/producBuoy.svg" className={classes.buoy} alt="buoy" />
+     
     </LayoutBody>
   );
 }
