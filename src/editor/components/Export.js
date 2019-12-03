@@ -10,7 +10,7 @@ import CancelExportModal from './modal/CancelExportModal';
 import blue from "@material-ui/core/colors/blue";
 import ExportCard from "./ExportCard";
 import Button from "@material-ui/core/Button";
-
+import Questionaire from './Questionairre';
 
 
 const audioItem =  {
@@ -42,7 +42,7 @@ const styles = {
 };
 
 class SimpleDialog extends React.Component {
-    state = {modalOpen: false};
+    state = {modalOpen: false, questionaireOpen: true };
     componentDidMount() {
         this.startTime = performance.now();
         window.onbeforeunload = function(event) {
@@ -92,6 +92,7 @@ class SimpleDialog extends React.Component {
         return (
             <div className={classes.container}>
              <CancelExportModal open={this.state.modalOpen} accept={this.cancel} reject={this.toggleModal}></CancelExportModal>
+             <Questionaire close={() => this.setState({questionaireOpen: false})} open={this.state.questionaireOpen}></Questionaire>
                 <List>
                      <ListItem style={{ justifyContent: "center" }}>
                         <Typography
