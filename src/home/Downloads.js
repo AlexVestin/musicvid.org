@@ -100,7 +100,7 @@ function Terms() {
                     </li>
                     
                     <li>
-                        <Typography>It automatically uses a default bitrate (chosen by the encoder) and preset.</Typography>
+                        <Typography>It automatically uses the medium preset.</Typography>
                     </li>
 
                     <li>
@@ -119,14 +119,6 @@ function Terms() {
                     </li>
                 </ul>
 
-                <Typography style={{textAlign:"center", marginTop: 40, color: "red"}} variant="h4">
-                    Disclaimer
-                </Typography>
-                <Typography variant="h6" style={{textAlign:"center"}}>
-    
-                    The desktop version is still very unstable, and I would love to get reports of any issues. 
-                    Mac version is still under development.
-                </Typography>
             </LayoutBody>
             <AppFooter />
         </React.Fragment>
