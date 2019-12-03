@@ -26,11 +26,7 @@ export default class Tutorial extends PureComponent {
                             path="/tutorial/audio_analysers"
                             component={Audio}
                         />
-                        <Route
-                            path="/tutorial/automations"
-                            exact
-                            component={Automations}
-                        />
+        
                         <Route
                             path="/tutorial/exporting"
                             exact

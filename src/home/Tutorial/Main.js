@@ -11,29 +11,14 @@ const tutorials = [
         path: "basics",
         title: "Basics",
         description: "How to edit and export a video using the site",
-        disabled: true
     },
 
-    {
-        path: "advanced",
-        title: "Advanced",
-        description:
-            "More advanced features, such as creating and sharing projects.",
-        disabled: true
-    },
+
 
     {
         path: "audio_analysers",
         title: "Audio Analysers",
         description: "How the audio analysers work and what settings to use"
-    },
-
-    {
-        path: "automations",
-        title: "Automations",
-        description:
-            "How the automations work and how to use them in your projects",
-        disabled: true
     },
 
     {
