@@ -13,16 +13,6 @@ import Button from "@material-ui/core/Button";
 import Questionaire from './Questionairre';
 
 
-const audioItem =  {
-    name: "Nomyn - Reverie",
-    imageUrl: "img/items/reverie.jpg",
-    projectUrl: "https://nomyn.bandcamp.com/track/reverie",
-    authors: [ {
-        name: "Nomyn",
-        social1: {type: "soundcloud", url: "https://soundcloud.com/nomyn"},
-        social2: {type: "twitter", url: "https://twitter.com/nomynmusic"},
-    }]   
-};
 
 
 const styles = {
@@ -119,10 +109,6 @@ class SimpleDialog extends React.Component {
                             Creators
                         </Typography>
                     </ListItem>
-
-                    {usingSampleAudio && <ListItem style={{ justifyContent: "center" }}>
-                        <ExportCard item={audioItem} />
-                    </ListItem>}
 
                     {items.map(item => {
                         if (item.showAttribution) {

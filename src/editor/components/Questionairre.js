@@ -50,7 +50,7 @@ class Questionaire extends React.Component {
                         <Typography>                        
                         Hi, your export is now running! 
                         <br/>
-                        Do you have three minutes to fill out a questionnaire regarding audio visualizers? It won't affect the export
+                        Do you have a few moments to fill out a questionnaire regarding audio visualizers? It won't affect the export
                         and would help a lot!
                         <br/>
 
