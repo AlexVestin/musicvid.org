@@ -25,7 +25,7 @@ function ProductCategories(props) {
   const images = [
     {
       url: 'img/templates/JSNation.png',
-      src: "vid/templates/JSNationX.mp4",
+      src: "vid/templates/JSNationY.mp4",
       title: 'Circle Spectrum',
       width: '40%',
       templateName: "editor?project=fe7acdd6-bbcc-467f-a4a1-52b19b970384",
@@ -35,7 +35,7 @@ function ProductCategories(props) {
     },
     {
       url: 'img/templates/Polartone.png',
-      src: "vid/templates/PolartoneX.mp4",
+      src: "vid/templates/PolartoneY.mp4",
       title: 'Polartone',
       width: '24%',
       templateName: "editor?template=Polartone",
@@ -45,7 +45,7 @@ function ProductCategories(props) {
     },
     {
       url: 'img/templates/Monstercat.png',
-      src: "vid/templates/MonstercatX.mp4",
+      src: "vid/templates/MonstercatY.mp4",
       title: 'Monstercat Bar Visualizer',
       width: '36%',
       templateName: "editor?project=c1ec78f7-3c67-4d10-80bc-70cdb8b8cf0d",
@@ -55,7 +55,7 @@ function ProductCategories(props) {
     },
     {
       url: 'img/templates/StarField.png',
-      src: "vid/templates/StarNestX.mp4",
+      src: "vid/templates/StarNestY.mp4",
       title: 'Star Field',
       width: '32%',
       templateName: "editor?template=Stars",
@@ -65,7 +65,7 @@ function ProductCategories(props) {
     },
     {
       url: 'img/templates/linebed.PNG',
-      src: "vid/templates/linebed.mp4",
+      src: "vid/templates/linebedY.mp4",
       title: 'Linebed',
       width: '38%',
       templateName:"editor?project=a9a2e6e3-8c8b-44ca-8d44-f4400e6d835e",
@@ -76,7 +76,7 @@ function ProductCategories(props) {
     },
     {
       url: 'img/templates/UniverseWithin.png',
-      src: "vid/templates/UniverseWithinX.mp4",
+      src: "vid/templates/UniverseWithinY.mp4",
       title: 'Universe Within',
       width: '30%',
       templateName: "editor?template=UniverseWithin",
@@ -87,7 +87,7 @@ function ProductCategories(props) {
     },
     {
       url:'img/templates/Noise.png',
-      src: "vid/templates/NoiseX.mp4",
+      src: "vid/templates/NoiseY.mp4",
       title: 'Electric Noise',
       width: '40%',
       templateName: "editor?template=Noise",
@@ -98,7 +98,7 @@ function ProductCategories(props) {
     },
     {
       url: 'img/templates/AudioWave.png',
-      src: "vid/templates/TimerepX.mp4",
+      src: "vid/templates/TimerepY.mp4",
       title: 'Audio Wave',
       width: '20%',
       templateName: "editor?template=AudioWave",
@@ -108,7 +108,7 @@ function ProductCategories(props) {
     },
     {
       url: 'img/templates/HexaGone.png',
-      src: "vid/templates/HexagoneX.mp4",
+      src: "vid/templates/HexagoneY.mp4",
       title: 'HexaGone',
       width: '40%',
       templateName:"editor?project=96f76587-2e0a-4e00-9ad5-fddc96d9925e",
