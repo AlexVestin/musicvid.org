@@ -2,7 +2,6 @@ import React, { PureComponent } from "react";
 
 import Main from "./Main";
 import Audio from "./Audio/Audio";
-import Automations from "./Automations";
 import Export from "./Export";
 import Basics from "./Basics";
 

@@ -10,6 +10,8 @@ import SignIn from "./home/Account/SignIn";
 import SignUp from "./home/Account/SignUp";
 import Missing from "./home/Missing";
 import Tutorial from "./home/Tutorial/Tutorial";
+import TroubleShoot from "./home/Troubleshoot";
+
 import ErrorComponent from "./home/Error";
 
 import AddProject from "./home/AddProject";
@@ -55,6 +57,8 @@ class Index extends PureComponent {
                         <Route path="/sign-in" component={SignIn} />
                         <Route path="/sign-up" component={SignUp} />
                         <Route path="/forgot-password" component={Forgot} />
+                        <Route path="/troubleshoot" component={TroubleShoot} />
+
                         <Route path="/sign-out" component={SignOutComponent} />
                         <Route component={Missing} />
                     </Switch>

@@ -104,17 +104,10 @@ class AppAppBar extends PureComponent {
                             className={classes.title}
                             onClick={() => this.setState({ redirectTo: "/" })}
                         >
-                            {"musicvid.org"}
+
+
+                            <div style={{display:"flex", flexDirection:"row"}}>{"musicvid"}<div style={{ color: "#ff3366"}}>.org</div></div>
                         </Link>
-
-                        <Typography
-                            variant="h6"
-                            style={{ color: "#ff3366", marginLeft: 6 }}
-                        >
-                            {" "}
-                            ALPHA
-                        </Typography>
-
                        
                         <div className={classes.right}>
 

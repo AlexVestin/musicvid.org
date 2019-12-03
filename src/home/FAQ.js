@@ -51,10 +51,15 @@ function Terms() {
                         In short, it's an in-website editor where you can create and export videos of audio visualizations. 
                     </FAQItem>
 
-                    <FAQItem title="Who is making the site?">
+                    <FAQItem title="Who made this site?">
                         I code the website (GamleGaz on discord or KFriedChicken on reddit), in my free time.
                         Most of the visualization have been done by other people, while I code mainly the structure of
                         the site.     
+                    </FAQItem>
+
+                    
+                    <FAQItem title="Is the site currently active?">
+                        No, it is not being actively developed, however it is still usable.    
                     </FAQItem>
 
                     <FAQItem title="Can I use my exported video commercially?">
@@ -71,20 +76,11 @@ function Terms() {
                     <FAQItem title="Something broke/doesn't work!">
                         The site is developed to work in Chrome/FireFox, so make sure that you're
                         using a recent version of either of those. Try to refreshing the page, since some bugs may have caused the
-                        browser to hang. If it still doesn't work you can find help in the bugs channel 
-                        on the <a href="https://discord.gg/Qf7y579">discord</a>, or email me at musicvid.org@gmail.com.     
+                        browser to hang. Also you can check out the <Link to="/troubleshooting"> troubleshooting page</Link>   
                     </FAQItem>
 
                     <FAQItem title="Export times are slow, is it possible to speed them up?">
                         The desktop version has faster exports, however is less stable than the web version.
-                        Functionality for faster exports is being added to browsers at the moment, which will
-                        be added when they're implemented and stable.
-                    </FAQItem>
-
-                     
-                    <FAQItem title="It doesn't work on my phone?">
-                       The website is targeting desktop for the time being. Exporting video from a website 
-                       on mobile would be deathly slow.
                     </FAQItem>
 
                     <FAQItem title="What is the site made with?">
