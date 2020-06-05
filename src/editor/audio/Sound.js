@@ -9,11 +9,11 @@ export default class Audio {
         this.playBufferSource = this.audioCtx.createBufferSource();
         this.loaded = false;
         this.fftSize = 2048 * 8;
-        
+
         this.volume = 1;
         this.storedVolume = 1;
         this.muted = false;
-        this.exportWindowSize = 2048;
+        this.exportWindowSize = 1024;
         this.exportFrameIdx = 0;
         this.gui = gui;
         this.onProgress = onprogress;
@@ -21,43 +21,47 @@ export default class Audio {
     }
 
     load = () => {
-        return new Promise( (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.onfileready = resolve;
             if (typeof this.infile === "string") {
                 this.loadFileFromUrl(this.infile);
             } else {
                 this.loadFileFromFile(this.infile);
             }
-        })
-    }
+        });
+    };
 
     loadFft = () => {
         this.Module = {};
         try {
             KissFFT(this.Module);
-        } catch(err) {
-            setSnackbarMessage("Failed to initialize FFT module, please reload", "error", 10000000);
+        } catch (err) {
+            setSnackbarMessage(
+                "Failed to initialize FFT module, please reload",
+                "error",
+                10000000
+            );
         }
-        
+
         this.Module["onRuntimeInitialized"] = () => {
             this.Module._init_r(this.fftSize);
             this.moduleLoaded = true;
         };
     };
 
-    setFFTSize = fftSize => {
+    setFFTSize = (fftSize) => {
         this.fftSize = Number(fftSize);
-        if(this.moduleLoaded) {
+        if (this.moduleLoaded) {
             this.Module._init_r(this.fftSize);
-            if(this.gui)
-                this.gui.updateDisplay();
+            if (this.gui) this.gui.updateDisplay();
         }
-        
     };
 
     setEncodeStartTime = (time) => {
-        this.exportFrameIdx = Math.floor(time * this.sampleRate / this.exportWindowSize);
-    }
+        this.exportFrameIdx = Math.floor(
+            (time * this.sampleRate) / this.exportWindowSize
+        );
+    };
 
     getEncodingFrame = () => {
         const sidx = this.exportFrameIdx * this.exportWindowSize;
@@ -74,7 +78,7 @@ export default class Audio {
     };
 
     // VOLUME FROM [0..1]
-    setVolume = volume => {
+    setVolume = (volume) => {
         if (this.gainNode)
             this.gainNode.gain.setValueAtTime(
                 volume,
@@ -97,15 +101,15 @@ export default class Audio {
         this.playing = true;
     };
 
-    getAudioByteData = buffer => {
+    getAudioByteData = (buffer) => {
         this.combinedAudioData = new Float32Array(buffer.length);
 
         const leftAudio = buffer.getChannelData(0);
-        if(buffer.numberOfChannels === 1) {
+        if (buffer.numberOfChannels === 1) {
             this.combinedAudioData = leftAudio;
             return;
         }
-        
+
         const rightAudio = buffer.getChannelData(1);
         for (var i = 0; i < buffer.length; i++) {
             this.combinedAudioData[i] = (leftAudio[i] + rightAudio[i]) / 2;
@@ -113,21 +117,21 @@ export default class Audio {
     };
 
     toggleMuted = () => {
-        this.muted =  !this.muted;
-        if(this.muted) {
+        this.muted = !this.muted;
+        if (this.muted) {
             this.storedVolume = this.volume;
             this.setVolume(0);
-        }else {
+        } else {
             this.setVolume(this.storedVolume);
-        }   
-    }
+        }
+    };
 
     setUnmuted = () => {
         this.setVolume(this.storedVolume);
         this.muted = false;
-    }
+    };
 
-    getAudioData = time => {
+    getAudioData = (time) => {
         const halfWindowSize = this.fftSize / 2;
         let idx = Math.floor(time * this.bufferSource.buffer.sampleRate);
         if (idx < 0) idx = 0;
@@ -158,11 +162,15 @@ export default class Audio {
         this.playing = false;
     };
 
-    onload = ev => {
-        this.audioCtx.decodeAudioData(ev.target.result).then(buffer => {
+    onload = (ev) => {
+        this.audioCtx.decodeAudioData(ev.target.result).then((buffer) => {
             this.bufferSource = this.audioCtx.createBufferSource();
-            if(buffer.numberOfChannels === 1 || buffer.numberOfChannels > 2) {
-                setSnackbarMessage("Only stereo audio is currently supported, please load a new audio file.", "error", 1000000);
+            if (buffer.numberOfChannels === 1 || buffer.numberOfChannels > 2) {
+                setSnackbarMessage(
+                    "Only stereo audio is currently supported, please load a new audio file.",
+                    "error",
+                    1000000
+                );
             }
             this.bufferSource.buffer = buffer;
             this.duration = buffer.duration;
@@ -180,15 +188,15 @@ export default class Audio {
         oReq.onload = () => {
             var blob = oReq.response; // Note: not oReq.responseText
             if (blob) {
-                this.onload({target: {result: blob}})
+                this.onload({ target: { result: blob } });
             }
         };
 
         oReq.addEventListener("progress", (event) => {
             if (event.lengthComputable) {
                 const percentComplete = event.loaded / event.total;
-                this.onProgress(Math.max(percentComplete-0.02, 0));
-              }
+                this.onProgress(Math.max(percentComplete - 0.02, 0));
+            }
         });
 
         oReq.send();
@@ -213,12 +221,12 @@ export default class Audio {
         let fileReader = new FileReader();
         fileReader.readAsArrayBuffer(file);
         fileReader.onload = this.onload;
-        fileReader.onerror = err => console.log(err);
+        fileReader.onerror = (err) => console.log(err);
         fileReader.onprogress = (event) => {
             if (event.lengthComputable) {
                 const percentComplete = event.loaded / event.total;
-                this.onProgress(Math.max(percentComplete-0.02, 0));
-              }
+                this.onProgress(Math.max(percentComplete - 0.02, 0));
+            }
         };
     }
 }

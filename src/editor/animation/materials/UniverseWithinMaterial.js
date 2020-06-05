@@ -1,11 +1,11 @@
-import ShaderToyMaterial from 'editor/animation/util/ShaderToyMaterial'
+import ShaderToyMaterial from "editor/animation/util/ShaderToyMaterial";
 import { Vector2 } from "three";
 import ImpactAnalyser from "../audio/ImpactAnalyser";
-import fragShader from "../shaders/licensed/UniverseWithin";
+//import fragShader from "../shaders/licensed/UniverseWithin";
 
 export default class UniverseWithinMaterial extends ShaderToyMaterial {
     constructor(item) {
-        super(fragShader, {
+        super("fragShader", {
             uniforms: {
                 iResolution: { value: new Vector2(item.width, item.height) },
                 iTime: { value: 0.0 },
@@ -23,7 +23,6 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
         this.numLayers = 4;
         this.movementExaggeration = 5.0;
 
-       
         item.__attribution = {
             showAttribution: true,
             name: "The Universe Within",
@@ -52,16 +51,17 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
         this.__item = item;
     }
 
-
-    __setUpGUI = folder => {
+    __setUpGUI = (folder) => {
         const i = this.__item;
-        i.addController(folder, this, "numLayers", {values: [1, 2, 4, 8], min: 0, path: this.path}).onChange(
-            () => (this.uniforms.NUM_LAYERS.value = this.numLayers)
-        );
+        i.addController(folder, this, "numLayers", {
+            values: [1, 2, 4, 8],
+            min: 0,
+            path: this.path
+        }).onChange(() => (this.uniforms.NUM_LAYERS.value = this.numLayers));
         i.addController(folder, this, "amplitude", 0, 1, 0.001);
         i.addController(folder, this, "frequency", 0, 1, 0.01);
         i.addController(folder, this, "moveToAudioImpact");
-        i.addController(folder, this, "baseSpeed",  -50, 50, 0.1);
+        i.addController(folder, this, "baseSpeed", -50, 50, 0.1);
         i.addController(folder, this, "movementExaggeration", -10, 10, 0.1);
         i.addController(folder, this, "amplitude", 0, 1, 0.001);
         this.impactAnalyser = new ImpactAnalyser(folder, i);
@@ -77,11 +77,12 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
 
         this.uniforms.iTime.value = time;
 
-          
         if (this.moveToAudioImpact && this.impactAnalyser) {
             const impact = this.impactAnalyser.analyse(audioData.frequencyData);
             const fftMult = 1024 / audioData.frequencyData.length;
-            this.time +=this.baseSpeed * 0.01 + dt * impact  * this.movementExaggeration * fftMult;
+            this.time +=
+                this.baseSpeed * 0.01 +
+                dt * impact * this.movementExaggeration * fftMult;
             this.uniforms.iTime.value = this.time;
         }
 
@@ -92,6 +93,4 @@ export default class UniverseWithinMaterial extends ShaderToyMaterial {
     stop = () => {
         this.time = 0;
     };
-
-    
 }
