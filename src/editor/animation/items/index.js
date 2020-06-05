@@ -78,7 +78,7 @@ const pixiItems = {
 }
 
 
-const licensed = true;
+const licensed = false;
 if(licensed) {
     const licensedOrthoItems = [
         {path: './ortho/Noise.js', img: "img/items/Noise.png", authors: "nmz (@Stormoid)", url: "https://www.shadertoy.com/view/ldlXRS", name: "Noise"},

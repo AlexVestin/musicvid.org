@@ -1,6 +1,5 @@
 import * as FileSaver from "file-saver";
 import VideoEncoder from "./VideoEncodeWorker";
-import VideoModule from "./WasmEncoder1t";
 
 export default class Exporter {
     constructor(config, ondone, onProgress) {
@@ -29,18 +28,6 @@ export default class Exporter {
             duration = config.endTime;
         }
 
-        this.Module = {};
-        this.Module["locateFile"] = (file) => file;
-
-        this.Module["onRuntimeInitialized"] = () => {
-            console.log("initialized");
-            this.initEncoder();
-        };
-
-        this.Module["mainScriptUrlOrBlob"] = "WasmEncoder1t.js";
-
-        VideoModule(this.Module);
-
         this.duration = duration;
         this.__startTime = time;
     }
@@ -53,25 +40,32 @@ export default class Exporter {
 
     init = (onready) => {
         this.onready = onready;
-        console.log("?");
-        //this.videoEncoder = new VideoEncoder(this.initEncoder);
+        this.videoEncoder = new VideoEncoder(this.initEncoder);
     };
     initEncoder = () => {
-        try {
-            this.Module._open_video(
-                this.width,
-                this.height,
-                this.fps,
-                this.videoBitrate,
-                this.presetIdx,
-                1,
-                1
-            );
+        const videoConfig = {
+            w: this.width,
+            h: this.height,
+            bitrate: this.videoBitrate,
+            fps: this.fps,
+            presetIdx: this.presetIdx
+        };
 
-            this.Module._write_header();
-        } catch (err) {
-            console.error("Error in initializing video: ", err.message);
-        }
+        const audioConfig = {
+            channels: 2,
+            sampleRate: this.sound.sampleRate,
+            bitrate: 320000
+        };
+
+        this.videoEncoder.init(
+            videoConfig,
+            audioConfig,
+            this.encoderInitialized,
+            this.encode
+        );
+    };
+
+    encoderInitialized = () => {
         this.encoding = true;
         this.encodedVideoFrames = 0;
         this.startTime = performance.now();
@@ -106,8 +100,7 @@ export default class Exporter {
                 this.encodeVideoFrame();
             }
 
-            //this.videoEncoder.sendFrame();
-            console.log("Encode?", this.encodedVideoFrames);
+            this.videoEncoder.sendFrame();
 
             if (this.encodedVideoFrames % 15 === 0)
                 this.onProgress(
@@ -116,33 +109,21 @@ export default class Exporter {
                 );
 
             if (this.time > this.duration) {
-                //this.videoEncoder.close(this.saveBlob);
+                this.videoEncoder.close(this.saveBlob);
             }
-
-            setTimeout(this.encode, 0);
         }
     };
 
     encodeVideoFrame = () => {
-        const buffer = this.animationManager.readPixels();
-
-        try {
-            var encodedBuffer_p = this.Module._malloc(buffer.length);
-            this.Module.HEAPU8.set(buffer, encodedBuffer_p);
-            this.Module._add_video_frame(encodedBuffer_p);
-        } catch (err) {
-            console.error("Error encoding video: ", err.message);
-        } finally {
-            this.Module._free(encodedBuffer_p);
-        }
-
+        this.pixels = this.animationManager.readPixels();
+        this.videoEncoder.queueFrame({ type: "video", pixels: this.pixels });
         this.pixels = null;
         this.encodedVideoFrames++;
     };
 
     encodeAudioFrame = () => {
         const frame = this.sound.getEncodingFrame();
-        //this.videoEncoder.queueFrame(frame);
+        this.videoEncoder.queueFrame(frame);
     };
 
     saveBlob = (vid) => {
