@@ -13,7 +13,7 @@ export default class Audio {
         this.volume = 1;
         this.storedVolume = 1;
         this.muted = false;
-        this.exportWindowSize = 1024;
+        this.exportWindowSize = 1152;
         this.exportFrameIdx = 0;
         this.gui = gui;
         this.onProgress = onprogress;
