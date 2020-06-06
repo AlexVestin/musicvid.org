@@ -4,11 +4,11 @@ import { withStyles } from "@material-ui/core/styles";
 import Button from "../components/Button";
 import Typography from "../components/Typography";
 import ProductHeroLayout from "./ProductHeroLayout";
-import { Redirect } from 'react-router-dom'
+import { Redirect } from "react-router-dom";
 
 const backgroundImage = "./img/Background.png";
 
-const styles = theme => ({
+const styles = (theme) => ({
     background: {
         backgroundImage: `url(${backgroundImage})`,
         backgroundColor: "#7fc7d9", // Average color of the background image.
@@ -30,13 +30,12 @@ const styles = theme => ({
 });
 
 class ProductHero extends React.PureComponent {
-
-    state = {redirectTo: ""};
+    state = { redirectTo: "" };
     render() {
         const { classes } = this.props;
 
-        if(this.state.redirectTo)
-          return <Redirect to={this.state.redirectTo}></Redirect>
+        if (this.state.redirectTo)
+            return <Redirect to={this.state.redirectTo}></Redirect>;
 
         return (
             <ProductHeroLayout backgroundClassName={classes.background}>
@@ -66,28 +65,12 @@ class ProductHero extends React.PureComponent {
                     size="large"
                     className={classes.button}
                     style={{ textAlign: "center", color: "rgb(20,20,22)" }}
-                    onClick={() => this.setState({redirectTo: "/editor"})}
-         
+                    onClick={() => this.setState({ redirectTo: "/editor" })}
                 >
-                    {" "}Open empty project {" "}
+                    {" "}
+                    Open empty project{" "}
                 </Button>
 
-                <Button
-                    color="primary"
-                    variant="contained"
-                    size="large"
-                    className={classes.button}
-                    style={{
-                        textAlign: "center",
-                        marginTop: 10,
-                        width: 255,
-                        backgroundColor: "#3333AA",
-                        fontSize: "0.825rem"
-                    }}
-                    onClick={() => this.setState({redirectTo: "/downloads"})}
-                >
-                    Download desktop client
-                </Button>
                 <Typography
                     variant="body2"
                     color="inherit"
@@ -105,3 +88,22 @@ ProductHero.propTypes = {
 };
 
 export default withStyles(styles)(ProductHero);
+
+/*
+
+                <Button
+                    color="primary"
+                    variant="contained"
+                    size="large"
+                    className={classes.button}
+                    style={{
+                        textAlign: "center",
+                        marginTop: 10,
+                        width: 255,
+                        backgroundColor: "#3333AA",
+                        fontSize: "0.825rem"
+                    }}
+                    onClick={() => this.setState({redirectTo: "/downloads"})}
+                >
+                    Download desktop client
+                </Button>*/

@@ -19,6 +19,13 @@ export default class AudioWave extends BaseItem {
         this.textures = [];
         info.scene.add(this.mesh);
 
+
+        this.speedUpThresh2X = 128;
+        this.speedUpThresh4X = 128 + 16;
+        this.chungusThresh = 160;
+        this.darkBeforeChungus = 0 ;
+        this.opacityFadeIn = 62;
+
         var light = new THREE.PointLight( 0xffffff, 1, 100 );
         this.redLight = new THREE.PointLight( 0xff0000, 0.01, 100 );
         this.redLight.position.z = 1;
@@ -94,8 +101,25 @@ export default class AudioWave extends BaseItem {
         this.addController(folder,this.rightLight.position, "y").name("right y")
         this.addController(folder,this.rightLight.position, "z").name("right z")
         this.addController(folder,this.rightLight, "intensity").name("right intensity");
+
+
+        this.addController(folder,this, "speedUpThresh4X").name("4x speedup beat threhold");
+        this.addController(folder,this, "speedUpThresh2X").name("2x speedup beat threshold");
+        this.addController(folder,this, "chungusThresh").name("Chungus beat threshold");
+        this.addController(folder,this, "darkBeforeChungus").name("Dark beats before chungus");
+        this.addController(folder,this, "opacityFadeIn").name("Opacity fade in");
+
+
+
+        this.addController(folder,this, "bpm").name("bpm");
+
+
         return this.__addFolder(folder);
     };
+
+    stop  = () => {
+
+    }
 
     update = (time, dt, audioData) => {
         const t = time + this.offset;
@@ -103,25 +127,31 @@ export default class AudioWave extends BaseItem {
         const beatIndex = Math.floor(t / stepSize);
 
         let div = 4;
-        if(beatIndex > 128 + 16) {
+        if(beatIndex > this.speedUpThresh4X) {
             div = 0.5;
-        }else if( beatIndex > 128) {
+        }else if( beatIndex > this.speedUpThresh2X) {
             div = 1;
         }
 
+
+        console.log(beatIndex)
         //this.redLight.intensity = beatIndex / 150;
         const idx = Math.floor(
             (beatIndex / div) % (this.textures.length - 1)
         );
-        if(beatIndex >= 155 && beatIndex < 160) {
+        if(beatIndex >= this.chungusThresh - this.darkBeforeChungus && beatIndex < this.chungusThresh) {
             this.material.map =  null;
-        }else if (beatIndex >= 160) {
+        }else if (beatIndex >= this.chungusThresh) {
+
+          
             let t0 = 2;
-            let z =  ((time - 62) / t0);
+            let z =  ((time - this.opacityFadeIn) / t0);
             z = z > 1.6 ? 1.6 : z;
 
+            console.log("load chungus", z, (time - 62) / 3)
+
             this.mesh.scale.set(z,z,z);
-            this.material.opacity = (time - 62) / 3;
+            this.material.opacity = (time - 10) / 3;
             this.material.map = this.chungus;
         }else {
             this.material.map = this.textures[idx];

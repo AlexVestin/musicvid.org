@@ -33,14 +33,14 @@ export default class ControllerContainer extends PureComponent {
         if (firstLoad) this.initExportGUI();
 
         const d = document.getElementsByClassName("simplebar-mask")[0];
-        d.style.setProperty('width', '95%', 'important');
+        d.style.setProperty("width", "95%", "important");
     }
 
     initExportGUI = () => {
         const folder = this.props.gui.__folders["Export"];
-        this.MBitBitrate = 14.5;
+        this.MBitBitrate = 0;
         this.fps = 60;
-        this.preset = "veryfast";
+        this.preset = "ultrafast";
         this.useCustomTimeRange = false;
         this.startTime = 0;
         this.endTime = 0;
@@ -78,7 +78,9 @@ export default class ControllerContainer extends PureComponent {
         const { disabled, startEncoding } = this.props;
         if (!disabled) {
             const bitrate = this.MBitBitrate * Math.pow(10, 6);
-            const preset = this.presetLookup.findIndex(e => e === this.preset);
+            const preset = this.presetLookup.findIndex(
+                (e) => e === this.preset
+            );
             const settings = {
                 fps: this.fps,
                 bitrate: bitrate,
@@ -92,7 +94,7 @@ export default class ControllerContainer extends PureComponent {
         }
     };
 
-    convertAndLoad = projectFile => {
+    convertAndLoad = (projectFile) => {
         if (projectFile.str) {
             base.collection("projects")
                 .doc(projectFile.id)
@@ -116,7 +118,7 @@ export default class ControllerContainer extends PureComponent {
             base.collection("projects")
                 .doc(projectFile.id)
                 .get()
-                .then(snapshot => {
+                .then((snapshot) => {
                     window.history.pushState(
                         {},
                         null,
@@ -133,24 +135,85 @@ export default class ControllerContainer extends PureComponent {
         const selectedColor = "#444";
         return (
             <div className={classes.container}>
-                
                 <div className={classes.wrapper}>
-                
                     <div className={classes.sideNav}>
-                        <div style={{borderRight: "1px solid rgba(255,255,255,0.3)"}}>
-                        <div style={{backgroundColor: index === 0 ? selectedColor : ""}} onClick={() => this.setState({index: 0})}>Quick Settings</div>
-                        <div style={{backgroundColor: index === 1 ? selectedColor : ""}} onClick={() => this.setState({index: 1})}>Audio</div>
-                        <div style={{marginLeft: 0, backgroundColor: index === 2 ? selectedColor : ""}} onClick={() => this.setState({index: 2})}>Layers</div>
-                        <div style={{marginLeft: 0, backgroundColor: index === 3 ? selectedColor : ""}} onClick={() => this.setState({index: 3})}>Automations</div>
-                        <div style={{marginLeft: 0, backgroundColor: index === 4 ? selectedColor : ""}} onClick={() => this.setState({index: 4})}>Settings</div>
-                        <div style={{backgroundColor: index === 5 ? selectedColor : ""}} onClick={() => this.setState({index: 5})}>Project</div>
-                        <div style={{backgroundColor: index === 6 ? selectedColor : ""}}onClick={() => this.setState({index: 6})}>Export</div>
+                        <div
+                            style={{
+                                borderRight: "1px solid rgba(255,255,255,0.3)"
+                            }}
+                        >
+                            <div
+                                style={{
+                                    backgroundColor:
+                                        index === 0 ? selectedColor : ""
+                                }}
+                                onClick={() => this.setState({ index: 0 })}
+                            >
+                                Quick Settings
+                            </div>
+                            <div
+                                style={{
+                                    backgroundColor:
+                                        index === 1 ? selectedColor : ""
+                                }}
+                                onClick={() => this.setState({ index: 1 })}
+                            >
+                                Audio
+                            </div>
+                            <div
+                                style={{
+                                    marginLeft: 0,
+                                    backgroundColor:
+                                        index === 2 ? selectedColor : ""
+                                }}
+                                onClick={() => this.setState({ index: 2 })}
+                            >
+                                Layers
+                            </div>
+                            <div
+                                style={{
+                                    marginLeft: 0,
+                                    backgroundColor:
+                                        index === 3 ? selectedColor : ""
+                                }}
+                                onClick={() => this.setState({ index: 3 })}
+                            >
+                                Automations
+                            </div>
+                            <div
+                                style={{
+                                    marginLeft: 0,
+                                    backgroundColor:
+                                        index === 4 ? selectedColor : ""
+                                }}
+                                onClick={() => this.setState({ index: 4 })}
+                            >
+                                Settings
+                            </div>
+                            <div
+                                style={{
+                                    backgroundColor:
+                                        index === 5 ? selectedColor : ""
+                                }}
+                                onClick={() => this.setState({ index: 5 })}
+                            >
+                                Project
+                            </div>
+                            <div
+                                style={{
+                                    backgroundColor:
+                                        index === 6 ? selectedColor : ""
+                                }}
+                                onClick={() => this.setState({ index: 6 })}
+                            >
+                                Export
+                            </div>
                         </div>
                     </div>
                     <SimpleBar
                         data-simplebar-force-visible
                         className={classes.scrollbar}
-                        style={{  height: "90%", width: "99%" }}
+                        style={{ height: "90%", width: "99%" }}
                     >
                         {index === 0 && loaded && (
                             <GUIMount
@@ -168,14 +231,19 @@ export default class ControllerContainer extends PureComponent {
                             />
                         )}
                         {index === 3 && loaded && <Automations gui={gui} />}
-                       
+
                         {index === 4 && loaded && (
                             <GUIMount
                                 gui={gui.__folders["Settings"].domElement}
                             />
                         )}
 
-                        {index === 5 && loaded && <Projects loadProject={this.convertAndLoad} gui={gui}></Projects> }
+                        {index === 5 && loaded && (
+                            <Projects
+                                loadProject={this.convertAndLoad}
+                                gui={gui}
+                            ></Projects>
+                        )}
                         {index === 6 && loaded && (
                             <GUIMount
                                 gui={gui.__folders["Export"].domElement}

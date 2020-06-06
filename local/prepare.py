@@ -3,7 +3,6 @@ platforms = ["windows64", "windows32", "linux"]
 ext = {
     "windows64": "zip",
     "windows32": "zip",
-
     "linux": "gztar",
     "mac": "zip"
 }

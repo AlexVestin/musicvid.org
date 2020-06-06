@@ -122,7 +122,7 @@ export default class Particles extends BaseItem {
                 },
                 {
                     name: "Incept", 
-                    social1: {type: "youtube", url: "https://www.youtube.com/channel/UCS12_l2kLigIPaXjRRmbdNA"},
+                    social1: {type: "website", url: "https://incept.online/"},
                     social2: {type: "github", url: "https://github.com/itsIncept"},
 
                 }

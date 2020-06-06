@@ -1,11 +1,11 @@
 import ShaderToyMaterial from "editor/animation/util/ShaderToyMaterial";
 import { Vector2 } from "three";
 import ImpactAnalyser from "../audio/ImpactAnalyser";
-//import fragShader from "../shaders/licensed/UniverseWithin";
+import fragShader from "../shaders/licensed/UniverseWithin";
 
 export default class UniverseWithinMaterial extends ShaderToyMaterial {
     constructor(item) {
-        super("fragShader", {
+        super(fragShader, {
             uniforms: {
                 iResolution: { value: new Vector2(item.width, item.height) },
                 iTime: { value: 0.0 },

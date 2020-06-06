@@ -1,5 +1,7 @@
 const script =
-    typeof Atomics === "undefined" ? "WasmEncoder.js" : "WasmEncoder1t.js";
+    typeof Atomics === "undefined" && true
+        ? "WasmEncoder.js"
+        : "WasmEncoder1t.js";
 importScripts(script);
 
 let Module = {};

@@ -2,7 +2,7 @@ import getItemClassFromText from "../items";
 import OrbitControls from "../controls/OrbitControls";
 import SerializableObject from "../SerializableObject";
 import serialize from "../Serialize";
-import { Vector3 } from 'three'
+import { Vector3 } from "three";
 export default class Scene extends SerializableObject {
     constructor(gui, resolution, remove, moveScene) {
         super();
@@ -20,19 +20,21 @@ export default class Scene extends SerializableObject {
         }
     }
 
-    play = t => {
-        this.items.forEach(item => item.play(t));
+    play = (t) => {
+        this.items.forEach((item) => item.play(t));
     };
 
-    seekTime = t => {
-        this.items.forEach(item => item.seekTime(t));
+    seekTime = (t) => {
+        this.items.forEach((item) => item.seekTime(t));
     };
 
-    addItems = items => {
-        items.forEach(item => {
+    addItems = (items) => {
+        items.forEach((item) => {
             const i = this.addItemFromText(item.__itemName);
-            i.__setControllerValues(item.controllers, item.__automations);
-            i.setFolderName(i.name);
+            if (i) {
+                i.__setControllerValues(item.controllers, item.__automations);
+                i.setFolderName(i.name);
+            }
         });
     };
 
@@ -53,7 +55,7 @@ export default class Scene extends SerializableObject {
     };
 
     updateSettings = () => {
-        if(this.controls) {
+        if (this.controls) {
             this.controls.update();
         }
     };
@@ -70,7 +72,7 @@ export default class Scene extends SerializableObject {
 
         if (controlConfigs) {
             this.controls.enabled = controlConfigs.enabled;
-            const { x, y, z } = controlConfigs.target; 
+            const { x, y, z } = controlConfigs.target;
             this.controls.target = new Vector3(x, y, z);
 
             this.controls.update();
@@ -78,8 +80,6 @@ export default class Scene extends SerializableObject {
             this.controls.enabled = false;
             this.controls.update();
         }
-     
-        
     };
 
     handleMouseUp = () => {
@@ -212,9 +212,11 @@ export default class Scene extends SerializableObject {
             "Scene name"
         );
         this.addController(this.cameraFolder, this, "resetCamera");
-        this.settingsFolder.add(this, "removeMeWithModal").name("Remove this scene");
+        this.settingsFolder
+            .add(this, "removeMeWithModal")
+            .name("Remove this scene");
 
-        this.items.forEach(item => {
+        this.items.forEach((item) => {
             item.__gui = this.itemsFolder;
             item.__setUpFolder();
         });
@@ -229,14 +231,14 @@ export default class Scene extends SerializableObject {
             __controllers: this.__serializeControllers()
         };
 
-        this.items.forEach(item => {
+        this.items.forEach((item) => {
             sceneConfig.__items.push(item.serialize());
         });
         sceneConfig.camera = this.camera.matrix.toArray();
         sceneConfig.controls = {
             enabled: this.controls.enabled,
             target: this.controls.target
-        }
+        };
 
         sceneConfig.controlsEnabled = this.controls.enabled;
 
@@ -247,7 +249,7 @@ export default class Scene extends SerializableObject {
         this.gui
             .getRoot()
             .modalRef.toggleModal(22, true, { title: this.folder.name })
-            .then(response => {
+            .then((response) => {
                 if (response) {
                     this.removeMe();
                 }
@@ -255,7 +257,7 @@ export default class Scene extends SerializableObject {
     };
 
     removeMe = () => {
-        this.items.forEach(item => {
+        this.items.forEach((item) => {
             this.removeItem(item);
         });
 
@@ -272,15 +274,15 @@ export default class Scene extends SerializableObject {
         this.remove({ scene: this });
     };
 
-    removeItem = item => {
-        const index = this.items.findIndex(e => e === item);
+    removeItem = (item) => {
+        const index = this.items.findIndex((e) => e === item);
         if (this.type !== "canvas" && this.type !== "pixi") {
             this.scene.remove(item.mesh);
         }
 
         item.dispose();
-        Object.keys(item.__controllers).forEach(key => {
-            item.__controllers[key].__subControllers.forEach(folder => {
+        Object.keys(item.__controllers).forEach((key) => {
+            item.__controllers[key].__subControllers.forEach((folder) => {
                 try {
                     folder.parent.remove(folder);
                 } catch (err) {
@@ -295,11 +297,11 @@ export default class Scene extends SerializableObject {
         this.items.splice(index, 1);
     };
 
-    removeItemWithModal = args => {
+    removeItemWithModal = (args) => {
         this.gui
             .getRoot()
             .modalRef.toggleModal(22, true, { title: args.item.name })
-            .then(response => {
+            .then((response) => {
                 const { item } = args;
                 if (response) {
                     this.removeItem(item);
@@ -308,7 +310,7 @@ export default class Scene extends SerializableObject {
     };
 
     stop = () => {
-        this.items.forEach(item => {
+        this.items.forEach((item) => {
             item.stop();
         });
     };
@@ -342,24 +344,26 @@ export default class Scene extends SerializableObject {
             }
 
             const itemClass = getItemClassFromText(this.type, name);
-            const item = new itemClass(info);
-            item.__itemName = name;
-            this.items.push(item);
+            if (itemClass) {
+                const item = new itemClass(info);
+                item.__itemName = name;
+                this.items.push(item);
+                return item;
+            }
 
-
-            return item;
+            return null;
         }
     };
 
     addItem = () => {
         const ref = this.itemsFolder.__root.modalRef;
-        ref.toggleModal(this.MODAL_REF_NR).then(text =>
+        ref.toggleModal(this.MODAL_REF_NR).then((text) =>
             this.addItemFromText(text, false)
         );
     };
 
-    render = renderer => {
-        this.items.forEach(item => {
+    render = (renderer) => {
+        this.items.forEach((item) => {
             item.render(renderer, this.camera);
         });
 
@@ -369,7 +373,7 @@ export default class Scene extends SerializableObject {
     update = (time, dt, audioData, shouldIncrement) => {
         this.applyAutomations(shouldIncrement);
         if (shouldIncrement) {
-            this.items.forEach(item => {
+            this.items.forEach((item) => {
                 item.mesh.visible =
                     item.__startTime <= time && item.__endTime >= time;
                 item.applyAutomations(shouldIncrement);

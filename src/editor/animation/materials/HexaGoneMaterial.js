@@ -1,11 +1,11 @@
 import * as THREE from "three";
 import ShaderToyMaterial from "editor/animation/util/ShaderToyMaterial";
-//import fragShader from '../shaders/licensed/HexaGone'
+import fragShader from "../shaders/licensed/HexaGone";
 import serialize from "../Serialize";
 
 export default class HexaGoneMaterial extends ShaderToyMaterial {
     constructor(item) {
-        super("fragShader", {
+        super(fragShader, {
             uniforms: {
                 iResolution: {
                     value: new THREE.Vector2(item.width, item.height)

@@ -31,6 +31,7 @@
         "react-redux": "^7.0.3",
         "react-router-dom": "5.0.0",
         "react-scripts": "^2.1.8",
+        "react-youtube": "^7.9.0",
         "recompose": "^0.30.0",
         "redux": "^4.0.1",
         "simplebar": "^3.1.3",
@@ -55,7 +56,8 @@
         "nw-windows": "C:/Users/alex/Desktop/nwjs-v0.40.1-win-x64/nw build/",
         "prepare-builds": "python local/prepare.py",
         "invalidate-cache": "aws cloudfront create-invalidation --distribution-id E3KDNOXC03JXHV --paths /*",
-        "sync": "aws s3 sync C:/Users/alex/Desktop/mvid_deps/build s3://mvid-build/ --delete"
+        "sync": "aws s3 sync C:/Users/alex/Desktop/mvid_deps/build s3://mvid-build/ --delete",
+        "sync-build": "aws s3 sync ./build s3://mvid-build/ --delete"
     },
     "eslintConfig": {
         "extends": "react-app"

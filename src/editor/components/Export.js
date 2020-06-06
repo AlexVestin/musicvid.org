@@ -6,14 +6,11 @@ import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import WhileExporting from "./WhileExporting";
 import DoneExporting from "./DoneExporting";
-import CancelExportModal from './modal/CancelExportModal';
+import CancelExportModal from "./modal/CancelExportModal";
 import blue from "@material-ui/core/colors/blue";
 import ExportCard from "./ExportCard";
 import Button from "@material-ui/core/Button";
-import Questionaire from './Questionairre';
-
-
-
+import Questionaire from "./Questionairre";
 
 const styles = {
     root: {
@@ -32,10 +29,10 @@ const styles = {
 };
 
 class SimpleDialog extends React.Component {
-    state = {modalOpen: false, questionaireOpen: true };
+    state = { modalOpen: false, questionaireOpen: true };
     componentDidMount() {
         this.startTime = performance.now();
-        window.onbeforeunload = function(event) {
+        window.onbeforeunload = function (event) {
             // do stuff here
             event.returnValue =
                 "Your export will be canceled, are you sure you want navigate away?";
@@ -47,57 +44,87 @@ class SimpleDialog extends React.Component {
         //this.props.onClose(this.props.selectedValue);
     };
 
-    getDimensions = object => {
+    getDimensions = (object) => {
         return {
             width: Number(object.split("x")[0]),
             height: Number(object.split("x")[1])
         };
     };
 
-    toggleModal = () => { 
-        if(!this.props.encoding) {
-            this.setState({modalOpen: !this.state.modalOpen});
-        }else {
+    toggleModal = () => {
+        if (!this.props.encoding) {
+            this.setState({ modalOpen: !this.state.modalOpen });
+        } else {
             if (window.__cancel) {
                 window.__cancel();
             }
             this.props.cancel();
-           
         }
-    } 
+    };
 
     cancel = () => {
         this.props.cancel();
         this.toggleModal();
-    }
+    };
 
     render() {
-        const { classes, progress, encoding, fileName, blobFile, usingSampleAudio } = this.props;
+        const {
+            classes,
+            progress,
+            encoding,
+            fileName,
+            blobFile,
+            usingSampleAudio
+        } = this.props;
         const items = this.props.items;
         const dt = (performance.now() - this.startTime) / 1000;
         //  Very cool scientific constant that predicts export time
-        let timeLeft = (1.55*dt / progress) - dt* (1 + Math.pow(progress, 3));
-        if(timeLeft < 0) timeLeft = 0;
+        let timeLeft =
+            (1.55 * dt) / progress - dt * (1 + Math.pow(progress, 3));
+        if (timeLeft < 0) timeLeft = 0;
 
         return (
             <div className={classes.container}>
-             <CancelExportModal open={this.state.modalOpen} accept={this.cancel} reject={this.toggleModal}></CancelExportModal>
-             <Questionaire close={() => this.setState({questionaireOpen: false})} open={this.state.questionaireOpen}></Questionaire>
+                <CancelExportModal
+                    open={this.state.modalOpen}
+                    accept={this.cancel}
+                    reject={this.toggleModal}
+                ></CancelExportModal>
+                <Questionaire
+                    close={() => this.setState({ questionaireOpen: false })}
+                    open={this.state.questionaireOpen}
+                ></Questionaire>
                 <List>
-                     <ListItem style={{ justifyContent: "center" }}>
+                    <ListItem style={{ justifyContent: "center" }}>
                         <Typography
                             style={{ color: "#efefef" }}
                             component="h4"
                             variant="h4"
                         >
-                            <Button  style={{color: !encoding ? '#ff3366' : '#12FF12'}} onClick={this.toggleModal}>Go back to project {!encoding ? "(and cancel encoding)" : "" }</Button>
+                            <Button
+                                style={{
+                                    color: !encoding ? "#ff3366" : "#12FF12"
+                                }}
+                                onClick={this.toggleModal}
+                            >
+                                Go back to project{" "}
+                                {!encoding ? "(and cancel encoding)" : ""}
+                            </Button>
                         </Typography>
                     </ListItem>
 
                     {encoding ? (
-                        <DoneExporting fileBlob={blobFile} fileName={fileName} classes={classes} />
+                        <DoneExporting
+                            fileBlob={blobFile}
+                            fileName={fileName}
+                            classes={classes}
+                        />
                     ) : (
-                        <WhileExporting timeLeft={timeLeft} classes={classes} progress={progress} />
+                        <WhileExporting
+                            timeLeft={timeLeft}
+                            classes={classes}
+                            progress={progress}
+                        />
                     )}
 
                     <ListItem style={{ justifyContent: "center" }}>
@@ -110,7 +137,14 @@ class SimpleDialog extends React.Component {
                         </Typography>
                     </ListItem>
 
-                    {items.map(item => {
+                    <ListItem style={{ justifyContent: "center" }}>
+                        <Typography color="error" component="h6" variant="h6">
+                            (DO NOT CONTACT THE CREATORS REGARDING ISSUES WITH
+                            THE SITE)
+                        </Typography>
+                    </ListItem>
+
+                    {items.map((item) => {
                         if (item.showAttribution) {
                             return (
                                 <ListItem

@@ -4,16 +4,40 @@ import Typography from "./modules/components/Typography";
 import LayoutBody from "./modules/components/LayoutBody";
 import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
-import Button from './modules/components/Button';
-import FAQItem from './FAQitem'
+import Button from "./modules/components/Button";
+import FAQItem from "./FAQitem";
+import YouTube from "react-youtube";
 
-const linuxPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_linux.tar.gz";
-const windows64Path = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_windows64.zip";
-const windows32Path = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_windows32.zip";
+const linuxPath =
+    "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_linux.tar.gz";
+const windows64Path =
+    "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_windows64.zip";
+const windows32Path =
+    "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_windows32.zip";
+const buildPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/build.zip";
+const macPath =
+    "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_mac.zip";
 
-const macPath = "https://s3.eu-central-1.amazonaws.com/mvid-build/musicvid_mac.zip";
+function Terms() {
+    return (
+        <React.Fragment>
+            <AppAppBar />
+            <LayoutBody margin marginBottom>
+                <Typography
+                    variant="h3"
+                    gutterBottom
+                    marked="center"
+                    align="center"
+                >
+                    Downloads are temporarily disabled due to costs
+                </Typography>
+            </LayoutBody>
+            <AppFooter />
+        </React.Fragment>
+    );
+}
 
-
+/*
 function Terms() {
     return (
         <React.Fragment>
@@ -27,71 +51,48 @@ function Terms() {
                 >
                     Download the desktop client
                 </Typography>
+              <div style={{display: 'flex', flexDirection:'column', alignContent: 'center', alignItems: 'center', width: '100%'}}>
+                <YouTube
+                  videoId="MY-_dsdTlosI"
+                  opts={{
+                    width: '640',
+                    height: '480'
+                  }}
+                />
 
-                <div style={{display: "flex", justifyContent: "space-between"}}>
                     <Button
                         color="secondary"
                         variant="contained"
                         size="large"
                         style={{textAlign: "center", marginTop: 10, width: 255}}
-                        href={windows64Path}
+                        href={buildPath}
                 
                     >
-                        Windows x64
-                    </Button>
-
-                    <Button
-                        color="secondary"
-                        variant="contained"
-                        size="large"
-                        style={{textAlign: "center", marginTop: 10, width: 255}}
-                        href={windows32Path}
-                
-                    >
-                        Windows x32
-                    </Button>
-
-                    <Button
-                        color="secondary"
-                        variant="contained"
-                        size="large"
-                        style={{textAlign: "center", marginTop: 10, width: 255}}
-                        href={linuxPath}
-                              
-                    >
-                        Linux x64
-                    </Button>
-
-                    <Button
-                        disabled={true}
-                        color="primary"
-                        variant="contained"
-                        size="large"
-                        style={{textAlign: "center", marginTop: 10, width: 255}}
-                        href={macPath}            
-                    >
-                        Mac x64
+                        Download
                     </Button>
                 </div>
-
 
             <Typography style={{textAlign:"center", marginTop: 40}} variant="h4">
                 How to install & info
             </Typography>
                 <ol>
-                    <FAQItem title="Download and extract the zipped files">
-                        The unzipped files are around 300MB in size, so make sure you have room
-                        on your computer
+                    <FAQItem title="Download the nw.js files and extract it to a folder"></FAQItem>   
+                      <a href=" https://nwjs.io/downloads/"> https://nwjs.io/downloads/</a>
+                    <FAQItem title="Download the musicvid source and extract it to the same folder as above">
+                      Press the 'Download' button above to download
                     </FAQItem>
 
-                    <FAQItem title="Run the musicvid.org file">
-                        On Windows just open and double click the <i>musicvid.org</i> file, on linux run /path/to/musicvid.org
+                    <FAQItem title="Download the ffmpeg file">
+                       <a href="https://ffmpeg.zeranoe.com/builds/">https://ffmpeg.zeranoe.com/builds/</a>
+                       Both the latest version (the dated one) or the release version works.
+
+                       Extract the files and move the ffmpeg file to the same folder as the other files.
                     </FAQItem>   
 
-                    <FAQItem title="Use the client like you would on the web">
-                        
+                    <FAQItem title="Run the nw file">
+                      You're good to go!
                     </FAQItem>   
-                    
+
                 </ol>
 
                 <ul style={{marginTop: 30}}>
@@ -124,5 +125,5 @@ function Terms() {
         </React.Fragment>
     );
 }
-
+*/
 export default Terms;
