@@ -90,6 +90,7 @@ class SimpleDialog extends React.Component {
                     accept={this.cancel}
                     reject={this.toggleModal}
                 ></CancelExportModal>
+
                 <Questionaire
                     close={() => this.setState({ questionaireOpen: false })}
                     open={this.state.questionaireOpen}

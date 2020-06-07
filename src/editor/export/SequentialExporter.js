@@ -1,6 +1,7 @@
 import * as FileSaver from "file-saver";
 import VideoEncoder from "./VideoEncodeWorker";
 import VideoModule from "./WasmEncoder1t";
+import { setSnackbarMessage } from "../../fredux/actions/message";
 
 export default class Exporter {
     constructor(config, ondone, onProgress) {
@@ -53,7 +54,6 @@ export default class Exporter {
 
     init = (onready) => {
         this.onready = onready;
-        console.log("?");
         //this.videoEncoder = new VideoEncoder(this.initEncoder);
     };
     initEncoder = () => {
@@ -65,12 +65,14 @@ export default class Exporter {
                 this.videoBitrate,
                 this.presetIdx,
                 1,
-                1
+                1,
+                this.duration
             );
+            //this.Module._open_audio(this.sound.sampleRate, 2, 320000, 2);
 
             this.Module._write_header();
         } catch (err) {
-            console.error("Error in initializing video: ", err.message);
+            console.error("Error in initializing: ", err.message);
         }
         this.encoding = true;
         this.encodedVideoFrames = 0;
@@ -94,11 +96,11 @@ export default class Exporter {
             video_p = this.Module._close_stream(size_p);
         } catch (err) {
             console.error("Error closing streams: ", err.message);
-            postMessage({
-                action: "error",
-                errTitle: "Error closing streams",
-                errMsg: err.message
-            });
+            setSnackbarMessage(
+                "Error closing streams" + err.message,
+                "error",
+                1000000
+            );
         }
 
         size = this.Module.HEAP32[size_p >> 2];
@@ -123,8 +125,6 @@ export default class Exporter {
                 this.encodeVideoFrame();
             }
 
-            //this.videoEncoder.sendFrame();
-
             if (this.encodedVideoFrames % 15 === 0)
                 this.onProgress(
                     this.encodedVideoFrames,
@@ -132,16 +132,18 @@ export default class Exporter {
                 );
 
             if (this.time > this.duration) {
+                let vid = this.close_stream();
+
                 try {
-                    let vid = this.close_stream();
+                    const blob = this.saveBlob(vid.buffer);
                     this.Module._free_buffer();
-                    this.saveBlob(vid.buffer);
+                    this.ondone(blob, this.fileName);
                 } catch (err) {
-                    postMessage({
-                        action: "error",
-                        errTitle: "Error closing streams",
-                        errMsg: err.message
-                    });
+                    setSnackbarMessage(
+                        "Error freeing streams" + err.message,
+                        "error",
+                        1000000
+                    );
                 }
             } else {
                 setTimeout(this.encode, 0);
@@ -151,6 +153,7 @@ export default class Exporter {
 
     encodeVideoFrame = () => {
         const buffer = this.animationManager.readPixels();
+        console.log("encode1");
 
         try {
             var encodedBuffer_p = this.Module._malloc(buffer.length);
@@ -161,6 +164,7 @@ export default class Exporter {
         } finally {
             this.Module._free(encodedBuffer_p);
         }
+        console.log("encode2");
 
         this.pixels = null;
         this.encodedVideoFrames++;
@@ -170,7 +174,8 @@ export default class Exporter {
         const frame = this.sound.getEncodingFrame();
         const audioWindowLength = 1024;
 
-        /*let left_p = this.Module._malloc(audioWindowLength * 4);
+        /*
+        let left_p = this.Module._malloc(audioWindowLength * 4);
         let right_p = this.Module._malloc(audioWindowLength * 4);
         try {
             this.Module.HEAPF32.set(frame.left, left_p >> 2);
@@ -178,22 +183,20 @@ export default class Exporter {
             this.Module._add_audio_frame(left_p, right_p, audioWindowLength);
         } catch (err) {
             console.error("Error in encoding audio: ", err.message);
-            postMessage({
-                action: "error",
-                errTitle: "Error adding audio frame",
-                errMsg: err.message
-            });
-            return;
+            setSnackbarMessage(
+                "Error adding audio frame: " + err.message,
+                "error",
+                1000000
+            );
         } finally {
             this.Module._free(left_p);
             this.Module._free(right_p);
-        }
-        //this.videoEncoder.queueFrame(frame);*/
+        }*/
     };
 
     saveBlob = (vid) => {
         const blob = new Blob([vid], { type: "video/mp4" });
         FileSaver.saveAs(blob, this.fileName);
-        this.ondone(blob, this.fileName);
+        return blob;
     };
 }

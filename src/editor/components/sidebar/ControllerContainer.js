@@ -70,7 +70,7 @@ export default class ControllerContainer extends PureComponent {
         folder.add(this, "fileName").disableAll();
         folder.add(this, "fps", [24, 25, 30, 48, 60]).disableAll();
         folder.add(this, "preset", this.presetLookup).disableAll();
-        folder.add(this, "MBitBitrate", 0, 50, 0.1).disableAll();
+        folder.add(this, "MBitBitrate", 0, 25, 0.1).disableAll();
         folder.add(this, "startEncoding").disableAll();
     };
 

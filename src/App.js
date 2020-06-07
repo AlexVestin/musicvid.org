@@ -11,13 +11,13 @@ import SignUp from "./home/Account/SignUp";
 import Missing from "./home/Missing";
 import Tutorial from "./home/Tutorial/Tutorial";
 import TroubleShoot from "./home/Troubleshoot";
-
 import ErrorComponent from "./home/Error";
+import ErrorLog from "./home/ErrorLog";
 
 import AddProject from "./home/AddProject";
 
 import Forgot from "./home/ForgotPassword";
-import SignOutComponent from './home/SignOutComponent'
+import SignOutComponent from "./home/SignOutComponent";
 import { app } from "backend/firebase";
 import { setIsAuthenticated } from "./fredux/actions/auth";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -26,7 +26,7 @@ import MessageSnackbar from "./MessageSnackbar";
 
 class Index extends PureComponent {
     componentDidMount() {
-        this.removeAuthListener = app.auth().onAuthStateChanged(user => {
+        this.removeAuthListener = app.auth().onAuthStateChanged((user) => {
             if (user) {
                 setIsAuthenticated(true);
             } else {
@@ -58,6 +58,7 @@ class Index extends PureComponent {
                         <Route path="/sign-up" component={SignUp} />
                         <Route path="/forgot-password" component={Forgot} />
                         <Route path="/troubleshoot" component={TroubleShoot} />
+                        <Route path="/errorlog" component={ErrorLog} />
 
                         <Route path="/sign-out" component={SignOutComponent} />
                         <Route component={Missing} />

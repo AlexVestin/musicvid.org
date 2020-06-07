@@ -2,11 +2,22 @@ import * as FileSaver from "file-saver";
 import VideoEncoder from "./VideoEncodeWorker";
 
 export default class Exporter {
-    constructor(config, ondone, onProgress) {
+    constructor(
+        config,
+        ondone,
+        onProgress,
+        onError,
+        mallocTestResult,
+        exportNum
+    ) {
         this.onProgress = onProgress;
         this.fps = Number(config.video.fps);
         this.videoBitrate = config.video.bitrate;
 
+        this.videoConfig = config.video;
+        this.audioConfig = { duration: config.sound.duration };
+
+        this.onError = onError;
         this.encodedVideoFrames = 0;
         this.width = config.video.width;
         this.height = config.video.height;
@@ -22,6 +33,9 @@ export default class Exporter {
 
         let duration = config.sound.duration;
         let time = 0;
+        this.closed = false;
+        this.mallocTestResult = mallocTestResult;
+        this.exportNum = exportNum;
 
         if (config.useCustomTimeRange) {
             time = config.startTime;
@@ -40,7 +54,12 @@ export default class Exporter {
 
     init = (onready) => {
         this.onready = onready;
-        this.videoEncoder = new VideoEncoder(this.initEncoder);
+        this.videoEncoder = new VideoEncoder(
+            this.initEncoder,
+            this.onError,
+            this.mallocTestResult,
+            this.exportNum
+        );
     };
     initEncoder = () => {
         const videoConfig = {
@@ -48,7 +67,8 @@ export default class Exporter {
             h: this.height,
             bitrate: this.videoBitrate,
             fps: this.fps,
-            presetIdx: this.presetIdx
+            presetIdx: this.presetIdx,
+            duration: this.duration
         };
 
         const audioConfig = {
@@ -83,7 +103,7 @@ export default class Exporter {
     };
 
     encode = () => {
-        if (!this.canceled) {
+        if (!this.canceled && !this.closed) {
             const videoTs = this.time;
             const audioTs =
                 (this.sound.exportFrameIdx * this.sound.exportWindowSize) /
@@ -97,6 +117,7 @@ export default class Exporter {
                 });
                 this.animationManager.update(this.time, audioData, true);
                 this.time += 1 / this.fps;
+
                 this.encodeVideoFrame();
             }
 
@@ -109,6 +130,7 @@ export default class Exporter {
                 );
 
             if (this.time > this.duration) {
+                this.closed = true;
                 this.videoEncoder.close(this.saveBlob);
             }
         }
@@ -129,6 +151,12 @@ export default class Exporter {
     saveBlob = (vid) => {
         const blob = new Blob([vid], { type: "video/mp4" });
         FileSaver.saveAs(blob, this.fileName);
-        this.ondone(blob, this.fileName);
+        this.ondone(
+            blob,
+            this.fileName,
+            this.videoConfig,
+            this.audioConfig,
+            performance.now() - this.startTime
+        );
     };
 }

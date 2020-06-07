@@ -16,18 +16,32 @@ import WaveCanvas from "./WaveCanvas";
 import OverviewgGroup from "./OverviewGroup";
 import { setFatalError } from "fredux/actions/error";
 import { Redirect } from "react-router-dom";
+import { app } from "backend/firebase";
+import { v4 as uuid } from "uuid";
+import ExportErrorModal from "./ExportErrorModal";
+import { setSnackbarMessage } from "../fredux/actions/message";
+import InitMalloc from "./malloc";
 
 class App extends PureComponent {
     constructor() {
         super();
         this.gui = new dat.GUI({ autoPlace: false, width: "100%" });
-        this.overviewFolder = this.gui.addFolder("Overview", { useTitleRow: false });
+        this.overviewFolder = this.gui.addFolder("Overview", {
+            useTitleRow: false
+        });
 
-        this.layersFolder = this.gui.addFolder("Layers", { useTitleRow: false });
+        this.layersFolder = this.gui.addFolder("Layers", {
+            useTitleRow: false
+        });
         this.audioFolder = this.gui.addFolder("Audio", { useTitleRow: false });
         this.audioFolder.add(this, "loadNewAudioFile");
-        this.settingsFolder = this.gui.addFolder("Settings", { useTitleRow: false });
-        this.exportFolder = this.gui.addFolder("Export", { useTitleRow: false });
+
+        this.settingsFolder = this.gui.addFolder("Settings", {
+            useTitleRow: false
+        });
+        this.exportFolder = this.gui.addFolder("Export", {
+            useTitleRow: false
+        });
         this.state = {
             shouldLoadProject: false,
             videoLoaded: false,
@@ -39,8 +53,12 @@ class App extends PureComponent {
             progress: 0,
             encoding: false,
             doneEncoding: false,
-            advanced: true
+            advanced: true,
+            exportError: false,
+            error: {}
         };
+
+        this.exportNr = 0;
 
         this.firstLoad = true;
         this.fastLoad = true;
@@ -61,88 +79,85 @@ class App extends PureComponent {
     };
 
     keyBindings = (e) => {
-
         if (e.keyCode === 17) {
             this.ctrlKeyDown = false;
         }
 
-        if (!this.state.encoding && this.state.audioLoaded && this.state.videoLoaded) {
-
+        if (
+            !this.state.encoding &&
+            this.state.audioLoaded &&
+            this.state.videoLoaded
+        ) {
             if (e.ctrlKey || this.ctrlKeyDown) {
-                switch(e.keyCode) {
+                switch (e.keyCode) {
                     // Left key
                     case 37:
                         this.time -= 20;
-                        if(this.time < 0)
-                            this.time = 0;
-                        
-                        this.seek(this.time);     
-                    break;
+                        if (this.time < 0) this.time = 0;
+
+                        this.seek(this.time);
+                        break;
                     // right key
                     case 39:
-                    this.time += 20;
-                    if(this.time < this.state.duration)
-                        this.time = this.state.duation;
-                    
-                    this.seek(this.time);     
-                    break;
+                        this.time += 20;
+                        if (this.time < this.state.duration)
+                            this.time = this.state.duation;
+
+                        this.seek(this.time);
+                        break;
                     // spacebar
                     case 32:
                         this.stop();
                         break;
 
                     default:
-                        console.log()
+                        console.log();
                 }
-            } else if(e.shiftKey) {
-                switch(e.keyCode) {
+            } else if (e.shiftKey) {
+                switch (e.keyCode) {
                     // Left key
                     case 37:
-                        
-                    break;
+                        break;
                     // right key
                     case 39:
-                
-                    break;
+                        break;
                     // spacebar
                     case 32:
                         this.stop();
                         this.play();
-                    break;
+                        break;
                     default:
-                        console.log()
+                        console.log();
                 }
-            }else {
-                switch(e.keyCode) {
+            } else {
+                switch (e.keyCode) {
                     // Left key
                     case 37:
                         this.time -= 5;
-                        if(this.time < 0)
-                            this.time = 0;
-                        
-                        this.seek(this.time);     
-                    break;
+                        if (this.time < 0) this.time = 0;
+
+                        this.seek(this.time);
+                        break;
                     // right key
                     case 39:
-                    this.time += 5;
-                    if(this.time < this.state.duration)
-                        this.time = this.state.duation;
-                    
-                    this.seek(this.time);     
-                    break;
+                        this.time += 5;
+                        if (this.time < this.state.duration)
+                            this.time = this.state.duation;
+
+                        this.seek(this.time);
+                        break;
                     // spacebar
                     case 32:
                         this.play();
-                    break;
+                        break;
                     default:
-                        console.log()
+                        console.log();
                 }
             }
         }
-      
-    }
+    };
 
-    toggleAdvancedMode = advanced => {
+    toggleAdvancedMode = (advanced) => {
         if (advanced) {
             this.addOverviewFolderButton = this.overviewFolder
                 .addWithMeta(this, "addFolderToOverview", {}, { first: true })
@@ -152,7 +167,7 @@ class App extends PureComponent {
             try {
                 this.overviewFolder.remove(this.addOverviewFolderButton);
             } catch (err) {
-                console.log("Failed to remove folder")
+                console.log("Failed to remove folder");
             }
         }
 
@@ -163,12 +178,8 @@ class App extends PureComponent {
     async loadProject(uid) {
         let proj;
         try {
-            proj = await base
-                .collection("projects")
-                .doc(uid)
-                .get();
+            proj = await base.collection("projects").doc(uid).get();
         } catch (err) {
-
             setFatalError({
                 code: -1,
                 message:
@@ -185,17 +196,17 @@ class App extends PureComponent {
     clearOverviewFolder = () => {
         const _of = this.gui.__folders["Overview"];
 
-        _of.__controllers.forEach(c => {
+        _of.__controllers.forEach((c) => {
             _of.remove(c);
             delete _of.__controllers[c.__id];
         });
-        Object.values(_of.__folders).forEach(f => {
+        Object.values(_of.__folders).forEach((f) => {
             _of.removeFolder(f);
             delete _of.__folders[f.__id];
         });
     };
 
-    initFromProjectFile = projectFile => {
+    initFromProjectFile = (projectFile) => {
         this.resolution = {
             width: projectFile.width,
             height: projectFile.height
@@ -220,9 +231,70 @@ class App extends PureComponent {
     }
 
     componentDidMount = async () => {
-        window.onkeydown = (e) => {
-   
+        let Module = {};
+        this.mallocResult = -1;
+        Module["locateFile"] = (file) => "workers/" + file;
+        try {
+            InitMalloc(Module);
+        } catch (err) {
+            setSnackbarMessage(
+                "Failed initialize wasm-malloc test",
+                "error",
+                100000
+            );
 
+            this.mallocResult = err.message;
+        }
+
+        Module["onRuntimeInitialized"] = () => {
+            try {
+                this.mallocResult = Module._test_malloc();
+            } catch (err) {
+                console.log(err.message);
+                setSnackbarMessage(
+                    "Malloc test failed with: " + err.message,
+                    "error",
+                    100000
+                );
+            }
+            console.log("Result of malloc test: ", this.mallocResult);
+        };
+
+        const supported = (() => {
+            try {
+                if (
+                    typeof WebAssembly === "object" &&
+                    typeof WebAssembly.instantiate === "function"
+                ) {
+                    const module = new WebAssembly.Module(
+                        Uint8Array.of(
+                            0x0,
+                            0x61,
+                            0x73,
+                            0x6d,
+                            0x01,
+                            0x00,
+                            0x00,
+                            0x00
+                        )
+                    );
+                    if (module instanceof WebAssembly.Module)
+                        return (
+                            new WebAssembly.Instance(module) instanceof
+                            WebAssembly.Instance
+                        );
+                }
+            } catch (e) {}
+            return false;
+        })();
+
+        if (!supported) {
+            alert(
+                "ERROR: You need a browser that has WebAssembly enabled. Exporting will not work without it."
+            );
+        }
+
+        window.onkeydown = (e) => {
             if (e.keyCode === 17) {
                 this.ctrlKeyDown = true;
             }
@@ -247,14 +319,12 @@ class App extends PureComponent {
                 e.preventDefault();
                 this.animationManager.resetAllCameras();
             }
-        }
+        };
 
-        
-        
         window.onkeyup = this.keyBindings;
-        
+
         if (!this.fastLoad) {
-            window.onbeforeunload = function(event) {
+            window.onbeforeunload = function (event) {
                 // do stuff here
                 event.returnValue =
                     "If you leave this page you will lose your unsaved changes.";
@@ -274,7 +344,7 @@ class App extends PureComponent {
 
         window.__onError = this.onExportError;
         import("./animation/templates/" + template + ".js").then(
-            async AnimationManager => {
+            async (AnimationManager) => {
                 this.animationManager = new AnimationManager.default(this);
                 this.update();
                 this.setState({ videoLoaded: true });
@@ -304,32 +374,41 @@ class App extends PureComponent {
 
     setUnmuted = () => {
         this.audio.setUnmuted();
-    }
+    };
 
     setFFTSize = () => {
-        this.audio.setFFTSize(this.audio.fftSize)
-    }
+        this.audio.setFFTSize(this.audio.fftSize);
+    };
 
-    audioReady = duration => {
+    audioReady = (duration) => {
         if (this.firstLoad) {
             this.audioFolder
-                .add(this.audio, "fftSize", [1024, 2048, 4096, 8192, 16384,32768])
+                .add(this.audio, "fftSize", [
+                    1024,
+                    2048,
+                    4096,
+                    8192,
+                    16384,
+                    32768
+                ])
                 .onChange(this.setFFTSize);
+            this.audioFolder.add(this.audio, "useTwoChannelFFT");
+
             this.firstLoad = false;
         }
         if (duration > 8 * 60) {
             this.modalRef.current.toggleModal(10);
         }
 
-        if(this.audioWaveCanvasRef.current) {
-            this.audioWaveCanvasRef.current.generateAudioWave(
-                this.audio.combinedAudioData
+        if (this.audioWaveCanvasRef.current) {
+            const data = this.audio.getCombinedAudioData(
+                this.audioWaveCanvasRef.current.dimensions.width
             );
-    
+            this.audioWaveCanvasRef.current.generateAudioWave(data);
+
             this.animationManager.setAudio(this.audio);
             this.setState({ audioDuration: duration, audioLoaded: true });
         }
-       
     };
 
     play = () => {
@@ -367,8 +446,8 @@ class App extends PureComponent {
     applyAutomation = (time, audioData) => {
         const root = this.gui.getRoot();
         const automations = root.getAutomations();
-            
-        automations.forEach(item => {
+
+        automations.forEach((item) => {
             item.update(time, audioData);
         });
     };
@@ -377,12 +456,9 @@ class App extends PureComponent {
         const disabled = !this.state.audioLoaded || !this.state.videoLoaded;
 
         if (!disabled && this.canvasRef.current !== null) {
-
             let time, audioData;
 
             if (this.state.playing && this.time < this.audio.duration) {
-
-                
                 time =
                     (performance.now() - this.startTime) / 1000 +
                     this.timeOffset;
@@ -406,9 +482,32 @@ class App extends PureComponent {
         if (!this.encoding) requestAnimationFrame(this.update);
     };
 
-    encoderDone = (file, fileName) => {
+    encoderDone = (file, fileName, video, audio, timeTaken) => {
         this.file = file;
         this.setState({ doneEncoding: true, fileName: fileName });
+        const exportId = uuid();
+
+        const data = JSON.parse(
+            JSON.stringify({
+                platform: navigator.platform,
+                vendor: navigator.platform,
+                cpuClass: navigator.cpuClass,
+                video,
+                audio,
+                timeTaken
+            })
+        );
+
+        app.firestore()
+            .collection("exports")
+            .doc(exportId)
+            .set(data)
+            .then(() => {
+                console.log("uploaded error log");
+            })
+            .catch((err) =>
+                console.log("Failed to upload error log: " + err.message)
+            );
     };
 
     cancelEncoder = () => {
@@ -422,12 +521,13 @@ class App extends PureComponent {
             this.audio.exportFrameIdx = 0;
             this.canvasRef.current.setSize(this.resolution);
             this.gui.canvasMountRef = this.canvasRef.current.getMountRef();
-            
+
             this.animationManager.refresh(this.gui.canvasMountRef);
-            if(this.audioWaveCanvasRef.current) {
-                this.audioWaveCanvasRef.current.generateAudioWave(
-                    this.audio.combinedAudioData
-                );
+            const data = this.audio.getCombinedAudioData(
+                this.audioWaveCanvasRef.current.dimensions.width
+            );
+            if (this.audioWaveCanvasRef.current) {
+                this.audioWaveCanvasRef.current.generateAudioWave(data);
             }
         });
     };
@@ -447,11 +547,11 @@ class App extends PureComponent {
         this.setState({ progress: current / max });
     };
 
-    onAudioProgress = e => {
+    onAudioProgress = (e) => {
         this.setState({ progress: e });
     };
 
-    startEncoding = selected => {
+    startEncoding = (selected) => {
         let duration = this.state.audioDuration;
         if (selected.useCustomTimeRange) {
             if (selected.startTime < 0 || selected.endTime > duration) {
@@ -467,38 +567,76 @@ class App extends PureComponent {
             }
         }
 
-        this.checkLicense().then(() => {
-            const config = {
-                video: {
-                    width: this.resolution.width,
-                    height: this.resolution.height,
-                    fps: selected.fps,
-                    bitrate: selected.bitrate,
-                    presetIdx: selected.preset
-                },
-                fileName: selected.fileName,
-                animationManager: this.animationManager,
-                duration: duration,
-                sound: this.audio,
-                gui: this.gui,
-                startTime: selected.startTime,
-                endTime: selected.endTime,
-                useCustomTimeRange: selected.useCustomTimeRange
-            };
+        const multipliers = { 1920: 12, 1280: 6, 680: 3 };
+        let assumed_br = selected.bitrate / (1000 * 1000);
+        if (selected.bitrate === 0) {
+            assumed_br = multipliers[this.resolution.width];
+        }
 
-            this.exporter = new Exporter(
-                config,
-                this.encoderDone,
-                this.onProgress
+        const totalSize = 1.25 * (assumed_br / 8) * duration;
+        console.log(totalSize);
+
+        if (totalSize > 1500) {
+            setSnackbarMessage(
+                `Projected file size (${Math.floor(
+                    totalSize
+                )}MB) is too large with the applied settings.`,
+                "error",
+                100000
             );
+            return;
+        } else if (totalSize > 1000) {
+            setSnackbarMessage(
+                "Projected file size is very large and have a high probability of not exporting properly, please consider lowering the bitrate or exporting a shorter audio file",
+                "warning"
+            );
+        }
 
-            this.animationManager.prepareEncoding();
-            this.exporter.init(this.encoderReady);
-            this.encoding = true;
-        });
+        let timeOut = totalSize > 1000 ? 1000 : 0;
+        setTimeout(() => {
+            this.checkLicense().then(() => {
+                const config = {
+                    video: {
+                        width: this.resolution.width,
+                        height: this.resolution.height,
+                        fps: selected.fps,
+                        bitrate: selected.bitrate,
+                        presetIdx: selected.preset
+                    },
+                    fileName: selected.fileName,
+                    animationManager: this.animationManager,
+                    duration: duration,
+                    sound: this.audio,
+                    gui: this.gui,
+                    startTime: selected.startTime,
+                    endTime: selected.endTime,
+                    useCustomTimeRange: selected.useCustomTimeRange
+                };
+
+                this.exporter = new Exporter(
+                    config,
+                    this.encoderDone,
+                    this.onProgress,
+                    this.onError,
+                    this.mallocResult,
+                    this.exportNr++
+                );
+
+                this.animationManager.prepareEncoding();
+                this.exporter.init(this.encoderReady);
+                this.encoding = true;
+            });
+        }, timeOut);
     };
 
-    seek = time => {
+    onError = (errObj) => {
+        this.setState({ exportError: true, error: errObj });
+    };
+    closeExportErrorModal = () => {
+        this.setState({ exportError: false });
+    };
+
+    seek = (time) => {
         this.timeOffset = time;
         this.startTime = performance.now();
         if (this.state.playing) {
@@ -512,14 +650,14 @@ class App extends PureComponent {
         this.setState({ time: time });
     };
 
-    loadNewAudio = audio => {
+    loadNewAudio = (audio) => {
         this.stop();
         this.setState({ audioLoaded: false });
         this.audio = new Sound(audio, this.audioFolder, this.onAudioProgress);
         return this.audio.load();
     };
 
-    onSelect = selected => {
+    onSelect = (selected) => {
         if (!this.resolution) {
             this.resolution = selected;
             this.modalRef.current.toggleModal(1, true).then(this.onSelect);
@@ -572,6 +710,11 @@ class App extends PureComponent {
 
                 {this.state.encoding ? (
                     <React.Fragment>
+                        <ExportErrorModal
+                            onSelect={this.closeExportErrorModal}
+                            open={this.state.exportError}
+                            error={this.state.error}
+                        ></ExportErrorModal>
                         <ExportScreen
                             encoding={this.state.doneEncoding}
                             cancel={this.cancelEncoder}
@@ -624,11 +767,9 @@ class App extends PureComponent {
                                 canvas={this.audioWaveCanvas}
                                 toggleMuted={this.toggleMuted}
                                 setUnmuted={this.setUnmuted}
-
                                 ref={this.trackRef}
                             >
                                 <WaveCanvas
-                                
                                     ref={this.audioWaveCanvasRef}
                                     classes={classes}
                                 />
@@ -641,7 +782,7 @@ class App extends PureComponent {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         authFetching: state.auth.fetching
     };

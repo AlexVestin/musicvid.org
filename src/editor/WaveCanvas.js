@@ -7,7 +7,10 @@ export default class WaveCanvas extends PureComponent {
     }
 
     get dimensions() {
-        return {width: this.audioWaveCanvas.current.clientWidth, height: this.audioWaveCanvas.current.clientHeight};
+        return {
+            width: this.audioWaveCanvas.current.clientWidth,
+            height: this.audioWaveCanvas.current.clientHeight
+        };
     }
 
     get width() {
@@ -18,29 +21,21 @@ export default class WaveCanvas extends PureComponent {
         return this.audioWaveCanvas.current.clientWidth;
     }
 
-    generateAudioWave = audioData => {
+    generateAudioWave = (audioData) => {
         const canvas = this.audioWaveCanvas.current;
         const ctx = canvas.getContext("2d");
-        const nrPointsToDraw = canvas.clientWidth;
-        const stepSize = Math.floor(audioData.length / nrPointsToDraw);
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
         ctx.strokeStyle = "#000";
         ctx.beginPath();
-        const midPoint = canvas.height / 2;
-        ctx.moveTo(0, midPoint);
-        for (var i = 0; i < audioData.length; i += stepSize) {
-            const x = Math.floor(i / stepSize);
-            let sum = 0;
-
-            const ij = 8;
-            for (var j = i; j < i + stepSize; j += ij) {
-                sum += Math.abs(audioData[j]);
-            }
-            const y = 1 + Math.floor(((ij * sum) / stepSize) * canvas.height);
-            ctx.moveTo(x, midPoint - y);
-            ctx.lineTo(x, midPoint + y);
-            ctx.moveTo(x + 1, midPoint);
+        const halfHeight = canvas.height / 2;
+        ctx.moveTo(0, halfHeight);
+        for (var i = 0; i < audioData.length; i++) {
+            const x = i;
+            const y = 1 + Math.floor(Math.abs(audioData[i]) * canvas.height);
+            ctx.moveTo(x, halfHeight - y);
+            ctx.lineTo(x, halfHeight + y);
+            ctx.moveTo(x + 1, halfHeight);
         }
 
         ctx.stroke();

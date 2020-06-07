@@ -1,0 +1,112 @@
+r: 3601 buf size: 89653248 room: 54783034  counter: 34870214
+WasmEncoder1t.js:10 frame nr: 3901 buf size: 89653248 room: 51081952  counter: 38571296
+WasmEncoder1t.js:10 frame nr: 4201 buf size: 89653248 room: 47575518  counter: 42077730
+WasmEncoder1t.js:10 frame nr: 4501 buf size: 89653248 room: 45140853  counter: 44512395
+WasmEncoder1t.js:10 [mp4 @ 0x5be0dc0] Application provided invalid, non monotonically increasing dts to muxer in stream 1: 3673775 >= 0
+put_char @ WasmEncoder1t.js:10
+write @ WasmEncoder1t.js:10
+write @ WasmEncoder1t.js:10
+doWritev @ WasmEncoder1t.js:10
+_fd_write @ WasmEncoder1t.js:10
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+ja @ WasmEncoder1t.wasm:1
+addAudioFrame @ encodeworkers.js:68
+onmessage @ encodeworkers.js:174
+WasmEncoder1t.js:10 Flushing video...
+WasmEncoder1t.js:10 Blocking on the main thread is very dangerous, see https://emscripten.org/docs/porting/pthreads.html#blocking-on-the-main-browser-thread
+warnOnce @ WasmEncoder1t.js:10
+_emscripten_check_blocking_allowed @ WasmEncoder1t.js:10
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+ha @ WasmEncoder1t.wasm:1
+Module._close_stream @ WasmEncoder1t.js:10
+close_stream @ encodeworkers.js:110
+close @ encodeworkers.js:153
+onmessage @ encodeworkers.js:200
+WasmEncoder1t.js:10 Flushing audio...
+WasmEncoder1t.js:10 [libmp3lame @ 0x7de2420] Trying to remove 1152 samples, but the queue is empty
+put_char @ WasmEncoder1t.js:10
+write @ WasmEncoder1t.js:10
+write @ WasmEncoder1t.js:10
+doWritev @ WasmEncoder1t.js:10
+_fd_write @ WasmEncoder1t.js:10
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+ha @ WasmEncoder1t.wasm:1
+Module._close_stream @ WasmEncoder1t.js:10
+close_stream @ encodeworkers.js:110
+close @ encodeworkers.js:153
+onmessage @ encodeworkers.js:200
+WasmEncoder1t.js:10 Assertion afq->remaining_samples == afq->remaining_delay failed at libavcodec/audio_frame_queue.c:106
+put_char @ WasmEncoder1t.js:10
+write @ WasmEncoder1t.js:10
+write @ WasmEncoder1t.js:10
+doWritev @ WasmEncoder1t.js:10
+_fd_write @ WasmEncoder1t.js:10
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+ha @ WasmEncoder1t.wasm:1
+Module._close_stream @ WasmEncoder1t.js:10
+close_stream @ encodeworkers.js:110
+close @ encodeworkers.js:153
+onmessage @ encodeworkers.js:200
+WasmEncoder1t.js:10 undefined
+WasmEncoder1t.js:10 undefined
+abort @ WasmEncoder1t.js:10
+_abort @ WasmEncoder1t.js:10
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+(anonymous) @ WasmEncoder1t.wasm:1
+ha @ WasmEncoder1t.wasm:1
+Module._close_stream @ WasmEncoder1t.js:10
+close_stream @ encodeworkers.js:110
+close @ encodeworkers.js:153
+onmessage @ encodeworkers.js:200
+encodeworkers.js:112 Error closing streams:  abort(undefined). Build with -s ASSERTIONS=1 for more info.
+close_stream @ encodeworkers.js:112
+close @ encodeworkers.js:153
+onmessage @ encodeworkers.js:200
+VideoEncodeWorker.js:113 uploaded error log
+App.js:432 uploaded error log

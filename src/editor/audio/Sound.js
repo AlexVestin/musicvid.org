@@ -10,10 +10,11 @@ export default class Audio {
         this.loaded = false;
         this.fftSize = 2048 * 8;
 
+        this.useTwoChannelFFT = false;
         this.volume = 1;
         this.storedVolume = 1;
         this.muted = false;
-        this.exportWindowSize = 1024;
+        this.exportWindowSize = 1152;
         this.exportFrameIdx = 0;
         this.gui = gui;
         this.onProgress = onprogress;
@@ -67,14 +68,25 @@ export default class Audio {
         const sidx = this.exportFrameIdx * this.exportWindowSize;
         const eidx = (this.exportFrameIdx + 1) * this.exportWindowSize;
 
-        const left = this.bufferSource.buffer
-            .getChannelData(0)
-            .slice(sidx, eidx);
-        const right = this.bufferSource.buffer
-            .getChannelData(1)
-            .slice(sidx, eidx);
+        const leftBuffer = new Float32Array(this.exportWindowSize);
+        const rightBuffer = new Float32Array(this.exportWindowSize);
+
+        leftBuffer.set(
+            this.bufferSource.buffer.getChannelData(0).slice(sidx, eidx),
+            0
+        );
+
+        rightBuffer.set(
+            this.bufferSource.buffer.getChannelData(1).slice(sidx, eidx),
+            0
+        );
         this.exportFrameIdx++;
-        return { type: "audio", left, right, sampleRate: this.sampleRate };
+        return {
+            type: "audio",
+            left: leftBuffer,
+            right: rightBuffer,
+            sampleRate: this.sampleRate
+        };
     };
 
     // VOLUME FROM [0..1]
@@ -101,20 +113,7 @@ export default class Audio {
         this.playing = true;
     };
 
-    getAudioByteData = (buffer) => {
-        this.combinedAudioData = new Float32Array(buffer.length);
-
-        const leftAudio = buffer.getChannelData(0);
-        if (buffer.numberOfChannels === 1) {
-            this.combinedAudioData = leftAudio;
-            return;
-        }
-
-        const rightAudio = buffer.getChannelData(1);
-        for (var i = 0; i < buffer.length; i++) {
-            this.combinedAudioData[i] = (leftAudio[i] + rightAudio[i]) / 2;
-        }
-    };
+    getAudioByteData = (buffer) => {};
 
     toggleMuted = () => {
         this.muted = !this.muted;
@@ -131,12 +130,47 @@ export default class Audio {
         this.muted = false;
     };
 
+    getCombinedAudioData = (canvasWidth) => {
+        const nrPointsToDraw = canvasWidth;
+        const buffer = this.bufferSource.buffer;
+
+        const stepSize = Math.floor(buffer.length / nrPointsToDraw);
+        let data = new Float32Array(nrPointsToDraw);
+
+        const left = buffer.getChannelData(0);
+        let cnt = 0;
+        if (buffer.numberOfChannels === 1) {
+            for (let i = 0; i < buffer.length; i += stepSize) {
+                data[cnt++] = left[i];
+            }
+        } else {
+            const right = buffer.getChannelData(1);
+            for (let i = 0; i < buffer.length; i += stepSize) {
+                data[cnt++] = (left[i] + right[i]) / 2;
+            }
+        }
+
+        return data;
+    };
+
     getAudioData = (time) => {
         const halfWindowSize = this.fftSize / 2;
         let idx = Math.floor(time * this.bufferSource.buffer.sampleRate);
         if (idx < 0) idx = 0;
         let audio_p, bins, buf_p;
-        const data = this.combinedAudioData.subarray(idx, idx + this.fftSize);
+
+        const buffer = this.bufferSource.buffer;
+        const leftAudio = buffer.getChannelData(0);
+
+        let data = new Float32Array(this.fftSize);
+        if (buffer.numberOfChannels === 1 || !this.useTwoChannelFFT) {
+            data = leftAudio.subarray(idx, idx + this.fftSize);
+        } else {
+            const rightAudio = buffer.getChannelData(1);
+            for (var i = 0; i < this.fftSize; i++) {
+                data[i] = (leftAudio[idx + i] + rightAudio[idx + i]) / 2;
+            }
+        }
 
         try {
             audio_p = this.Module._malloc(this.fftSize * 4);
