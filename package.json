@@ -19,7 +19,7 @@
         "lerp": "^1.0.3",
         "markdown-to-jsx": "^6.9.1",
         "mathjs": "^5.9.0",
-        "node-sass": "^4.11.0",
+        "node-sass": "^7.0.0",
         "open-file-explorer": "^1.0.2",
         "perspective-camera": "^2.0.1",
         "pixi-filters": "^3.0.2",
